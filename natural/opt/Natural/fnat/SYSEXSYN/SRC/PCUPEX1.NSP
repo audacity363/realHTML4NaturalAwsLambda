@@ -1,0 +1,26 @@
+0010** Example 'PCUPEX1': UPLOAD PC FILE
+0020**
+0030** NOTE: Example requires that Natural Connection is installed.
+0040** CAUTION: Executing this example will modify the database records!
+0050************************************************************************
+0060DEFINE DATA LOCAL
+007001 EMPL VIEW OF EMPLOYEES
+0080   02 PERSONNEL-ID
+0090   02 INCOME
+0100      03 SALARY (1)
+0110*
+012001 #PID (A8)                                   /* Personnel ID on PC
+013001 #NEW-INCREASE (N4)                          /* Increase for salary
+0140END-DEFINE
+0150*
+0160UPLOAD PC FILE 7 #PID #NEW-INCREASE            /* Data upload
+0170*
+0180  FIND EMPL WITH PERSONNEL-ID = #PID           /* Data selection
+0190    ADD #NEW-INCREASE TO SALARY (1)            /* Data update on host
+0200    UPDATE
+0210    END TRANSACTION
+0220    ESCAPE BOTTOM
+0230  END-FIND
+0240*
+0250END-WORK
+0260END

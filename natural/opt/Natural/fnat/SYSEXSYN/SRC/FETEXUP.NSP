@@ -1,0 +1,11 @@
+0010** Example 'FETEXUP': FETCH (called by FETEX1)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #PERS-NR (N8)
+0050END-DEFINE
+0060*
+0070INPUT #PERS-NR
+0080*
+0090WRITE *PROGRAM 'Record updated with personnel number:' #PERS-NR
+0100*
+0110END

@@ -1,0 +1,38 @@
+0010**********************************************************************
+0020*
+0030* FILE   : XARR.NSN
+0040* PURPOSE: SAMPLE SUBPROGRAM CALLED FROM A USER EXIT (XARR)
+0050*
+0060* (C) COPYRIGHT 1991-2004 BY SOFTWARE AG
+0070*
+0080**********************************************************************
+0090*
+0100DEFINE DATA
+0110PARAMETER
+01201 #ARRAY-OF-DYNAMIC(A/1:6) DYNAMIC
+01301 #X-ARRAY(I4/1:*)
+01401 #X-ARRAY-OF-DYNAMIC(A/1:*) DYNAMIC
+0150LOCAL
+01601 #I(I4)
+0170END-DEFINE
+0180*
+0190* Fill the array of dynamic alphas
+0200* with new strings of different length.
+0210FOR #I := 1 TO 6
+0220  COMPRESS 'OUTPUT' #I TO #ARRAY-OF-DYNAMIC(#I)
+0230END-FOR
+0240*
+0250* Resize the x-array and fill the new occurrences.
+0260RESIZE ARRAY #X-ARRAY TO (1:6)
+0270FOR #I := 1 TO 6
+0280  MOVE #I TO #X-ARRAY(#I)
+0290END-FOR
+0300*
+0310* Resize the x-array of dynamic alphas
+0320* and fill the new occurrences.
+0330RESIZE ARRAY #X-ARRAY-OF-DYNAMIC TO (1:6)
+0340FOR #I := 1 TO 6
+0350  COMPRESS 'OUTPUT' #I TO #X-ARRAY-OF-DYNAMIC(#I)
+0360END-FOR
+0370*
+0380END

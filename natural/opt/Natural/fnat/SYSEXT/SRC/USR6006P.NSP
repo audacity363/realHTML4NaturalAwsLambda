@@ -1,0 +1,54 @@
+0010/* This program serves as example how to design a user-defined
+0020/* program to call 'USR6006N'
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR6006L
+0070   2 INPUTS
+0080     3 SYSF-DBID       (I4)
+0090     3 SYSF-FNR        (I4)
+0100   2 OUTPUTS
+0110     3 SYSF-PATH       (A253)
+0120     3 RESPONSE-CODE   (I4)
+0130     3 INFOTEXT        (A65)
+0140 1 EXTENSIONS          (A1/1:1)
+0150END-DEFINE
+0160/*
+0170RESET EXTENSIONS(*)
+0180SYSF-DBID := 99
+0190SYSF-FNR  := 101
+0200/*
+0210SET KEY ALL
+0220/*
+0230REPEAT
+0240  /*
+0250  INPUT (AD=MITL'_' IP=OFF SG=OFF) ///
+0260    'Get Path for DBID and FNR' /
+0270    '-' (34) //
+0280    'DBID .......' SYSF-DBID   /
+0290    'FNR ........' SYSF-FNR    /
+0300    'Press ENTER to receive the path.' /
+0310    'Press any PF-Key to stop.'
+0320    /*
+0330  IF *PF-KEY NE 'ENTR'
+0340    ESCAPE BOTTOM
+0350  END-IF
+0360  RESET INFOTEXT RESPONSE-CODE
+0370  CALLNAT 'USR6006N' USR6006L EXTENSIONS(*)
+0380  /*
+0390  INPUT (AD=OITL'_' IP=OFF SG=OFF) ///
+0400    'Path for DBID and FNR' /
+0410    '-' (34) //
+0420    'DBID .......' SYSF-DBID   /
+0430    'FNR ........' SYSF-FNR    /
+0440    'PATH .......' SYSF-PATH  (AL=60)  /
+0450    'RESPONSE ...' RESPONSE-CODE    /
+0460    'INFO .......' INFOTEXT /
+0470    'Press any PF-Key to stop.'
+0480  IF *PF-KEY NE 'ENTR'
+0490    ESCAPE BOTTOM
+0500  END-IF
+0510
+0520END-REPEAT
+0530/*
+0540END

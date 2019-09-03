@@ -1,0 +1,64 @@
+0010*
+0020* Program .. V62MASK
+0030* Library .. SYSEXV
+0040* Version .. 6.2
+0050*
+0060* Functionality: Show new MASK option for a date in Julian format
+0070************************************************************************
+0080*
+0090DEFINE DATA
+0100LOCAL
+0110  1 #FIELD     (A07)
+0120  1 #MESSAGE   (A20)
+0130  1 #TEXT1     (A32) INIT<'No Julian date.'>
+0140  1 #DATE      (D)
+0150END-DEFINE
+0160OPTIONS MASKCME=ON       /* only years from 1582 - 2699 allowed
+0170*
+0180FORMAT KD=ON
+0190SET KEY PF3  NAMED 'Exit'
+0200        PF12 NAMED 'Canc'
+0210*
+0220#FIELD := '3652002'
+0230*
+0240*
+0250REPEAT
+0260*
+0270  IF #FIELD = MASK (JJJYYYY)
+0280    MOVE EDITED #FIELD TO #DATE (EM=JJJYYYY)
+0290    MOVE EDITED #DATE (EM=DD.MM.YYYY) TO #MESSAGE
+0300  ELSE
+0310    MOVE #TEXT1 TO #MESSAGE
+0320  END-IF
+0330*
+0340*
+0350  INPUT (IP=OFF)
+0360   01T *TIMX  (AD=OTD)
+0370   21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0380   70T *DATX  (DF=L AD=OTD)
+0390   /
+0400   01T 'User'
+0410   06T *USER  (AD=OILT)
+0420   29T '- New MASK option -'(I)
+0430   64T 'Program'
+0440   72T *PROGRAM (AD=OI)
+0450   ///
+0460   02T 'Julian date format for MASK option'(I)
+0470   ///
+0480   15T 'Enter date:' #FIELD  (AD=MIT)
+0490   ////
+0500   02T 'Check text string' #FIELD (AD=OI) 'with'
+0510       'MASK(JJJYYYY)'(I) ':' #MESSAGE (AD=OD)
+0520   ///
+0530   02T 'Note: Correct years are 1582 - 2699.'
+0540   / / / /
+0550*
+0560   IF *PF-KEY ='PF3'
+0570     ESCAPE BOTTOM
+0580   END-IF
+0590   IF (*PF-KEY = 'PF12' OR= 'CLR')
+0600  CALLNAT 'UTILSTOP'
+0610  END-IF
+0620END-REPEAT
+0630*
+0640END

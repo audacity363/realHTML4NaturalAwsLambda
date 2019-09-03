@@ -1,0 +1,15 @@
+0010&H View VTOC
+0020&L
+0030&L
+0040#Zweck@    : Listet die VTOC einer bestimmten Platte.
+0050&L
+0060#System@   : z/OS, z/VSE, BS2000/OSD.
+0070&L
+0080&L
+0090#Anwendung@: Die Informationen, die dieser View liefert, entsprechen
+0100             denen, die das BS2000 Kommando
+0110             '/FSTAT <dsname>,VOL=<volser>'  bzw.
+0120             '/SHOW-FILE-ATTRIBUTES FILE-NAME=<dsname>,SELECT=
+0130               BY-ATTRIBUTES(VOLUME=<volser>)' ausgibt.
+0140&L
+0150#Anmerkung@:

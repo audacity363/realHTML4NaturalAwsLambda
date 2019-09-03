@@ -1,0 +1,35 @@
+0010* ------------------------------------------------------
+0020* Library SYSEXBAT
+0030* Batch Mode Examples
+0040*
+0050*   Example Program  Short Description
+0060*   ---------------  -----------------------------
+0070*   EJECTON          Page ejection on
+0080*   EJECTOFF         Page ejection off
+0090*   ERROR1           Error handling (CC)
+0100*   ERROR2           Error handling (CC)
+0110*   ERROR3           Error handling (CC)
+0120*   HIDESHOW         Hide/show input data
+0130*   KEYDELIM         Keyword delimiter mode
+0140*   MESSAGE          Message line
+0150*   NOERASE          Windows with INPUT NO ERASE
+0160*   PARAM            Output parameters
+0170*   PFKEY            Function keys
+0180*   RECCONT          Record continuation lines
+0190*   RECSUPP          Record suppression
+0200*   REINPUT          REINPUT feature
+0210*   STACK            Stack processing
+0220*   WINDOW           Windows
+0230*   ---------------  -----------------------------
+0240
+0250
+0260The programs/dialogs in library SYSEXBAT are using the user exits:
+0270
+0280 USR1002  Save and restore Natural environment parameters
+0290 USR1052  Send a command to the operating system
+0300 USR1053  Get the value of an environment variable
+0310
+0320
+0330Therefore, before you invoke the programs/dialogs of library SYSEXBAT,
+0340please set the library SYSEXT as steplib.
+0350

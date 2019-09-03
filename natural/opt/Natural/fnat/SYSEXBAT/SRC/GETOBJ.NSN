@@ -1,0 +1,36 @@
+0010* return a XML Entity with an specific Child Entity
+0020* set to an given Value
+0030Define Data parameter
+00401 getXmlObject   ( A) dynamic            /* return Value
+00501 xmlFile        ( A) dynamic            /* XML String to be searched
+00601 objName        ( A) dynamic by value   /* Name of Parent Entity
+00701 entName        ( A) dynamic by value   /* Name of Child Entity
+00801 entValue       ( A) dynamic by value   /* Value of Child Entity
+0090Local
+0100*
+01101 exObj          ( A) dynamic
+01201 exName         ( A) dynamic
+01301 nextStart      (I4)
+01401 next2Start     (I4)
+0150end-define
+0160*
+0170
+0180* reset getXmlObject                        /* fill dynamic variable with blanks up to actual *length
+0190* getXmlObject := " "                       /* fill dynamic variable with one blank
+0200* compress ' ' into getXmlObject leaving no /* empty dynamic variable, do not release memory -> *length = 0
+0210  reduce dynamic getXmlObject to 0          /* empty dynamic variable, and release memory
+0220*
+0230  nextStart := 1
+0240  callnat "GETENT" exObj nextStart xmlFile objName
+0250*
+0260  repeat While exObj <> " "
+0270     next2Start := 1
+0280     callnat "GETENT" exName next2Start exObj entName
+0290     If exName = entValue Then
+0300       getXmlObject := exObj
+0310       escape routine
+0320     End-If
+0330     callnat "GETENT" exObj nextStart xmlFile objName
+0340  end-repeat
+0350*
+0360END

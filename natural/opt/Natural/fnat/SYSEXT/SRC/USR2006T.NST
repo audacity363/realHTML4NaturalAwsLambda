@@ -1,0 +1,90 @@
+0010Get information from error message collector
+0020.
+0030Documentation ......... USR2006T    /*  Text object
+0040Interface ............. USR2006N    /*  Cataloged subprogram
+0050Example Program ....... USR2006P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR MESSAGES
+0100.
+0110Keywords .............. ERROR, *ERROR-NR
+0120.
+0130Function .............. Get detailed information of errors
+0140.
+0150.
+0160Parameters
+0170----------
+0180Define the following parameters with the DEFINE DATA statement:
+0190.
+020001 PARM-1                               control block
+0210  02 INDEX                 (I4)         ERROR TO BE READ
+0220                                        -2 set last message to 0
+0230                                        -1 mark all errors to be cleared
+0240                                         0 read last message
+0250                                         ix read message no. ix
+0260  02 RESPONSE              (I4)         RESPONSE CODE
+0270                                            0 ok
+0280                                         4131 message does not exist
+0290*
+030001 PARM-2                               error information
+0310  02 NUMBER                (I4)         ERROR NUMBER
+0320  02 LINE                  (I4)         SOURCE LINE WHERE ERROR OCCURED
+0330  02 PROGRAM               (A32)        OBJECT WITH ERROR
+0340  02 LIBRARY               (A32)        LIBRARY WHERE OBJECT WAS LOADED
+0350                                        FROM
+0360  02 DBID                  (I4)         DB WHERE OBJECT WAS LOADED FROM
+0370  02 FNR                   (I4)         FILE WHERE OBJECT WAS LOADED
+0380  02 TIME                  (T)          TIME OF ERROR
+0390  02 OBJTYPE               (A11)        OBJECT TYPE
+0400  02 LANGUAGE              (I4)         LANGUAGE CODE
+0410  02 LEVEL                 (I4)         OBJECT LEVEL
+0420  02 FILLER                (B1)         FILLER BYTE
+0430  02 MC                    (B1)         MESSAGE CLASS:
+0440                                        00 - ERROR
+0450                                        01 - WARNING
+0460                                        02 - MESSAGE
+0470  02 EC                    (B1)       /*ERROR CLASS:
+0480                                      /*00 - SYSTEM
+0490                                      /*00 - USER
+0500  02 ET                    (B1)       /*ERROR TYPE*/
+0510                                      /*00 - RUNTIME
+0520                                      /*01 - SYNTAX
+0530                                      /*02 - COMMAND TIME
+0540                                      /*03 - TERMINATION
+0550                                      /*04 - PROGRAM TERMINATION
+0560                                      /*05 - REMOTE
+0570*
+058001 PARM-3                  (A253)     /*message text
+0590.
+0600Interface Call
+0610--------------
+0620Use the interface with the CALLNAT statement:
+0630.
+0640CALLNAT 'USR2006N' PARM-1 PARM-2 PARM-3
+0650.
+0660.
+0670Using the Application Programming Interface:
+0680--------------------------------------------
+0690Copy the subprogram USR2006N to the library SYSTEM or the steplib
+0700library respectively, or to the required library.
+0710.
+0720.
+0730PARM-1 is a control block, with
+0740  INDEX      - number of error information to be read
+0750               if 'USR2006N' is called with INDEX = 0, the very last
+0760               message will be read.
+0770               if 'USR2006N' is called with INDEX = -1, all errors
+0780               will be marked to be cleared. It means, that you are
+0790               still able to read them again, but with the next error
+0800               all messages will be really erased.
+0810               if 'USR2006N is called with INDEX = - 2, the very last
+0820               message will be set to 0.
+0830  RESPONSE   - zero, if read was successful
+0840               4131, message does not exist/has not been found
+0850.
+0860PARM-2 is the error information fields
+0870.
+0880PARM-3 is the message text
+0890.
+0900***** End of Description *****

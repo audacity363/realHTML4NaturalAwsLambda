@@ -1,0 +1,13 @@
+0010**DV          0014     V1TCB                             TCB
+0020**DD          0017N 3.0 2ERROR-CODE
+0030**DD          0018A  58 2ERROR-TEXT
+0040**DD          0019N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0020A   8 2JOB-NAME
+0060**DD          0021B   4 2TCB-ADDRESS
+0070**DD          0022B   4 2RB-CHAIN
+0080**DD          0023B   4 2DEB-CHAIN
+0090**DD          0024B   4 2LLS-CHAIN
+0100**DD          0025B   4 2COMPLETION-CODE
+0110**DD          0026B   4 2MOTHER-TCB
+0120**DD          0027B   4 2SISTER-TCB
+0130**DD          0028B   4 2DAUGHTER-TCB

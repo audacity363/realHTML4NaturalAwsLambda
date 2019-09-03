@@ -1,0 +1,13 @@
+0010**DV          0014     V1VTOC-UPDATE                     VTOC-UPDATE
+0020**DD          0017N 3.0 2ERROR-CODE
+0030**DD          0018A  58 2ERROR-TEXT
+0040**DD          0019N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0020A  10 2SYSTEM-MESSAGE-CODE
+0060**DD          0021A  54 2DSNAME
+0070**DD          0022A   6 2VOLSER
+0080**DD          0023A  54 2NEWNAME
+0090**DD          0024A   8 2FUNCTION
+0100**DD          0025B   2 2SYSTEM-CODE
+0110**DD          0026A   7 2ERASE-OPTION
+0120**DD          0027A   1 2ERASE-RANGE
+0130**DD          0028A   8 2PASSWORD

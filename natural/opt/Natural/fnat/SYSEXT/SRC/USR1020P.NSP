@@ -1,0 +1,45 @@
+0010/*  ADD USER SHORT ERROR MESSAGE TO NATURAL SYSTEM FILE FUSER
+0020/*  ATTENTION:   NATURAL SECURITY CHECK INTENTIONALLY BYPASSED
+0030/*  This program serves as an example how to design a user-defined
+0040/*  program to call 'USR1020N'
+0050/**********************
+0060DEFINE DATA LOCAL
+0070  01 PARAM
+0080     02 LIBRARY      (A08)   /* Must not be blank
+0090     02 ERROR-NUMB   (A04)   /* 1 thru 9999
+0100     02 INPUT-TEXT   (A79)   /* Must not be blank
+0110     02 LANG-NUMB    (I01)   /* 1 thru 60
+0120     02 RESPONSE     (N04)   /* Status code
+0130     02 INFOTEXT     (A65)   /* Status text
+0140  01 LAYOUT-CHECK    (A01)   /* Check SYSERR LAYOUT for LIBRARY
+0150END-DEFINE
+0160/*
+0170/* Set up some defaults:
+0180/*
+0190SET KEY ALL
+0200MOVE 'SYSTEM'   TO LIBRARY         /* Any valid library
+0210MOVE 1          TO ERROR-NUMB      /* For this error number
+0220MOVE *LANGUAGE  TO LANG-NUMB       /* For current language number
+0230MOVE 'X'        TO LAYOUT-CHECK    /* Check SYSERR LAYOUT for LIBRARY
+0240/*
+0250REPEAT
+0260  /*
+0270  INPUT (AD=MITL'_' IP=OFF ZP=ON SG=ON ) WITH TEXT INFOTEXT
+0280    'Add User Short Error Message to Natural System File FUSER:' (I) /
+0290    '-' (58) (I) //
+0300    'Library .......' LIBRARY        /
+0310    'Error no. .....' ERROR-NUMB     /
+0320    'Language ......' LANG-NUMB      /
+0330    'Layout check ..' LAYOUT-CHECK   /
+0340    'Status ........' RESPONSE   (AD=OI) /
+0350    'Short text ....' INPUT-TEXT (AD=MIW AL=65) ///
+0360    'Press any PF-Key to stop.'
+0370    /*
+0380  IF *PF-KEY NE 'ENTR'
+0390    ESCAPE BOTTOM
+0400  END-IF
+0410  /*
+0420  CALLNAT 'USR1020N' PARAM LAYOUT-CHECK
+0430  /*
+0440END-REPEAT
+0450END

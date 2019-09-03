@@ -1,0 +1,18 @@
+0010** Example 'FNDCPL': FIND (using coupled files)
+0020** NOTE: Adabas files must be physically coupled when using the
+0030**       COUPLED clause without the VIA clause.
+0040************************************************************************
+0050DEFINE DATA LOCAL
+00601 EMPLOY-VIEW VIEW OF EMPLOYEES
+0070  2 NAME
+00801 VEHIC-VIEW VIEW OF VEHICLES
+0090  2 MAKE
+0100END-DEFINE
+0110*
+0120FIND EMPLOY-VIEW WITH CITY = 'FRANKFURT'
+0130     AND COUPLED TO
+0140     VEHIC-VIEW WITH MAKE = 'VW'
+0150  DISPLAY NOTITLE NAME
+0160END-FIND
+0170*
+0180END

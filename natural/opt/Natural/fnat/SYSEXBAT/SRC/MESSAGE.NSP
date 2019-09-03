@@ -1,0 +1,17 @@
+0010/* ---------------------------------------------------------------------
+0020/* Program:        MESSAGE
+0030/* Library:        SYSEXBAT (Batch mode samples)
+0040/*
+0050/* Functionality:  Message line
+0060/*
+0070/* Description:    A given message line appear in the batch output file
+0080/* ---------------------------------------------------------------------
+0090DEFINE DATA LOCAL
+01001 #name (A10)
+0110END-DEFINE
+0120**
+0130INPUT WITH TEXT "This is the message line" #name
+0140**
+0150DISPLAY #name
+0160**
+0170END

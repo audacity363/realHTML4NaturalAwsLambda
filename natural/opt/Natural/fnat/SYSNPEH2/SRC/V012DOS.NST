@@ -1,0 +1,13 @@
+0010&H View READ-SPOOL
+0020&L
+0030&L
+0040#Zweck@    : Lesen des SPOOL-SYSOUT.
+0050&L
+0060#System@   : z/OS, z/VSE.
+0070&L
+0080&L
+0090#Anwendung@: Dieser View liest Datensaetze aus POWER.
+0100&L
+0110#Anmerkung@: Benutzen Sie den View SPOOL-QUEUE zur Anzeige der
+0120             SPOOL-Datei, bevor Sie READ-SPOOL ausfuehren.
+0130

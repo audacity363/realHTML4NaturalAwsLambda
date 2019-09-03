@@ -1,0 +1,216 @@
+0010/* USR2018P - Get Natural Object Directory Information
+0020/*******************************************************************
+0030/*  This program serves as example how to design a user-defined
+0040/*  program to call 'USR2018N'
+0050/*******************************************************************
+0060DEFINE DATA LOCAL
+00701 #CBDIR               (B126)
+00801 REDEFINE #CBDIR
+0090  2 FILLER             1X
+0100  2 #CBDIR-OPT2        (A01)
+0110  2 #CBDIR-RSP1        (I02)
+0120  2 #CBDIR-RSP2        (I02)
+0130  2 FILLER             20X
+0140  2 #CBDIR-NAME        (A96)
+0150  2 REDEFINE #CBDIR-NAME
+0160    3 #CBDIR-NLIB      (A08)
+0170    3 #CBDIR-NNAM      (A08)
+0180  2 #CBDIR-DBID        (B02)
+0190  2 #CBDIR-FNR         (B02)
+0200/*
+02101 #DIR-OB1             (B100/1:4)        /*  saved object directory
+02201 REDEFINE #DIR-OB1
+0230  2 NATVERSM           (A4)              /* internal use; dir version
+0240  2 NATVER             (A4)
+0250  2 NATSM              (A4)
+0260  2 REDEFINE NATSM
+0270    3 NATSMN           (N4)
+0280  2 USERID             (A8)
+0290  2 TID                (A8)
+0300  2 TIME               (A8)
+0310  2 DATE               (A8)
+0320  2 OBJ-TYPE           (A1)              /* Internal object type
+0330                 /*
+0340                 /* Mappings Internal/External Object Type:
+0350                 /*
+0360                 /* 1 INTERNAL-TYPE-TABLE        (A1/1:28)
+0370                 /*   INIT  <'F', 'M', '*', 'X', 'C',       /*  1 -  5
+0380                 /*          'L', 'P', 'U', 'S', 'H',       /*  6 - 10
+0390                 /*          'N', 'Y', 'G', '*', 'R',       /* 11 - 15
+0400                 /*          'Z', 'T', 'A', 'V', H'01',     /* 16 - 20
+0410                 /*          H'02', H'03', H'04', '3', '6', /* 21 - 25
+0420                 /*          '4', 'x','7'                   /* 26 - 28
+0430                 /*         >
+0440                 /* 1 EXTERNAL-TYPE-TABLE        (A1/1:28)
+0450                 /*   CONST <'P', 'M', ' ', ' ', 'G',      /*  1 -  5
+0460                 /*          'L', 'A', ' ', 'S', 'H',      /*  6 - 10
+0470                 /*          'N', 'Y', 'C', '*', 'R',      /* 11 - 15
+0480                 /*          'Z', 'T', 'O', 'V', H'01',    /* 16 - 20
+0490                 /*          H'02', '5', H'04', '3', '6',  /* 21 - 25
+0500                 /*          '4', 'x','7'                  /* 26 - 28
+0510                 /*         >
+0520  2 OBJ-LONGNAME       (A11)
+0530  2 DIR-STATE          (A12)
+0540  2 CREATE-LIB         (A8)
+0550  2 CREATE-OBJ-NAME    (A8)
+0560  2 TERM-USER          (A8)
+0570  2 SA-SIZE            (I4)
+0580  2 REC-SIZE           (I2)
+0590  2 DEV-MODE           (A15)
+0600  2 SAV-CAT-DATE-TIME  (T)
+0610  2 OP-SYSTEM          (A16)
+0620  2 TA-NAME            (A8)
+0630  2 VCS-IAPPLID        (A8)
+0640  2 REDEFINE VCS-IAPPLID
+0650    3 APPL-ID          (B2)
+0660    3 APPL-VER         (B2)
+0670    3 CNTL-VER         (B2)
+0680    3 OBJ-VER          (B2)
+0690  2 AIV-LENGTH         (I4)
+0700  2 BP-SIZE            (I4)
+0710  2 U-SIZE             (I4)
+0720  2 INV-SUBTAB         (I4)
+0730  2 DEF-SUBTAB         (I4)
+0740  2 TURBO-CODE         (A3)
+0750  2 RECAT-POSS         (A3)
+0760  2 OBJ-RELINKED       (A3)
+0770  2 TIMESTMP           (B8)
+0780  2 TURBO-CODE-LEN     (I4)
+0790  2 GDA-SIZE           (I4)
+0800  2 NUM-SUBR           (I4)
+0810  2 NUM-GDA            (I4)
+0820  2 NUM-REP            (I4)
+0830  2 NUM-WFILE          (I4)
+0840/*
+08501 #DIR-OB2             (B100/1:4)        /* cataloged object directory
+08601 REDEFINE #DIR-OB2
+0870  2 NATVERSM           (A4)              /* internal use; dir version
+0880  2 NATVER             (A4)
+0890  2 NATSM              (A4)
+0900  2 REDEFINE NATSM
+0910    3 NATSMN           (N4)
+0920  2 USERID             (A8)
+0930  2 TID                (A8)
+0940  2 TIME               (A8)
+0950  2 DATE               (A8)
+0960  2 OBJ-TYPE           (A1)              /* Internal object type
+0970  2 OBJ-LONGNAME       (A11)
+0980  2 DIR-STATE          (A12)
+0990  2 CREATE-LIB         (A8)
+1000  2 CREATE-OBJ-NAME    (A8)
+1010  2 TERM-USER          (A8)
+1020  2 SA-SIZE            (I4)
+1030  2 REC-SIZE           (I2)
+1040  2 DEV-MODE           (A15)
+1050  2 SAV-CAT-DATE-TIME  (T)
+1060  2 OP-SYSTEM          (A16)
+1070  2 ENDIAN-MODE        (A8)
+1080  2 VCS-IAPPLID        (A8)
+1090  2 REDEFINE VCS-IAPPLID
+1100    3 APPL-ID          (B2)
+1110    3 APPL-VER         (B2)
+1120    3 CNTL-VER         (B2)
+1130    3 OBJ-VER          (B2)
+1140  2 AIV-LENGTH         (I4)
+1150  2 BP-SIZE            (I4)
+1160  2 U-SIZE             (I4)
+1170  2 INV-SUBTAB         (I4)
+1180  2 DEF-SUBTAB         (I4)
+1190  2 TURBO-CODE         (A3)
+1200  2 RECAT-POSS         (A3)
+1210  2 OBJ-RELINKED       (A3)
+1220  2 TIMESTMP           (B8)
+1230  2 TURBO-CODE-LEN     (I4)
+1240  2 GDA-SIZE           (I4)
+1250  2 NUM-SUBR           (I4)
+1260  2 NUM-GDA            (I4)
+1270  2 NUM-REP            (I4)
+1280  2 NUM-WFILE          (I4)
+1290  2 DUMMY              (A20)
+1300  2 GDA-NAME           (A8)
+1310  2 DUMMY2             (A8)
+1320  2 MCG-STRING         (A80)
+13301 SYSTEM-FILE          (A1)
+1340LOCAL
+13501 OBJ-DATE-TIME        (A19)
+13601 SRC-DATE-TIME        (A19)
+13701 #TIME                (A8)
+13801 #DATE                (A10)
+13901 OBJ-NAT-VER          (A10)
+14001 IX                   (I1)
+14101 DB                   (N5)
+14201 FNR                  (N4)
+1430END-DEFINE
+1440/*******************************************************************
+1450SET KEY PF3
+1460ASSIGN #CBDIR-NNAM = *PROGRAM
+1470ASSIGN #CBDIR-NLIB = *LIBRARY-ID
+1480RESET SYSTEM-FILE
+1490/*
+1500INPUT  (AD=MILT)
+1510  / 'Name .........' #CBDIR-NNAM
+1520  / 'Library ......' #CBDIR-NLIB
+1530  / 'System-File ..' SYSTEM-FILE '(U/N)'
+1540  / 'DBID .........' DB
+1550  / 'FNR ..........' FNR
+1560IF *PF-KEY = 'PF3' THEN ESCAPE ROUTINE END-IF
+1570/*
+1580IF DB = 0 THRU 65536
+1590  COMPUTE #CBDIR-DBID = DB
+1600END-IF
+1610/*
+1620IF FNR = 0 THRU 5000
+1630  COMPUTE #CBDIR-FNR = FNR
+1640END-IF
+1650ASSIGN #CBDIR-OPT2 = 'E'   /* Read exactly specified object
+1660CALLNAT 'USR2018N' #CBDIR #DIR-OB1 (*) #DIR-OB2 (*) SYSTEM-FILE
+1670/*
+1680IF #CBDIR-RSP1 NE 0 AND #CBDIR-RSP2 NE 0
+1690  WRITE 'Object does not exist.'
+1700END-IF
+1710/*
+1720IF #CBDIR-RSP1 EQ 0
+1730  WRITE (AD=LI)
+1740    / 'Information about Object Source'
+1750    / 3T 'Saved on ..............' #DIR-OB1.SAV-CAT-DATE-TIME (EM=YYYY-MM-DD' 'HH:II:SS)
+1760    / 3T 'User ID ...............' #DIR-OB1.USERID
+1770    / 3T 'Object Type ...........' #DIR-OB1.OBJ-TYPE
+1780                                   #DIR-OB1.OBJ-LONGNAME
+1790    / 3T 'Programming Mode ......' #DIR-OB1.DEV-MODE
+1800    / 3T 'Object size (Bytes) ...' #DIR-OB1.SA-SIZE
+1810    / 3T 'Op System .............' #DIR-OB1.OP-SYSTEM
+1820END-IF
+1830/*
+1840IF #CBDIR-RSP2 EQ 0
+1850  COMPRESS #DIR-OB2.NATVER '.' #DIR-OB2.NATSM
+1860    TO OBJ-NAT-VER LEAVING NO
+1870  WRITE (AD=LI)
+1880    / 'Information about Object Module'
+1890    / 3T 'Cataloged on ..........' #DIR-OB2.SAV-CAT-DATE-TIME (EM=YYYY-MM-DD' 'HH:II:SS)
+1900    / 3T 'User ID ...............' #DIR-OB2.USERID
+1910    / 3T 'Object Type ...........' #DIR-OB2.OBJ-TYPE
+1920                                   #DIR-OB2.OBJ-LONGNAME
+1930    / 3T 'Object size (Bytes) ...' #DIR-OB2.BP-SIZE
+1940    / 3T 'NAT-Version ...........' OBJ-NAT-VER
+1950    / 3T 'Op System .............' #DIR-OB2.OP-SYSTEM
+1960    / 3T 'Endian Mode ...........' #DIR-OB2.ENDIAN-MODE
+1970END-IF
+1980/* ---------------------------------------------------------------------
+1990ASSIGN #CBDIR-OPT2 = 'N'   /* Search objects starting with #CBDIR-NNAM
+2000NEWPAGE
+2010WRITE // 'List of ten objects starting with:' #CBDIR-NNAM /
+2020FOR IX = 1 TO 10
+2030  CALLNAT 'USR2018N' #CBDIR #DIR-OB1 (*) #DIR-OB2 (*) SYSTEM-FILE
+2040  /*
+2050  IF #CBDIR-RSP1 NE 0 AND #CBDIR-RSP2 NE 0
+2060    ESCAPE BOTTOM
+2070  END-IF
+2080  /*
+2090  IF #CBDIR-RSP1 NE 0
+2100    WRITE #CBDIR-NNAM #DIR-OB2.OBJ-LONGNAME
+2110  ELSE
+2120    WRITE #CBDIR-NNAM #DIR-OB1.OBJ-LONGNAME
+2130  END-IF
+2140END-FOR
+2150/*
+2160END

@@ -1,0 +1,72 @@
+0010Convert bits and bytes
+0020.
+0030Documentation ......... USR1028T    /*  Text object
+0040Interface ............. USR1028N    /*  Cataloged subprogram
+0050Example Program ....... USR1028P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATA HANDLING
+0100.
+0110Keywords .............. BIT, BYTE
+0120.
+0130Function .............. This interface converts eight bits into
+0140                        a byte or a byte into eight bits. You
+0150                        can choose how many bytes are to be
+0160                        converted.
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+02301 FUNCTION       (A1)           /* 'I' - byte to bit conversion
+0240                                /* 'Y' - bit to byte conversion
+02501 NUM            (P5)           /* Number of bytes to be converted
+02601 BITS           (A1/1:8,1:nn)  /* Array of bits to be converted
+0270                                /* nn must be less than 4096
+02801 BYTES          (A1/1:nn)      /* Array of bytes to be converted
+02901 RESPONSE       (N4)           /* Error code
+0300.
+0310.
+0320Interface Call
+0330--------------
+0340Use the interface with the CALLNAT statement:
+0350.
+0360CALLNAT 'USR1028N'
+0370         FUNCTION NUM BITS(1:8,1:NUM) BYTES(1:NUM) RESPONSE
+0380.
+0390.
+0400Using the Application Programming Interface:
+0410--------------------------------------------
+0420Copy the subprogram USR1028N to the library SYSTEM or the steplib
+0430library respectively, or to the required library.
+0440.
+0450Description of the parameters:
+0460.
+0470FUNCTION (Input)
+0480  Has to be filled before invoking the interface.
+0490  'I' converts a byte field into single bits and
+0500  'Y' compresses a field of bits into byte representation.
+0510.
+0520NUM (Input)
+0530  Has to be filled before invoking the interface.
+0540  NUM contains the number of bytes to be converted. It
+0550  must be a value between 1 and 65536.
+0560.
+0570BITS (Input/Output)
+0580  BITS contains a field of bits. Each bit is represented
+0590  by '0' or '1'.
+0600.
+0610BYTES (Input/Output)
+0620  BYTES contains a field of bytes in hexadecimal
+0630  representation.
+0640.
+0650RESPONSE (Output)
+0660  Error code:
+0670  0001 - FUNCTION is not 'I' or 'Y'
+0680  0002 - NUM is not between 1 and 65536
+0690  0003 - The field BITS is to small for given NUM
+0700.
+0710.
+0720***** End of Description *****

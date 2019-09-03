@@ -1,0 +1,31 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> SYSOBJH Direct Commands
+0080<Header2> Page 1 of 4
+0090/* <Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110<InputValues>
+0120<InputNames>
+0130<Predecessor>
+0140<Successor>OHTHD002
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170The following Object Handler commands are available:
+0180
+0190DIRECT
+0200  The DIRECT clause may contain all possible NATLOAD, NATUNLD and
+0210  SYSTRANS commands in the original format of these commands. If more
+0220  than one direct command is given, they must be separated with a ';'.
+0230
+0240EXECUTE ( procedure-workplan )
+0250  Executes a Workplan of type PROCEDURE.
+0260
+0270UNLOAD select-clause parameter-setting option-setting
+0280  Unload the objects given in the select clause with the parameters given in
+0290  the parameter setting with the options given in the option setting.
+0300  (parameter-setting and option-setting are optional)
+0310<HelpTextEnd>

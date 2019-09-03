@@ -1,0 +1,21 @@
+0010/*  Display program chain
+0020/*  This program serves as example how to design a user-defined
+0030/*  program to call 'USR0600N'
+0040/*********************
+0050DEFINE DATA LOCAL
+0060  01 #NAMES (A08/10)
+0070  01 #LEVEL (P03/10)
+0080/* It works with any number of occurrences from 1 up to 32:
+0090/*01 #NAMES (A08/32)
+0100/*01 #LEVEL (P03/32)
+0110END-DEFINE
+0120/*********************
+0130/*
+0140CALLNAT 'USR0600N' #NAMES (*) #LEVEL (*)
+0150/*
+0160WRITE TITLE LEFT
+0170 /  'USR0600P --- Display "stacked" NATURAL objects for'
+0180    - ' current *LEVEL:' (I) *LEVEL (AD=I) ///
+0190/*
+0200DISPLAY (ZP=OFF) #NAMES (*) #LEVEL (*)
+0210END

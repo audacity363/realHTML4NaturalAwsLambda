@@ -1,0 +1,17 @@
+0010** Example 'DDAEX1': DEFINE DATA
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #VAR1     (A15)
+00501 #VAR2
+0060  2 #VAR2A  (N4.1) INIT <1111>
+0070  2 #VAR2B  (N6.2) INIT <222222>
+00801 REDEFINE #VAR2
+0090  2 #VAR2C  (A2)
+0100  2 #VAR2D  (A2)
+0110  2 #VAR2E  (A6)
+0120END-DEFINE
+0130*
+0140WRITE NOTITLE '=' #VAR2A / '=' #VAR2B /
+0150              '=' #VAR2C / '=' #VAR2D / '=' #VAR2E
+0160*
+0170END

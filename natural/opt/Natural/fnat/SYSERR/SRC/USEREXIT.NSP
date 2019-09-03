@@ -1,0 +1,24 @@
+0010****NAT22       S
+0020* User may define his own routine  h e r e  .
+0030***************************************************************
+0040* Example:
+0050DEFINE DATA LOCAL
+0060  01 LIN (A52)
+0070END-DEFINE
+0080IF *DATA = 1
+0090  INPUT LIN   /*  Get Parameter, given with Menu Command Line
+0100END-IF
+0110SET CONTROL 'WFL60C13B5/12'
+0120INPUT WITH TEXT LIN
+0130      'This is your program "USEREXIT".' (GRI)
+0140   /
+0150   /  'You may create your own program, ' (GRI)
+0160   /  'then STOW it with name "USEREXIT" in Library "SYSERR".' (GRI)
+0170   /  ' '
+0180   /  'Every time a user will enter "USEREXIT" '  (GRI)
+0190   /  'as a Command within SYSERR Menu Screen,' (GRI)
+0200   /  'this special program will be executed.' (GRI)
+0210   /  'On the STACK, there is the NEXT Command "MENU",' (GRI)
+0220   /  'so that to return to SYSERR Menu.' (GRI)
+0230SET CONTROL 'WB'
+0240END

@@ -1,0 +1,92 @@
+0010Set parameters for EntireX
+0020.
+0030Documentation ......... USR4009T    /*  Text object
+0040Interface ............. USR4009N    /*  Cataloged subprogram
+0050Example Program ....... USR4009P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC
+0100.
+0110Keywords .............. CLIENT, RPC, SERVER
+0120.
+0130Function .............. Set/get parameters for EntireX
+0140                        in an RPC client or server environment.
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+0210       FUNCTION         (A01)     IN:    function,
+0220                                         G= GET, P= PUT
+0230       ENVIRONMENT      (A01)     IN:    environment,
+0240                                         S= SERVER, C= CLIENT, B= BOTH
+0250       COMPRESSLEVEL    (A01)     INOUT: compression level
+0260       ENCRYPTION-LEVEL (I01)     INOUT: encryption level
+0270       ACIVERS          (B01)     OUT:   ACI version used
+0280       RC               (B01)     OUT:   return code, if not equal zero:
+0290                                         contains required ACI version
+0300                                         to set the requested parameter
+0310                                         0   function successfull
+0320                                         6   encryption level requires
+0330                                             ACI version 6
+0340                                         7   compression level requires
+0350                                             ACI version 7
+0360
+0370.
+0380Interface Call
+0390--------------
+0400Use the interface with the CALLNAT statement:
+0410.
+0420CALLNAT 'USR4009N' FUNCTION ENVIRONMENT
+0430                   COMPRESSLEVEL
+0440                   ENCRYPTION-LEVEL
+0450                   ACIVERS RC
+0460.
+0470.
+0480Using the Application Programming Interface:
+0490--------------------------------------------
+0500Copy the subprogram USR4009N to the library SYSTEM or the steplib
+0510library respectively, or to the required library.
+0520.
+0530The interface can be called in two ways:
+0540a) From within a program
+0550CALLNAT 'USR4009N' FUNCTION ENVIRONMENT
+0560                   COMPRESSLEVEL
+0570                   ENCRYPTION-LEVEL
+0580                   ACIVERS RC
+0590b) From command prompt or via STACK, with values for the parameters
+0600Examples:
+0610          USR4009P P,C,ENCRYPTION-LEVEL=1
+0620          USR4009P P,C,,2
+0630          USR4009P P,C,ENCRYPTION-LEVEL=1,COMPRESSLEVEL=6
+0640.
+0650Functionality:
+0660--------------
+0670Set or get EntireX parameters that are supported by the Natural RPC.
+0680The supported EntireX parameters are are marked in the parameter list
+0690above with INOUT.
+0700.
+07101) GET
+0720   The already set values for the EntireX parameters are returned. If
+0730   no PUT has been called before in the Natural session all values are
+0740   zero or blank.
+0750.
+07602) PUT
+0770   The specified values for the EntireX parameters are saved and used
+0780   in all subsequent calls to EntireX.
+0790.
+0800   In command mode you may use the keyword=value notation to set only
+0810   a subset of the EntireX parameters. The values for parameters that
+0820   are not referenced remain unchanged.
+0830.
+0840   Notes:
+0850   - The request is rejected and no values are saved if the ACI version
+0860     used by the current Natural session is not high enough to support
+0870     the requested EntireX parameter.
+0880     In this case the RC contains the required ACI version.
+0890.
+0900   - The EntireX parameters are only honoured by the Natural RPC.
+0910.
+0920***** End of Description *****

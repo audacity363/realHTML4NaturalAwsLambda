@@ -1,0 +1,44 @@
+0010Get dynamic Natural profile parameters at session start
+0020.
+0030Documentation ......... USR4004T    /*  Text object
+0040Interface ............. USR4004N    /*  Cataloged subprogram
+0050Example Program ....... USR4004P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. PROFILE PARAMETERS
+0100.
+0110Keywords .............. DYNAMIC, PARAMETER, PROFILE
+0120.
+0130Function .............. Retrieve dynamic Natural profile parameters
+0140                        Hint: Only if the Natural start-up doesn't get
+0150                        an error, all specified dynamic profile
+0160                        parameters will be effectively interpreted.
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+0230   1 Return-Code        (I4)          /* 0  = OK
+0240                                      /* 4  = Dynamic parameter string
+0250                                              too long
+0260                                      /* 16 = invalid number of
+0270                                              parameters
+0280   1 Profile-Parameters (A) Dynamic   /* filled if P-Return-Code = 0
+0290.
+0300.
+0310Interface Call
+0320--------------
+0330Use the interface with the CALLNAT statement:
+0340.
+0350CALLNAT 'USR4004N'  P-Return-Code  P-Profile-Parameter
+0360.
+0370.
+0380Using the Application Programming Interface:
+0390--------------------------------------------
+0400Copy the subprogram USR4004N to the library SYSTEM or the steplib
+0410library respectively, or to the required library.
+0420.
+0430.
+0440***** End of Description *****

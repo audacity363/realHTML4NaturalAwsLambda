@@ -1,0 +1,274 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Utilities
+0030*
+0040*        NAT-LIB
+0050*
+0060* DESCRIPTION
+0070*               This Program returnes the Natual Libraries of
+0080*               FUSER or FNAT
+0090*
+0100* AUTHOR        SAG   05.10.99
+0110*
+0120* Version       8.3
+0130*
+0140* Copyright (c) 1999-2016 Software AG, Germany.  All rights reserved.
+0150*
+0160* HISTORY
+0170* USER    DATE       REASON
+0180* ------+----------+----------------------------------------------
+0190*       !          !
+0200* ------+----------+----------------------------------------------
+0210*
+0220DEFINE DATA
+0230* ------------------------------------------- standard PDA for HTTP Api
+0240PARAMETER USING W3PARM
+0250* -------------------------------------------- definitions for HTTP Api
+0260LOCAL  USING W3CONST
+0270LOCAL  USING W3PINFO
+0280* ---------------------------------------------- parameter for USR1055N
+0290LOCAL USING USR-MSG   /* Data for message exchange
+0300LOCAL USING USR-FLD   /* Description of the field in error
+0310LOCAL
+03201 V                  (I01)  CONST <100>
+03301 RET_CODE           (I04)
+0340LOCAL
+03501 USR1054L
+0360  2 OBJECT-KEY
+0370    3 SYSTEM-FILE    (A01)
+0380    3 LIBRARY-FROM   (A09)
+0390    3 LIBRARY-TO     (A09)
+0400/*
+0410  2 INPUTS
+0420    3 OPT-ACCESS     (A01)
+0430    3 OPT-KIND       (A01)
+0440    3 OPT-SCROLL     (A01)
+0450    3 OPT-WILDCARD   (A01)
+0460    3 OPT-ASTERISK   (A01)
+0470    3 OPT-AMOUNT     (I02)
+0480/*
+0490  2 INPUT-OUTPUTS
+0500    3 INT-HANDLE     (I04)
+0510    3 NEXT-LIB       (A08)
+0520  2 OUTPUTS
+0530    3 RETURNED       (I02)
+0540    3 LIST-LIB       (A08/1:V)
+0550    3 LIST-KIND      (A01/1:V)
+0560/*
+05701 USR1054N
+0580  2 VERSION          (I01)     INIT <2>
+0590  2 V1-NSC-CKECK     (A01)
+0600  2 V2-DBID          (N05)
+0610  2 V2-FNR           (N04)
+0620  2 V2-PSW           (A08)
+0630  2 V2-CIP           (N08)
+06401 REDEFINE USR1054N
+0650  2 EXTENDED-PARMS
+0660    3 EXTENDED-DATA  (A01/1:27)
+0670* ----------------------------------------------------- local parameter
+06801 TYPE                (A001)
+06901 IX                  (I004)
+0700* -------------------------------------------------- parmeter W3READENV
+07101 #LEN                (I004) INIT <0>
+0720*
+07301 #VALUE2             (A) DYNAMIC
+07401 #VALUE              (A) DYNAMIC
+0750* --------------------------------------------------- output generation
+07601 OTYP                (A032)
+07701 OUTNUM              (A008)
+07801 REDEFINE OUTNUM
+0790  2  NUMOUT           (N008)
+0800* --------------------------------------------------- parameter W3FREE
+08101 #W3COUNT            (I004)
+08201 #W3COUNT-MAX        (I004)
+08301 #W3FREE             (I004)
+0840* ------------------------------------------------- internal parameter
+08501 #COL                (   L)
+08601 II                  (I004)
+08701 #FIRST              (N008) INIT <0>
+08801 #COUNT              (N008) INIT <9999999>
+08901 #OUTLINE            (N008) INIT <0>
+09001 #SOURCELINE         (N008) INIT <0>
+0910* ---------------------------------------------------- set exprire
+09201 #EXPIRES            (A029)
+09301 REDEFINE #EXPIRES
+0940  2 RDATE             (A017)
+0950  2 RTIME             (A008)
+0960  2 RZONE             (A004)
+09701 ATIME               (   T)
+09801 ADATE               (   D)
+09901 #ADDDAY             (I004) INIT <0>
+10001 LANG                (I004)
+1010END-DEFINE
+1020* ---------------------------------------------------- error handling
+1030ON ERROR
+1040  PERFORM W3ERROR ##W3ERROR
+1050  PERFORM W3END ##RPC
+1060  ESCAPE ROUTINE
+1070END-ERROR
+1080* ======================================================== Main Program
+1090* ------------------------------------------------------- init HTML API
+1100PERFORM W3INIT ##RPC
+1110* --------------------------------------------- Library to be displayed
+1120*
+1130PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC 'FNAT' " " #VALUE
+1140IF *LENGTH(#VALUE) NE 0 THEN
+1150  SYSTEM-FILE  := 'N'
+1160ELSE
+1170  SYSTEM-FILE  := 'U'
+1180END-IF
+1190*
+1200PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC 'START' " " #VALUE
+1210IF *LENGTH(#VALUE) EQ 0 THEN
+1220  LIBRARY-FROM := '*        '
+1230ELSE
+1240  LIBRARY-FROM := #VALUE
+1250  EXAMINE LIBRARY-FROM TRANSLATE INTO UPPER
+1260END-IF
+1270* ---------------------------------------- Start from this Line Number
+1280PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "FIRST" " " #VALUE
+1290IF *LENGTH(#VALUE) GT 0 AND #VALUE IS (N8) THEN
+1300  #FIRST := VAL(#VALUE)
+1310ELSE
+1320  #FIRST := 0
+1330END-IF
+1340* ------------------------------------------ Read this ammount of Lines
+1350PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "COUNT" " " #VALUE
+1360IF *LENGTH(#VALUE) GT 0 AND #VALUE IS (N8) THEN
+1370  #COUNT := VAL(#VALUE)
+1380ELSE
+1390  #COUNT := 9999999
+1400END-IF
+1410* ------------------------------------------ Set expire Date
+1420PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "EXPIRE" "P" #VALUE
+1430IF *LENGTH(#VALUE) GT 0 AND #VALUE IS (N8) THEN
+1440  IF #VALUE IS (N8) THEN
+1450    #ADDDAY := VAL(#VALUE)
+1460  END-IF
+1470*
+1480  ADATE := *DATX + #ADDDAY
+1490  ATIME := *TIMX
+1500  LANG  := *LANGUAGE
+1510   *LANGUAGE := 1
+1520  MOVE EDITED ADATE (EM=NNN', 'DD' 'LLL' 'YYYY) TO RDATE
+1530  MOVE EDITED ATIME (EM=HH:II:SS) TO RTIME
+1540  MOVE " GMT" TO RZONE
+1550   *LANGUAGE := LANG
+1560END-IF
+1570* --------------------------------------------- Set type of return Page
+1580PERFORM W3CONTENT-TYPE 'text/html'
+1590* ------------------------------------------- Set head of the HTML page
+1600#VALUE := "<!DOCTYPE 'HTML PUBLIC -//W3C//DTD HTML 3.2//EN'>"
+1610IF #ADDDAY > 0 THEN
+1620  COMPRESS #VALUE '<HTML><HEAD>' ##HTTP_NEWLINE
+1630    '<META HTTP-EQUIV="Expires" CONTENT="' #EXPIRES'">' ##HTTP_NEWLINE
+1640    '<TITLE>' INTO #VALUE LEAVING NO
+1650ELSE
+1660  COMPRESS #VALUE '<HTML><HEAD><TITLE>' INTO #VALUE LEAVING NO
+1670END-IF
+1680*
+1690* --------------------------------- Page heading and start output table
+1700IF SYSTEM-FILE = 'N' THEN
+1710  COMPRESS FULL #VALUE 'List Natural System Libraries</TITLE>'-
+1720    '<META HTTP-EQUIV="Content-Type" '-
+1730    'CONTENT="text/html; charset=iso-8859-1"></HEAD>'
+1740    ##HTTP_NEWLINE '<BODY BGCOLOR="#FFFFFF"><P>&nbsp;'-
+1750    "<H2 ALIGN='CENTER'><FONT COLOR='NAVY'>"-
+1760    'List Natural System Libraries</FONT></H2>'-
+1770    "<BR><TABLE WIDTH='100%' BORDER='0' CELLPADDING='5' CELLSPACING='3'>"
+1780    ##HTTP_NEWLINE '<TR BGCOLOR="#999999"><TH>FNAT'
+1790    '- Start Value: ' LIBRARY-FROM " </TH></TR>" ##HTTP_NEWLINE
+1800    INTO #VALUE LEAVING NO
+1810ELSE
+1820  COMPRESS FULL #VALUE 'List Natural User Libraries</TITLE>'-
+1830    '<META HTTP-EQUIV="Content-Type" '-
+1840    'CONTENT="text/html; charset=iso-8859-1"></HEAD>'
+1850    ##HTTP_NEWLINE '<BODY BGCOLOR="#FFFFFF"><P>&nbsp;'-
+1860    "<H2 ALIGN='CENTER'><FONT COLOR='NAVY'>"-
+1870    'List Natural User Libraries</FONT></H2>'-
+1880    "<BR><TABLE WIDTH='100%' BORDER='0' CELLPADDING='5' CELLSPACING='3'>"
+1890    ##HTTP_NEWLINE '<TR BGCOLOR="#999999"><TH>FUSER'
+1900    '- Start Value: ' LIBRARY-FROM " </TH></TR>" ##HTTP_NEWLINE
+1910    INTO #VALUE LEAVING NO
+1920END-IF
+1930PERFORM W3TEXTDYNAMIC #VALUE
+1940* ------------------------------------------------- Initialize URS1055N
+1950LIBRARY-TO   := '        '
+1960OPT-KIND     := 'A'
+1970OPT-SCROLL   := 'D'
+1980OPT-AMOUNT   := V
+1990OPT-ACCESS := 'O'    /* Open
+2000/*
+2010REPEAT
+2020  /*
+2030  CALLNAT 'USR1054N' USR1054L  USR1054N.EXTENDED-PARMS
+2040    NAD-MSG   NAD-FLD
+2050  /*
+2060  OPT-ACCESS := 'R'    /* Read
+2070  /*
+2080* --------------------------------------------- Return library objects
+2090  FOR IX = 1 TO RETURNED
+2100    ADD 1 TO #SOURCELINE
+2110* ------------------------------------------------- Display this 'page'
+2120    IF #SOURCELINE >= #FIRST AND #OUTLINE <= #COUNT THEN
+2130      IF LIST-LIB(IX) NE " " THEN
+2140        ADD 1 TO #OUTLINE
+2150* --------------------------------------- Create link to display source
+2160        IF #COL = TRUE THEN
+2170          #VALUE2 := "<TR BGCOLOR='#CCCCCC'><TD>"
+2180          #COL := FALSE
+2190        ELSE
+2200          #VALUE2 := "<TR><TD>"
+2210          #COL := TRUE
+2220        END-IF
+2230        /*
+2240        COMPRESS  #VALUE2 "<A HREF='NAT-DIR?LIB=" LIST-LIB(IX)
+2250          "'>" LIST-LIB(IX) "</A></TD></TR>" INTO #VALUE LEAVING NO
+2260        PERFORM W3TEXTLINEDYNAMIC #VALUE
+2270        /*
+2280        PERFORM W3COUNTER #W3COUNT #W3COUNT-MAX #W3FREE
+2290        IF #W3FREE < 1500 THEN
+2300          #COUNT := #OUTLINE - 1
+2310        END-IF
+2320      END-IF
+2330    END-IF
+2340  END-FOR
+2350* -------------------------------------------- exit if an error occured
+2360  IF MSG-NR NE 0 THEN
+2370    ESCAPE BOTTOM
+2380  END-IF
+2390END-REPEAT
+2400* ----------------------------------------------------- close USR1055N
+2410OPT-ACCESS := 'C'    /* Close
+2420CALLNAT 'USR1054N' USR1054L  USR1054N.EXTENDED-PARMS NAD-MSG NAD-FLD
+2430* ------------------------------------------------- close output table
+2440COMPRESS "</TABLE><BR>" ##HTTP_NEWLINE INTO #VALUE
+2450* ------------------------ Output to large, create 'next pages' index
+2460IF #COUNT < #OUTLINE OR #FIRST NE 0 THEN
+2470  COMPRESS #VALUE '<P ALIGN="CENTER"><I>Next Pages: ' INTO #VALUE
+2480  FOR II = 1 TO #SOURCELINE STEP #COUNT
+2490    NUMOUT := II
+2500    IF  SYSTEM-FILE  = 'N' THEN
+2510      #VALUE2 := "FNAT&"
+2520    ELSE
+2530      RESET #VALUE2
+2540    END-IF
+2550    COMPRESS #VALUE "<A HREF='NAT-LIB?" #VALUE2 "FIRST=" II
+2560      "&COUNT=" #COUNT '">' II
+2570      "</A>" ##HTTP_NEWLINE INTO #VALUE LEAVING NO
+2580  END-FOR
+2590  COMPRESS #VALUE '</I><BR>&nbsp;' ##HTTP_NEWLINE INTO #VALUE LEAVING NO
+2600END-IF
+2610* -------------------------- Display current time/date and program name
+2620* ------------------------------------------------- and close HTML page
+2630PERFORM W3INFO ##W3INFO
+2640COMPRESS #VALUE "<TABLE BORDER='0' WIDTH='100%' CELLSPACING='0' "-
+2650  "CELLPADDING='5'>"
+2660  '<TR BGCOLOR="#00cc66"><TD>' *PROGRAM '&#32;-&#32;' ##W3INFO.LOG-TIME
+2670  "</TD><TD>" #SOURCELINE '&#32;objects found</TD>'
+2680  "<TD ALIGN='RIGHT'>" 'Natural'
+2690  "</TD></TR></TABLE></BODY></HTML>" INTO #VALUE LEAVING NO
+2700PERFORM W3TEXTDYNAMIC #VALUE
+2710* ------------------------------------------------------ close HTTP Api
+2720PERFORM W3END ##RPC
+2730* ================================================================= End
+2740END

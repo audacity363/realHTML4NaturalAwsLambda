@@ -1,0 +1,58 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1028N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060   1 FUNCTION       (A1)          /* 'I' - byte to bit conversion
+0070                                  /* 'Y' - bit to byte conversion
+0080   1 NUM            (P5)          /* Number of bytes to be converted
+0090   1 BITS           (A1/1:8,1:80) /* Array of bits to be converted
+0100   1 REDEFINE BITS
+0110     2 BITS-A8      (A8/1:80)
+0120   1 BYTES          (A1/1:80)     /* Array of bytes to be converted
+0130   1 REDEFINE BYTES
+0140     2 BYTES-B      (B1/1:80)
+0150   1 RESPONSE       (N4)          /* Error code
+0160*
+0170END-DEFINE
+0180*
+0190* Set up some defaults:
+0200*
+0210SET KEY ALL
+0220ASSIGN FUNCTION = 'I'
+0230ASSIGN NUM = 4
+0240MOVE ALL '0' TO BITS(*,*)
+0250ASSIGN BYTES(1) = 'A'
+0260ASSIGN BYTES(2) = 'B'
+0270ASSIGN BYTES(3) = 'C'
+0280ASSIGN BYTES(4) = 'D'
+0290RESET BYTES(5:6)
+0300*
+0310REPEAT
+0320*
+0330  INPUT (AD=MITL'_' IP=OFF)
+0340      'Bit/byte conversion:' (I)
+0350    / '-' (20) (I) /
+0360    / 'Function ..........' FUNCTION
+0370      6X '("I" - byte to bit; "Y" - bit to byte)'
+0380    / 'Number of bytes ...' NUM
+0390    / 'Response ..........' RESPONSE (AD=O)
+0400  /// 'Bytes alpha .......' BYTES(01) 8X BYTES(02) 8X
+0410                            BYTES(03) 8X BYTES(04) 8X
+0420                            BYTES(05) 8X BYTES(06)
+0430    / 'Bytes hex .........' BYTES-B(01) 7X BYTES-B(02) 7X
+0440                            BYTES-B(03) 7X BYTES-B(04) 7X
+0450                            BYTES-B(05) 7X BYTES-B(06)
+0460    / 'Bits ..............' BITS-A8(01) BITS-A8(02) BITS-A8(03)
+0470                            BITS-A8(04) BITS-A8(05) BITS-A8(06)
+0480  /// 'Press any PF-Key to stop.'
+0490*
+0500  IF *PF-KEY NE 'ENTR'
+0510    ESCAPE ROUTINE
+0520  END-IF
+0530*
+0540  CALLNAT 'USR1028N'
+0550    FUNCTION NUM BITS(1:8,1:80) BYTES(1:80) RESPONSE
+0560END-REPEAT
+0570*
+0580END

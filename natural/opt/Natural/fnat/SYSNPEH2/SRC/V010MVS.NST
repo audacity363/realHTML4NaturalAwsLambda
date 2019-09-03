@@ -1,0 +1,12 @@
+0010&H View CATALOG-UPDATE
+0020&L
+0030&L
+0040#Zweck@    : Durchfuehrung von Wartungsfunktionen im Katalog.
+0050&L
+0060#System@   : z/OS, BS2000/OSD.
+0070&L
+0080&L
+0090#Anwendung@: Unter OS/390 stehen z.B. die Funktionen Einrichten und
+0100             Loeschen von Katalogeintraegen zur Verfuegung.
+0110&L
+0120#Anmerkung@:

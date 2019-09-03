@@ -1,0 +1,50 @@
+0010/*  User Exit NCP-REDM: Runtime Action Definition: Default Actions
+0020/***********************************************************************
+0030/*  Description .... This subprogram is invoked by program 'NCP-CE'.
+0040/*                   NCP-CE is the 'Function Editor'. It activates
+0050/*                   the 'Runtime Action Definition' editor when you
+0060/*                   enter 'VG' or 'VL' to validate a new global or
+0070/*                   local function.
+0080/*
+0090/*                   The variables RUNTIME-ACTION(*) and
+0100/*                   RUNTIME-DEFINITION (*) will be used as default
+0110/*                   Runtime Action Definitions for the new global or
+0120/*                   local function.
+0130/*
+0140/*                   After you modified the source, you should STOW it.
+0150/*
+0160/***********************************************************************
+0170DEFINE DATA PARAMETER               /* Calling program is NCP-CE
+0180  01 RUNTIME-ACTION     (A01/1:8)   /* Format/length must be (A01/1:8)
+0190  01 RUNTIME-DEFINITION (A64/1:8)   /* Format/length must be (A64/1:8)
+0200END-DEFINE
+0210/***********************************************************************
+0220/*
+0230/*  Possible runtime actions are:
+0240/*
+0250/*  'V'         Valid. Marks a valid Function having no Runtime Action.
+0260/*  'T'         Text. May be cataloged into the object.
+0270/*  'M'         Move this line to the Command line at runtime.
+0280/*  'C'         Stack Top Command. Will be put to top of NATURAL stack.
+0290/*  'D'         Stack Top Data. Will be put to top of NATURAL stack.
+0300/*  'F'         Fetch. Line contains the Program Name to be FETCHed.
+0310/*  'S'         Stop. NATURAL will issue a STOP statement at runtime.
+0320/*  'E'         Error. Issues a NATURAL runtime error.
+0330/*  'R'         Return Code. Will be put to field RETURN-CODE.
+0340/*  '1' to '9'  Occurrences of RESULT-FIELD.
+0350/*  '*'         Comment. Will not be cataloged into the object.
+0360/*
+0370/*
+0380RUNTIME-ACTION     (01) := 'V'       /* Runtime action 'V'
+0390RUNTIME-DEFINITION (01) := ' '       /* must not have any definitions
+0400/*
+0410/*
+0420/*  An example how to use the parameters:
+0430/*
+0440/*  RUNTIME-ACTION     (01) := '*'
+0450/*  RUNTIME-DEFINITION (01) := 'Default comment for all runtime actions'
+0460/*  RUNTIME-ACTION     (02) := 'R'
+0470/*  RUNTIME-DEFINITION (02) := '9999'
+0480/***********************************************************************
+0490/*
+0500END

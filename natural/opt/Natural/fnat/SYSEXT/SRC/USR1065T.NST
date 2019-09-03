@@ -1,0 +1,68 @@
+0010Preview a report
+0020.
+0030Documentation ......... USR1065T    /*  Text object
+0040Interface ............. USR1065N    /*  Cataloged subprogram
+0050Example Program ....... USR1065P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. REPORTER
+0100.
+0110Keywords .............. +MOD-NAT-8.3.8, PREVIEW, REPORTER
+0120.
+0130Function .............. This interface previews a report.
+0140.
+0150.
+0160Parameters
+0170----------
+0180Define the following parameters with the DEFINE DATA statement:
+0190.
+0200Input ...... REPORT-ID (I4)
+0210                    Report id, as returned by new/open request.
+0220Output ..... RETURN-CODE (I4)
+0230                    Return code. Set to zero if the interface
+0240                    succeeded, otherwise set to a non-zero
+0250                    error code, which can be one of the
+0260                    following:
+0270.
+0280                    -3  : proc not found. Indicates that a
+0290                          procedure in a dynamically-loaded
+0300                          support library cannot be found.
+0310                          Possible cause: version mismatch.
+0320                          (check executable file search path)
+0330.
+0340                    -4  : initialization error. Possible causes:
+0350                             - the interface which initializes
+0360                               the Natural Reporter interface has
+0370                               NOT yet been called
+0380                             - the interface which initializes
+0390                               the Natural Reporter interface
+0400                               was called, but did not succeed
+0410                               (non-zero return code)
+0420                             - the interface which terminates
+0430                               the Natural Reporter interface has
+0440                               been called
+0450.
+0460                    -11 : general error. Indicates non-specific
+0470                          error in dynamically-loaded support
+0480                          library
+0490.
+0500                    -12 : invalid report id
+0510.
+0520                    -99 : unsupported machine class. The reporter
+0530                          runs only under Windows.
+0540.
+0550.
+0560Interface Call
+0570--------------
+0580Use the interface with the CALLNAT statement:
+0590.
+0600CALLNAT 'USR1065N' REPORT-ID RETURN-CODE
+0610.
+0620.
+0630Using the Application Programming Interface:
+0640--------------------------------------------
+0650Copy the subprogram USR1065N to the library SYSTEM or the steplib
+0660library respectively, or to the required library.
+0670.
+0680*****  End of description  *****

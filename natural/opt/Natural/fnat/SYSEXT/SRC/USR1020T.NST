@@ -1,0 +1,91 @@
+0010Add user short error message to FUSER
+0020.
+0030Documentation ......... USR1020T    /*  Text object
+0040Interface ............. USR1020N    /*  Cataloged subprogram
+0050Example Program ....... USR1020P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR MESSAGES
+0100.
+0110Keywords .............. *ERROR-NR, ERROR, FUSER, SYSERR
+0120.
+0130Function .............. Add a new error number to the FUSER
+0140                        system file. After the error number has
+0150                        been added, you can use USR0360N to
+0160                        add message texts for other languages.
+0170.
+0180Parameters
+0190----------
+0200Define the following parameters with the DEFINE DATA statement:
+0210.
+022001 PARM-AREA
+0230   02 LIBRARY      (A08)  /*  Library name
+0240   02 ERROR-NUMBER (A04)  /*  0001 to 9999
+0250   02 INPUT-TEXT   (A79)  /*  Text to be added
+0260   02 LANGUAGE     (I01)  /*  Language number (similar to *LANGUAGE)
+0270   02 RESPONSE     (N04)  /*  Error code
+0280   02 ERROR-TEXT   (A65)  /*  Text for RESPONSE field
+029001 LAYOUT-CHECK    (A01) OPTIONAL /* Check SYSERR LAYOUT for LIBRARY
+0300.
+0310Interface Call
+0320--------------
+0330Use the interface with the CALLNAT statement:
+0340.
+0350CALLNAT 'USR1020N' PARM-AREA
+0360                   LAYOUT-CHECK  /* Optional parameter
+0370.
+0380.
+0390Using the Application Programming Interface:
+0400--------------------------------------------
+0410Copy the subprogram USR1020N to the library SYSTEM or the steplib
+0420library respectively, or to the required library.
+0430.
+0440.
+0450Following variables have to be filled before invoking the interface:
+0460.
+0470LIBRARY
+0480  Fill in the name of the library to which the text belongs to.
+0490.
+0500ERROR-NUMBER
+0510  May be any value from '0001' up to '9999' (alpha-field).
+0520.
+0530INPUT-TEXT
+0540  Text to be added to the Natural System File FUSER.
+0550.
+0560LANGUAGE
+0570  Similar to *LANGUAGE. If LANGUAGE is zero, current contents
+0580  of *LANGUAGE is taken.
+0590.
+0600RESPONSE
+0610  Is negative after text has been added successfully.
+0620  Any positive value indicates an error.
+0630.
+0640ERROR-TEXT
+0650  This serves as explanation to field RESPONSE.
+0660.
+0670LAYOUT-CHECK
+0680  If LAYOUT-CHECK is <blank>, no LAYOUT check will be performed.
+0690  If a layout has been setup with SYSERR for this library, an error
+0700  message may only be modified if it is included in a layout range.
+0710.
+0720.
+0730The subprogram adds the requested user message to the
+0740Natural system file FUSER.
+0750.
+0760RESPONSE indicates the status:
+0770    -1 ........  number has been added
+0780  0002 ........  application missing
+0790  0003 ........  SYS-application not allowed
+0800  0004 ........  1st char of application invalid
+0810  0005 ........  Function disabled by means of SYSERR LAYOUT
+0820  0007 ........  number must be 4 digits numeric
+0830  0008 ........  number 0000 not permitted
+0840  0011 ........  text is missing
+0850  0012 ........  language must be '01' thru '60'
+0860  0013 ........  text already exists
+0870  0014 ........  error number already exists
+0880  0015 ........  text cannot be added
+0890  any other ...  Natural internal error
+0900.
+0910***** End of Description *****

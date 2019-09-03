@@ -1,0 +1,96 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR9171N'.
+0030/***********************************************************************
+0040/*
+0050/*  Client RPC: Set User Id and Password for RPC request
+0060/*
+0070/*  Function ... Set User Id and Password for RPC request if user Id
+0080/*               is not filled *USER is set.
+0090/*  Parameter
+0100/*    INPUT
+0110/*          FUNCTION   (A02)  - 'SP'
+0120/*          USERID     (A32)  - User ID with a length of max. 8 bytes.
+0130/*                              If this is not filled,
+0140/*                              *USER will be used instead.
+0150/*          PASSPHRASE (A128) - user's password phrase in mixed-case.
+0160/*                              There is no validation on Client side.
+0170/*                              If this is required and target Fsec is
+0180/*                              accessible, use NSC--PH  before.
+0190/*
+0200/*
+0210/*
+0220/*    OUTPUT
+0230/*          MSG-TEXT   (A79)  - If PRC is greater 0, a message text is
+0240/*                              returned.
+0250/*          PRC        (N04)  - return value
+0260/*                                0     ok
+0270/*                                4     internal error
+0280/*                               2x     Error in write handling
+0290/*                               3x     Error in read handling
+0300/*                             9999     invalid function code
+0310/*
+0320/***********************************************************************
+0330DEFINE DATA LOCAL
+03401 PARM-USR9171N
+0350  2 FUNCTION            (A02)
+0360  2 PPARM               (A20)
+0370  2 USERID              (A32)
+0380  2 PASS_PHRASE         (A128)
+0390  2 MSG-TEXT            (A79)
+0400  2 PRC                 (N04)
+0410LOCAL
+04201 #A8                   (A08)
+04301 #DATA-128             (A128/1:2)
+04401 #SW_ESCAPE            (L)
+0450END-DEFINE
+0460/*
+0470FORMAT LS=144    /* XL FORMAT
+0480/*
+0490DEFINE WINDOW RPC-CLIENT SIZE 12*65 BASE 5/10
+0500  TITLE ' RPC Client Set User ID and Password Phrase' CONTROL SCREEN
+0510/*
+0520SET KEY ALL
+0530SET CONTROL 'L'
+0540PARM-USR9171N.FUNCTION := 'SP'
+0550/*
+0560REPEAT
+0570/*
+0580  IF *DATA > 0
+0590/*
+0600    INPUT #DATA-128  (1) #DATA-128  (2)
+0610/*
+0620    MOVE SUBSTR(#DATA-128(1),1,8) TO PARM-USR9171N.USERID
+0630    MOVE        #DATA-128(2)      TO PARM-USR9171N.PASS_PHRASE
+0640/*
+0650    #SW_ESCAPE := TRUE
+0660/*
+0670  ELSE
+0680/*
+0690    INPUT WINDOW='RPC-CLIENT'  (AD=MI'_' IP=OFF ZP=ON SG=OFF)
+0700      /    'User ID .......... :' PARM-USR9171N.USERID (AL=8)
+0710      /    'Pass phrase ...... :' PARM-USR9171N.PASS_PHRASE (AD=N AL=32)
+0720      /    'Return code ...... :' PARM-USR9171N.PRC (AD=OIL ZP=ON)
+0730      /    PARM-USR9171N.MSG-TEXT (AD=OI)
+0740      // 15T 'Press any PF-Key to stop.'
+0750    IF *PF-KEY NE 'ENTR'
+0760      ESCAPE BOTTOM
+0770    END-IF
+0780  END-IF
+0790/*
+0800  IF PARM-USR9171N.USERID = #A8
+0810    PARM-USR9171N.USERID := *USER
+0820  END-IF
+0830/*
+0840  EXAMINE PARM-USR9171N.USERID   TRANSLATE INTO UPPER
+0850/*
+0860  CALLNAT 'USR9171N' PARM-USR9171N
+0870/*
+0880  IF #SW_ESCAPE
+0890    IF PRC NE 0
+0900      STACK TOP DATA PRC MSG-TEXT
+0910    END-IF
+0920    ESCAPE BOTTOM
+0930  END-IF
+0940/*
+0950END-REPEAT
+0960END

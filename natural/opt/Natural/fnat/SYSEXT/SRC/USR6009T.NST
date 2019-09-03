@@ -1,0 +1,171 @@
+0010Maintain Natural buffer pool
+0020.
+0030Documentation ......... USR6009T    /*  Text object
+0040Interface ............. USR6009N    /*  Cataloged subprogram
+0050Example Program ....... USR6009P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. BUFFER POOL
+0100.
+0110Keywords .............. BUFFER POOL
+0120.
+0130Function .............. Access buffer pool with function
+0140                        Corpses, Delete, Dir, Status(Param).
+0150                        This application interface works for open
+0160                        systems only.
+0170                        For mainframe systems use USR0340N.
+0180.
+0190This application programming interface is available on OS only.
+0200There is a equivalent application programming interface USR0340N on
+0210Mainframes.
+0220The parameters for USR0340N and USR6009N are different. In case of a
+0230Natural application migration, the CALLNAT would have to be adapted.
+0240.
+0250.
+0260Parameters
+0270----------
+0280Define the following parameters with the DEFINE DATA statement:
+0290.
+03001 P-FUNCTION            (A1)   /* (I)   function code:
+0310                               /*       D - Delete objects
+0320                               /*             Selection with P-KEY
+0330                               /*       G - Global statistics
+0340                               /*             (status,param)
+0350                               /*       S - Display directory of buffer
+0360                               /*             Selection with P-KEY
+0370                               /*       C - Display a list of all
+0380                               /*             corpses; no selection,
+0390                               /*             returned from 1st to last
+0400                               /*       N - Return buffer pool name
+0410                               /*
+04201 P-KEY                 (A64)  /* (I/O) buffer pool key
+0430                               /* Do not change between two 'S' calls!!
+04401 REDEFINE P-KEY
+0450  2 P-KEY-LIB           (A8)   /* (I/O) library name
+0460  2 P-KEY-NAME          (A32)  /* (I/O) object name
+0470                               /*       Numbers and @ indicate chunks of
+0480                               /*         FILEDIR.SAG for the currently
+0490                               /*         loaded library
+0500  2 P-KEY-KIND          (A1)   /* (I/O) object kind
+0510                               /*       G - generated object module
+0520                               /*       S - source
+0530                               /*       D - part of FILEDIR.SAG
+0540                               /*       R - resource
+0550  2 P-KEY-TYPE          (A1)   /* (I/O) object type
+0560                               /*       blank for P-KIND = D
+0570  2 P-KEY-DBID          (I4)   /* (I/O) database id
+0580  2 P-KEY-FNR           (I4)   /* (I/O) filenumber
+0590  2 P-KEY-LANGUAGE      (I4)   /* (I/O) language (must be zero)
+0600/*
+06101 P-NUMBER              (I2)   /* (O)   number of attached objects
+06201 P-RESPONSE1           (I2)   /* (O)   response code1
+0630                               /*    -2 bufferpool returns error in
+0640                               /*         bpcberr; bpcberr error
+0650                               /*         in P-RESPONSE2
+0660                               /*    -1 bufferpool returns internal
+0670                               /*         error;
+0680                               /*         RET('CMNCBP') in P-RESPONSE2
+0690                               /*     0 ok
+0700                               /*    >0 response from Natural part
+0710                               /*         of user exit
+0720                               /*     4 invalid function code
+0730                               /*     8 invalid dbid
+0740                               /*    12 invalid fnr
+0750                               /*    16 invalid kind
+0760                               /*    20 invalid type
+0770                               /*    24 For P-FUNCTION 'N': Optional
+0780                               /*       parameter P-BPNAME missing
+0790                               /*   100 function 'S': end of list
+08001 P-RESPONSE2           (I2)   /* (O)   response code2
+0810                               /*       if P-RESPONSE1 = -2: bpcberr
+0820                               /*       if P-RESPONSE1 = -1:
+0830                               /*         RET('CMNCBP')
+0840/*
+08501 P-DIRECTORY-BUFFER (10)      /* (O)   10 * 384
+0860  2 P-LIB               (A8)   /* (O)   library name
+0870  2 P-NAME              (A32)  /* (O)   object name
+0880  2 P-KIND              (A1)   /* (O)   object kind
+0890  2 P-TYPE              (A1)   /* (O)   object type
+0900  2 P-DBID              (I4)   /* (O)   database id
+0910  2 P-FNR               (I4)   /* (O)   filenumber
+0920  2 P-LANGUAGE          (I4)   /* (O)   language (must be zero)
+0930  2 P-BPCBOBST          (I4/1:16) /* (O) OBJECT STATUS
+0940  2 REDEFINE P-BPCBOBST
+0950    3 P-BPCBNTAB        (I4)   /* (O)   NUMBER OF TABLES
+0960    3 P-BPCBTOTL        (I4)   /* (O)   TOTAL SIZE OF OBJECT
+0970    3 P-BPCBNUSR        (I4)   /* (O)   CURRENT NUMBER OF USERS
+0980    3 P-BPCBMAXP        (I4)   /* (O)   PEAK PARALLEL USAGE
+0990    3 P-BPCBNUSG        (I4)   /* (O)   NUMBER OF ACTIVATIONS
+1000    3 P-BPCBFLGS        (I4)   /* (O)   OBJECT FLAGS
+1010    3 P-BPCBGENO        (I4)   /* (O)   TRUE IF GENERATING
+1020  2 P-BPCBOTSZ          (I4/1:64) /* (O) TABLE SIZES
+10301 REDEFINE P-DIRECTORY-BUFFER
+1040  /* General Statistics 'G'        184
+1050  2 P-BPCBMJR           (I4)   /* (O)   MAJOR RELEASE NUMBER
+1060  2 P-BPCBMIR           (I4)   /* (O)   MINOR RELEASE NUMBER
+1070  2 P-BPCBVSN           (I4)   /* (O)   VERSION NUMBER of buffer pool
+1080  2 P-BPCBDAT           (A32)  /* (O)   GENERATION DATE
+1090  2 P-BPCBUPT           (A32)  /* (O)   UPTIME OF POOL
+1100  /*
+1110  2 P-BPCBMAXU          (I4)   /* (O)   MAX NUMBER OF USERS
+1120  2 P-BPCBMEMS          (I4)   /* (O)   MEMORY SIZE OF POOL
+1130  2 P-BPCBDORM          (I4)   /* (O)   DORMANT OBJECTS
+1140  2 P-BPCBACTV          (I4)   /* (O)   ACTIVE OBJECTS
+1150  2 P-BPCBGENBP         (I4)   /* (O)   GENERATING OBJECTS
+1160  2 P-BPCBTBDL          (I4)   /* (O)   OBSOLETE OBJECTS
+1170  2 P-BPCBNPUR          (I4)   /* (O)   PURGED OBJECTS
+1180  2 P-BPCBALC           (I4)   /* (O)   LOCATES
+1190  2 P-BPCBAFLC          (I4)   /* (O)   FAST LOCATES
+1200  2 P-BPCBSFLC          (I4)   /* (O)   SUCCESFUL FAST LOCATES
+1210  2 P-BPCBSTOR          (I4)   /* (O)   STORES
+1220  2 P-BPCBPKPR          (I4)   /* (O)   PEAK PAR USAGE
+1230  2 P-BPCBACT           (I4)   /* (O)   ACTIVATIONS
+1240  2 P-BPCBLDS           (I4)   /* (O)   OBJECT LOADS
+1250  2 P-BPCBALDS          (I4)   /* (O)   ABORTED LOADS
+1260  2 P-BPCBCUSR          (I4)   /* (O)   CURRENT USERS
+1270  2 P-BPCBPUSR          (I4)   /* (O)   PEAK USERS
+1280  2 P-BPCBDUSR          (I4)   /* (O)   DEAD PURGED USERS
+1290  /*
+1300  2 P-BPCBOSMN          (I4)   /* (O)   MINIMUM
+1310  2 P-BPCBOSMX          (I4)   /* (O)   MAXIMUM
+1320  2 P-BPCBOSTL          (I4)   /* (O)   TOTAL
+1330  /*
+1340  2 P-BPCBAMMN          (I4)   /* (O)   MINIMUM
+1350  2 P-BPCBAMMX          (I4)   /* (O)   MAXIMUM
+1360  2 P-BPCBAMTL          (I4)   /* (O)   TOTAL
+1370  /*
+1380  2 P-BPCBFMMN          (I4)   /* (O)   MINIMUM
+1390  2 P-BPCBFMMX          (I4)   /* (O)   MAXIMUM
+1400  2 P-BPCBFMTL          (I4)   /* (O)   TOTAL
+1410/*
+14201 P-WORKAREA                   /* (I/O) Do not change
+1430                               /*       between two 'S' or 'C' calls
+1440  2 P-INDEX             (I4)   /*
+1450  2 P-BPCBPAT           (A64)  /*
+1460/*
+14701 P-BPNAME              (A8) OPTIONAL
+1480                               /* bufferpool name
+1490                               /* The BP name is returned for function
+1500                               /* G or N if the field is supplied.
+1510                               /* Function N returns the name only
+1520                               /* (no statistics).
+1530.
+1540.
+1550Interface Call
+1560--------------
+1570Use the interface with the CALLNAT statement:
+1580.
+1590CALLNAT 'USR6009N' P-FUNCTION P-KEY P-NUMBER P-RESPONSE1
+1600                   P-RESPONSE2 P-DIRECTORY-BUFFER(*)
+1610                   P-WORKAREA
+1620                   P-BPNAME   /* Optional parameter
+1630.
+1640.
+1650Using the Application Programming Interface:
+1660--------------------------------------------
+1670Copy the subprogram USR6009N to the library SYSTEM or the steplib
+1680library respectively, or to the required library.
+1690.
+1700***** End of description *****
+1710

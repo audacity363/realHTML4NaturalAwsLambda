@@ -1,0 +1,13 @@
+0010&H View SPOOL-UPDATE
+0020&L
+0030&L
+0040#Purpose@: Alter status of Spool job.
+0050&L
+0060#OpSys@  : z/OS, z/VSE
+0070&L
+0080&L
+0090#Usage@  : This view allows the user or application to alter the
+0100           status of a specific spool job, e.g. Change job class,
+0110           change destination, delete spool job entry etc.
+0120&L
+0130#Notes@  :

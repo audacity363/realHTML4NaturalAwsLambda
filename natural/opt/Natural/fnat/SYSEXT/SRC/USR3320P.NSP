@@ -1,0 +1,67 @@
+0010/*  Find user short error-message as it is retrieved by e.g. the
+0020/*  INPUT statement (search in steplibs, language 1 and no. x000)
+0030/*  ATTENTION:   NATURAL SECURITY CHECK INTENTIONALLY BYPASSED
+0040/*  This program serves as an example how to design a user-defined
+0050/*  program to call 'USR3320N'
+0060/**********************************************************************
+0070DEFINE DATA LOCAL
+0080  01 PARAM
+0090     02 ERROR-NUMBER (N04)   /* 1 thru 9999
+0100     02 LANG-CODE    (I01)   /* 1 thru 60 allowed
+0110     02 RESPONSE     (N04)   /* Error during execution of USR0320N
+0120     02 SHORT-TEXT   (A65)   /*
+0130     02 ERR-APPLIC   (A32)   /* Applic of short usr msg (may be steplib)
+0140     02 ERR-NO       (N4)    /* No. of short usr msg (may be x000)
+0150     02 ERR-LANG     (I1)    /* Lang of short usr msg (may be 1)
+0160  01 #MSG            (A72)
+0170  01 #MARK           (N4)
+0180END-DEFINE
+0190/*
+0200/* Set up some defaults:
+0210/*
+0220MOVE *LANGUAGE  TO LANG-CODE       /* Current language code
+0230SET KEY ALL
+0240/*
+0250REPEAT
+0260  /*
+0270  RESET RESPONSE SHORT-TEXT
+0280  /*
+0290  INPUT (AD=MITL'_' IP=OFF ZP=ON SG=OFF) WITH TEXT #MSG MARK #MARK ///
+0300    15T  ' Read User Short Error Message' /
+0310    15T  ' from System File FUSER or FNAT' /
+0320    15T  ' including steplibs' /
+0330    15T  '-' (32) //
+0340    18T  'Error number ....' ERROR-NUMBER   /
+0350    18T  'Language code ...' LANG-CODE      ///
+0360    15T  'Press ENTER to receive the text.' /
+0370    15T  'Press any PF-Key to stop.'
+0380    17/1 ' ' (78)
+0390    /*
+0400  IF *PF-KEY NE 'ENTR'
+0410    ESCAPE BOTTOM
+0420  END-IF
+0430  RESET #MARK #MSG
+0440  /*
+0450  CALLNAT 'USR3320N' PARAM
+0460  /*
+0470  IF RESPONSE > 0
+0480    DECIDE ON FIRST VALUE OF RESPONSE
+0490      VALUE 2    #MSG := 'Invalid parameters in internal call.'
+0500                 #MARK := 1
+0510      VALUE 3    #MSG := 'Internal error in USR3320N.'
+0520                 #MARK := 1
+0530      VALUE 9    #MSG := 'Error Message not found.'
+0540                 #MARK := 1
+0550      VALUE 10   #MSG := 'Invalid Error Number.'
+0560                 #MARK := 1
+0570      VALUE 11   #MSG := 'Invalid Language Code.'
+0580                 #MARK := 2
+0590      NONE
+0600        INPUT 'Response code from USR3320N:' (I) RESPONSE (AD=OIL)
+0610    END-DECIDE
+0620  ELSE
+0630    /* INPUT NO ERASE (AD=OI IP=OFF) 17/1 SHORT-TEXT
+0640    #MSG :=  SHORT-TEXT
+0650  END-IF
+0660END-REPEAT
+0670END

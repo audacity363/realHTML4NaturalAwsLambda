@@ -1,0 +1,59 @@
+0010/*  This copycode can directly be used. For more information read the
+0020/*  text object 'USR1023T' in library SYSEXT.
+0030/***********************************************************************
+0040/*
+0050/*  Copycode Interface .... USR1023Y    /*  Copycode source
+0060/*  Documentation ......... USR1023T    /*  Text object
+0070/*  Example Program ....... USR1023P    /*  Source program
+0080/*
+0090/*  Function .............. Convert a store clock into microseconds.
+0100/*
+0110/*
+0120/*  Transferred Parameters
+0130/*  ----------------------
+0140/*  &1&   Input:  store clock value, format (B8), such as *TIMESTMP
+0150/*  &2&   Output: microseconds since 1900-01-01 00:00:00,
+0160/*                format (P19), (N19) or (F8)
+0170/*
+0180/*
+0190/*  Additional Data Definitions
+0200/*  ---------------------------
+0210/*  1 USR1023_B8     (B8)  /* variables used in copycode USR1023Y
+0220/*  1 REDEFINE USR1023_B8
+0230/*    2 USR1023_B81  (B3)
+0240/*    2 USR1023_B82  (B3)
+0250/*    2 USR1023_B83A (B1)
+0260/*    2 USR1023_B83B (B1)
+0270/*  1 USR1023_I41    (I4)
+0280/*  1 USR1023_I42    (I4)
+0290/*  1 USR1023_I43    (I4)
+0300/*
+0310/*
+0320/*  Using Copycode Interface
+0330/*  ------------------------
+0340/*  Copy the copycode USR1023Y to the required library.
+0350/*
+0360/*  Add the additional data definitions for the copycode to the data
+0370/*  definitions of your program.
+0380/*
+0390/*  Use the copycode with the INCLUDE statement:
+0400/*     INCLUDE USR1023Y 'C-STORECLOCK' 'C-MICROSECONDS'
+0410***********************************************************************
+0420*
+0430* Get binary value (B8)
+0440*
+0450MOVE &1& TO USR1023_B8
+0460*
+0470* Transform data into integer
+0480*
+0490USR1023_I41 := USR1023_B81
+0500USR1023_I42 := USR1023_B82
+0510USR1023_I43 := USR1023_B83A
+0520*
+0530* Convert into microseconds (possible format: (P19), (N19), (F8))
+0540*
+0550&2& := ( USR1023_I41 * 0000000000268435456 ) +
+0560       ( USR1023_I42 * 16 ) +
+0570       ( USR1023_I43 / 16 )
+0580*
+0590***********************************************************************

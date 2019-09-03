@@ -1,0 +1,30 @@
+0010/* USR1002P: Save or Restore Natural Parameters
+0020/* This program serves as example how to design a user-defined
+0030/* program to call 'USR1002N'
+0040/**********************
+0050DEFINE DATA LOCAL
+0060  01 ACTION (A01)
+0070  01 #MSG   (A72)
+0080END-DEFINE
+0090/*
+0100SET KEY ALL
+0110/*
+0120REPEAT
+0130  INPUT WITH TEXT #MSG
+0140   'Save or Restore Natural Parameters .....' ACTION (AD=MIT)
+0150/*
+0160  IF *PF-KEY NE 'ENTR'
+0170    ESCAPE BOTTOM
+0180  END-IF
+0190  RESET #MSG
+0200/*
+0210  DECIDE ON FIRST ACTION
+0220    VALUE 'R', 'S' CALLNAT 'USR1002N' ACTION
+0230                   WRITE '=' ACTION
+0240                   ESCAPE BOTTOM
+0250    VALUE '.'      ESCAPE BOTTOM
+0260    NONE           #MSG := 'Enter "S", "R" or ".", please.'
+0270  END-DECIDE
+0280END-REPEAT
+0290/*
+0300END

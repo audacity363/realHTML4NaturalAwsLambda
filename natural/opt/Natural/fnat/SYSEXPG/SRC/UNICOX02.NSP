@@ -1,0 +1,89 @@
+0010** Example 'UNICOX02': Convert Unicode character to code point
+0020**                     and vice versa
+0030************************************************************************
+0040*
+0050DEFINE DATA LOCAL
+00601 #UNICODE     (U75)
+00701 #CODEPOINT   (B150)
+00801 REDEFINE #CODEPOINT
+0090  2 B2         (B2/75)
+01001 REDEFINE #CODEPOINT
+0110  2 BIN        (B30/1:5)
+01201 RSP          (I4)
+01301 MSG          (A70) INIT <' '>
+01401 U-OLD        (U75)
+01501 B-OLD        (B150)
+0160END-DEFINE
+0170*
+0180FORMAT KD=ON
+0190SET CONTROL 'L'                /* lower case
+0200SET KEY PF3 NAMED 'Exit'
+0210*
+0220* Initialize all with Unicode blanks
+0230MOVE U' ' TO #UNICODE
+0240*
+0250* Code page 'UTF-16BE' is the big endian Unicode
+0260* which contains the binary code point values.
+0270*
+0280MOVE ENCODED #UNICODE TO #CODEPOINT IN CODEPAGE 'UTF-16BE' GIVING RSP
+0290*
+0300*
+0310REPEAT
+0320  INPUT (IP=OFF) WITH TEXT MSG (AD=I CD=RE)
+0330    21T '- Unicode to Code Point Conversion -'
+0340    //
+0350    02T 'Unicode string (max length 75)'
+0360    /
+0370    02T #UNICODE  (AD=M)
+0380    //
+0390    02T 'Code points (U+0000 - U+FFFF)'
+0400    /
+0410    02T BIN(1) (AD=M) /
+0420    02T BIN(2) (AD=M) /
+0430    02T BIN(3) (AD=M) /
+0440    02T BIN(4) (AD=M) /
+0450    02T BIN(5) (AD=M) /
+0460    /
+0470    02T 'Code points (formatted)'
+0480    /
+0490    02T B2(1:15)  (AD=O) /
+0500    02T B2(16:30) (AD=O) /
+0510    02T B2(31:45) (AD=O) /
+0520    02T B2(46:60) (AD=O) /
+0530    02T B2(61:75) (AD=O) /
+0540    /
+0550    02T 'Press Enter to perform the conversion.' /
+0560*
+0570  IF *PF-KEY = 'PF3'
+0580    ESCAPE BOTTOM
+0590  END-IF
+0600*
+0610  DECIDE FOR FIRST CONDITION
+0620    WHEN #UNICODE NE U-OLD   /* Unicode to code point
+0630      MOVE ENCODED #UNICODE TO #CODEPOINT IN CODEPAGE 'UTF-16BE'
+0640                   GIVING RSP
+0650      IF RSP NE 0
+0660        COMPRESS 'Error at MOVE ENCODED:' RSP INTO MSG
+0670        MOVE B-OLD TO #CODEPOINT
+0680        ESCAPE TOP
+0690      END-IF
+0700      MOVE #UNICODE   TO U-OLD
+0710      MOVE #CODEPOINT TO B-OLD
+0720      /*
+0730    WHEN #CODEPOINT NE B-OLD  /* code point to Unicode
+0740      MOVE ENCODED #CODEPOINT IN CODEPAGE 'UTF-16BE' TO #UNICODE
+0750                   GIVING RSP
+0760      IF RSP NE 0
+0770        COMPRESS 'Error at MOVE ENCODED:' RSP INTO MSG
+0780        MOVE U-OLD TO #UNICODE
+0790        ESCAPE TOP
+0800      END-IF
+0810      MOVE #UNICODE   TO U-OLD
+0820      MOVE #CODEPOINT TO B-OLD
+0830      /*
+0840    WHEN NONE
+0850      IGNORE
+0860  END-DECIDE
+0870END-REPEAT
+0880*
+0890END

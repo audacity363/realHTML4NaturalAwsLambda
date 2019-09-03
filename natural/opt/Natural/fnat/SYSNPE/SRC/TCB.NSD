@@ -1,0 +1,52 @@
+0010DB: 148 FILE: 024  - TCB                              DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:26
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:26
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      MVS fields
+0230*
+0240  1 A1 JOB-NAME                          A    8    D Name of job to be sc
+0250*      Name of job to be scanned.
+0260  1 A2 TCB-ADDRESS                       B    4    D TCB address.
+0270*      TCB address.
+0280  1 A3 RB-CHAIN                          B    4    D Address of Request B
+0290*      Address of Request Block chain
+0300*      (active programs).
+0310  1 A4 DEB-CHAIN                         B    4    D Address of DEB chain
+0320*      Address of DEB chain
+0330*      (open data sets).
+0340  1 A5 LLS-CHAIN                         B    4    D Address of LLS chain
+0350*      Address of LLS chain
+0360*      (loaded programs).
+0370  1 A6 COMPLETION-CODE                   B    4    D Completion code for
+0380*      Completion code for the task.
+0390  1 A7 MOTHER-TCB                        B    4    D TCB address of task
+0400*      TCB address of task which
+0410*      attached this task.
+0420  1 A8 SISTER-TCB                        B    4    D TCB address of task
+0430*      TCB address of task previously
+0440*      attached by the task which
+0450*      attached this task.
+0460  1 A9 DAUGHTER-TCB                      B    4    D TCB address of task
+0470*      TCB address of task last
+0480*      attached by this task.
+0490*
+0500*      End of TCB
+0510*
+0520******DDM OUTPUT TERMINATED******

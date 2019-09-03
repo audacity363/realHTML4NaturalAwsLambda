@@ -1,0 +1,143 @@
+0010Maintain definition of multiple steplibs
+0020.
+0030Documentation ......... USR1025T    /*  Text object
+0040Interface ............. USR1025N    /*  Cataloged subprogram
+0050Example Program ....... USR1025P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. STEPLIBS
+0100.
+0110Keywords .............. +MOD-NAT-8.3.2,
+0120                        *STEPLIB, LIBRARY, STEPLIB
+0130.
+0140Interface Versions .... USR1025N, USR3025N
+0150.
+0160Function .............. With this interface you can handle multiple
+0170                        steplibs in a non-security environment.
+0180                        Up to 8 steplibs can be added to the
+0190                        steplib table. Your definitions are valid
+0200                        until the next LOGON command is issued.
+0210.
+0220                        Mote: With NAT824 (mainframe) and NAT832
+0230                        (PC, UNIX, Linux) onward for ACTION = 'D'
+0240                        additionaly the complete steplib table (up to
+0250                        30 steplibs) is returned in the optional
+0260                        parameters (if specified).
+0270.
+0280                        Note: If DBID and FNR are zero in function 'A',
+0290                        the DBID and FNR of the FUSER are used for the
+0300                        steplib, with no consideration for the library
+0310                        name. With NAT315 on mainframe systems and
+0320                        Nat412 on PC, UNIX and OpenVMS you can use
+0330                        the interface USR3025N. It applies the standard
+0340                        settings for zero DBID and FNR.
+0350.
+0360Parameters
+0370----------
+0380Define the following parameters with the DEFINE DATA statement:
+0390.
+0400  01 USR1025L
+0410     02 ACTION        (A01)      /* 'D', 'A', 'I', 'P'
+0420     02 STEPLIB-ID    (A08/1:8)  /* ID of steplib
+0430     02 DBID          (N05/1:8)  /* DBID of steplib
+0440     02 FNR           (N05/1:8)  /* FNR of steplib
+0450     02 PASSWORD      (A08)      /* Input for ACTION 'A'
+0460     02 CIPHERCODE    (N08)      /* Input for ACTION 'A'
+0470     02 POSIT         (N01)      /* Position of lib to be added/deleted
+0480     02 AST-STEPLIB   (A08)      /* Value of *STEPLIB
+0490     02 AST-DBID      (N05)      /* DBID of *STEPLIB
+0500     02 AST-FNR       (N05)      /* FNR of *STEPLIB
+0510     02 NUMBER-ACTIVE (N01)      /* Number of active steplibs
+0520     02 RESPONSE      (N04)      /* Error code
+0530     02 INFOTEXT      (A65)      /* Text for RESPONSE field
+0540  01 P-NUMBER-STEPLIBS (I1)      /* Optional parameter for ACTION = D
+0550                                 /* Number of active steplibs
+0560                                 /* If this parameter is specified,
+0570                                 /* the other optional parameters have
+0580                                 /* to be specifed too.
+0590  01 P-STEPLIB-NAME   (A8/1:30)  /* Optional parameter for ACTION = D
+0600                                 /* ID of steplib
+0610  01 P-STEPLIB-DBID   (N5/1:30)  /* Optional parameter for ACTION = D
+0620                                 /* DBID of steplib
+0630  01 P-STEPLIB-FNR    (N5/1:30)  /* Optional parameter for ACTION = D
+0640                                 /* FNR of steplib
+0650.
+0660Interface Call
+0670--------------
+0680Use the interface with the CALLNAT statement:
+0690.
+0700CALLNAT 'USR1025N'  USR1025L
+0710.
+0720.
+0730Using the Application Programming Interface:
+0740--------------------------------------------
+0750Copy the subprogram USR1025N to the library SYSTEM or the steplib
+0760library respectively, or to the required library.
+0770.
+0780Description of the parameters:
+0790.
+0800ACTION (Input)
+0810  Has to be filled before invoking the interface.
+0820  Valid codes are: 'D' - Display the steplib table
+0830                   'A' - Add a steplib
+0840                   'P' - Delete a steplib
+0850                   'I' - Initialize the steplib table
+0860.
+0870STEPLIB-ID, DBID, FNR (Input,Output)
+0880  ACTION 'D': Up to 8 active steplibs are displayed.
+0890              If the optional parameters P-NUMBER-STEPLIBS,
+0900              P-STEPLIB-NAME, P-STEPLIB-DBID and P-STEPLIB-FNR
+0910              are used up to 30 steplibs are displayed and
+0920              P-NUMBER-STEPLIBS contains the number of found steplibs.
+0930  ACTION 'A': The first occurrence is used as input data.
+0940.
+0950PASSWORD, CIPHERCODE (Input)
+0960  These two fields are used as input data for ACTION 'A'.
+0970.
+0980POSIT (Input)
+0990  Position of a steplib in the table. POSIT must be filled
+1000  if a steplib is to be added or deleted.
+1010  ACTION 'A': a value of 0 indicates that the steplib
+1020  will be added as last entry in the steplib table.
+1030.
+1040AST-STEPLIB, AST-DBID, AST-FNR (Output)
+1050  Output data for ACTION 'A'.
+1060  Contains the value of the system variable *STEPLIB.
+1070  In addition the data base ID and file number of *STEPLIB is returned.
+1080.
+1090NUMBER-ACTIVE (Output)
+1100  Contains the number of active steplibs in the steplib table.
+1110  The value 9 indicates that there are more than 8 steplibs active.
+1120  In this case use the optional parameters P-NUMBER-STEPLIBS,
+1130  P-STEPLIB-NAME, P-STEPLIB-DBID and P-STEPLIB-FNR to display the
+1140  complete steplib table.
+1150.
+1160RESPONSE, INFOTEXT (Output)
+1170  Error code and the related explanation:
+1180  04 - Valid action codes are 'A', 'D', 'I', 'P'.
+1190  08 - Natural Security installed; function not allowed.
+1200  12 - Not all optional parameters specified.
+1210  20 - First character of library is invalid.
+1220  24 - Position must be 0 through 8.
+1230  28 - Invalid DBID (1..65535) or FNR (1..5000).
+1240  32 - Already 8 steplibs active.
+1250  36 - The steplib is already included in the list.
+1260 999 - Return code nn from CMSLFT, processing stopped.
+1270 < 0 - Natural runtime error, see INFOTEXT.
+1280.
+1290P-NUMBER-STEPLIBS (Output)
+1300  Optional parameter for ACTION = D;
+1310  Contains the number of active steplibs in the steplib table.
+1320P-STEPLIB-NAME (Output)
+1330  Optional parameter for ACTION = D;
+1340  Contains the steplib name.
+1350P-STEPLIB-DBID (Output)
+1360  Optional parameter for ACTION = D;
+1370  Contains the data base ID of the steplib.
+1380P-STEPLIB-FNR (Output)
+1390  Optional parameter for ACTION = D;
+1400  Contains the file number of the steplib.
+1410.
+1420.
+1430*****  End of Description  *****

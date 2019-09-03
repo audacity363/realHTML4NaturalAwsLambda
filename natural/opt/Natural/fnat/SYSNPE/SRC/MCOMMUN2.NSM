@@ -1,0 +1,67 @@
+0010* MAP2: PROTOTYPE
+0020* INPUT USING MAP 'XXXXXXXX'
+0030*     ##TITLE #ANSWER #CONV-ID #DATA #FUNCTION #MAX-WAIT-TIME #OPTION
+0040*     #SYSTEM-ID #WAIT
+0050DEFINE DATA PARAMETER
+00601 ##TITLE (A078)
+00701 #ANSWER (A003)
+00801 #CONV-ID (A004)
+00901 #DATA (A060)
+01001 #FUNCTION (A008)
+01101 #MAX-WAIT-TIME (N04.0)
+01201 #OPTION (A008)
+01301 #SYSTEM-ID (A008)
+01401 #WAIT (A003)
+0150END-DEFINE
+0160FORMAT PS=021 LS=080 ZP=OFF SG=OFF KD=ON  IP=OFF
+0170* MAP2: MAP PROFILES *****************************        410***********
+0180* .TTAAAMMOO   D I D I N D I D I        ?_)¬&:+(                       *
+0190* 023079        N0NNUCN             X        01 SYSPROF YL           1 *
+0200************************************************************************
+0210INPUT          (     IP=OFF                                           /*
+0220                                                                       )
+0230 002T ##TITLE  (AD=ODL ) /*.01D078 A078 .
+0240/
+0250/
+0260/
+0270 002T 'Funktion ........'
+0280 020T #FUNCTION  (AD=MILT'_' ) /*.99D008 A008 .
+0290 030T '(Send/Receive)'
+0300/
+0310 002T 'System ID .......'
+0320 020T #SYSTEM-ID  (AD=MILT'_' ) /*.99D008 A008 .
+0330/
+0340 002T 'Konversation ID .'
+0350 020T #CONV-ID  (AD=MILT'_' ) /*.99D004 A004 .
+0360 030T '(New/...)'
+0370/
+0380/
+0390 002T 'Antwort .........'
+0400 020T #ANSWER  (AD=MILT'_' ) /*.99D003 A003 .
+0410 030T '(yes/no)'
+0420/
+0430 002T 'Warten ..........'
+0440 020T #WAIT  (AD=MILT'_' ) /*.99D003 A003 .
+0450 030T '(yes/no)'
+0460/
+0470 002T 'Max. Wartezeit ..'
+0480 020T #MAX-WAIT-TIME  (AD=MILT'_' ) /*.99D004 N04.0.
+0490/
+0500/
+0510 002T 'Daten ...........'
+0520 020T #DATA  (AD=MILT'_' ) /*.99D060 A060 .
+0530/
+0540 002T 'Option ..........'
+0550 020T #OPTION  (AD=MILT'_' ) /*.99D008 A008 .
+0560 030T '(more/eod/end)'
+0570/
+0580/
+0590/
+0600/
+0610/
+0620/
+0630/
+0640/
+0650* MAP2: VALIDATION *****************************************************
+0660* MAP2: END OF MAP *****************************************************
+0670END

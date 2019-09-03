@@ -1,0 +1,78 @@
+0010Set credentials for RPC server
+0020.
+0030Documentation ......... USR4371T    /*  Text object
+0040Interface ............. USR4371N    /*  Cataloged subprogram
+0050Example Program ....... USR4371P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC - SECURITY
+0100.
+0110Keywords .............. +CURRENT-VERSION,
+0120                        +NEW-NAT-8.3.4,
+0130                        ETID, PASSWORD, RPC, SECURITY,
+0140                        TICKET, USER ID
+0150.
+0160Interface Versions .... USR1071N, USR4371N
+0170.
+0180Function .............. On RPC client, this API sets user ID
+0190                        and ETID for Natural RPC servers which were
+0200                        configured with Impersonation = A
+0210                        (automatic logon).
+0220                        This text member contains the description of
+0230                        USR4371P and USR4371X (extended version).
+0240                        With USR4371N, the ETID can be defined.
+0250.
+0260.
+0270Parameters
+0280----------
+0290Define the following parameters with the DEFINE DATA statement:
+0300.
+03101 PARM-USR4371N
+0320  2 FUNCTION   (A02)       /* - Function code to maintain RPC save area
+0330*                          /*   USR4371P:
+0340*                          /*   value 'ST' - set user ID and/or ETID.
+0350*                          /*   If NSC is installed on client, *USER
+0360*                          /*   and ETID are set by NSC logon.
+0370*                          /*   However, the interface may be used to
+0380*                          /*   set another user ID and/or ETID.
+0390*                          /*
+0400  2 E-CRITERIA (A20)       /* This is unsupported in this version.
+0410*                          /*
+0420  2 USERID     (A08)       /* User ID to be used.
+0430  2 PASSWORD   (A08)       /* This is unsupported in this version.
+0440  2 ETID       (A08)       /* ETID to be used.
+0450  2 USER-DATA  (A32)       /* This is unsupported in this version.
+0460  2 MSG-TEXT   (A79)       /* If PRC is greater 0, a message text is
+0470                           /* returned.
+0480  2 PRC        (N04)       /*   Return value
+0490                           /*   0     OK
+0500                           /*   4     Internal error
+0510                           /*   1x     Error in exp. crit. handling
+0520                           /*   2x     Error in write handling
+0530                           /*   3x     Error in read handling
+0540                           /*   9999   Invalid function code
+0550.
+0560Interface Call
+0570--------------
+0580Use the interface with the CALLNAT statement:
+0590.
+0600CALLNAT 'USR4371N' PARM-USR4371N
+0610.
+0620.
+0630Using the Application Programming Interface:
+0640--------------------------------------------
+0650Copy the subprogram USR4371N to the library SYSTEM or the steplib
+0660library respectively, or to the required library.
+0670.
+0680.
+0690 Steps:
+0700 1.) Initialize phase / Runtime phase:
+0710   - Set user ID and ETID ; please note there is no validation
+0720     on client. The ETID will be validated on the RPC server.
+0730 2.) End phase:
+0740     The contents of the area are only available until the end of
+0750     Natural session.
+0760.
+0770.
+0780***** End of Description *****

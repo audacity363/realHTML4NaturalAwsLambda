@@ -1,0 +1,49 @@
+0010************************************************************************
+0020* Application: Natural Development Server
+0030* Program:     NDV-SX01
+0040**----------------------------------------------------------------------
+0050* Function:    Source of the NDV user exit NDV-UX01.
+0060*
+0070*              To activate this exit, catalog or stow as NDV-UX01 in
+0080*              library SYSLIB, SYSLIBS or SYSTEM
+0090*
+0100**----------------------------------------------------------------------
+0110* Remarks:     This exit is invoked before a Natural source object or
+0120*              a DDM is edited.
+0130*
+0140*              To allow editing of a source, the parameter variable
+0150*              ALLOW-DISALLOW-TRANSFER must be set to TRUE.
+0160*
+0170*              To reject editing of a source, the parameter variable
+0180*              ALLOW-DISALLOW-TRANSFER must be set to FALSE and the
+0190*              parameter variable DISALLOW-DESCRIPTION must be
+0200*              filled with a corresponding message.
+0210*
+0220*              If ALLOW-DISALLOW-TRANSFER is set to FALSE, NDV rejects
+0230*              the edit request and issues the error message in
+0240*              DISALLOW-DESCRIPTION.
+0250*
+0260*              Control must be returned to NDV.
+0270************************************************************************
+0280DEFINE DATA PARAMETER
+02901 SPOD-EDIT-USEREXIT
+0300  2 SPOD-EDIT-INPUT
+0310    3 FUSER-DBID                (N5)
+0320    3 FUSER-FNR                 (N5)
+0330    3 LIBRARY                   (A8)
+0340    3 OBJECT-NAME               (A32)
+0350    3 REDEFINE OBJECT-NAME
+0360      4 PROGRAM-NAME            (A8)
+0370    3 USERID                    (A8)
+0380    3 OBJECT-TYPE               (A1)
+0390  2 SPOD-EDIT-OUTPUT
+0400    3 ALLOW-DISALLOW-TRANSFER   (L)
+0410    3 DISALLOW-DESCRIPTION      (A65)
+04201 ADDITIONAL-DATA            (A1/1:V)  /* For future use
+0430END-DEFINE
+0440/*----------------------------------------------------------------------
+0450ALLOW-DISALLOW-TRANSFER := TRUE
+0460/* If set to FALSE, DISALLOW-DESCRIPTION should contain a text
+0470/* indicating why the transfer is disallowed.
+0480/*----------------------------------------------------------------------
+0490END

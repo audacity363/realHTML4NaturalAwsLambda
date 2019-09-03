@@ -1,0 +1,13 @@
+0010&H View LOADED-MODULES
+0020&L
+0030&L
+0040#Zweck@    : Ausgabe von Informationen ueber Module, die in einen
+0050             Adressraum geladen wurden.
+0060&L
+0070#System@   : z/OS.
+0080&L
+0090&L
+0100#Anwendung@: Dieser View kann zur Anzeige aller Module benutzt wer-
+0110             den, die in einen bestimmten Adressraum geladen wurden.
+0120&L
+0130#Anmerkung@:

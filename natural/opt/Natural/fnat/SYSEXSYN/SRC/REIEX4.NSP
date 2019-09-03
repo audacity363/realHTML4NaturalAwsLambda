@@ -1,0 +1,23 @@
+0010** Example 'REIEX4': REINPUT (with TEXT option)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+004001 #NAME   (A8)
+005001 #TEXT   (A20)
+0060END-DEFINE
+0070*
+0080*
+0090INPUT WITH TEXT 'Enter a program name.' 'Program name:' #NAME
+0100*
+0110IF #NAME = ' '
+0120  REINPUT WITH TEXT 'Input missing. Enter a name.'
+0130END-IF
+0140*
+0150IF #NAME NE MASK (A)
+0160  MOVE 'Invalid input.' TO #TEXT
+0170  REINPUT WITH TEXT ':1: Name must start with a letter.',#TEXT
+0180ELSE
+0190  /* Using Natural error message 7600 for demonstration
+0200  COMPRESS *INIT-USER 'on' *DAT4I INTO #TEXT
+0210  INPUT WITH TEXT *-7600,#NAME,#TEXT 'Input accepted.'
+0220END-IF
+0230END

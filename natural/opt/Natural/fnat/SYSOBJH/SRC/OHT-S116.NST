@@ -1,0 +1,28 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Natural Version
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor> OHT-0002
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180Natural version of the Natural programming objects to be processed:
+0190
+0200A single Natural version in the format 'V.R.SM' where
+0210  V   = 1 digit version
+0220  R   = 1 digit release
+0230  SM  = 2 digit system maintenance level
+0240or a range can be specified.
+0250
+0260See next help screen for valid ranges.
+0270
+0280<HelpTextEnd>

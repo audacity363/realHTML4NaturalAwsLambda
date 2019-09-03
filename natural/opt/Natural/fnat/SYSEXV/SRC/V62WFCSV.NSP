@@ -1,0 +1,167 @@
+0010* Program ...... V62WFCSV
+0020* Library ...... SYSEXV
+0030* Version ...... 6.2
+0040* Machine ...... UNIX
+0050*
+0060* Functionality  Work File Type CSV (comma-seperated values)
+0070*                Write to CSV file
+0080*                Read from CSV file
+0090************************************************************************
+0100*
+0110*
+0120DEFINE DATA LOCAL
+01301 #SELECTNAME (A253)
+01401 #MSG (A70) INIT <' '>
+01501 #HEADER (A10) /* skip header
+0160* Table content
+01701 #ROW (N3)
+01801 #MAX-ROW (N3) CONST <6>
+01901 #NBR (N3/1:#MAX-ROW)
+02001 #NAME (A20/1:#MAX-ROW) INIT
+0210(001)  <'Adams               '>
+0220(002)  <'Baggins             '>
+0230(003)  <'Cesar               '>
+0240(004)  <'Dursley             '>
+0250(005)  <'Einstein            '>
+02601 #FIRST_NAME (A20/1:#MAX-ROW) INIT
+0270(001)  <'Eve                 '>
+0280(002)  <'Bilbo               '>
+0290(003)  <'Julius              '>
+0300(004)  <'Dudley              '>
+0310(005)  <'Albert              '>
+03201 #INCOME (P10/1:#MAX-ROW) INIT
+0330(001)  <0054000>
+0340(002)  <0600000>
+0350(003)  <2400000>
+0360(004)  <0062000>
+0370(005)  <0160000>
+0380END-DEFINE
+0390*
+0400DEFINE PROTOTYPE WORKFILE-SUFFIX
+0410  RETURNS (A) DYNAMIC
+0420DEFINE DATA PARAMETER
+04301 #FILENAME (A253)
+0440END-DEFINE
+0450END-PROTOTYPE
+0460*
+0470FORMAT KD=ON
+0480SET KEY PF3  NAMED 'Exit'
+0490  PF5  NAMED 'Save'
+0500  PF6  NAMED 'Read'
+0510  PF12 NAMED 'Canc'
+0520*
+0530FOR #ROW = 1 TO #MAX-ROW
+0540  MOVE #ROW TO #NBR(#ROW)
+0550END-FOR
+0560*
+0570REPEAT
+0580*
+0590  INPUT  (IP=OFF) WITH TEXT #MSG (AD=I )
+0600    01T *TIMX  (AD=OTD  )
+0610    21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0620    70T *DATX  (AD=OTD DF=L  )
+0630    /
+0640    01T 'User'
+0650    06T *USER  (AD=OLTI  )
+0660    25T     '   - Work File Type CSV -   ' (I)
+0670    64T 'Program'
+0680    72T *PROGRAM   (AD=OI  )
+0690    //
+0700    02T 'DEFINE WORK FILE' (I) 'n name'   'TYPE ''CSV'''
+0710    (I) /
+0720    /
+0730    02T 'With the'   'new type CSV,' (I)
+0740    'data can be written to a work file as'   /
+0750    02T 'comma-separated values.' (I)  /
+0760    /
+0770    5T 'Nbr' (I) 10T 'Name' (I) 32T
+0780    'First Name' (I) 54T 'Income' (I) /
+0790    5T #NBR(1) (AD=M CD=NE) 10T #NAME(1) (AD=M CD=NE)
+0800    32T #FIRST_NAME(1) (AD=M CD=NE) 54T #INCOME(1) (AD=M CD=NE) /
+0810    5T #NBR(2) (AD=M CD=NE) 10T #NAME(2) (AD=M CD=NE)
+0820    32T #FIRST_NAME(2) (AD=M CD=NE) 54T #INCOME(2) (AD=M CD=NE) /
+0830    5T #NBR(3) (AD=M CD=NE) 10T #NAME(3) (AD=M CD=NE)
+0840    32T #FIRST_NAME(3) (AD=M CD=NE) 54T #INCOME(3) (AD=M CD=NE) /
+0850    5T #NBR(4) (AD=M CD=NE) 10T #NAME(4) (AD=M CD=NE)
+0860    32T #FIRST_NAME(4) (AD=M CD=NE) 54T #INCOME(4) (AD=M CD=NE) /
+0870    5T #NBR(5) (AD=M CD=NE) 10T #NAME(5) (AD=M CD=NE)
+0880    32T #FIRST_NAME(5) (AD=M CD=NE) 54T #INCOME(5) (AD=M CD=NE) /
+0890    5T #NBR(6) (AD=M CD=NE) 10T #NAME(6) (AD=M CD=NE)
+0900    /
+0910    02T 'Work file:'   #SELECTNAME (AL=50 AD=MI) /
+0920    02T 'Press'   'PF5' (I) 'to save the table as'
+0930    'comma-separated values (CSV) to the Work file.'   /
+0940    02T 'Then you can edit the CSV file with external tools.'   /
+0950    02T 'Press'   'PF6' (I)
+0960    'to re-read the table from the CSV file.'   /
+0970    02T 'Hint:' (I) 'CSV properties (header, separator character'
+0980
+0990    'and code page) can be'   /
+1000    02T '      specified in Natparm.'
+1010*
+1020  RESET  #MSG
+1030*
+1040  DECIDE ON FIRST VALUE OF *PF-KEY
+1050    VALUE 'PF3'  /* Exit
+1060      ESCAPE ROUTINE
+1070    VALUE 'PF12'
+1080      CALLNAT 'UTILSTOP'
+1090    VALUE 'ENTR'
+1100      IGNORE
+1110    VALUE 'PF5' /* save
+1120      IF *TRANSLATE(#SELECTNAME,UPPER) <> MASK(*'.CSV'/)
+1130        COMPRESS #SELECTNAME '.csv' INTO #SELECTNAME LEAVING NO
+1140      END-IF
+1150*
+1160* Define the comma-sepearted values (CSV) work file
+1170*
+1180      DEFINE WORK FILE 1 #SELECTNAME TYPE 'CSV'
+1190*
+1200* Write a user defined header
+1210* The 'VARIABLE' allows to write alpha values into a column with
+1220* numerics
+1230*
+1240      WRITE WORK 1 VARIABLE 'Nbr' 'Name' 'First Name' 'Income'
+1250*
+1260      FOR #ROW = 1 TO #MAX-ROW
+1270*
+1280        WRITE WORK 1 VARIABLE #NBR(#ROW) #NAME(#ROW)
+1290          #FIRST_NAME(#ROW) #INCOME(#ROW)
+1300*
+1310      END-FOR
+1320      CLOSE WORK 1
+1330      COMPRESS 'Data saved into' SUBSTR (#SELECTNAME,1,55) INTO #MSG
+1340*
+1350    VALUE 'PF6' /* read
+1360      IF WORKFILE-SUFFIX(<#SELECTNAME>) = ' '  /* no suffix specified
+1370        COMPRESS #SELECTNAME '.csv' INTO #SELECTNAME LEAVING NO
+1380      END-IF
+1390*
+1400* Define the comma-sepearted values (CSV) work file
+1410*
+1420      DEFINE WORK FILE 1 #SELECTNAME TYPE 'CSV'
+1430*
+1440* Skip the user defined header
+1450*
+1460      READ WORK 1 ONCE #HEADER
+1470*
+1480      MOVE 1 TO #ROW
+1490*
+1500      READ WORK 1 #NBR(#ROW) #NAME(#ROW) #FIRST_NAME(#ROW) #INCOME(#ROW)
+1510*
+1520        IF #ROW >= #MAX-ROW
+1530          ESCAPE BOTTOM
+1540        ELSE
+1550          ADD 1 TO #ROW
+1560        END-IF
+1570      END-WORK
+1580      CLOSE WORK 1
+1590      COMPRESS 'Data read from' SUBSTR (#SELECTNAME,1,55) INTO #MSG
+1600    NONE VALUE
+1610      IGNORE
+1620  END-DECIDE
+1630END-REPEAT
+1640*
+1650*
+1660END
+1670

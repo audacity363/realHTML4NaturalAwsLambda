@@ -1,0 +1,89 @@
+0010** Example 'GETTRX01': GET TRANSACTION
+0020**
+0030** CAUTION: Executing this example will modify the database records!
+0040************************************************************************
+0050DEFINE DATA LOCAL
+006001 PERSON VIEW OF EMPLOYEES
+0070  02 PERSONNEL-ID      (A8)
+0080  02 NAME              (A20)
+0090  02 FIRST-NAME        (A20)
+0100  02 MIDDLE-I          (A1)
+0110  02 CITY              (A20)
+012001 AUTO VIEW OF VEHICLES
+0130  02 PERSONNEL-ID      (A8)
+0140  02 MAKE              (A20)
+0150  02 MODEL             (A20)
+0160*
+017001 ET-DATA
+0180  02 #APPL-ID          (A8) INIT <' '>
+0190  02 #USER-ID          (A8)
+0200  02 #PROGRAM          (A8)
+0210  02 #DATE             (A10)
+0220  02 #TIME             (A8)
+0230  02 #PERSONNEL-NUMBER (A8)
+0240END-DEFINE
+0250*
+0260GET TRANSACTION DATA #APPL-ID #USER-ID #PROGRAM
+0270                     #DATE    #TIME    #PERSONNEL-NUMBER
+0280*
+0290IF  #APPL-ID NOT = 'NORMAL'     /* if last execution ended abnormally
+0300AND #APPL-ID NOT = ' '
+0310  INPUT (AD=OIL)
+0320    //  20T '*** LAST SUCCESSFUL TRANSACTION ***' (I)
+0330    /   20T '***********************************'
+0340    /// 25T      'APPLICATION:' #APPL-ID
+0350    /   32T             'USER:' #USER-ID
+0360    /   29T          'PROGRAM:' #PROGRAM
+0370    /   24T     'COMPLETED ON:' #DATE 'AT' #TIME
+0380    /   20T 'PERSONNEL NUMBER:' #PERSONNEL-NUMBER
+0390END-IF
+0400*
+0410REPEAT
+0420  /*
+0430  INPUT (AD=MIL) // 20T 'ENTER PERSONNEL NUMBER:' #PERSONNEL-NUMBER
+0440  /*
+0450  IF #PERSONNEL-NUMBER = '99999999'
+0460    ESCAPE BOTTOM
+0470  END-IF
+0480  /*
+0490  FIND1. FIND PERSON WITH PERSONNEL-ID = #PERSONNEL-NUMBER
+0500    IF NO RECORDS FOUND
+0510      REINPUT 'SPECIFIED NUMBER DOES NOT EXIST; ENTER ANOTHER ONE.'
+0520    END-NOREC
+0530    FIND2. FIND AUTO WITH PERSONNEL-ID = #PERSONNEL-NUMBER
+0540      IF NO RECORDS FOUND
+0550        WRITE 'PERSON DOES NOT OWN ANY CARS'
+0560        ESCAPE BOTTOM
+0570      END-NOREC
+0580      IF *COUNTER (FIND2.) = 1     /* first pass through the loop
+0590        INPUT (AD=M)
+0600          /   20T 'EMPLOYEES/AUTOMOBILE DETAILS' (I)
+0610          /   20T '----------------------------'
+0620          /// 20T 'NUMBER:' PERSONNEL-ID (AD=O)
+0630          /   22T   'NAME:' NAME ' ' FIRST-NAME ' ' MIDDLE-I
+0640          /   22T   'CITY:' CITY
+0650          /   22T   'MAKE:' MAKE
+0660          /   21T  'MODEL:' MODEL
+0670        UPDATE (FIND1.)            /* update the EMPLOYEES file
+0680      ELSE                         /* subsequent passes through the loop
+0690        INPUT NO ERASE (AD=M IP=OFF) //////// 28T MAKE / 28T MODEL
+0700      END-IF
+0710      /*
+0720      UPDATE (FIND2.)              /* update the VEHICLES file
+0730      /*
+0740      MOVE *APPLIC-ID TO #APPL-ID
+0750      MOVE *INIT-USER TO #USER-ID
+0760      MOVE *PROGRAM   TO #PROGRAM
+0770      MOVE *DAT4E     TO #DATE
+0780      MOVE *TIME      TO #TIME
+0790      /*
+0800      END TRANSACTION #APPL-ID #USER-ID #PROGRAM
+0810                      #DATE    #TIME    #PERSONNEL-NUMBER
+0820      /*
+0830    END-FIND                  /* for VEHICLES    (FIND2.)
+0840  END-FIND                    /* for EMPLOYEES   (FIND1.)
+0850END-REPEAT                    /* for REPEAT
+0860*
+0870STOP                          /* Simulate abnormal transaction end
+0880END TRANSACTION 'NORMAL  '
+0890END

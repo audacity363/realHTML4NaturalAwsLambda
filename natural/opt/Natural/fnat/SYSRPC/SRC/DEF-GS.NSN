@@ -1,0 +1,97 @@
+0010* Example Service Directory DEF-GS
+0020*
+0030* Copyright (c) 1992-2012 Software AG, Darmstadt, Germany and/or
+0040*   Software AG USA, Inc., Reston, VA, United States of America,
+0050*   and/or their suppliers. All rights reserved.
+0060* This Service Directory is delivered with
+0070* the SYSRPC utility of Natural version 6.3.13.
+0080* DO NOT EDIT!
+0090*
+0100DEFINE DATA PARAMETER
+01101 PFUNC     (A1)
+01201 PRET      (I4)
+01301 INX       (I2)
+01401 LIBID     (A8)
+01501 PNAM      (A8)
+01601 PSRV-NODE (A8)
+01701 PSRV-NAME (A8)
+01801 NEXT      (A16)
+01901 X-DATA    (A16/1:*) OPTIONAL
+0200LOCAL USING NATRPCL
+0210LOCAL USING NATRPCCL
+0220LOCAL
+02301 NUM(I2)        CONST <12>
+02401 ID (A16/0:NUM) INIT
+0250(0) <' 310'>                    /* feature version
+0260(1) <'NETB001  N B'>
+0270(2) <'SSRV1    N'>
+0280(3) <'LSYSRPC'>
+0290(4) <'PTESTS1'>
+0300(5) <'PTESTS2'>
+0310(6) <'PTESTS3'>
+0320(7) <'PTESTS4'>
+0330(8) <'PTESTS5'>
+0340(9) <'PTESTS6'>
+0350(10) <'PTESTS7'>
+0360(11) <'        '>
+03701 N_NT     (I2)        CONST <1>
+03801 NAMETABLE(A16/1:N_NT) INIT
+0390(1) <'        '>
+04001 EXP_TIME  (A10) CONST <'0'>
+04101 U_ID      (A16) CONST <'CA3CCD6ECD8F0000'>
+04201 TIMESTAMP (A16) CONST <'20120928 0744549'>
+04301 GENERATOR (A16) CONST <'6.3.13.1'>
+0440END-DEFINE
+0450DECIDE ON FIRST VALUE OF PFUNC
+0460  VALUE 'A'                     /* All entries G & N in one call
+0470    COMPRESS NUM ':' N_NT       /* send the sizes
+0480        INTO NEXT  LEAVING NO SPACE
+0490    IF X-DATA SPECIFIED
+0500    THEN
+0510      X-DATA(3:NUM) := ID(1:NUM - 2)
+0520      IF N_NT > 1
+0530      THEN
+0540        X-DATA(NUM + 1:NUM + N_NT) := NAMETABLE(1:N_NT)
+0550      END-IF
+0560    END-IF
+0570  VALUE 'E'                     /* expiration time
+0580    ASSIGN NEXT = EXP_TIME
+0590  VALUE 'G'                     /* Get entries
+0600    IF INX < 0 OR INX >= NUM
+0610      ASSIGN INX = 1
+0620    END-IF
+0630    ASSIGN NEXT = ID(INX)
+0640    ADD 1 TO INX
+0650    IF INX >= NUM
+0660      RESET INX                 /* mark end of directory
+0670    END-IF
+0680  VALUE 'L'                     /* Load NATCLTGS to buffer
+0690    MOVE 'L' TO RPC-CONV-CL.FUNC
+0700    MOVE NUM TO RPC-CONV-CL.SNUM
+0710***
+0720    CALL 'NATGWRPC' FKT-CONVCLIENT 'C'
+0730                    RPC-CONV-CL NAMETABLE(1) ID(*)
+0740***
+0750    ASSIGN PRET = RPC-CONV-CL.RETVAL
+0760  VALUE 'N'                     /* get name table
+0770    IF INX <= 0 OR INX >= N_NT
+0780      ASSIGN INX = 1
+0790    END-IF
+0800    ASSIGN NEXT = NAMETABLE(INX)
+0810    ADD 1 TO INX
+0820    IF INX >= N_NT
+0830      RESET INX                 /* mark end of name table
+0840    END-IF
+0850  VALUE 'S'                     /* get INIT size
+0860    COMPRESS NUM ':' N_NT
+0870        INTO NEXT  LEAVING NO SPACE
+0880  VALUE 'T'                     /* get time stamp
+0890    ASSIGN NEXT = TIMESTAMP
+0900  VALUE 'U'                     /* unique directory identifier
+0910    ASSIGN NEXT = U_ID
+0920  VALUE 'V'                     /* generator version
+0930    ASSIGN NEXT = GENERATOR
+0940  NONE
+0950    IGNORE
+0960END-DECIDE
+0970END

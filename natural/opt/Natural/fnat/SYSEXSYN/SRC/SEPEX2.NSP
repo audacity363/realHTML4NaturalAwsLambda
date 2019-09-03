@@ -1,0 +1,20 @@
+0010** Example 'SEPEX2': SEPARATE (using array variable)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #INPUT-LINE (A60) INIT <'VALUE1,   VALUE2,VALUE3'>
+00501 #FIELD      (A20/1:5)
+00601 #NUMBER     (N2)
+0070END-DEFINE
+0080*
+0090SEPARATE #INPUT-LINE LEFT JUSTIFIED INTO #FIELD (1:5)
+0100                     GIVING NUMBER IN #NUMBER
+0110*
+0120WRITE NOTITLE #INPUT-LINE //
+0130              #FIELD (1)  /
+0140              #FIELD (2)  /
+0150              #FIELD (3)  /
+0160              #FIELD (4)  /
+0170              #FIELD (5)  /
+0180              #NUMBER
+0190*
+0200END

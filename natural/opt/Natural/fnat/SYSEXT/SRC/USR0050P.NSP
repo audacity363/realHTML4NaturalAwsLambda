@@ -1,0 +1,54 @@
+0010/* Get 'SYSPROD' Information
+0020/**********************
+0030DEFINE DATA LOCAL
+0040  01 PARAMETER          /*  Output Elements
+0050     02 PN (A20/1:12)   /*  Product Name
+0060     02 VS (A04/1:12)   /*  Product Version and Release
+0070     02 SM (A02/1:12)   /*  SM Level
+0080     02 DT (A08/1:12)   /*  SM Release Date
+0090     02 IU (A02/1:12)   /*  Update Level
+0100     02 RC (P01)        /*  Response Code
+0110     02 TX (A48)        /*  Explanation to RC
+0120END-DEFINE
+0130/**********************
+0140DEFINE WINDOW PRODUCTS
+0150  SIZE 17 * 52
+0160  BASE 02 / 20
+0170  TITLE 'NATURAL Product Information'
+0180  FRAMED POSITION OFF
+0190/**********************
+0200REPEAT
+0210  /*
+0220  RESET PN (*) VS (*) SM (*) DT (*) IU (*)
+0230  /*
+0240  CALLNAT 'USR0050N' PARAMETER      /*  Read Product Information
+0250  /*
+0260  IF RC = 1
+0270    COMPRESS TX '(More)' TO TX
+0280  END-IF
+0290  /*
+0300  INPUT WINDOW = 'PRODUCTS'
+0310    (AD=OD CD=YE IP=OFF ZP=OFF SG=OFF) WITH TEXT TX (CD=NE)
+0320    'Product Name          V/R   SM    Date    Iupd' (TUD) /
+0330    '--------------------  ----  --  --------  ----' (TUD) /
+0340    PN (01) 2X VS (01) 2X SM (01) 2X DT (01) 3X IU (01)  /
+0350    PN (02) 2X VS (02) 2X SM (02) 2X DT (02) 3X IU (02)  /
+0360    PN (03) 2X VS (03) 2X SM (03) 2X DT (03) 3X IU (03)  /
+0370    PN (04) 2X VS (04) 2X SM (04) 2X DT (04) 3X IU (04)  /
+0380    PN (05) 2X VS (05) 2X SM (05) 2X DT (05) 3X IU (05)  /
+0390    PN (06) 2X VS (06) 2X SM (06) 2X DT (06) 3X IU (06)  /
+0400    PN (07) 2X VS (07) 2X SM (07) 2X DT (07) 3X IU (07)  /
+0410    PN (08) 2X VS (08) 2X SM (08) 2X DT (08) 3X IU (08)  /
+0420    PN (09) 2X VS (09) 2X SM (09) 2X DT (09) 3X IU (09)  /
+0430    PN (10) 2X VS (10) 2X SM (10) 2X DT (10) 3X IU (10)  /
+0440    PN (11) 2X VS (11) 2X SM (11) 2X DT (11) 3X IU (11)  /
+0450    PN (12) 2X VS (12) 2X SM (12) 2X DT (12) 3X IU (12)  /
+0460  SET WINDOW OFF                  /* Close the Window
+0470  /*
+0480  IF RC = 1
+0490    MOVE '+10' TO TX
+0500  ELSE
+0510    ESCAPE BOTTOM
+0520  END-IF
+0530END-REPEAT
+0540END

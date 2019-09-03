@@ -1,0 +1,21 @@
+0010** Example 'REIEX3': REINPUT  (with FULL and POSITION option)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #A (A20)
+00501 #B (N7.2)
+00601 #C (A5)
+00701 #D (N3)
+0080END-DEFINE
+0090*
+0100INPUT (AD=M) #A  #B  #C  #D
+0110*
+0120IF #A = ' '
+0130  COMPUTE #B = #B + #D
+0140  RESET #D
+0150END-IF
+0160*
+0170IF #A = SCAN 'TEST' OR = ' '
+0180  REINPUT FULL 'RETYPE VALUES' MARK POSITION 5 IN *#A
+0190END-IF
+0200*
+0210END

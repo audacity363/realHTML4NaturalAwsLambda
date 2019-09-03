@@ -1,0 +1,214 @@
+0010**  Example program for USR3005N
+0020**  This program shows, how data can be added to Predict.
+0030**  It updates the Adabas attributes of a file
+0040**
+0050DEFINE DATA LOCAL
+00601 REQUEST-RESULT(A) DYNAMIC
+00701 UPD-STATEMENT(A) DYNAMIC
+0080*
+0090LOCAL USING PARSER-X                /* Local Data Area is located
+0100                                    /* in Library SYSEXXT
+0110LOCAL
+01201 XML_PARSER_XPATH             (A) DYNAMIC
+01301 XML_PARSER_XPATH_TYPE        (A1)
+01401 XML_PARSER_CONTENT           (A) DYNAMIC
+01501 XML_PARSER_CONTENT_IS_EMPTY  (L)
+01601 XML_PARSER_ERROR_TEXT        (A253)
+01701 XML_PARSER_RESPONSE          (I2)
+01801 #XNAME (A) DYNAMIC
+01901 #XVALUE (A) DYNAMIC
+02001 #MSG-NR(I4)
+02101 #MSG-TEXT(A79)
+02201 #MSG-TYPE(A8)
+02301 #ADDITIONAL-MSG-NR(I4)
+02401 #ADDITIONAL-MSG-TEXT(A79)
+02501 #INVALID-ATTRIBUTE(A32)
+02601 #INDEX-IN-INVALID-ATTRIBUTE(I4)
+02701 #COMPOSE-STATEMENT (L)
+0280END-DEFINE
+0290PRINT 'Example program' *PROGRAM 'for USR3005N'
+0300/     'This program shows, how data can be added to Predict.'
+0310/     'It updates the Adabas attributes of a file'
+0320/
+0330**
+0340** First lock the parent object to be updated
+0350**
+0360COMPRESS
+0370'<Predict>'
+0380  '<Request>'
+0390    '<Lock>'
+0400      '<Search>'
+0410         '<Object-type value=''DATABASE-A''/>'
+0420         '<Attribute name=''ID'' value=''PREDICT''/>'
+0430      '</Search>'
+0440    '</Lock>'
+0450  '</Request>'
+0460'</Predict>'
+0470**
+0480TO REQUEST-RESULT
+0490*
+0500PERFORM CALL-USR3005N
+0510*
+0520IF #MSG-TYPE NE 'SUCCESS'
+0530  ESCAPE ROUTINE
+0540END-IF
+0550**
+0560** Now add the file SYSDIC to the link list and store the Adabas
+0570** attributes
+0580**
+0590COMPRESS
+0600'<Predict>'
+0610  '<Request>'
+0620    '<Add>'
+0630      '<Multi-Link source-object-type=''DATABASE-A'''
+0640               'association=''FILE'' direction =''ACTIVE''/>'
+0650      '<Set>'
+0660        '<Row>'
+0670          '<Attribute name=''SOURCE-OBJECT'' value=''PREDICT''/>'
+0680          '<Attribute name=''TARGET-OBJECT'' value=''SYSDIC''/>'
+0690          '<Attribute Name=''P-FNR'' Value=''101'' />'
+0700**
+0710** Attributes not specified will be taken from the Default Adabas
+0720** attributes
+0730**
+0740          '<Attribute Name=''MAX-ISN'' Value=''1000'' />'
+0750          '<Attribute Name=''ASSO-DEVICE-TYPE'' Value=''3390'' />'
+0760          '<Attribute Name=''DATA-DEVICE-TYPE'' Value=''3390'' />'
+0770          '<Attribute Name=''UISIZE'' Value=''10'' />'
+0780          '<Attribute Name=''NISIZE'' Value=''15'' />'
+0790          '<Attribute Name=''DSSIZE'' Value=''20'' />'
+0800          '<Attribute Name=''ASSOPFAC'' Value=''10'' />'
+0810          '<Attribute Name=''DATAPFAC'' Value=''10'' />'
+0820          '<Attribute Name=''ISNREUSAGE'' Value=''Y'' />'
+0830          '<Attribute Name=''INDEXCOMPRESSION'' Value=''Y'' />'
+0840          '<Attribute Name=''PHYS-DISTRIBUTION-TYPE'' Value='''' />'
+0850        '</Row>'
+0860      '</Set>'
+0870    '</Add>'
+0880  '</Request>'
+0890'</Predict>'
+0900**
+0910** To update attributes of an already existing link use the following
+0920** request
+0930**
+0940**'<Predict>'
+0950**  '<Request>'
+0960**    '<Update>'
+0970**      '<Search>'
+0980**        '<Multi-Link source-object-type=''DATABASE-A''
+0990**        ' association=''FILE'' direction=''ACTIVE''/>'
+1000**        '<Attribute name=''SOURCE-OBJECT'' value=''PREDICT''/>'
+1010**        '<Attribute name=''TARGET-OBJECT'' value=''SYSDIC''/>'
+1020**        '<Attribute Name=''P-FNR'' Value=''101'' />'
+1030**      '</Search>'
+1040**      '<Set>'
+1050**        '<Row>'
+1060**          '<Attribute Name=''MAX-ISN'' Value=''1000'' />'
+1070**          '<Attribute Name=''ASSO-DEVICE-TYPE'' Value=''3390'' />'
+1080**          '<Attribute Name=''DATA-DEVICE-TYPE'' Value=''3390'' />'
+1090**          '<Attribute Name=''UISIZE'' Value=''10'' />'
+1100**          '<Attribute Name=''NISIZE'' Value=''15'' />'
+1110**          '<Attribute Name=''DSSIZE'' Value=''20'' />'
+1120**          '<Attribute Name=''ASSOPFAC'' Value=''10'' />'
+1130**          '<Attribute Name=''DATAPFAC'' Value=''10'' />'
+1140**          '<Attribute Name=''ISNREUSAGE'' Value=''Y'' />'
+1150**          '<Attribute Name=''INDEXCOMPRESSION'' Value=''Y'' />'
+1160**          '<Attribute Name=''PHYS-DISTRIBUTION-TYPE'' Value='''' />'
+1170**        '</Row>'
+1180**      '</Set>'
+1190**    '</Update>'
+1200**  '</Request>'
+1210**'</Predict>'
+1220**
+1230*
+1240TO REQUEST-RESULT
+1250*
+1260PERFORM CALL-USR3005N
+1270**
+1280** Now unlock the updated object
+1290**
+1300COMPRESS
+1310'<Predict>'
+1320  '<Request>'
+1330    '<Unlock>'
+1340      '<Search>'
+1350         '<Object-type value=''DATABASE-A''/>'
+1360         '<Attribute name=''ID'' value=''PREDICT''/>'
+1370      '</Search>'
+1380    '</Unlock>'
+1390  '</Request>'
+1400'</Predict>'
+1410**
+1420TO REQUEST-RESULT
+1430*
+1440PERFORM CALL-USR3005N
+1450*
+1460DEFINE SUBROUTINE CALL-USR3005N
+1470*
+1480PRINT 'Request passed to USR3005N' /
+1490PRINT REQUEST-RESULT
+1500*
+1510CALLNAT 'USR3005N' REQUEST-RESULT
+1520*
+1530PRINT / 'Result returned from USR3005N' /
+1540*
+1550INCLUDE PARSER_X                    /* Copy Code is located
+1560                                    /* in Library SYSEXXT
+1570                                    /*
+1580  'REQUEST-RESULT'                  /* XML FILE TO BE PARSED
+1590  'XML_PARSER_XPATH'                /* XPATH TO REPESENT ELEMENT...
+1600  'XML_PARSER_XPATH_TYPE'           /* TYPE OF CALLBACK
+1610  'XML_PARSER_CONTENT'              /* CONTENT OF FOUND ELEMENT
+1620  'XML_PARSER_CONTENT_IS_EMPTY'     /* IS TRUE IF ELEMENT IS EMPTY
+1630  'XML_PARSER_ERROR_TEXT'           /* ERROR MESSAGE
+1640  'XML_PARSER_RESPONSE'             /* ERROR NR; 0 = OK
+1650END-SUBROUTINE
+1660*
+1670DEFINE SUBROUTINE CALLBACK
+1680*
+1690EXAMINE XML_PARSER_XPATH TRANSLATE INTO UPPER
+1700DECIDE ON FIRST VALUE OF XML_PARSER_XPATH
+1710*
+1720  VALUE 'PREDICT/RESULT/MESSAGE/?NUMBER'
+1730    #MSG-NR := VAL(XML_PARSER_CONTENT)
+1740*
+1750  VALUE 'PREDICT/RESULT/MESSAGE/?TEXT'
+1760    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#MSG-TEXT'
+1770*
+1780  VALUE 'PREDICT/RESULT/MESSAGE/?TYPE'
+1790    #MSG-TYPE := XML_PARSER_CONTENT
+1800    EXAMINE #MSG-TYPE TRANSLATE INTO UPPER
+1810    IF #MSG-TYPE NE 'SUCCESS'
+1820**
+1830** Possible Values of ?TYPE are SUCCESS, ERROR and WARNING
+1840**
+1850      PRINT #MSG-NR
+1860      PRINT #MSG-TEXT
+1870    END-IF
+1880  VALUE 'PREDICT/RESULT/MESSAGE/?ADDITIONAL-MSG-NUMBER'
+1890    #ADDITIONAL-MSG-NR := VAL(XML_PARSER_CONTENT)
+1900*
+1910  VALUE 'PREDICT/RESULT/MESSAGE/?ADDITIONAL-MSG-TEXT'
+1920    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#ADDITIONAL-MSG-TEXT'
+1930    PRINT #ADDITIONAL-MSG-NR
+1940    PRINT #ADDITIONAL-MSG-TEXT
+1950  VALUE 'PREDICT/RESULT/MESSAGE/?INVALID-ATTRIBUTE'
+1960    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#INVALID-ATTRIBUTE'
+1970    PRINT #INVALID-ATTRIBUTE 'is invalid'
+1980  VALUE 'PREDICT/RESULT/MESSAGE/?INDEX-IN-INVALID-ATTRIBUTE'
+1990    #INDEX-IN-INVALID-ATTRIBUTE := VAL(XML_PARSER_CONTENT)
+2000    PRINT 'Occurrence' #INDEX-IN-INVALID-ATTRIBUTE
+2010    'of' #INVALID-ATTRIBUTE 'is invalid'
+2020*
+2030*
+2040  NONE IGNORE
+2050*
+2060END-DECIDE
+2070END-SUBROUTINE /* CALLBACK
+2080*
+2090DEFINE SUBROUTINE PARSER_ERROR
+2100   PRINT 'Parser Error'
+2110   PRINT XML_PARSER_ERROR_TEXT
+2120 END-SUBROUTINE
+2130*
+2140END

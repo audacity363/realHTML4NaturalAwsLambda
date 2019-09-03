@@ -1,0 +1,66 @@
+0010* Program   MCOMDTA
+0020* View      COMMON-DATA
+0030*
+0040* Function  Maintenance of shared Mainstorage
+0050*
+0060* ----------------------------------------------------------------------
+0070*
+0080DEFINE DATA
+0090   GLOBAL USING TUTO
+0100   LOCAL  USING COMDATAL
+0110END-DEFINE
+0120*
+0130ASSIGN COMMON-DATA.EDITOR-BUFFER-POOL= 'N'
+0140*
+0150REPEAT
+0160   INPUT (AD=MILT'_') WITH TEXT *##MSG-NR,##MSG-TXT1, ##MSG-TXT2
+0170     / ##TITLE (AD=OI IP=OFF)
+0180   /// 10X 'Function ....................' (I) COMMON-DATA.FUNCTION
+0190     / 10X '(CREATE/DELETE/CLOSE/GET/MODIFY/LIST)'
+0200    // 10X 'Name of Common Data .........' (I) COMMON-DATA.DATA-ID
+0210                                           (AD=M)
+0220    // 10X 'Use Editor-Buffer-Pool? (y/n)' COMMON-DATA.EDITOR-BUFFER-POOL
+0230                                           (AD=M)
+0240     / 10X 'Number of Entries ...........' COMMON-DATA.NUMBER-OF-ENTRIES
+0250     / 10X 'Length of Entry .............' COMMON-DATA.ENTRY-LENGTH
+0260   /// 10X 'Entry-Number ................' COMMON-DATA.ENTRY-NUMBER
+0270     / 10X 'Delete this Entry ? (y/n) ...' COMMON-DATA.DELETE-ENTRY
+0280    // 10X 'Data ........................' COMMON-DATA.DATA
+0290                                           (AD=M AL=20)
+0300   /// 10X 'Current Number of Entries ...' COMMON-DATA.CURRENT-ENTRIES
+0310                                           (AD=O)
+0320*
+0330   RESET ##MSG-NR ##MSG-TXT1 ##MSG-TXT2
+0340*
+0350   IF COMMON-DATA.FUNCTION = 'GET' OR = 'LIST'
+0360      FIND COMMON-DATA
+0370        WITH NODE         = ##NODE
+0380         AND FUNCTION     = COMMON-DATA.FUNCTION
+0390         AND DATA-ID      = COMMON-DATA.DATA-ID
+0400         AND ENTRY-NUMBER = COMMON-DATA.ENTRY-NUMBER
+0410         DISPLAY DATA-ID DATA (AL=20) 'DATA-HEX' DATA (EM=H(20))
+0420      END-FIND
+0430   ELSE
+0440      PROCESS COMMON-DATA
+0450        USING NODE               = ##NODE
+0460          ,   FUNCTION           = COMMON-DATA.FUNCTION
+0470          ,   DATA-ID            = COMMON-DATA.DATA-ID
+0480          ,   EDITOR-BUFFER-POOL = COMMON-DATA.EDITOR-BUFFER-POOL
+0490          ,   NUMBER-OF-ENTRIES  = COMMON-DATA.NUMBER-OF-ENTRIES
+0500          ,   ENTRY-LENGTH       = COMMON-DATA.ENTRY-LENGTH
+0510          ,   ENTRY-NUMBER       = COMMON-DATA.ENTRY-NUMBER
+0520          ,   DELETE-ENTRY       = COMMON-DATA.DELETE-ENTRY
+0530          ,   DATA               = COMMON-DATA.DATA
+0540       GIVING ERROR-CODE
+0550              ERROR-TEXT
+0560   END-IF
+0570*
+0580   IF COMMON-DATA.ERROR-CODE > 0
+0590      ASSIGN ##MSG-NR = 1000
+0600      ASSIGN ##MSG-TXT1 =  COMMON-DATA.ERROR-TEXT
+0610   ELSE
+0620      ASSIGN ##MSG-NR = 1003
+0630   END-IF
+0640*
+0650END-REPEAT
+0660END

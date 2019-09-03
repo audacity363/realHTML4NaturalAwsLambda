@@ -1,0 +1,10 @@
+0010** Example 'INCEX4': INCLUDE  (with concatenated parameters in copycode)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #GROUP
+0050  2  ABC(A10) INIT <'1234567890'>
+0060END-DEFINE
+0070*
+0080INCLUDE INCEX4C  '#GROUP.'  'ABC'  'AB'
+0090*
+0100END

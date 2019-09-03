@@ -1,0 +1,63 @@
+0010* Program   MSYSINF
+0020* View      SYSTEM-INFO
+0030*
+0040* Function  Display system information
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* hka 97-12-03   NPE213:   make it y2000 compliant
+0090* ======================================================================
+0100*
+0110DEFINE DATA
+0120   GLOBAL USING TUTO
+0130   LOCAL  USING SYSINFOL
+0140*
+0150   LOCAL
+016001  NODE-NAMES VIEW OF SYSTEM-INFO
+0170    02  ERROR-CODE
+0180    02  NODE-NAME-LIST
+0190END-DEFINE
+0200* --------------------------------------- main -------------------------
+0210PERFORM PF-KEY
+0220SET KEY PF4 = PGM NAMED 'Parm'
+0230SET KEY PF5 = PGM NAMED 'Name'
+0240*
+0250FIND (1) SYSTEM-INFO WITH NODE = ##NODE
+0260*
+0270   IF ERROR-CODE NE 0
+0280      ASSIGN ##MSG-NR = 1000
+0290      ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0300      STOP
+0310   END-IF
+0320*
+0330   REPEAT
+0340      INPUT WITH TEXT *##MSG-NR,
+0350                       ##MSG-TXT1,
+0360                       ##MSG-TXT2
+0370            USING MAP 'MSYSINF&'
+0380      RESET ##MSG
+0390      IF *PF-KEY = 'PF4'
+0400         PERFORM DISPLAY-PARMS
+0410      END-IF
+0420      IF *PF-KEY = 'PF5'
+0430         PERFORM DISPLAY-NODE-NAMES
+0440      END-IF
+0450   END-REPEAT
+0460*
+0470END-FIND
+0480*
+0490* --------------------------------------- display-parms ----------------
+0500DEFINE SUBROUTINE DISPLAY-PARMS
+0510FIND SYSTEM-INFO WITH NODE = ##NODE
+0520  DISPLAY NOTITLE NOHDR STARTUP-PARM (AL=78)
+0530END-FIND
+0540END-SUBROUTINE
+0550* --------------------------------------- display-node-names -----------
+0560DEFINE SUBROUTINE DISPLAY-NODE-NAMES
+0570FIND NODE-NAMES WITH NODE = ##NODE
+0580  DISPLAY NOTITLE NOHDR NODE-NAME-LIST
+0590END-FIND
+0600END-SUBROUTINE
+0610* --------------------------------------- pf key ----------------------
+0620INCLUDE C-PFKEY
+0630END

@@ -1,0 +1,21 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> SYSOBJH Functions
+0080<Header2>
+0090/* <Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110<InputValues>F,U,V,A
+0120<InputNames>OHTHFF01,OHTHFU01,OHTHFV01,OHTHFA01
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170Available functions
+0180UNLOAD/LOAD/SCAN function
+0190VIEW function
+0200Administrate
+0210<HelpTextEnd>

@@ -1,0 +1,12 @@
+0010&H View LIB-UPDATE
+0020&L
+0030&L
+0040#Purpose@: Maintain library directories.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : This view permits one to perform various library update
+0100           functions, e.g. Rename/Purge directory entries.
+0110&L
+0120#Notes@  :

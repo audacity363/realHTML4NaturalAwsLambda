@@ -1,0 +1,37 @@
+0010* Program   MLIBUPD
+0020* View      LIB-UPDATE
+0030*
+0040* Function  Perform various operations on LIB directory
+0050*
+0060* ----------------------------------------------------------------------
+0070*
+0080DEFINE DATA
+0090   GLOBAL USING TUTO
+0100   LOCAL  USING LIBUPD-L
+0110END-DEFINE
+0120*
+0130INPUT (AD=MI'_')
+0140    / ##TITLE (AD=OI IP=OFF)
+0150   // '  Data set...:' LIB-UPDATE.DSNAME
+0160    / '  Volume ....:' LIB-UPDATE.VOLSER
+0170    / '  Function ..:' LIB-UPDATE.FUNCTION '(rename/scratch/alias)'
+0180   // '  Member ....:' LIB-UPDATE.MEMBER
+0190    / '  Newname ...:' LIB-UPDATE.NEWNAME-MEMBER
+0200    / '  Alias .....:' LIB-UPDATE.ALIAS
+0210*
+0220PROCESS LIB-UPDATE USING DSNAME         = LIB-UPDATE.DSNAME
+0230                     ,   VOLSER         = LIB-UPDATE.VOLSER
+0240                     ,   FUNCTION       = LIB-UPDATE.FUNCTION
+0250                     ,   MEMBER         = LIB-UPDATE.MEMBER
+0260                     ,   NEWNAME-MEMBER = LIB-UPDATE.NEWNAME-MEMBER
+0270                     ,   ALIAS          = LIB-UPDATE.ALIAS
+0280                     ,   NODE           = ##NODE
+0290                  GIVING ERROR-CODE
+0300                         ERROR-TEXT
+0310IF ERROR-CODE > 0
+0320   REINPUT ERROR-TEXT
+0330ELSE
+0340   REINPUT *1007
+0350END-IF
+0360*
+0370END

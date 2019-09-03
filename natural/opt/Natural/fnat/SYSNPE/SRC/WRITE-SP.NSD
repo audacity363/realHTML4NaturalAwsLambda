@@ -1,0 +1,322 @@
+0010DB: 148 FILE: 203  - WRITE-SPOOL                      DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:27
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:27
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A2 FORM                              A    8    D SYSOUT form.
+0250*      SYSOUT form.
+0260  1 A6 RECORD                            A  253    D Record to be written
+0270*      Record to be written.
+0280  1 A7 RECORD-LENGTH                     N  3.0    D Length of record.
+0290*      Length of record.
+0300  1 A8 CONTROL                           A    1    D Carriage control mod
+0310*      Carriage control mode:
+0320*      A  position 1 is ASA code
+0330*      M  position 1 is machine code
+0340*      E  SPACE=E (BS2000)
+0350*      I  SPACE=I (in BS2000 for
+0360*      IBM carriage control
+0370*      characters)
+0380*      ... or a number (BS2000) for
+0390*      the number of new lines
+0400*      after each line
+0410  1 A9 DESTINATION                       A  127    D Remote destination f
+0420*      Remote destination for the
+0430*      SYSOUT data set. May also be
+0440*      specified as 'IP:ipaddr' for
+0450*      a TCP/IP destination.
+0460*      In BS2000 device-type of
+0470*      printer (ND, HP) if parameter
+0480*      DEVICE is specified.
+0490  1 FN FUNCTION                          A    8    D Function to be perfo
+0500*      Function to be performed:
+0510*      blank   Write a record
+0520*      CLOSE   All records have
+0530*      been written
+0540*      SEGMENT Create new POWER
+0550*      segment after writing
+0560*      next line.
+0570*      (VSE only)
+0580  1 A4 COPIES                            B    1    D Number of SYSOUT cop
+0590*      Number of SYSOUT copies.
+0600*
+0610*      Fields common to MVS and VSE
+0620*
+0630  1 A1 CLASS                             A    1    D SYSOUT class (if omi
+0640*      SYSOUT class (if omitted, the
+0650*      default class of the ENTIRE
+0660*      SYSTEM SERVER node is used).
+0670  1 A5 PROGRAM                           A    8    D Name of writer progr
+0680*      Name of writer program to
+0690*      process this data set.
+0700*
+0710*      MVS and BS2000 fields
+0720*
+0730  1 AD CHARS                             A   64    D Four groups of four
+0740*      Four groups of four bytes each
+0750*      taken from JCL (max. 16 bytes)
+0760*      '(CHARS=(AAAA,BBBB,CCCC,DDDD)'
+0770*      (3800).
+0780*      In BS2000 it is taken from
+0790*      parameter CHARS of the PRINT
+0800*      command.
+0810*      Possible values:
+0820*      AAAA             or
+0830*      AAAABBBB         or
+0840*      AAAABBBBCCCC     or
+0850*      AAAABBBBCCCCDDDD
+0860*      Sixteen groups of four bytes
+0870*      may be specified for RSO-
+0880*      printers (max. 64 bytes).
+0890  1 AH JOB-NUMBER                        N  7.0      Job number or TSN of
+0900*      Job number or TSN of job.
+0910  1 ID IDENTIFIER                        A    8    D Needed if multiple u
+0920*      Needed if multiple update
+0930*      views are executing in
+0940*      parallel, all requests for the
+0950*      same process must have the
+0960*      same identifier.
+0970  1 JA JOB-ID                            A    8      Job number or TSN of
+0980*      Job number or TSN of job in
+0990*      alpha format.
+1000*      Field must be used for BS2000
+1010*      V10 or above with alpha TSNs.
+1020*
+1030*      VSE and BS2000 fields
+1040*
+1050  1 AA JOB-NAME                          A    8    D Name of job under wh
+1060*      Name of job under which
+1070*      output is to be printed.
+1080  1 B2 PASSWORD                          A    8    D Password of protecte
+1090*      Password of protected file
+1100*      or job.
+1110*
+1120*      MVS fields
+1130*
+1140  1 A3 HOLD                              A    8    D YES      : The SYSOU
+1150*      YES      : The SYSOUT data set
+1160*      is to be held.
+1170*      NO       : Not held.
+1180  1 AB FCB                               A    8    D FCB.
+1190*      FCB.
+1200  1 AC FLASH                             A    4    D Flash for 3800.
+1210       HD=Flash
+1220*      Flash for 3800.
+1230  1 AE TRC                               A    3    D YES - Byte 2 in reco
+1240*      YES - Byte 2 in record used
+1250*      for 'CHARS' (3800)
+1260*      (DCB=OPTCD=J specified).
+1270  1 AF REMOTE-USERID                     A    8    D User-Id for printing
+1280*      User-Id for printing at remote
+1290*      destinations.
+1300  1 AG DATA-SET-ID                       A   54      Internal data set na
+1310*      Internal data set name of
+1320*      SYSOUT file (returned after
+1330*      function 'CLOSE').
+1340  1 AI DDNAME                            A    8      The DDname of the sp
+1350*      The DDname of the spool file.
+1360  1 DC FORMDEF                           A    6    D
+1370  1 DD PAGEDEF                           A    6    D
+1380  1 C1 FSSDATA                           A  127    D Data to pass to a fu
+1390*      Data to pass to a functional
+1400*      subsystem that controls
+1410*      printing (e.g. IP PrintWay).
+1420  1 C2 PRTQUEUE                          A  127    D Specifies the name o
+1430*      Specifies the name of the
+1440*      target print queue on a remote
+1450*      host system.
+1460  1 C3 PORTNO                            N  5.0    D Specifies the TCP/IP
+1470*      Specifies the TCP/IP port
+1480*      number at which a functional
+1490*      subsystem (e.g. IP PrintWay)
+1500*      connects to a printer.
+1510  1 C4 PRTOPTNS                          A   16    D Specified additional
+1520*      Specified additional print
+1530*      options a functional subsystem
+1540*      can use when printing a TCP/IP
+1550*      routed data set.
+1560*
+1570*      VSE fields
+1580*
+1590  1 AJ BURST                             A    3    D Burst option :
+1600*      Burst option :
+1610*      YES
+1620*      NO  (Default)
+1630  1 AK COMPACT                           A    4    D Name of COMPACTATION
+1640*      Name of COMPACTATION table.
+1650  1 AL TARGET-NODE                       A    8    D Name of TARGET node.
+1660*      Name of TARGET node.
+1670  1 AM DISPOSITION                       A    1    D Disposition to be as
+1680*      Disposition to be assigned to
+1690*      spool output.
+1700  1 AN FLASH-COUNT                       N  3.0    D Flash count.
+1710*      Flash count.
+1720  1 AO SEP-PAGES-COUNT                   B    1    D Number of separator
+1730*      Number of separator pages.
+1740  1 AP SEP-PAGES-COPIES                  A    3    D Copy separators requ
+1750*      Copy separators required :
+1760*      YES
+1770*      NO  (default)
+1780  1 AQ COPY-MODIFY-MODULE                A    4    D Copy modification mo
+1790*      Copy modification module name.
+1800  1 AR COPY-MODIFY-TABLE                 A    4    D Character arrangemen
+1810*      Character arrangement table
+1820*      for copy modification.
+1830  1 AT UCS                               A    8    D UCB name.
+1840*      UCB name.
+1850  1 AU UCS-OPTIONS                       A    2    D UCB options :
+1860*      UCB options :
+1870*      B = Block data check option
+1880*      F = Fold option
+1890  1 AV USER-INFO                         A   16    D User information.
+1900*      User information.
+1910  1 AW SEGMENTATION-SIZE                 B    4    D Size of each segment
+1920*      Size of each segment to be
+1930*      written (in lines).
+1940*
+1950*      BS2000 fields
+1960*
+1970  1 ES SYSTEM-CODE                       B    2      System error code.
+1980*      System error code.
+1990  1 B1 DSNAME                            A   54    D Name of file to prin
+2000*      Name of file to print out.
+2010  1 B5 DEVICE                            A    8    D RSO printer.
+2020*      RSO printer.
+2030  1 B6 END-NUMBER                        N  5.0    D Number of last colum
+2040*      Number of last column in line
+2050*      to print.
+2060*      Value range:
+2070*      1 <= value <= 32767.
+2080  1 B8 LOCK                              A    3    D Protect output again
+2090*      Protect output against
+2100*      modifications during wait
+2110*      as task type 4.
+2120*      Possible values are YES or NO.
+2130  1 B9 TEXT                              A   32    D Saved in SPOOL contr
+2140*      Saved in SPOOL control block
+2150*      (SCB). The first 8 characters
+2160*      will be used as text at the
+2170*      header page.
+2180  1 BB LOOP                              A    3    D Name of LOOP record.
+2190*      Name of LOOP record.
+2200  1 BC HEADER                            A    5    D Print a headline on
+2210*      Print a headline on each page.
+2220*      Possible values are:
+2230*      D = DATE yy-mm-tt,
+2240*      T = first record as headline,
+2250*      P = PAGE nnnn,
+2260*      D,T,P = all values,
+2270*      NO    = no headline.
+2280  1 BD HEADER-NUMBER                     N 10.0    D Number of cover page
+2290*      Number of cover pages for the
+2300*      output list.
+2310*      Range of value:
+2320*      0 <= value <= 2**31 -1
+2330  1 BE TRAIL-NUMBER                      N 10.0    D Number of trailing p
+2340*      Number of trailing pages for
+2350*      the output list.
+2360*      Range of value:
+2370*      0 <= value <= 2**31 -1
+2380  1 BF BINARY                            A    3    D Print in hexadecimal
+2390*      Print in hexadecimal or not.
+2400*      Possible values are:
+2410*      YES - hexadecimal,
+2420*      NO  - character.
+2430  1 BG FROM-LINE-NUMBER                  N 10.0    D Starting line number
+2440*      Starting line number of
+2450*      output list.
+2460  1 BH TO-LINE-NUMBER                    N 10.0    D Ending line number o
+2470*      Ending line number of output
+2480*      list.
+2490  1 BI FROM-PAGE-NUMBER                  N 10.0    D Starting page number
+2500*      Starting page number of output
+2510*      list.
+2520  1 BJ TO-PAGE-NUMBER                    N 10.0    D Ending page number o
+2530*      Ending page number of output
+2540*      list.
+2550  1 BL LINES                             N  3.0    D Number of lines per
+2560*      Number of lines per page.
+2570  1 BM CHARS-MODIFICATION                A    3    D Possible values:
+2580*      Possible values:
+2590*      YES - all characteristics of
+2600*      character sets are
+2610*      supported (default),
+2620*      NO  - only character type,
+2630*      language and near-
+2640*      letter-quality are
+2650*      supported.
+2660  1 BN START-NUMBER                      N  5.0    D Number of first colu
+2670*      Number of first column in line
+2680*      for print.
+2690*      Value range:
+2700*      0 <= value <= 32767.
+2710  1 BO IMAGE                             A   28    D Specifies a user-fil
+2720*      Specifies a user-file which
+2730*      includes LOOP-records,
+2740*      character sets ...
+2750  1 BP TRAY                              N  1.0    D Specifies the tray n
+2760*      Specifies the tray number.
+2770*      Possible values: 1 - 9
+2780  1 BR DIA                               A    2    D Form dia name.
+2790*      Form dia name.
+2800  1 BS CONTROL-OPTION                    A   16    D Possible values:
+2810*      Possible values:
+2820*      NO
+2830*      LOGICAL
+2840*      LINEMODE
+2850*      PHYS
+2860*      PHYSICAL
+2870*      TRANSPARENT
+2880*      For explanation please refer
+2890*      to description of parameter
+2900*      CONTROL of BS2000 PRINT
+2910*      command.
+2920  1 BT ELEMENT                           A   64    D LMS element name (BS
+2930*      LMS element name (BS2000 V10
+2940*      or above).
+2950  1 BU ELEMENT-TYPE                      A    8    D LMS element type (BS
+2960*      LMS element type (BS2000 V10
+2970*      or above).
+2980  1 BV ELEMENT-VERSION                   A   24    D LMS element version
+2990*      LMS element version (BS2000
+3000*      V10 or above).
+3010  1 BW ELEMENT-PASSWORD                  A    8    D Password for protect
+3020*      Password for protected LMS
+3030*      element (BS2000 V10 or above
+3040*      and LMS V2 or above).
+3050  1 BX TRANSLATION-TABLE                 A    8    D Name of translation
+3060*      Name of translation table for
+3070*      RSO printer. (For detailed
+3080*      information please refer to
+3090*      description of parameter
+3100*      TRANSLATION-TABLE (name1) of
+3110*      BS2000 command PRINT.
+3120  1 BY RSO-FILE-NAME                     A   28    D Name of translation
+3130*      Name of translation table for
+3140*      RSO printer. (For detailed
+3150*      information please refer to
+3160*      description of parameter
+3170*      TRANSLATION-TABLE (name2) of
+3180*      BS2000 command PRINT.
+3190*
+3200*      End of WRITE-SPOOL
+3210*
+3220******DDM OUTPUT TERMINATED******

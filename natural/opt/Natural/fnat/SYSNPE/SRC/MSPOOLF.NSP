@@ -1,0 +1,42 @@
+0010* Program   MSPOOLF
+0020* View      SPOOL-FILES
+0030*
+0040* Function  Display spool files information for a given job
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* sju 02-02-18   NPE321:   7 digit job-number
+0090* ======================================================================
+0100*
+0110DEFINE DATA
+0120   GLOBAL USING TUTO
+0130   LOCAL  USING SPOOLF-L
+0140END-DEFINE
+0150*
+0160REPEAT
+0170   INPUT (AD=MIL'_' ZP=OFF SG=OFF)       /* sju 02-02-18 added SG=OFF
+0180      // ##TITLE (AD=OI IP=OFF)
+0190      // '  Job-name....:' SPOOL-FILES.JOB-NAME
+0200       / '  Job-number..:' SPOOL-FILES.JOB-NUMBER
+0210*
+0220   WRITE TITLE
+0230      ##TITLE (AD=I)
+0240     / 'Job.....' SPOOL-FILES.JOB-NAME (AD=I)
+0250       '(' SPOOL-FILES.JOB-NUMBER (AD=I) ')' /
+0260*
+0270   FIND SPOOL-FILES WITH JOB-NAME   = SPOOL-FILES.JOB-NAME
+0280                     AND JOB-NUMBER = SPOOL-FILES.JOB-NUMBER
+0290                     AND NODE       = ##NODE
+0300      IF ERROR-CODE NE 0
+0310         REINPUT ERROR-TEXT
+0320      END-IF
+0330*
+0340      AT BREAK TYPE
+0350         SKIP 1
+0360      END-BREAK
+0370      DISPLAY TYPE (IS=ON) DATA-SET STEPNAME (IS=ON) DDNAME
+0380              RECORD-COUNT COPIES CLASS HOLD FORM
+0390   END-FIND
+0400END-REPEAT
+0410*
+0420END

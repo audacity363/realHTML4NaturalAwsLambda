@@ -1,0 +1,17 @@
+0010** Example 'FOREX1R': FOR (reporting mode)
+0020************************************************************************
+0030RESET #INDEX (I1)
+0040      #ROOT  (N2.7)
+0050*
+0060FOR #INDEX 1 TO 5
+0070  COMPUTE #ROOT = SQRT (#INDEX)
+0080  WRITE NOTITLE '=' #INDEX 3X '=' #ROOT
+0090LOOP
+0100*
+0110SKIP 1
+0120FOR #INDEX 1 TO 5 STEP 2
+0130  COMPUTE #ROOT = SQRT (#INDEX)
+0140  WRITE '=' #INDEX 3X '=' #ROOT
+0150LOOP
+0160*
+0170END

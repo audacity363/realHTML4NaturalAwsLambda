@@ -1,0 +1,14 @@
+0010&H View READ-FILE
+0020&L
+0030&L
+0040#Purpose@: Read data from disk files.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : This view makes it possible to read all or a selected set of
+0100           records from a Sequential or Partitioned (PDS/LIBRARIAN/LMS)
+0110           disk file. Using the SCAN fields, records containing only
+0120           the specified string will be returned.
+0130&L
+0140#Notes@  : The file MUST already exist prior to executing READ-FILE.

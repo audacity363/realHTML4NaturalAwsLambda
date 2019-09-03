@@ -1,0 +1,250 @@
+0010**  Example program for USR3005N
+0020**  This program shows, how data can be updated in Predict.
+0030**  It updates the index definition of partitioned, primary key.
+0040**
+0050DEFINE DATA LOCAL
+00601 REQUEST-RESULT(A) DYNAMIC
+0070*
+0080LOCAL USING PARSER-X                /* Local Data Area is located
+0090                                    /* in Library SYSEXXT
+0100LOCAL
+01101 XML_PARSER_XPATH             (A) DYNAMIC
+01201 XML_PARSER_XPATH_TYPE        (A1)
+01301 XML_PARSER_CONTENT           (A) DYNAMIC
+01401 XML_PARSER_CONTENT_IS_EMPTY  (L)
+01501 XML_PARSER_ERROR_TEXT        (A253)
+01601 XML_PARSER_RESPONSE          (I2)
+01701 #XNAME (A) DYNAMIC
+01801 #XVALUE (A) DYNAMIC
+01901 #MSG-NR(I4)
+02001 #MSG-TEXT(A79)
+02101 #MSG-TYPE(A8)
+02201 #ADDITIONAL-MSG-NR(I4)
+02301 #ADDITIONAL-MSG-TEXT(A79)
+02401 #INVALID-ATTRIBUTE(A32)
+02501 #INDEX-IN-INVALID-ATTRIBUTE(I4)
+02601 #LINE-WITH-APOSTROPH(A30)
+02701 #LINE-WITHOUT-APOSTROPH(A50)
+0280END-DEFINE
+0290COMPRESS *USER '''s execution'  TO #LINE-WITH-APOSTROPH LEAVING NO
+0300INCLUDE USR3005Y '''1'''
+0310                 '#LINE-WITH-APOSTROPH' '#LINE-WITHOUT-APOSTROPH'
+0320**
+0330** With the above coding apostrophs in values are translated
+0340** so that a correct value clause can be assembled
+0350**
+0360PRINT 'Example program' *PROGRAM 'for USR3005N'
+0370/     'This program shows, how data can be updated in Predict.'
+0380/     'It updates the index definition of partitioned, primary key.'
+0390/
+0400**
+0410** First lock the object to be updated
+0420**
+0430COMPRESS
+0440'<Predict>'
+0450  '<Request>'
+0460    '<Lock>'
+0470      '<Search>'
+0480**
+0490** The field is named DEMOINX in a DB2 table named SAG-DEMOTAB
+0500**
+0510        '<Object-type value=''ELEMENT-D''/>'
+0520        '<Attribute name=''ID'' value=''DEMOINX''/>'
+0530        '<Attribute name=''NAMESPACE'' value=''SAG-DEMOTAB'' />'
+0540      '</Search>'
+0550    '</Lock>'
+0560  '</Request>'
+0570'</Predict>'
+0580**
+0590TO REQUEST-RESULT
+0600*
+0610PRINT 'Request passed to USR3005N' /
+0620PRINT REQUEST-RESULT
+0630*
+0640CALLNAT 'USR3005N' REQUEST-RESULT
+0650*
+0660PRINT / 'Result returned from USR3005N' /
+0670PRINT REQUEST-RESULT
+0680*
+0690INCLUDE PARSER_X                    /* Copy Code is located
+0700                                    /* in Library SYSEXXT
+0710                                    /*
+0720  'REQUEST-RESULT'                  /* XML FILE TO BE PARSED
+0730  'XML_PARSER_XPATH'                /* XPATH TO REPESENT ELEMENT...
+0740  'XML_PARSER_XPATH_TYPE'           /* TYPE OF CALLBACK
+0750  'XML_PARSER_CONTENT'              /* CONTENT OF FOUND ELEMENT
+0760  'XML_PARSER_CONTENT_IS_EMPTY'     /* IS TRUE IF ELEMENT IS EMPTY
+0770  'XML_PARSER_ERROR_TEXT'           /* ERROR MESSAGE
+0780  'XML_PARSER_RESPONSE'             /* ERROR NR; 0 = OK
+0790*
+0800IF #MSG-TYPE NE 'SUCCESS'
+0810  WRITE 'Object can not be locked'
+0820  ESCAPE ROUTINE
+0830END-IF
+0840**
+0850COMPRESS
+0860'<Predict>'
+0870  '<Request>'
+0880    '<Update>'
+0890      '<Search>'
+0900        '<Object-type value=''ELEMENT-D''/>'
+0910        '<Attribute name=''ID'' value=''DEMOINX''/>'
+0920        '<Attribute name=''NAMESPACE'' value=''SAG-DEMOTAB'' />'
+0930      '</Search>'
+0940      '<Set>'
+0950        '<Row>'
+0960          '<Attribute Name=''INDEX-NAME'' Value=''SAG-DEMOINXNEW'' />'
+0970          '<Attribute Name=''DEFAULT-STORAGESPACE'''
+0980                    'Value=''SYSDEFLT'' />'
+0990          '<Attribute Name=''DEFAULT-PERCENTAGE-FREE'' Value=''10'' />'
+1000          '<Attribute Name=''DEFAULT-PRIMARY-ALLOC'' Value=''20'' />'
+1010          '<Attribute Name=''DEFAULT-SECONDARY-ALLOC'' Value=''8'' />'
+1020          '<Structure Name=''PARTITIONS-TABLE''>'
+1030             '<Group>'
+1040                '<Attribute Name=''VALUE'''
+1050     'Value=''1000000.,99999.,&apos;Z&apos;,&apos;2000-01-01&apos;'' />'
+1060                '<Attribute Name=''VSAM-CATALOG'' Value='''' />'
+1070                '<Attribute Name=''STORAGESPACE'' Value=''SYSDEFLT'' />'
+1080                '<Attribute Name=''FREE-PAGES'' Value='''' />'
+1090                '<Attribute Name=''PERCENTAGE-FREE'' Value=''10'' />'
+1100                '<Attribute Name=''GBPCACHE'' Value=''C'' />'
+1110                '<Attribute Name=''PRIMARY-ALLOC'' Value=''21'' />'
+1120                '<Attribute Name=''SECONDARY-ALLOC'' Value=''9'' />'
+1130                '<Attribute Name=''ERASE-OPTION'' Value=''N'' />'
+1140             '</Group>'
+1150             '<Group>'
+1160                '<Attribute Name=''VALUE'''
+1170     'Value=''2000000.,99999.,&apos;Z&apos;,&apos;2089-01-01&apos;'' />'
+1180                '<Attribute Name=''VSAM-CATALOG'' Value='''' />'
+1190                '<Attribute Name=''STORAGESPACE'' Value=''SYSDEFLT'' />'
+1200                '<Attribute Name=''FREE-PAGES'' Value='''' />'
+1210                '<Attribute Name=''PERCENTAGE-FREE'' Value=''12'' />'
+1220                '<Attribute Name=''GBPCACHE'' Value='''' />'
+1230                '<Attribute Name=''PRIMARY-ALLOC'' Value=''13'' />'
+1240                '<Attribute Name=''SECONDARY-ALLOC'' Value=''5'' />'
+1250                '<Attribute Name=''ERASE-OPTION'' Value=''N'' />'
+1260              '</Group>'
+1270              '<Group>'
+1280                '<Attribute Name=''VALUE'''
+1290     'Value=''9999999.,99999.,&apos;Z&apos;,&apos;2098-01-01&apos;'' />'
+1300                '<Attribute Name=''VSAM-CATALOG'' Value='''' />'
+1310                '<Attribute Name=''STORAGESPACE'' Value=''SYSDEFLT'' />'
+1320                '<Attribute Name=''FREE-PAGES'' Value='''' />'
+1330                '<Attribute Name=''PERCENTAGE-FREE'' Value=''13'' />'
+1340                '<Attribute Name=''GBPCACHE'' Value='''' />'
+1350                '<Attribute Name=''PRIMARY-ALLOC'' Value=''17'' />'
+1360                '<Attribute Name=''SECONDARY-ALLOC'' Value=''17'' />'
+1370                '<Attribute Name=''ERASE-OPTION'' Value=''N'' />'
+1380              '</Group>'
+1390          '</Structure>'
+1400        '</Row>'
+1410      '</Set>'
+1420    '</Update>'
+1430  '</Request>'
+1440'</Predict>'
+1450*
+1460TO REQUEST-RESULT
+1470*
+1480PRINT 'Request passed to USR3005N' /
+1490PRINT REQUEST-RESULT
+1500*
+1510CALLNAT 'USR3005N' REQUEST-RESULT
+1520*
+1530PRINT / 'Result returned from USR3005N' /
+1540PRINT REQUEST-RESULT
+1550*
+1560INCLUDE PARSER_X                    /* Copy Code is located
+1570                                    /* in Library SYSEXXT
+1580                                    /*
+1590  'REQUEST-RESULT'                  /* XML FILE TO BE PARSED
+1600  'XML_PARSER_XPATH'                /* XPATH TO REPESENT ELEMENT...
+1610  'XML_PARSER_XPATH_TYPE'           /* TYPE OF CALLBACK
+1620  'XML_PARSER_CONTENT'              /* CONTENT OF FOUND ELEMENT
+1630  'XML_PARSER_CONTENT_IS_EMPTY'     /* IS TRUE IF ELEMENT IS EMPTY
+1640  'XML_PARSER_ERROR_TEXT'           /* ERROR MESSAGE
+1650  'XML_PARSER_RESPONSE'             /* ERROR NR; 0 = OK
+1660*
+1670**
+1680** Now unlock the updated object
+1690**
+1700COMPRESS
+1710'<Predict>'
+1720  '<Request>'
+1730    '<Unlock>'
+1740      '<Search>'
+1750        '<Object-type value=''ELEMENT-D''/>'
+1760        '<Attribute name=''ID'' value=''DEMOINX''/>'
+1770        '<Attribute name=''NAMESPACE'' value=''SAG-DEMOTAB'' />'
+1780      '</Search>'
+1790    '</Unlock>'
+1800  '</Request>'
+1810'</Predict>'
+1820**
+1830TO REQUEST-RESULT
+1840*
+1850PRINT 'Request passed to USR3005N' /
+1860PRINT REQUEST-RESULT
+1870*
+1880CALLNAT 'USR3005N' REQUEST-RESULT
+1890*
+1900PRINT / 'Result returned from USR3005N' /
+1910PRINT REQUEST-RESULT
+1920*
+1930INCLUDE PARSER_X                    /* Copy Code is located
+1940                                    /* in Library SYSEXXT
+1950                                    /*
+1960  'REQUEST-RESULT'                  /* XML FILE TO BE PARSED
+1970  'XML_PARSER_XPATH'                /* XPATH TO REPESENT ELEMENT...
+1980  'XML_PARSER_XPATH_TYPE'           /* TYPE OF CALLBACK
+1990  'XML_PARSER_CONTENT'              /* CONTENT OF FOUND ELEMENT
+2000  'XML_PARSER_CONTENT_IS_EMPTY'     /* IS TRUE IF ELEMENT IS EMPTY
+2010  'XML_PARSER_ERROR_TEXT'           /* ERROR MESSAGE
+2020  'XML_PARSER_RESPONSE'             /* ERROR NR; 0 = OK
+2030*
+2040DEFINE SUBROUTINE CALLBACK
+2050*
+2060EXAMINE XML_PARSER_XPATH TRANSLATE INTO UPPER
+2070DECIDE ON FIRST VALUE OF XML_PARSER_XPATH
+2080*
+2090  VALUE 'PREDICT/RESULT/MESSAGE/?NUMBER'
+2100    #MSG-NR := VAL(XML_PARSER_CONTENT)
+2110*
+2120  VALUE 'PREDICT/RESULT/MESSAGE/?TEXT'
+2130    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#MSG-TEXT'
+2140*
+2150  VALUE 'PREDICT/RESULT/MESSAGE/?TYPE'
+2160    #MSG-TYPE := XML_PARSER_CONTENT
+2170    EXAMINE #MSG-TYPE TRANSLATE INTO UPPER
+2180    IF #MSG-TYPE NE 'SUCCESS'
+2190**
+2200** Possible Values of ?TYPE are SUCCESS, ERROR and WARNING
+2210**
+2220      PRINT #MSG-NR
+2230      PRINT #MSG-TEXT
+2240    END-IF
+2250  VALUE 'PREDICT/RESULT/MESSAGE/?ADDITIONAL-MSG-NUMBER'
+2260    #ADDITIONAL-MSG-NR := VAL(XML_PARSER_CONTENT)
+2270*
+2280  VALUE 'PREDICT/RESULT/MESSAGE/?ADDITIONAL-MSG-TEXT'
+2290    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#ADDITIONAL-MSG-TEXT'
+2300    PRINT #ADDITIONAL-MSG-NR
+2310    PRINT #ADDITIONAL-MSG-TEXT
+2320 VALUE 'PREDICT/RESULT/MESSAGE/?INVALID-ATTRIBUTE'
+2330    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#INVALID-ATTRIBUTE'
+2340    PRINT #INVALID-ATTRIBUTE 'is invalid'
+2350  VALUE 'PREDICT/RESULT/MESSAGE/?INDEX-IN-INVALID-ATTRIBUTE'
+2360    #INDEX-IN-INVALID-ATTRIBUTE := VAL(XML_PARSER_CONTENT)
+2370    PRINT 'Occurrence' #INDEX-IN-INVALID-ATTRIBUTE
+2380    'of' #INVALID-ATTRIBUTE 'is invalid'
+2390*
+2400  NONE IGNORE
+2410*
+2420END-DECIDE
+2430END-SUBROUTINE /* CALLBACK
+2440*
+2450DEFINE SUBROUTINE PARSER_ERROR
+2460   PRINT 'Parser Error'
+2470   PRINT XML_PARSER_ERROR_TEXT
+2480 END-SUBROUTINE
+2490*
+2500END

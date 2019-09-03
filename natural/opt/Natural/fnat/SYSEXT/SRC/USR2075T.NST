@@ -1,0 +1,98 @@
+0010Terminate EntireX Broker service
+0020.
+0030Documentation ......... USR2075T    /*  Text object
+0040Interface ............. USR2075N    /*  Cataloged subprogram
+0050Example Program ....... USR2075P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC
+0100.
+0110Keywords .............. +PREVIOUS-VERSION, BROKER SERVICE, ENTIREX,
+0120                        RPC, SERVER, TERMINATE
+0130.
+0140Interface Versions .... USR2075N, USR8208N
+0150.
+0160Function .............. With the command TERMINATE-SERVICE the inter-
+0170                        face uses the command and information service
+0180                        of EntireX to fulfill the task. First of all
+0190                        it sends a logon request to the EntireX
+0200                        Broker, then it gets a list of all servers
+0210                        specified by server-class, server-name, and
+0220                        service type. Last it sends a shutdown
+0230                        request to each server.
+0240                        The message indicates how many servers were
+0250                        terminated.
+0260.
+0270.
+0280Parameters
+0290----------
+0300Define the following parameters with the DEFINE DATA statement:
+0310.
+032001 PARM-AREA
+0330   02 FUNCTION (A18)       /* 'TERMINATE-SERVICE'
+0340   02 SRVNODE  (A192)      /* Node name of EntireX Broker (A32)
+0350   02 SRVCLASS (A32)       /* Server class usually RPC
+0360   02 SRVNAME  (A192)      /* Server name (A32)
+0370   02 SERVICE  (A32)       /* Service type, CALLNAT for Natural
+0380                           /* RPC servers
+0390   02 IMMEDIATE(L)         /* TRUE: immediately terminate all con-
+0400                           /*   versations for the specified server.
+0410                           /* FALSE: Existing conversations are
+0420                           /*   allowed to end normally; no new con-
+0430                           /*   versations are accepted.
+0440   02 USER-ID  (A32)       /* Logon data for EntireX Broker
+0450   02 PASSWORD (A32)
+0460   02 MSG      (A) dynamic /* Message returned
+0470   02 RC       (I2)        /* Response code, possible values:
+0480                           /* 0 -  MSG contains a normal message
+0490                           /*        from the EntireX Broker
+0500                           /* 1 -  MSG contains an error message
+0510                           /*        from the EntireX Broker
+0520                           /* 3 -  MSG contains an error message
+0530                           /*        from Natural Security
+0540.
+0550Interface Call
+0560--------------
+0570Use the interface with the CALLNAT statement:
+0580.
+0590CALLNAT 'USR2075N' PARM-AREA
+0600.
+0610.
+0620Using the Application Programming Interface:
+0630--------------------------------------------
+0640Copy the subprogram USR2075N to the library SYSTEM or the steplib
+0650library respectively, or to the required library.
+0660.
+0670Following variables have to be filled before invoking the interface:
+0680.
+0690FUNCTION
+0700  'TERMINATE-SERVICE' sends a shutdown request to a service specified by
+0710      server-class, server-name, and service type.
+0720  'PING' returns the identification string of a server.
+0730.
+0740SRVNODE
+0750  EntireX Broker name.
+0760.
+0770SRVCLASS
+0780  Server class is usually RPC.
+0790.
+0800SRVNAME
+0810  Server name.
+0820.
+0830SERVICE
+0840  Service type is CALLNAT for Natural RPC servers.
+0850.
+0860USER-ID
+0870  The user ID to logon to the EntireX Broker.
+0880.
+0890PASSWORD
+0900  The password to logon to the EntireX Broker if EntireX Broker security
+0910  is active.
+0920  If EntireX Broker security is active, a password must be specified.
+0930  If EntireX Broker security uses the trusted user ID mechanism, the
+0940  reserved password *TRUSTED can be used instead of a user password.
+0950.
+0960***** End of Description *****
+0970
+0980

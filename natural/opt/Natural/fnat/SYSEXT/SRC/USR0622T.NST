@@ -1,0 +1,46 @@
+0010Reset error counter in ON ERROR statement block
+0020.
+0030Documentation ......... USR0622T    /*  Text object
+0040Interface ............. USR0622N    /*  Cataloged subprogram
+0050Example Program ....... USR0622P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR HANDLING
+0100.
+0110Keywords .............. *ERROR-NR, ERROR, COUNTER
+0120.
+0130Function .............. Reset the Natural internal error loop
+0140                        counter. This interface may be used in
+0150                        ON ERROR block within Natural objects.
+0160                        It disables the automatic error loop detector
+0170                        which is located in the Natural nucleus.
+0180                        It may also be used to avoid error NAT9969.
+0190.
+0200.
+0210Parameters
+0220----------
+0230.
+0240   NONE
+0250.
+0260.
+0270Interface Call
+0280--------------
+0290Use the interface with the CALLNAT statement:
+0300.
+0310CALLNAT 'USR0622N'
+0320.
+0330.
+0340Using the Application Programming Interface:
+0350--------------------------------------------
+0360Copy the subprogram USR0622N to the library SYSTEM or the steplib
+0370library respectively, or to the required library.
+0380.
+0390.
+0400ATTENTION:
+0410----------
+0420The use of this subprogram may lead to endless loops,
+0430if the error reason is not verified correctly.
+0440.
+0450.
+0460***** End of Description *****

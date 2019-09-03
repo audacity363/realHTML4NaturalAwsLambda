@@ -1,0 +1,257 @@
+0010DB: 148 FILE: 008  - CATALOG                          DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:20
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:20
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A1 DSNAME                            A   54    D The data set prefix,
+0250*      The data set prefix, or data
+0260*      set name. (If PREFIX=YES, data
+0270*      sets with the prefix will be
+0280*      returned. See field PREFIX.)
+0290*      BS2000 : the file name.
+0300*      ('*' may be used as wildcard
+0310*      as in FSTAT-cmd.)
+0320*      Wildcards in catalog ID or
+0330*      user ID of file name are only
+0340*      allowed for user TSOS.
+0350  1 A3 VOLSER                            A    6    D Volume serial number
+0360*      Volume serial number where
+0370*      data set is catalogued.
+0380*      Note: Generic search option
+0390*      is supported by BS2000 for
+0400*      this field.
+0410  1 A8 TYPE                              A    8    D Data set type:
+0420       HD=Type
+0430*      Data set type:
+0440*      NONVSAM  OS data set
+0450*      DATA     VSAM data set
+0460*      INDEX    VSAM index
+0470*      CLUSTER  VSAM cluster
+0480*      USERCAT  VSAM user catalog
+0490*      ALIAS    VSAM alias
+0500*      BS2000:
+0510*      FGG     File Generation
+0520*      Group
+0530*      VSE:
+0540*      VSAM
+0550*      SAM
+0560*      DA
+0570*      ISAM
+0580*
+0590*      Fields common to MVS and VSE
+0600*
+0610  1 A7 CLASS                             A    4    D Device class (e.g. '
+0620       HD=Class
+0630*      Device class (e.g. 'DASD').
+0640  1 A4 VOLUME-SEQUENCE                   N  3.0      Volume sequence (tap
+0650*      Volume sequence (tape data
+0660*      sets only).
+0670  1 A5 NUMBER-OF-VOLUMES                 N  3.0      Number of volumes on
+0680*      Number of volumes on which
+0690*      data set is cataloged.
+0700  1 AC USER-CATALOG                      A   44    D The name of the User
+0710*      The name of the User Catalog
+0720*      in which the file is
+0730*      catalogued.
+0740  1 AD OPTION                            A    8    D USERCAT: Return name
+0750*      USERCAT: Return names of all
+0760*      user catalogues in
+0770*      USER-CATALOG.
+0780*      LONG:    Scan entire catalog.
+0790*      This is needed if a
+0800*      file name like
+0810*      '*MACLIB*' is given.
+0820*      In this case the
+0830*      catalog specified in
+0840*      field USER-CATALOG is
+0850*      scanned. If the name
+0860*      is ommitted, the
+0870*      system catalog is
+0880*      scanned.
+0890*
+0900*      MVS fields
+0910*
+0920  1 AB PREFIX                            A    3    D NO:  catalog entry w
+0930*      NO:  catalog entry will be re-
+0940*      turned only for the given
+0950*      DSNAME, not for all files
+0960*      beginning with the given
+0970*      YES: (default) all datasets
+0980*      with prefix given in
+0990*      DSNAME will be returned
+1000  1 A2 DEVICE                            B    4      The internal UCBTYP
+1010       HD=Device
+1020*      The internal UCBTYP device
+1030*      code which identifies the
+1040*      device type where the data set
+1050*      resides.
+1060  1 A6 SERIES                            A    8    D Device series (e.g.
+1070*      Device series (e.g. '3330-1').
+1080  1 FS FILE-SYSTEM                       A    3    D Indicates if the cat
+1090*      Indicates if the catalog entry
+1100*      describes a z/OS UNIX file
+1110*      system data set (HFS or ZFS).
+1120*
+1130*      VSE fields
+1140*
+1150  1 A9 FILE-NAME                         A    7    D File name as specifi
+1160*      File name as specified in
+1170*      the DLBL statement for the
+1180*      data set.
+1190  1 AE LABEL-AREA                        A    8    D Indicates the LABEL
+1200*      Indicates the LABEL AREA
+1210*      where the LABEL is situated :
+1220*      STD    = Standard
+1230*      PARSTD = Partition Standard
+1240*      TEMP   = Temporary
+1250  1 AA LIBRARIAN                         A    3    D YES  it is a LIBRARI
+1260*      YES  it is a LIBRARIAN
+1270*      file.
+1280*      NO   it is not a LIBRARIAN
+1290*      file.
+1300  1 AF DYNAM                             A    3    D DYNAM/D Indicator
+1310*      DYNAM/D Indicator
+1320*      YES:DYNAM/D controlled file.
+1330*      NO :Non DYNAM/D controlled
+1340*      file.
+1350  1 AK VSAM-CATALOG                      A    8    D Label of VSAM catalo
+1360*      Label of VSAM catalog to be
+1370*      searched.
+1380  1 AG DEVICE-TYPE                       A    4    D The device type of t
+1390*      The device type of the entry.
+1400*
+1410*      BS2000 fields
+1420*
+1430  1 ES SYSTEM-CODE                       B    2      System error code.
+1440*      System error code.
+1450  1 BJ FILE-SIZE                         N 10.0      Number of PAM pages
+1460*      Number of PAM pages allocated
+1470*      by a file.
+1480  1 BK FILE-SIZE-LARGE                   N 10.0      File size value supp
+1490*      File size value supporting
+1500*      large files.
+1510*      --------------------------------
+1520*      For BS2000, several additional
+1530*      search criteria fields for
+1540*      catalog retrieval are available.
+1550*      Please note, that these fields
+1560*      are only used as search criteria
+1570*      and will be returned unchanged.
+1580*      Following fields are possible:
+1590*
+1600  1 BF STATE                             A    6    D State of file.
+1610*      State of file.
+1620*      blank  : List ALL files.
+1630*      NOCLOS : List ALL open files.
+1640  1 BG SUPPORT-TYPE                      A    9    D List all files that
+1650*      List all files that are on
+1660*      public or private discs :
+1670*      PUB      : Public
+1680*      PRV      : Private
+1690*      (PUB,PRV): Public and Private
+1700  1 B3 BACKUP-TYPE                       A   11    D List files of the gi
+1710*      List files of the given type.
+1720*      Valid types : A B C D E
+1730*      or a combination of them
+1740*      (e.g (A,D,E)).
+1750  1 B2 ACCESS-TYPE                       A    5    D Allowed value is R(E
+1760*      Allowed value is R(EAD) or
+1770*      W(RITE).
+1780*      List all files that are
+1790*      accessable by Read or Write.
+1800  1 B8 FCBTYPE                           A   11    D List all files with
+1810*      List all files with specified
+1820*      type. Allowed are :
+1830*      P(AM) S(AM) I(SAM) B(TAM)
+1840*      N(ONE) and a combination of
+1850*      them. (E.g. (P,I)).
+1860  1 BA PASSWORD-OPTION                   A    9    D List the files with
+1870*      List the files with the
+1880*      specified password options:
+1890*      R(DPASS) W(RPASS) E(XPASS)
+1900*      N(ONE) or a combination of
+1910*      those.(E.g. (R,N) ).
+1920  1 BC SHARE                             A    3    D List all files that
+1930*      List all files that are
+1940*      shareable (YES) or not (NO).
+1950  1 BD GEN                               A    3    D If Y(ES) is specifie
+1960*      If Y(ES) is specified the
+1970*      files of a file generation
+1980*      group will be listed.
+1990  1 BL BLOCK-CONTROL-OPTION              A   21    D Retrieve files with
+2000*      Retrieve files with specified
+2010*      block control type.
+2020*      Possible values:
+2030*      PAMKEY, DATA, NONE or NO or
+2040*      combinations of them separated
+2050*      by ',' and included in '( )'.
+2060*      --------------------------------
+2070*      The following 5 fields are used
+2080*      to further define ranges for
+2090*      catalog entries
+2100*      --------------------------------
+2110  1 B4 CREATION-RANGE                    A   23    D List all files with
+2120       HD=Creation Range
+2130*      List all files with a creation
+2140*      date as follows :
+2150*      (,YY-MM-DD)  Files created
+2160*      before YY-DD-MM.
+2170*      (YY-MM-DD,)  Files created
+2180*      since  YY-DD-MM.
+2190*      (YY-MM-DD,YY-MM-DD)
+2200*      Files created
+2210*      between 2 dates.
+2220*      YY-MM-DD     Files created
+2230*      on YY-MM-DD.
+2240  1 B5 EXPIRATION-RANGE                  A   23    D List files with expi
+2250       HD=Expiration/Range
+2260*      List files with expiration
+2270*      date within given range.
+2280*      (Syntax for range as in
+2290*      CREATION-RANGE)
+2300  1 B6 LAST-ACCESS-RANGE                 A   23    D List files with last
+2310       HD=Last-Access/Range
+2320*      List files with last access
+2330*      date within given range.
+2340*      (Syntax for range as in
+2350*      CREATION-RANGE)
+2360  1 B7 EXTENT-RANGE                      A   13    D Retrieve files with
+2370       HD=Extents
+2380*      Retrieve files with number of
+2390*      extents within given range.
+2400*      (Syntax as for SIZE-RANGE).
+2410  1 BE SIZE-RANGE                        A   19    D List files with size
+2420*      List files with size (number
+2430*      of pam pages) within given
+2440*      range:
+2450*      (,n)    Files with size <= n.
+2460*      (n,)    Files with size>=n.
+2470*      (n,m)   Files with size
+2480*      between n and m.
+2490*      n       Files with size = n.
+2500  1 B9 FREE-SIZE-RANGE                   A   19    D List Files with numb
+2510*      List Files with number of free
+2520*      pam pages within a given range
+2530*      (Syntax as for SIZE-RANGE).
+2540*
+2550*      End of CATALOG
+2560*
+2570******DDM OUTPUT TERMINATED******

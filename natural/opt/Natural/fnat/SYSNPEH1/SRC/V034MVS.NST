@@ -1,0 +1,18 @@
+0010&H View ACCOUNTING
+0020&L
+0030&L
+0040#Purpose@: Display Accounting information stored in SMF Records.
+0050&L
+0060&L
+0070#OpSys@  : z/OS
+0080&L
+0090&L
+0100#Usage@  : Evaluate SMF Records.
+0110&L
+0120&L
+0130#Notes@  : SMF records may be read in descending sequence by specifying
+0140           'DIRECTION = B' (backward). The default is 'F' (forward)
+0150           for ascending sequence.
+0160
+0170
+0180

@@ -1,0 +1,65 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3LBREAK
+0050*
+0060* DESCRIPTION   Forces a line break, with or without additional HTML
+0070*               text.
+0080*
+0090* SEE           ../sysweb/t3lbreak
+0100*
+0110* AUTHOR        SAG   08.09.1998
+0120*
+0130* Version       8.3
+0140*
+0150* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0160*
+0170* HISTORY
+0180* USER    DATE       REASON
+0190* ------+----------+----------------------------------------------
+0200*       ! --.--.-- !
+0210* ------+----------+----------------------------------------------
+0220*
+0230* ------ PARAMETER -----------------------------------------------
+0240DEFINE DATA
+0250PARAMETER USING W3PARM
+0260LOCAL USING W3CONST
+0270LOCAL
+02801 H3VALUE            (A) DYNAMIC
+0290*
+03001 II                 (I1)
+0310END-DEFINE
+0320* --- ERROR HANDLING ---
+0330ON ERROR
+0340  PERFORM W3ERROR ##W3ERROR
+0350  PERFORM W3END ##RPC
+0360  ESCAPE ROUTINE
+0370END-ERROR
+0380*
+0390* --- INITIALIZE Web Interface ---
+0400PERFORM W3INIT ##RPC
+0410*
+0420* --- START HTML Generation ---
+0430PERFORM H3-OPEN-HTML 'HTML Generation - Line Break' " " ' '
+0440* --- THE LEVEL 2 HEADER ---
+0450PERFORM H3-HEADER 2 'Line Break'
+0460*
+0470FOR II = 1 TO 10
+0480  COMPRESS 'This is line' II ##HTTP_END INTO H3VALUE
+0490  PERFORM H3-LINE-BREAK H3VALUE
+0500END-FOR
+0510*
+0520FOR II = 1 TO 5
+0530  PERFORM H3-LINE-BREAK 1X
+0540END-FOR
+0550*
+0560PERFORM W3TEXTLINE 'After 5 empty lines now some text.'
+0570*
+0580PERFORM E3-EXAMPLE-END
+0590*
+0600* --- END HTML Generation ---
+0610PERFORM H3-CLOSE-HTML
+0620* --- END Web Interface ---
+0630PERFORM W3END ##RPC
+0640*
+0650END

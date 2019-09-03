@@ -1,0 +1,54 @@
+0010Get program level information
+0020.
+0030Documentation ......... USR0600T    /*  Text object
+0040Interface ............. USR0600N    /*  Cataloged subprogram
+0050Example Program ....... USR0600P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. RUNTIME
+0100.
+0110Keywords .............. *LEVEL
+0120.
+0130Interface Versions .... USR0600N
+0140.
+0150Function .............. Information about "stacked" Natural objects
+0160.
+0170.
+0180Parameters
+0190----------
+0200Define the following parameters with the DEFINE DATA statement:
+0210.
+022001 USR0600L
+0230   02 NAME  (A08/nn)   /*  Name of "stacked" object
+0240   02 LEVEL (P03/nn)   /*  Level of object
+0250   ATTENTION: nn may be any value from 1 up to 32
+0260.
+0270Interface Call
+0280--------------
+0290Use the interface with the CALLNAT statement:
+0300.
+0310CALLNAT 'USR0600N'  USR0600L
+0320.
+0330.
+0340Using the Application Programming Interface:
+0350--------------------------------------------
+0360Copy the subprogram USR0600N to the library SYSTEM or the steplib
+0370library respectively, or to the required library.
+0380.
+0390.
+0400Example program:
+0410----------------
+0420.
+0430You may use USR0600P to get an example of different program level
+0440information.
+0450.
+0460 Executing USR0600P      (program)    will cause the following:
+0470 USR0600P calls USR0600X (subroutine),
+0480 USR0600X calls USR0600Y (subprogram),
+0490 USR0600Y calls USR0600N (subprogram)
+0500 and shows all information of the current object levels.
+0510 The API USR0600N is not shown in the list.
+0520.
+0530.
+0540*****  End of Description  *****

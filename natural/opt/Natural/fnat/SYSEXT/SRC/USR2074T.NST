@@ -1,0 +1,95 @@
+0010Set new password for Natural Security user in RPC context
+0020.
+0030Documentation ......... USR2074T    /*  Text object
+0040Interface ............. USR2074N    /*  Cataloged subprogram
+0050Example Program ....... USR2074P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC - SECURITY
+0100.
+0110Keywords .............. NEWPASSW, RPC, SERVER
+0120.
+0130Function .............. The interface sends a change password command
+0140                        to an RPC server specified by node name and
+0150                        server name.
+0160                        The returned message corresponds to a Natural
+0170                        system error number.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+023001 PARM-AREA
+0240                           /* Input:
+0250   02 USER-ID     (A8)     /* NSC user ID
+0260   02 PASSWORD    (A8)     /* Old NSC password
+0270   02 NEWPASSWORD (A8)     /* New NSC password
+0280   02 NODE-NAME   (A192)   /* Node name
+0290   02 SERVER-NAME (A192)   /* Server name
+0300   02 TRANSPORT   (A1)     /* Transport protocol:
+0310                           /* B   (= Broker)
+0320                           /* Output:
+0330   02 RC          (I2)     /* Response code, possible values:
+0340                           /* 0 -  MSG contains a normal message
+0350                           /*        from RPC server or Broker
+0360                           /* 1 -  MSG contains an error message
+0370                           /*        from RPC server or Broker
+0380                           /* 2 -  MSG contains an error message
+0390                           /*        from the interface
+0400                           /* 3 -  Natural Security error
+0410   02 MSG-NR      (N4)     /* Natural error message number
+0420   02 MSG         (A80)    /* Message returned
+0430.
+0440Interface Call
+0450--------------
+0460Use the interface with the CALLNAT statement:
+0470.
+0480CALLNAT 'USR2074N' PARM-AREA
+0490.
+0500.
+0510Using the Application Programming Interface:
+0520--------------------------------------------
+0530Copy the subprogram USR2074N to the library SYSTEM or the steplib
+0540library respectively, or to the required library.
+0550.
+0560The delivered example program 'USR2074P' calls 'USR2007N' to read the
+0570DFS setting. If you use 'USR2074P' subprogram 'USR2007N' must also be
+0580copied to library 'SYSTEM' or to the steplib-library respectively, or
+0590to any application.
+0600.
+0610.
+0620Following variables have to be filled before invoking the interface:
+0630.
+0640USER-ID
+0650  NSC user ID
+0660PASSWORD
+0670  Old password for the specified NSC user ID
+0680NEWPASSWORD
+0690  New password for the specified NSC user ID
+0700  In general the NSC password rules apply. The returned Natural
+0710  error message has to be considered.
+0720.
+0730Please note: if the logon attemp is exceeded, the NSC user
+0740             profile may be locked according the rules defined in NSC.
+0750NODE-NAME
+0760  The name of the node to which the Natural RPC server is connected.
+0770  Possible values:
+0780  - a physical node name of up to 32 characters
+0790  - *, if the server name refers to an EntireX logical service name
+0800  - LOGBROKER=<name> where <name> is an EntireX logical broker name
+0810  (see also the documentation of the Natural profile parameter SRVNODE)
+0820SERVER-NAME
+0830  The name of the Natural RPC server which should execute the command
+0840  Possible values:
+0850  - a physical server name of up to 32 characters
+0860  - an EntireX logical service name
+0870  (see also the documentation of the Natural profile parameter SRVNODE)
+0880TRANSPORT
+0890  The transport protocol used by the client to access the server
+0900  Possible values:
+0910  - B   (= Broker)
+0920.
+0930.
+0940***** End of Description *****
+0950

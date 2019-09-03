@@ -1,0 +1,31 @@
+0010**DV          0032     V1CONSOLE-LOG                     CONSOLE-LOG
+0020**DD          0035N 3.0 2ERROR-CODE
+0030**DD          0036A  58 2ERROR-TEXT
+0040**DD          0037N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0038N 7.0 2RECORD-NUMBER
+0060**DD          0039N 3.0 2RECORD-LENGTH
+0070**DD          0040A 253 2RECORD
+0080**DRR         0041     R2RECORD                          /* REDEF. BEGIN : RECORD
+0090**DFR         0042A  79 3#RECORD-LEFT-PART
+0100**C               *                                      /* .HKA 97-12-08 START
+0110**DRR         0043     R3#RECORD-LEFT-PART               /* REDEF. BEGIN : #RECORD-LEFT-P
+0120**DFR         0044A  15 4#FILLER
+0130**DFR         0045A  11 4#DATX-YYYY-MM-DD                /* OVERLAY WITH DATX(YYYY-MM-DD
+0140**DFR         0046A  10 4#TIMX-HHIISST                   /* OVERLAY WITH TIMX (HH:II:SS.T
+0150**C               *                                      /* .HKA 97-12-08 END
+0160**DRR         0047     R2RECORD                          /* REDEF. BEGIN : RECORD
+0170**DFR         0048A  56 3#DUMMY
+0180**DFR         0049A  79 3#RECORD-RIGHT-PART
+0190**DRR         0050     R2RECORD                          /* REDEF. BEGIN : RECORD
+0200**DFR         0051A  59 3#RECORD-1-59
+0210**DFR         0052A  59 3#RECORD-60-118
+0220**DD          0053B   1 2POSITION
+0230**DD          0054A 225 2TOKEN-VECTOR
+0240**DD          0055N 3.0 2NUMBER-OF-TOKENS
+0250**DD          0056A  10 2TOKEN-DELIMITERS
+0260**DD          0057A   6 2DATE
+0270**DD          0058A   2 2PARTITION
+0280**DD          0059A   8 2MESSAGE-TYPE
+0290**DD          0060A   8 2CONSOLE-TYPE
+0300**DD          0061D     2LOG-DATX                        /* ADDED .HKA. 97-12-08
+0310**DD          0062T     2LOG-TIMX                        /* ADDED .HKA. 97-12-08

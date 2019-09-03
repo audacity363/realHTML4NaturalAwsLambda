@@ -1,0 +1,21 @@
+0010/* This program serves as example how to design a user-defined
+0020/* program to call 'USR8215N'
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060  01 NATURAL-VERSION (N4)
+0070  01 NSC-VERSION     (N4)
+0080END-DEFINE
+0090/*
+0100/*
+0110CALLNAT 'USR8215N' NATURAL-VERSION NSC-VERSION
+0120/*
+0130INPUT (AD=OI CD=YE IP=OFF)
+0140  /// 20T 'Natural Version:' (YEI)
+0150    / 20T '-' (16) (YEI)
+0160   // 22T '>>'(TU) NATURAL-VERSION '<<'(TU)
+0170  /// 22T 'NSC Version:' (YEI)
+0180    / 20T '-' (16) (YEI)
+0190   // 22T '>>'(TU) NSC-VERSION '<<'(TU)
+0200/*
+0210END

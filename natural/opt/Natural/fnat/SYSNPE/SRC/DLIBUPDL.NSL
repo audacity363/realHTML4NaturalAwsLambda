@@ -1,0 +1,17 @@
+0010**DV          0018     V1LIB-UPDATE                      LIB-UPDATE
+0020**DD          0021N 3.0 2ERROR-CODE                      /* Message code.
+0030**DD          0022A  58 2ERROR-TEXT                      /* Text describing message.
+0040**DD          0023N 5.0 2NODE                            /* Node ID (DBID).
+0050**DD          0024A  54 2DSNAME                          /* Dataset name of library to be
+0060**DD          0025A   8 2FUNCTION                        /* Function to be performed:
+0070**DD          0026A   6 2VOLSER                          /* Volume serial number.
+0080**DD          0027A  10 2MEMBER                          /* Name of member to be
+0090**DD          0028A  10 2NEWNAME-MEMBER                  /* New member name.
+0100**DD          0029A   1 2PRODUCT                         /* 'P' if access method is
+0110**DD          0030A   8 2MEMBER-PASSWORD                 /* Password for protected
+0120**DD          0031A  80 2PRODUCT-OPTIONS                 /* Options for LIBRARIAN access
+0130**DD          0032A   8 2LIBRARY                         /* Name of library.
+0140**DD          0033A   8 2SUB-LIBRARY                     /* Name of sublibrary.
+0150**DD          0034A   8 2MEMBER-TYPE                     /* Member type.
+0160**DD          0035A   8 2NEWNAME-MEMBER-TYPE             /* New member type for rename.
+0170**DD          0036A   8 2VSAM-CATALOG                    /* Name of VSAM catalog where

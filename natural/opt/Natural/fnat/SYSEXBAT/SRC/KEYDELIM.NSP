@@ -1,0 +1,19 @@
+0010/* ---------------------------------------------------------------------
+0020/* Program:        KEYDELIM
+0030/* Library:        SYSEXBAT (Batch mode samples)
+0040/*
+0050/* Functionality:  Keyword delimiter mode
+0060/*
+0070/* Description:    With keyword delimiter you can skip input fields
+0080/* ---------------------------------------------------------------------
+0090DEFINE DATA LOCAL
+01001 #firstname (A10)
+01101 #lastname  (A10)
+01201 #age       (N3)
+0130END-DEFINE
+0140**
+0150INPUT (AD=M) #firstname #lastname #age
+0160**
+0170DISPLAY #firstname #lastname #age
+0180**
+0190END

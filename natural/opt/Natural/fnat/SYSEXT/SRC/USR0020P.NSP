@@ -1,0 +1,87 @@
+0010/*  Get Any Error Message from System File FNAT / FUSER
+0020/*  This program serves as example how to design a user-defined
+0030/*  program to call 'USR0020N'
+0040/*********************
+0050DEFINE DATA LOCAL
+0060  01 PARM-AREA               /* Parameters for CALLNAT
+0070     02 TYPE         (A01)   /* 'U' or 'N' ( User or NATURAL messages )
+0080     02 APPLICATION  (A08)   /* Must not be blank for type = 'U'
+0090     02 ERROR-NUMBER (N04)   /* 1 thru 9999
+0100     02 LANG-NUMB    (A01)   /* Language number (similar to *LANGUAGE)
+0110     02 REDEFINE LANG-NUMB
+0120        03 LANG-NUMB-I (I1)
+0130     02 RESPONSE     (N04)   /* Error during execution of USR0020N
+0140  01 RETURN-AREA             /* Contains the message texts
+0150     02 S-FOUND      (L)   INIT <FALSE>  /*  TRUE = 'Short text found'
+0160     02 L-FOUND      (L)   INIT <FALSE>  /*  TRUE = 'Long text found'
+0170     02 SHORT-TEXT   (A65)
+0180        INIT <'<<< Short text not found >>>'>
+0190     02 LONG-TEXT    (A78/01:20)
+0200        INIT ALL <'<<< Long text not found >>>'>
+0210  01 INFO (A79)  /*  Header for output screen
+0220  01 #MSG (A72)
+0230  01 #MARK (N4)
+0240END-DEFINE
+0250/*********************************
+0260/* Set up some defaults:
+0270/*
+0280MOVE 'N'        TO TYPE            /* User messages
+0290MOVE *APPLIC-ID TO APPLICATION     /* Current application
+0300MOVE *ERROR-NR  TO ERROR-NUMBER    /* Recent error code
+0310MOVE *LANGUAGE  TO LANG-NUMB-I     /* Current language code
+0320/*
+0330SET KEY ALL
+0340/*
+0350RESET RESPONSE
+0360REPEAT
+0370  /*
+0380  RESET INITIAL SHORT-TEXT LONG-TEXT (*)
+0390  /*
+0400  INPUT (AD=MITL'_' IP=OFF SG=OFF) WITH TEXT #MSG MARK #MARK ///
+0410    15T  'Get Error Message from System File' /
+0420    15T  '-' (34) //
+0430    18T  'Message type ...' TYPE           /
+0440    18T  'Application ....' APPLICATION    /
+0450    18T  'Error number ...' ERROR-NUMBER   /
+0460    18T  'Language code ..' LANG-NUMB-I    ///
+0470    15T  'Press ENTER to receive the texts.' /
+0480    15T  'Press any PF-Key to stop.'
+0490    /*
+0500  RESET #MSG #MARK RESPONSE
+0510  IF *PF-KEY NE 'ENTR' OR TYPE = '.'
+0520    ESCAPE BOTTOM
+0530  END-IF
+0540  /*
+0550  CALLNAT 'USR0020N' PARM-AREA RETURN-AREA
+0560  /*
+0570  IF RESPONSE > 0
+0580    DECIDE ON FIRST VALUE OF RESPONSE
+0590      VALUE 1    MOVE 'Invalid Message Type' TO #MSG
+0600                 MOVE 1 TO #MARK
+0610      VALUE 2    MOVE 'Invalid Application' TO #MSG
+0620                 MOVE 2 TO #MARK
+0630      VALUE 3    MOVE 'Invalid Error Number' TO #MSG
+0640                 MOVE 3 TO #MARK
+0650      VALUE 4    MOVE 'Invalid Language Code' TO #MSG
+0660                 MOVE 4 TO #MARK
+0670      NONE VALUE
+0680        INPUT 'Response code from USR0020N:' (I) RESPONSE (AD=OIL)
+0690        IGNORE
+0700    END-DECIDE
+0710  ELSE
+0720    /* Build a header line:
+0730    COMPRESS '&Message Type:%' TYPE
+0740      '&- Appl:%' APPLICATION
+0750      '&- Nr.:%'  ERROR-NUMBER
+0760      '&- Lang:%' LANG-NUMB-I INTO INFO
+0770    IF S-FOUND
+0780      COMPRESS INFO '&- Short' INTO INFO
+0790    END-IF
+0800    IF L-FOUND
+0810      COMPRESS INFO '&- Long' INTO INFO
+0820    END-IF
+0830    WRITE NOTITLE INFO (DY=&I%)
+0840      //  SHORT-TEXT (AD=I) LONG-TEXT (*)
+0850  END-IF
+0860END-REPEAT
+0870END

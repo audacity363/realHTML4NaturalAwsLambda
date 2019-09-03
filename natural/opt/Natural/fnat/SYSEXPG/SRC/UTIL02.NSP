@@ -1,0 +1,63 @@
+0010** Example 'UTIL02': USE THE ACTIVEX COMPONENT 'SoftwareAG.NaturalX.Utilities'
+0020******************************************************************************
+0030DEFINE DATA
+0040LOCAL
+00501 #CLASS (A) DYNAMIC CONST <'SoftwareAG.NaturalX.Utilities.3'>
+00601 #NAME (A) DYNAMIC INIT <'NaturalStudio/6.2'>
+00701 #LNAME (I2)
+00801 #UTIL HANDLE OF OBJECT
+00901 #STUDIO HANDLE OF OBJECT
+01001 #OBJECTS HANDLE OF OBJECT
+01101 #PROGS HANDLE OF OBJECT
+01201 #PROG HANDLE OF OBJECT
+01301 #ROT HANDLE OF OBJECT
+01401 #RO (A) DYNAMIC
+01501 #MSG (A72)
+01601 #ERR (I4)
+0170END-DEFINE
+0180*
+0190* Create an instance of the Utilities class.
+0200CREATE OBJECT #UTIL OF #CLASS GIVING #ERR
+0210IF #UTIL EQ NULL-HANDLE
+0220  COMPRESS 'Object of class' #CLASS 'could not be created.' TO #MSG
+0230  WRITE #MSG
+0240  ESCAPE ROUTINE
+0250END-IF
+0260*
+0270* Retrieve the Running Object Table.
+0280SEND 'GetRunningObjects' TO #UTIL
+0290RETURN #ROT GIVING #ERR
+0300IF #ROT EQ NULL-HANDLE
+0310  #MSG := 'Running Object Table could not be retrieved.'
+0320  WRITE #MSG
+0330  ESCAPE ROUTINE
+0340END-IF
+0350*
+0360#LNAME := *LENGTH(#NAME)
+0370* Iterate across the Running Objects Table.
+0380REPEAT
+0390  SEND 'Next' TO #ROT RETURN #RO
+0400  IF #RO = ' '
+0410    ESCAPE BOTTOM
+0420  END-IF
+0430* If we hit a running Natural Studio session,...
+0440  IF SUBSTRING(#RO,1,#LNAME) EQ #NAME
+0450* ...we access it...
+0460    SEND 'BindToObject' TO #UTIL
+0470    WITH #RO (AD=O) RETURN #STUDIO
+0480* ...open a Program editor in that session...
+0490    #OBJECTS := #STUDIO.OBJECTS
+0500    #PROGS := #OBJECTS.PROGRAMS
+0510    SEND 'Add' TO #PROGS
+0520    WITH 1009 RETURN #PROG
+0530* ...and display the identifier of this session in the editor.
+0540    COMPRESS 'This is' #RO TO #MSG
+0550    #PROG.SOURCE := #MSG
+0560  END-IF
+0570END-REPEAT
+0580*
+0590* Not really necessary at this time, just for testing reasons.
+0600SEND 'Reset' TO #ROT
+0610*
+0620END
+0630

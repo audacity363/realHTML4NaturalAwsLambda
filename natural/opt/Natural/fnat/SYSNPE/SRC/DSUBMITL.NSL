@@ -1,0 +1,15 @@
+0010**DV          0016     V1SUBMIT                          SUBMIT
+0020**DD          0019N 3.0 2ERROR-CODE
+0030**DD          0020A  58 2ERROR-TEXT
+0040**DD          0021N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0022A   8 2FUNCTION
+0060**DD          0023A  80 2CARD
+0070**DD          0024N 5.0 2JOB-NUMBER
+0080**CF              *
+0090**DF          0025A  78 1#MSG
+0100**DF          0027A   8 1#JOB-NAME
+0110**DRR         0028     R1#JOB-NAME                       /* REDEF. BEGIN : #JOB-NAME
+0120**DSRI1       0029      2#JOB-NAME-BYTES                 (8)
+0130**DFR         0030A   1 3#JOB-NAME-BYTE
+0140**DF I1       0031A   8 1#TOKEN                          (10)
+0150**DF          0032I   1 1#I

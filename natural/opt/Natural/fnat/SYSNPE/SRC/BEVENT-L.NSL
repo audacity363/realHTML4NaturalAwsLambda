@@ -1,0 +1,11 @@
+0010**DV          0012     V1EVENTING                        EVENTING
+0020**DD          0015N 3.0 2ERROR-CODE
+0030**DD          0016A  58 2ERROR-TEXT
+0040**DD          0017N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0018A  10 2SYSTEM-MESSAGE-CODE
+0060**DD          0019A   8 2FUNCTION
+0070**DD          0020A   8 2EVENT-NAME
+0080**DD          0021B   4 2MAX-TIME
+0090**DD          0022N 5.0 2NUMBER-OF-WAITERS
+0100**DD          0023N 5.0 2NUMBER-OF-MESSAGES
+0110**DD I1 C     0024A 250M2MESSAGE-ARRAY                   (1:5) /* MU-FIELD

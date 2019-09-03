@@ -1,0 +1,113 @@
+0010DB: 148 FILE: 191  - NATPROC-USERS                    DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:24
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:24
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   50      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A1 USER-ID                           A    8    D The user-id.
+0250*      The user-id.
+0260*      '--------'  user is not
+0270*      logged on.
+0280*      '****main'  entry for the
+0290*      ENTIRE SYSTEM
+0300*      SERVER main task.
+0310  1 A2 ADABAS-ID                         B    4    D The ADABAS user-id.
+0320*      The ADABAS user-id.
+0330  1 A3 NATPROC-ID                        A   10    D The internal unique
+0340*      The internal unique ID in
+0350*      ENTIRE SYSTEM SERVER.
+0360*      'MAIN' for the ENTIRE SYSTEM
+0370*      SERVER main task.
+0380  1 A4 LAST-ACTIVITY                     N  5.0    D Elapsed time since l
+0390*      Elapsed time since last
+0400*      activity (in seconds).
+0410  1 A5 CPU                               N  5.2    D Amount of CPU consum
+0420*      Amount of CPU consumed
+0430*      (format SSSSS.HH).
+0440  1 A6 IO-COUNT                          N  7.0    D Number of I/O operat
+0450*      Number of I/O operations
+0460*      so far.
+0470  1 AA ADABAS-EXTENDED-ID                B   28    D Extended (28 byte) A
+0480*      Extended (28 byte) ADABAS
+0490*      userid.
+0500  1 AD FULL-SCAN                         A    3    D YES if internal ESY
+0510*      YES if internal ESY tasks
+0520*      are requested
+0530*      (internal tasks marked as
+0540*      INTERNAL-TASK = 'YES' )
+0550*      NO  don't display internal ESY
+0560*      tasks (default)
+0570  1 AE INTERNAL-TASK                     A    3    D YES if data of inter
+0580*      YES if data of internal ESY
+0590*      task is returned
+0600*      NO  if data of NATPROC-USER
+0610*      is returned
+0620  1 AF TASK-ID                           A   16    D ID of the internal t
+0630*      ID of the internal task
+0640  1 FN FUNCTION                          A    8    D 'CANCEL'  Cancel use
+0650*      'CANCEL'  Cancel user with
+0660*      specified NATPROC-ID
+0670*      'LASTERR' Get last error
+0680*      message
+0690*      If FUNCTION is not specified
+0700*      a list of the ENTIRE SYSTEM
+0710*      SERVER users is given.
+0720*
+0730*      Fields common to MVS and VSE
+0740*
+0750  1 A7 CORE-USED                         N  7.0    D Amount of core (in K
+0760*      Amount of core (in K) used
+0770*      by task.
+0780*      (Not yet available for
+0790*      MVS/XA/ESA.)
+0800  1 A8 CORE-FREE                         N  7.0    D Amount of free core
+0810*      Amount of free core in the
+0820*      address space. This value is
+0830*      only returned for 'MAIN'
+0840*      entry.
+0850*      (Not yet available for
+0860*      MVS/XA/ESA.)
+0870*
+0880*      MVS fields
+0890*
+0900  1 AB ORIGIN-JOBNAME                    A    8    D Name of TP system or
+0910*      Name of TP system or BATCH job
+0920*      from which the user calls
+0930*      originate.
+0940  1 A9 TCB-ADDRESS                       B    4    D The TCB address of t
+0950*      The TCB address of the
+0960*      sub-task.
+0970M 1 AX EXTENDED-TEXT                     A  250      Extended error text
+0980*      Extended error text from
+0990*      last DYNALLOC error, available
+1000*      with FUNCTION=LASTERR.
+1010*      (maximum 3 occurences)
+1020*
+1030*      BS2000 fields
+1040*
+1050  1 ES SYSTEM-CODE                       B    2      System error code.
+1060*      System error code.
+1070  1 JA JOB-ID                            A    8    D TSN of internal task
+1080*      TSN of internal task in alpha
+1090*      format.
+1100*
+1110*      End of NATPROC-USERS
+1120*
+1130******DDM OUTPUT TERMINATED******

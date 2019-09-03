@@ -1,0 +1,28 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> SYSOBJH Internal Commands
+0080<Header2> Part 5
+0090/* <Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>OHTHI004
+0140<Successor>OHTHI006
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170GO VIEW
+0180  Go to the view menu
+0190
+0200GO VIEW LIBRARY (or ERROR, NCP, FDT)
+0210  Go to the view Natural library objects (or the corresponding) menu
+0220
+0230GO FIND
+0240  Go to the find menu
+0250
+0260GO FIND LIBRARY (or ERROR, NCP, FDT, SELECTION, LIST)
+0270  Go to the find Natural library objects (or the corresponding) menu
+0280<HelpTextEnd>

@@ -1,0 +1,12 @@
+0010&H View FILE-ATTRIBUTES
+0020&L
+0030&L
+0040#Zweck@    : Dateiattribute auflisten.
+0050&L
+0060#System@   : z/OS, z/VSE, BS2000/OSD.
+0070&L
+0080&L
+0090#Anwendung@: Dieser View zeigt die Attribute der spezifizierten Datei
+0100             an, wie z.B. Satzformat, Blockgroesse, Satzlaenge.
+0110&L
+0120#Anmerkung@:

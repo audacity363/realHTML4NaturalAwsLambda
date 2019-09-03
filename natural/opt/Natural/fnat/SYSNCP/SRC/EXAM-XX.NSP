@@ -1,0 +1,145 @@
+0010/*  EXAM-XX - EXEC
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (1)
+0070     02 NATURAL-ERROR
+0080     02 RETURN-CODE
+0090     02 RESULT-FIELD (01:12)
+0100     02 GETSET-FIELD-NAME
+0110     02 GETSET-FIELD-VALUE
+0120  01 MSG                    (A72)
+0130  01 PROC-NAME              (A08)
+0140  01 LOC-NUMBER             (A10)
+0150  01 LOC-NAME               (A50)
+0160  01 DUMMY                  (A32/1:8)
+0170  01 IN1                    (A04)
+0180  01 IN2                    (A04)
+0190  01 IN3                    (A04)
+0200  01 IN4                    (A04)
+0210  01 DATA-LINE              (A50)
+0220  01 #DATA                  (I01)
+0230  01 #TRACE-MODE            (A01)
+0240  01 #I                     (I2)
+0250END-DEFINE
+0260/**********************************************************************
+0270/* Allow to work with all PF-Keys:
+0280SET KEY ALL
+0290SET KEY PF1 NAMED 'Help'
+0300SET KEY PF2 NAMED 'Menu'
+0310SET KEY PF3 NAMED 'Exit'
+0320MOVE ' ' TO *ERROR-TA
+0330/**********************************************************************
+0340DEFINE WINDOW COMMAND-BOX
+0350  SIZE 22 * 78
+0360  BASE 01 / 01
+0370  TITLE ' (XX) Execute a Command '
+0380  CONTROL SCREEN
+0390  FRAMED POSITION OFF
+0400/*******************************************************************
+0410/* Read the currently used processor name:
+0420/*
+0430PROCESS COMMAND ACTION GET USING
+0440  PROCESSOR-NAME = ' '
+0450  GETSET-FIELD-NAME = 'NAME&'
+0460/*
+0470IF NATURAL-ERROR NE 0
+0480  CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0490  WRITE *PROGRAM (AD=I) NATURAL-ERROR MSG
+0500  ESCAPE ROUTINE
+0510END-IF
+0520/*
+0530MOVE GETSET-FIELD-VALUE TO PROC-NAME
+0540/*
+0550/*******************************************************************
+0560/* Check whether the TRACE flag is set:
+0570/*
+0580PROCESS COMMAND ACTION GET USING
+0590  PROCESSOR-NAME = ' '
+0600  GETSET-FIELD-NAME = 'TRACE'
+0610/*
+0620MOVE GETSET-FIELD-VALUE TO #TRACE-MODE
+0630/**********************************************************************
+0640REPEAT
+0650  RESET DUMMY (*) DATA-LINE
+0660  SET CONTROL 'K00' /* ENTR-Key
+0670  /*
+0680  RESET #DATA
+0690  IF *DATA > 0
+0700    MOVE *DATA TO #DATA
+0710    INPUT DUMMY (*) IN1 IN2 IN3 IN4
+0720    /* COMPRESS FULL DUMMY (1:#DATA) TO DATA-LINE WITH DELIMITER
+0730    FOR #I 1 #DATA
+0740      COMPRESS DATA-LINE DUMMY (#I) INTO DATA-LINE LEAVING NO
+0750      IF #I < #DATA
+0760        COMPRESS DATA-LINE ',' INTO DATA-LINE LEAVING NO
+0770      END-IF
+0780    END-FOR
+0790  END-IF
+0800  /*
+0810  /* Get the name and the internal number of the current location:
+0820  CALLNAT 'EXAM-GLN' LOC-NAME LOC-NUMBER
+0830  /*
+0840  /********************************************************************
+0850  INPUT WINDOW = 'COMMAND-BOX' (AD=MILT' ' IP=OFF)
+0860  WITH TEXT MSG
+0870    / 'Processor Name ..' PROC-NAME  (AD=OIL)
+0880    / 'Location No. ....' LOC-NUMBER (AD=OIL)
+0890    / 'Location Name ...' LOC-NAME   (AD=OIL)
+0900    / 'Data on STACK ...' DATA-LINE  (AD=OIL) #DATA (AD=OIL ZP=F)
+0910    / ' '
+0920    / 'Command .........' (I) COMMAND-LINE (1) (AL=52)  #TRACE-MODE
+0930    / ' '
+0940    / 'Result (1) ......' RESULT-FIELD (1) (AL=52)
+0950    / 'Result (2) ......' RESULT-FIELD (2) (AL=52)
+0960    / 'Result (3) ......' RESULT-FIELD (3) (AL=52)
+0970    / 'Result (4) ......' RESULT-FIELD (4) (AL=52)
+0980    / 'Result (5) ......' RESULT-FIELD (5) (AL=52)
+0990    / 'Result (6) ......' RESULT-FIELD (6) (AL=52)
+1000    / 'Result (7) ......' RESULT-FIELD (7) (AL=52)
+1010    / 'Result (8) ......' RESULT-FIELD (8) (AL=52)
+1020    / 'Result (9) ......' RESULT-FIELD (9) (AL=52)
+1030    / 'Return Code .....' RETURN-CODE
+1040    / 'NATURAL-Error ...' NATURAL-ERROR (AD=OI)
+1050  /********************************************************************
+1060  SET WINDOW OFF
+1070  RESET MSG NATURAL-ERROR
+1080  /*
+1090  IF *PF-KEY = 'PF1'
+1100    FETCH RETURN 'EXAM-H'
+1110    ESCAPE TOP
+1120  END-IF
+1130  /*
+1140  IF *PF-KEY = 'PF12'  /*  'Cancel' is not handled via processor
+1150    ESCAPE ROUTINE
+1160  END-IF
+1170  /*
+1180  IF COMMAND-LINE (1) = ' '
+1190  AND *PF-KEY = 'ENTR'
+1200    MOVE 'Please enter a command or press a PF-Key.' TO MSG
+1210    ESCAPE TOP
+1220  END-IF
+1230  /*
+1240  CALLNAT 'EXAM-ST0' #TRACE-MODE  /*  Set Trace Mode
+1250  /*
+1260  RESET RETURN-CODE RESULT-FIELD (*)
+1270  /*
+1280  /* Execute the command line, according to the 'Runtime Action'
+1290  /* which has been specified for the entered command:
+1300  /*
+1310  PROCESS COMMAND ACTION EXEC USING
+1320    PROCESSOR-NAME = PROC-NAME
+1330    COMMAND-LINE (1) = COMMAND-LINE (1)
+1340  /*
+1350  /* Remark: You will not return into this program, if the command
+1360  /* processor issues a FETCH or STOP statement for the given command.
+1370  /*
+1380* IF NATURAL-ERROR NE 0
+1390*   CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+1400*   ESCAPE TOP
+1410* END-IF
+1420  /*
+1430END-REPEAT
+1440/**********************************************************************
+1450END

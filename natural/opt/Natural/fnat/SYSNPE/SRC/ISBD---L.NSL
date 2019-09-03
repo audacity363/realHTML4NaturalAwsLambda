@@ -1,0 +1,45 @@
+0010**DF          0046A 128 1#SES-DATA-BD                    /* BS2000 SEQUENTIAL FILES
+0020**DRR         0048     R1#SES-DATA-BD                    /* REDEF. BEGIN : #SES-DATA-BD
+0030**DFR         0049A 100 2#SES-DATA-B2                    /* THIS PART IS IDENTICAL BD/BP
+0040**DRR         0050     R2#SES-DATA-B2                    /* REDEF. BEGIN : #SES-DATA-B2
+0050**C               * -------- THIS PART IS IDENTICAL      FOR OBJ-TYPES BD AND BP
+0060**DFR         0051N   3 3#NODE
+0070**DFR         0052A  54 3#DSNAME
+0080**DRR         0053     R3#DSNAME                         /* REDEF. BEGIN : #DSNAME
+0090**DFR         0054A  54 4#BS2-FNAME                      /* JUST AN ALIAS
+0100**DRR         0055     R3#DSNAME                         /* REDEF. BEGIN : #DSNAME
+0110**DFR         0056A   2 4#DSNAME-SHORT
+0120**DFR         0057A  52 4#DSNAME-REST
+0130**DFR         0058A   6 3#VOLSER
+0140**DFR         0059A   8 3#PASSWORD
+0150**DFR         0060A   5 3#FCBTYPE
+0160**DFR         0061A   1 3#STATE
+0170**DFR         0062A   1 3#ACCESS-TYPE
+0180**DFR         0063A   1 3#SHARE
+0190**DFR         0064A   1 3#FIL-1                          /* NOT USED WITH OBJ-TYPE BD
+0200**DFR         0065A   1 3#SELECTOR                       /* OPTIONAL: WHAT KIND OF RANGE
+0210**C               *                                      /* = BLANK: USE IT AS SCAN-VALUE
+0220**C               *                                      /* = 'C' USE IT AS CREATION RANG
+0230**C               *                                      /* = 'E' -"-    EXPIRATION RANGE
+0240**C               *                                      /* = 'A' -"-    LAST-ACCESS RANG
+0250**C               *                                      /* = 'S' -"-    AS SIZE RANGE
+0260**C               *                                      /* = 'F' -"-    FREE-SIZE RANGE
+0270**C               *                                      /* = 'M' USE IT AS MODEL-NAME
+0280**C               *                                      /* VALUES ABOVE FOR OBJ TYPE BD
+0290**C               *                                      /* OTHER VALUES SEE ISBP---L
+0300**DFR         0066A  19 3#RANGE                          /* SEE NPR-VIEW CATALOG
+0310**DRR         0067     R3#RANGE                          /* REDEF. BEGIN : #RANGE
+0320**DFR         0068A  18 4#SCAN                           /* scan-value
+0330**DRR         0069     R3#RANGE                          /* REDEF. BEGIN : #RANGE
+0340**DFR         0070A   8 4#MODEL
+0350**C               * -------------------- UP TO HERE      IDENTICAL WITH OBJ-TYPE BP --
+0360**DFR         0071A   3 2#DSORG
+0370**DFR         0072A   3 2#SPACE-UNITS
+0380**DFR         0073A   5 2#RECFM
+0390**DFR         0074I   2 2#RECSIZE
+0400**DFR         0075I   2 2#BLKSIZE
+0410**DFR         0076B   3 2#PRIMARY
+0420**DFR         0077B   3 2#SECONDARY
+0430**DFR         0078A   4 2#SUPPORT-TYPE
+0440**DFR         0079A   1 2#VTOC
+0450**DFR         0080A   2 2#FFU

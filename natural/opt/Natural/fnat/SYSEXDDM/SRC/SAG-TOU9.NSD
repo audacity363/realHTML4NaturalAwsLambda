@@ -1,0 +1,40 @@
+0010 DB: 000 FILE: 027  - SAG-TOURS-G-FIRMA                DEFAULT SEQUENCE:
+0020
+0030T L DB Name                              F Leng  S D Remark
+0040- - -- --------------------------------  - ----  - - ------------------------
+0050  1 A8 FIRMA-ID                          A    8  N D
+0060  1 A9 FIRMA-TYP                         A    1  N
+0070*      'A' Firma = Agentur, 'C' Firma
+0080*      = Charterbasis
+0090  1 BA FIRMA-BEZEICHNUNG                 A   30  N D
+0100G 1 BB FIRMA-LEITUNG
+0110  2 BC F-NACHNAME                        A   20  N D
+0120  2 BD F-VORNAME-1                       A   20  N
+0130  2 BE F-VORNAME-2                       A   20  N
+0140  2 BF F-TITEL                           A   20  N
+0150  2 BG F-ANREDE                          A    8  N
+0160G 1 BH FIRMA-ADRESSE
+0170M 2 BI F-ADRESSZUSATZ                    A   20  N
+0180  2 BJ F-STRASSE-HNR                     A   20  N
+0190  2 BK F-LAND                            A    3  N D
+0200  2 BL F-PLZ                             A   10  N D
+0210  2 BM F-ORT                             A   20  N D
+0220P 1 BN FIRMA-TELEFON
+0230*      2 Ausprägungen:  Telefon-1,
+0240*      Telefon-2
+0250  2 BO F-VORWAHL                         A    6  N
+0260  2 BP F-RUFNUMMER                       A   15  N
+0270G 1 BT TELEX
+0280  2 BU VORWAHL-TX                        A    6  N
+0290  2 BV RUFNUMMER-TX                      A   15  N
+0300G 1 BW TELEFAX
+0310  2 BX VORWAHL-FAX                       A    6  N
+0320  2 BY RUFNUMMER-FAX                     A   15  N
+0330  1 BZ DID-GESCHAEFTSBEDINGUNGEN         A    8  N D
+0340  1 T2 COMPANY-TIMESTAMP                 T   12  N
+0350*      used for Natural Constract
+0360  1 B0 FIRMA-TYP-SP                      A    9  N S
+0370*      -------- SOURCE FIELD(S) -------
+0380*      FIRMA-TYP(1-1)
+0390*      FIRMA-ID(1-8)
+0400******DDM OUTPUT TERMINATED******

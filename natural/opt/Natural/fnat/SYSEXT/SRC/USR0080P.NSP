@@ -1,0 +1,79 @@
+0010/*  Get / Set name and type of ESIZE editor contents
+0020/*  This program serves as an example how to design a user-defined
+0030/*  program to call 'USR0080N'
+0040/***********************************************************************
+0050DEFINE DATA LOCAL
+0060  01 PARAM                    /* Parameters for CALLNAT
+0070     02 ACTION       (A08)    /* "GET" or "SET"
+0080     02 TYPE         (A01)    /* Type of Source
+0090     02 NAME         (A08)    /* Name of source
+0100     02 EMPTY        (L)      /* TRUE if editor is empty
+0110     02 RESPONSE     (N04)    /* Error during execution of USR0080N
+0120     02 ERROR-TEXT   (A65)    /* Short text
+0130  01 TYPE-TEXT       (A12)    /* Explanation to TYPE
+0140  01 FLAG            (L)      /* Any DATA on the STACK ?
+0150  01 #MSG            (A72)
+0160END-DEFINE
+0170/*********
+0180SET KEY ALL
+0190/*
+0200MOVE 'GET' TO ACTION          /* read actual settings
+0210CALLNAT 'USR0080N' PARAM
+0220/*
+0230IF *DATA > 0
+0240  MOVE TRUE TO FLAG
+0250ELSE
+0260  MOVE FALSE TO FLAG
+0270END-IF
+0280/*
+0290REPEAT
+0300  DECIDE ON FIRST TYPE
+0310    VALUE 'P' MOVE 'Program'     TO TYPE-TEXT
+0320    VALUE 'S' MOVE 'Subroutine'  TO TYPE-TEXT
+0330    VALUE 'H' MOVE 'Helproutine' TO TYPE-TEXT
+0340    VALUE 'N' MOVE 'Subprogram'  TO TYPE-TEXT
+0350    VALUE 'C' MOVE 'Copycode'    TO TYPE-TEXT
+0360    VALUE 'T' MOVE 'Text'        TO TYPE-TEXT
+0370    VALUE 'G' MOVE 'GDA'         TO TYPE-TEXT
+0380    VALUE 'L' MOVE 'LDA'         TO TYPE-TEXT
+0390    VALUE 'A' MOVE 'PDA'         TO TYPE-TEXT
+0400    VALUE 'M' MOVE 'Map'         TO TYPE-TEXT
+0410    VALUE '3' MOVE 'Dialog'      TO TYPE-TEXT /* not on Mainframe
+0420    VALUE '4' MOVE 'Class'       TO TYPE-TEXT
+0430    VALUE 'O' MOVE 'Macro'       TO TYPE-TEXT /* only for ISPF/MF
+0440    VALUE '7' MOVE 'Function'    TO TYPE-TEXT
+0450    VALUE '8' MOVE 'Adapter'     TO TYPE-TEXT
+0460    NONE      MOVE '?'           TO TYPE-TEXT
+0470  END-DECIDE
+0480  /*
+0490  INPUT (AD=MITL'_' IP=OFF ZP=ON SG=OFF) WITH TEXT #MSG ///
+0500    18T  'Action .....................' ACTION (AL=3) /
+0510    18T  'Type of source in editor ...' TYPE 4X TYPE-TEXT (AD=OD)  /
+0520    18T  'Name of source in editor ...' NAME  /
+0530    18T  'Editor empty ...............' EMPTY (AD=OI EM=NO/YES) /
+0540    18T  'Response ...................' RESPONSE (AD=OI) /
+0550    18T   ERROR-TEXT (AD=OI) ///
+0560    15T  'Press ENTER to receive the information.' /
+0570    15T  'Press any PF-Key to stop.'
+0580    /*
+0590  RESET #MSG
+0600  IF *PF-KEY NE 'ENTR'
+0610    ESCAPE BOTTOM
+0620  END-IF
+0630  /*
+0640  CALLNAT 'USR0080N' PARAM
+0650  /*
+0660  IF RESPONSE > 0
+0670    MOVE ERROR-TEXT TO #MSG
+0680  ELSE
+0690    IF FLAG
+0700      ESCAPE BOTTOM
+0710    END-IF
+0720  END-IF
+0730  /*
+0740  RESET TYPE NAME RESPONSE
+0750  MOVE 'GET' TO ACTION        /* read actual settings
+0760  CALLNAT 'USR0080N' PARAM
+0770  /*
+0780END-REPEAT
+0790END

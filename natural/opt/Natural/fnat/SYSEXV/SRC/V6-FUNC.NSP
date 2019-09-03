@@ -1,0 +1,365 @@
+0010*
+0020* Program .. V6-FUNC
+0030* Library .. SYSEXV
+0040* Version .. 6.1
+0050*
+0060* Functionality: Show new external function
+0070************************************************************************
+0080*
+0090DEFINE DATA
+0100LOCAL
+0110  1 #PARM1     (A5/1:2)
+0120  1 #PARM2     (A) DYNAMIC
+0130  1 #LONGTEXT  (A) DYNAMIC
+0140  1 #TITLE     (A20)
+0150  1 #SUM1      (N2)
+0160  1 #SUM2      (N2)
+0170  1 #SUM3      (N2)
+0180  1 #SUM4      (N2)
+0190  1 #FUNC-NAME (A10)
+0200END-DEFINE
+0210*
+0220FORMAT KD=ON
+0230SET KEY PF3  NAMED 'Exit'
+0240        PF12 NAMED 'Canc'
+0250*
+0260*
+0270INPUT (IP=OFF)
+0280 01T *TIMX  (AD=OTD)
+0290 21T '***** NATURAL 6.1 ENHANCEMENTS *****'
+0300 70T *DATX  (AD=OTD DF=L)
+0310 /
+0320 01T 'User'
+0330 06T *USER  (AD=OILT)
+0340 28T '- External Function -'(I)
+0350 64T 'Program'
+0360 72T *PROGRAM (AD=OI)
+0370 ///
+0380 02T 'Definition of the new external function' (I)
+0390 //
+0400 02T 'DEFINE FUNCTION'(I) 'Example-Function'
+0410 37T '/* longname of the function '
+0420 /
+0430 04T 'RETURNS'(I) '#Value (A40)'
+0440 37T '/* return value (not mandatory)'
+0450 /
+0460 04T 'DEFINE DATA'
+0470 /
+0480 06T 'PARAMETER'
+0490 37T '/* parameters (not mandatory)'
+0500 /
+0510 08T '1 #Parm1 (A5/1:2) BY VALUE'
+0520 /
+0530 08T '1 #Parm2 (A) DYNAMIC'
+0540 /
+0550 06T 'LOCAL'
+0560 37T '/* local variables within the function'
+0570 /
+0580 08T '1 #IX    (I4)'
+0590 /
+0600 04T 'END-DEFINE' (I)
+0610 /
+0620 04T '...'
+0630 37T '/* any statements '
+0640 /
+0650 02T 'END-FUNCTION' (I)
+0660 ///
+0670 02T 'Note: This external function is defined in ''V6-FUNCA''.'
+0680 /
+0690*
+0700IF *PF-KEY = 'PF3'
+0710  ESCAPE ROUTINE
+0720END-IF
+0730IF (*PF-KEY = 'PF12' OR= 'CLR')
+0740  CALLNAT 'UTILSTOP'
+0750END-IF
+0760* -------------------------------------------------------------------
+0770*
+0780DEFINE PROTOTYPE EXAMPLE-FUNCTION
+0790  RETURNS #VALUE (A40)
+0800  DEFINE DATA PARAMETER
+0810    1 #PARM1 (A5/1:2) BY VALUE
+0820    1 #PARM2 (A)      DYNAMIC
+0830  END-DEFINE
+0840END-PROTOTYPE
+0850*
+0860#PARM1(1) := 'One'
+0870#PARM1(2) := 'step'
+0880#PARM2    := 'forward'
+0890*
+0900MOVE EXAMPLE-FUNCTION(<#PARM1(*),#PARM2>) TO #LONGTEXT
+0910*
+0920* write '=' #Longtext (AL=30)
+0930*
+0940INPUT (IP=OFF)
+0950 01T *TIMX  (AD=OTD)
+0960 21T '***** NATURAL 6.1 ENHANCEMENTS *****'(I)
+0970 70T *DATX  (AD=OTD DF=L)
+0980 /
+0990 01T 'User'(I)
+1000 06T *USER  (AD=OILT)
+1010 28T '- External Function -'(I)
+1020 64T 'Program'
+1030 72T *PROGRAM (AD=OI)
+1040 ///
+1050 02T 'Before using the function it must be defined with' (I)
+1060     'DEFINE PROTOTYPE '(I)
+1070 /
+1080 02T 'to declare return value and parameters of the function call'(I)
+1090 //
+1100 02T 'DEFINE PROTOTYPE'(I) 'Example-Function'
+1110 38T '/* same name as the function name'
+1120 /
+1130 04T 'RETURNS'(I) '#Value (A40)'
+1140 38T '/* return value of the function'
+1150 /
+1160 04T 'DEFINE DATA'(I)
+1170 /
+1180 06T 'PARAMETER'
+1190 38T '/* parameters of the function'
+1200 /
+1210 08T '1 #Parm1 (A5/1:2) BY VALUE'
+1220 /
+1230 08T '1 #Parm2 (A) DYNAMIC'
+1240 /
+1250 04T 'END-DEFINE' (I)
+1260 /
+1270 02T 'END-PROTOTYPE' (I)
+1280 ///
+1290 02T 'Now call the function with parameters in' '(< >)'(I)
+1300 //
+1310 02T 'MOVE'
+1320     'Example-Function (<#Parm1(*),#Parm2>)'(I) 'TO'
+1330     '#Longtext'
+1340 /
+1350
+1360*
+1370IF *PF-KEY = 'PF3'
+1380  ESCAPE ROUTINE
+1390END-IF
+1400IF (*PF-KEY = 'PF12' OR= 'CLR')
+1410  CALLNAT 'UTILSTOP'
+1420END-IF
+1430*
+1440* -------------------------------------------------------------------
+1450*
+1460INPUT (IP=OFF)
+1470 01T *TIMX  (AD=OTD)
+1480 21T '***** NATURAL 6.1 ENHANCEMENTS *****'
+1490 70T *DATX  (AD=OTD DF=L)
+1500 /
+1510 01T 'User'
+1520 06T *USER  (AD=OILT)
+1530 28T '- External Function -'(I)
+1540 64T 'Program'
+1550 72T *PROGRAM (AD=OI)
+1560 ///
+1570 02T 'The result of a function must always match to the used'(I)
+1580     'statement.'(I)
+1590 //
+1600 02T 'COMPUTE #Value :=' 'Fct(<#I,#J>)'(I) '*'
+1610     'Fct(<#K,#L>)'(I)
+1620 //
+1630 02T 'IF' 'Fct3(<#Var1>)'(I) '=' 'Fct3(<#Var2>)'(I)
+1640 /
+1650 02T '   ...'
+1660 /
+1670 02T 'END-IF'
+1680 //
+1690 02T 'DECIDE ON FIRST' 'Fct(<#I,#J>)'(I)
+1700 /
+1710 02T '   VALUE' 'Fct5(<1>)'(I) '   ....'
+1720 /
+1730 02T '   VALUE' 'Fct5(<2>)'(I) '   ....'
+1740 /
+1750 02T '   VALUE' 'Fct5(<3>)'(I) '   ....'
+1760 /
+1770 02T '   ...'
+1780 /
+1790 02T 'END-IF'
+1800 //
+1810 02T 'Function1(<#Var1,#Var2,#Var3>)'(I)
+1820     '       /* even as single statement'
+1830
+1840*
+1850IF *PF-KEY = 'PF3'
+1860  ESCAPE ROUTINE
+1870END-IF
+1880
+1890*
+1900* -------------------------------------------------------------------
+1910*
+1920DEFINE PROTOTYPE FCT1
+1930  RETURNS #TEXT (A20)
+1940END-PROTOTYPE
+1950*
+1960MOVE FCT1(<>) TO #TITLE
+1970*
+1980INPUT (IP=OFF)
+1990 01T *TIMX  (AD=OTD)
+2000 21T '***** NATURAL 6.1 ENHANCEMENTS *****'
+2010 70T *DATX  (AD=OTD DF=L)
+2020 /
+2030 01T 'User'
+2040 06T *USER  (AD=OILT)
+2050 28T '- External Function -'(I)
+2060 64T 'Program'
+2070 72T *PROGRAM (AD=OI)
+2080 ///
+2090 02T 'A function doesn''t need to have a return value or'(I)
+2100     'parameters. However the'(I)
+2110 /
+2120 02T 'DEFINE PROTOTYPE and DEFINE FUNCTION statement'(I)
+2130     'must fit together.'(I)
+2140 //
+2150 02T 'DEFINE PROTOTYPE'(I) 'Fct1'
+2160 38T '/* function with return value '
+2170 /
+2180 04T 'RETURNS #Text (A20)'
+2190 38T '/* but without parameters'
+2200 /
+2210 02T 'END-PROTOTYPE' (I)
+2220 //
+2230 02T 'DEFINE FUNCTION'(I) 'Fct1'
+2240 /
+2250 04T 'RETURNS #Text (A20)'
+2260 /
+2270 04T 'Move ''Window Title'' to #Text'
+2280 /
+2290 02T 'END-FUNCTION' (I)
+2300 ///
+2310 02T 'MOVE' 'Fct1(<>)'(I) 'TO #Title (A20)'
+2320 38T '/* function call without parameters'
+2330 //
+2340 02T '#Title:' #TITLE (AD=OI)
+2350
+2360*
+2370IF *PF-KEY = 'PF3' OR= 'PF12'
+2380  ESCAPE ROUTINE
+2390END-IF
+2400*
+2410* -------------------------------------------------------------------
+2420*
+2430DEFINE PROTOTYPE FCT-OPTIONAL
+2440  RETURNS #SUM (I4)
+2450  DEFINE DATA PARAMETER
+2460    1 #PARM1 (I4) BY VALUE OPTIONAL
+2470    1 #PARM2 (I4) BY VALUE
+2480    1 #PARM3 (I4) BY VALUE OPTIONAL
+2490    1 #PARM4 (I4) BY VALUE OPTIONAL
+2500  END-DEFINE
+2510END-PROTOTYPE
+2520*
+2530#SUM1 := FCT-OPTIONAL(< 1 ,2,3,4 >)
+2540#SUM2 := FCT-OPTIONAL(< 1 ,2, ,  >)
+2550#SUM3 := FCT-OPTIONAL(< 1 ,2     >)
+2560#SUM4 := FCT-OPTIONAL(< 1X,2,2X  >)
+2570*
+2580INPUT (IP=OFF)
+2590 01T *TIMX  (AD=OTD)
+2600 21T '***** NATURAL 6.1 ENHANCEMENTS *****'
+2610 70T *DATX  (AD=OTD DF=L)
+2620 /
+2630 01T 'User'
+2640 06T *USER  (AD=OILT)
+2650 28T '- External Function -'(I)
+2660 64T 'Program'
+2670 72T *PROGRAM (AD=OI)
+2680 ///
+2690 02T 'DEFINE FUNCTION' 'Fct-Optional'
+2700 35T '/*' 'function with optional parameters'(I)
+2710 /
+2720 04T 'RETURNS' '#Sum (I4)'
+2730 /
+2740 04T 'DEFINE DATA PARAMETER'
+2750 /
+2760 08T '1 #Parm1 (I4) BY VALUE' 'OPTIONAL' (I)
+2770 /
+2780 08T '1 #Parm2 (I4) BY VALUE '
+2790 /
+2800 08T '1 #Parm3 (I4) BY VALUE' 'OPTIONAL' (I)
+2810 /
+2820 08T '1 #Parm4 (I4) BY VALUE' 'OPTIONAL' (I)
+2830 /
+2840 04T 'END-DEFINE'
+2850 /
+2860 04T '...        /* #Sum is the sum of #Parm1, #Parm2,'
+2870     '#Parm3 and #Parm4'
+2880 /
+2890 02T 'END-FUNCTION'
+2900 //
+2910 02T '#Sum1 := Fct-Optional' '(< 1,2,3,4 >)'(I)
+2920 45T '/* use all parameters '
+2930 /
+2940 02T '#Sum2 := Fct-Optional' '(< 1,2, , >)'(I)
+2950 45T '/* use commas as replacement '
+2960 /
+2970 02T '#Sum3 := Fct-Optional' '(< 1,2 >)'(I)
+2980 45T '/* omit last optional parameters'
+2990 /
+3000 02T '#Sum4 := Fct-Optional' '(< 1X,2,2X >)'(I)
+3010 45T '/* use nX notation'
+3020 //
+3030 02T '#Sum1:'(I) #SUM1 (AD=OIL)
+3040 12T '#Sum2:'(I) #SUM2 (AD=OIL)
+3050 22T '#Sum3:'(I) #SUM3 (AD=OIL)
+3060 32T '#Sum4:'(I) #SUM4 (AD=OIL)
+3070
+3080*
+3090IF *PF-KEY = 'PF3' OR= 'PF12'
+3100  ESCAPE ROUTINE
+3110END-IF
+3120*
+3130* -------------------------------------------------------------------
+3140*
+3150DEFINE PROTOTYPE VARIABLE #FUNC-NAME
+3160  RETURNS #VAR1 (A20)
+3170END-PROTOTYPE
+3180*
+3190#FUNC-NAME := 'Fct1'
+3200*
+3210RESET #TITLE
+3220*
+3230MOVE #FUNC-NAME(<>) TO #TITLE
+3240*
+3250*
+3260INPUT (IP=OFF)
+3270 01T *TIMX  (AD=OTD)
+3280 21T '***** NATURAL 6.1 ENHANCEMENTS *****'
+3290 70T *DATX  (AD=OTD DF=L)
+3300 /
+3310 01T 'User'
+3320 06T *USER  (AD=OILT)
+3330 28T '- External Function -'(I)
+3340 64T 'Program'
+3350 72T *PROGRAM (AD=OI)
+3360 ///
+3370 02T 'The function name can be declared via a variable'(I)
+3380     'so that only at runtime'(I)
+3390 /
+3400 02T 'the actual function is available.'(I)
+3410 //
+3420 02T 'DEFINE PROTOTYPE' 'VARIABLE #Func-name' (I)
+3430 /
+3440 04T 'RETURNS #Var1 (A20)'
+3450 /
+3460 02T 'END-PROTOTYPE'
+3470 //
+3480 02T 'DEFINE FUNCTION' 'Fct1' (I)
+3490 /
+3500 04T 'RETURNS #Text (A20)'
+3510 /
+3520 04T 'Move ''Window Title'' to #Text'
+3530 /
+3540 02T 'END-FUNCTION'
+3550 //
+3560 02T '#Func-name := ''Fct1'''
+3570 //
+3580 02T 'MOVE' '#Func-name (<>)' (I) 'TO #TITLE'
+3590 40T '/* variable for function name '
+3600 //
+3610 02T '#Title:' #TITLE (AD=OI)
+3620 /
+3630*
+3640*
+3650END

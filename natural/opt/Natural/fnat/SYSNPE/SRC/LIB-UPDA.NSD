@@ -1,0 +1,135 @@
+0010DB: 148 FILE: 005  - LIB-UPDATE                       DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:23
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:23
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A1 DSNAME                            A   54    D Dataset name of libr
+0250*      Dataset name of library to be
+0260*      updated.
+0270  1 FN FUNCTION                          A    8    D Function to be perfo
+0280*      Function to be performed:
+0290*      RENAME
+0300*      SCRATCH
+0310*      ALIAS   (only for MVS)
+0320*
+0330*      Fields common to MVS and VSE
+0340*
+0350  1 A2 VOLSER                            A    6    D Volume serial number
+0360*      Volume serial number.
+0370  1 A3 MEMBER                            A   10    D Name of member to be
+0380*      Name of member to be
+0390*      processed.
+0400  1 A4 NEWNAME-MEMBER                    A   10    D New member name.
+0410*      New member name.
+0420*      (FUNCTION = 'RENAME')
+0430*
+0440*      Fields common to MVS and BS2000
+0450*
+0460  1 AL PRODUCT                           A    1    D 'P' if access method
+0470*      'P' if access method is
+0480*      PANVALET.
+0490*      'M' for LMS (BS2000, default).
+0500  1 A6 PASSWORD                          A    8    D Password for protect
+0510*      Password for protected data
+0520*      set.
+0530*
+0540*      MVS fields
+0550*
+0560  1 A5 ALIAS                             A    8    D Name of alias to be
+0570*      Name of alias to be created.
+0580*      (FUNCTION = 'ALIAS')
+0590  1 AE ALIAS-EP                          B    4    D Entry point of ALIAS
+0600       HD=ALIAS-EP
+0610*      Entry point of ALIAS
+0620*      (FUNCTION = 'ALIAS')
+0630  1 AM ALIAS-AMODE                       A    3    D AMODE of ALIAS - 24/
+0640*      AMODE of ALIAS - 24/31/64/ANY
+0650*      (FUNCTION = 'ALIAS')
+0660  1 AC MEMBER-PASSWORD                   A    8    D Password for protect
+0670*      Password for protected
+0680*      LIBRARIAN member.
+0690  1 AD PRODUCT-OPTIONS                   A   80    D Options for LIBRARIA
+0700*      Options for LIBRARIAN access
+0710*      method.
+0720*
+0730*      VSE fields
+0740*
+0750  1 A7 LIBRARY                           A    8    D Name of library.
+0760*      Name of library.
+0770  1 A8 SUB-LIBRARY                       A    8    D Name of sublibrary.
+0780*      Name of sublibrary.
+0790  1 A9 MEMBER-TYPE                       A    8    D Member type.
+0800*      Member type.
+0810  1 AA NEWNAME-MEMBER-TYPE               A    8    D New member type for
+0820*      New member type for rename.
+0830  1 AB VSAM-CATALOG                      A    8    D Name of VSAM catalog
+0840*      Name of VSAM catalog where
+0850*      the library is kept.
+0860*
+0870*      BS2000 fields
+0880*
+0890  1 ES SYSTEM-CODE                       B    2      System error code.
+0900*      System error code.
+0910  1 A3 ELEMENT                           A   64    D Name of LMS element.
+0920*      Name of LMS element.
+0930  1 A4 NEWNAME-ELEMENT                   A   64    D New element name.
+0940*      New element name.
+0950*      (FUNCTION = 'RENAME')
+0960  1 A9 ELEMENT-TYPE                      A    8    D Element type.
+0970*      Element type.
+0980  1 AA NEWNAME-ELEMENT-TYPE              A    8    D New element type for
+0990*      New element type for RENAME.
+1000  1 AC ELEMENT-PASSWORD                  A    8    D Password for protect
+1010*      Password for protected
+1020*      elements.
+1030  1 B2 ELEMENT-VERSION                   A   24    D Version number of el
+1040*      Version number of element to
+1050*      be updated.
+1060  1 B3 NEWNAME-ELEMENT-VERSION           A   24    D Version of new eleme
+1070*      Version of new element.
+1080*      (Function RENAME)
+1090  1 B5 OVERWRITE                         A    3    D For function RENAME:
+1100*      For function RENAME:
+1110*      NO: don't overwrite target
+1120*      element (default)
+1130*      YES: overwrite target element
+1140*      ONLY: target element must
+1150*      exist
+1160*      EXTEND: extend target element
+1170  1 B6 NEWNAME-ELEMENT-PASSWORD          A    8    D Password, if an exis
+1180*      Password, if an existing and
+1190*      password protected element
+1200*      has to be overwritten by
+1210*      RENAME.
+1220  1 B7 NEWNAME-ELEMENT-USER-DATE         A   14    D Will be written as e
+1230*      Will be written as element
+1240*      information into LMS library.
+1250*      Format: YYYY-MM-DDaaaa
+1260*      where 'aaaa' can be
+1270*      any 4 character string
+1280  1 B8 NEWNAME-ELEMENT-USER-TIME         A    8    D Will be written as e
+1290*      Will be written as element
+1300*      information into LMS library.
+1310*      Format: hh:mm:ss
+1320*
+1330*      End of LIB-UPDATE
+1340*
+1350******DDM OUTPUT TERMINATED******

@@ -1,0 +1,127 @@
+0010*
+0020* Program .. V3-RVAR
+0030* Library .. SYSEXV
+0040* Version .. 3.1
+0050*
+0060* Functionality: Show new option VARIABLE SEQUENCE in READ statement
+0070*
+0080* If the first and the last name of the list are identical, the next
+0090* (higher/lower) name will be directly read, but not the next record.
+0100* For a better solution see example READISN.
+0110************************************************************************
+0120*
+0130*
+0140DEFINE DATA
+0150LOCAL
+0160 01 EMPLOYEES-VIEW VIEW OF EMPLOYEES
+0170   02 FIRST-NAME
+0180   02 NAME
+0190 01 J           (I2)
+0200 01 #FIRST      (A15/1:6)
+0210 01 #NAME       (A15/1:6)
+0220 01 #START-NAME (A15)
+0230 01 #DIR        (A1)
+0240 01 #DIR-TEXT   (A30)
+0250END-DEFINE
+0260*
+0270*
+0280FORMAT KD=ON
+0290SET KEY PF3  NAMED 'Exit'
+0300        PF7  NAMED 'DESC'          /* DESCENDING direction
+0310        PF8  NAMED 'ASC'           /* ASCENDING direction
+0320        PF12 NAMED 'Canc'
+0330*
+0340*
+0350RESET J #NAME(*) #FIRST(*)
+0360#START-NAME := 'K'            /* Start with names beginning with 'K'
+0370#DIR        := 'D'            /* Read direction DESCENDING
+0380*
+0390REPEAT
+0400*
+0410  READ (6) EMPLOYEES-VIEW IN VARIABLE #DIR SEQUENCE
+0420           WITH NAME = #START-NAME
+0430    ADD 1 TO J
+0440    MOVE EMPLOYEES-VIEW.NAME       TO #NAME (J)
+0450    MOVE EMPLOYEES-VIEW.FIRST-NAME TO #FIRST (J)
+0460  END-READ
+0470*
+0480  IF #DIR = 'A'
+0490    #DIR-TEXT:= 'Forward Reading'
+0500  ELSE
+0510    #DIR-TEXT:= 'Backward Reading'
+0520  END-IF
+0530*
+0540*
+0550  INPUT (IP=OFF)
+0560   01T *TIMX  (AD=OTD )
+0570   21T '***** NATURAL 3.1 ENHANCEMENTS *****'
+0580   70T *DATX  (AD=OTD DF=L  )
+0590   /
+0600   01T 'User'
+0610   06T *USER  (AD=OILT )
+0620   27T '- New ADABAS Features -'(I)
+0630   64T 'Program'
+0640   72T *PROGRAM (AD=OI)
+0650   / / /
+0660   02T 'READ BY NAME with new option VARIABLE SEQUENCE' (I)
+0670   ///
+0680   05T #DIR-TEXT (AD=OD)
+0690   //
+0700   05T 'Name            First Name'
+0710   /
+0720   05T #NAME (1) #FIRST (1)
+0730   /
+0740   05T #NAME (2) #FIRST (2)
+0750   /
+0760   05T #NAME (3) #FIRST (3)
+0770   /
+0780   05T #NAME (4) #FIRST (4)
+0790   /
+0800   05T #NAME (5) #FIRST (5)
+0810   /
+0820   05T #NAME (6) #FIRST (6)
+0830   / / /
+0840   05T 'Press ENTER, or change direction with PF7 or PF8.'
+0850   / / /
+0860*
+0870*
+0880  DECIDE ON FIRST *PF-KEY
+0890    VALUE 'PF3'
+0900         ESCAPE BOTTOM
+0910    VALUE 'PF12'
+0920         CALLNAT 'UTILSTOP'
+0930    VALUE 'PF7'        /* Page backward
+0940         IF #DIR = 'D'
+0950           IF #NAME(1) = #NAME(6)     /* jump directly to next name
+0960             COMPRESS #NAME(6) H'00' INTO #NAME(6) LEAVING NO
+0970           END-IF
+0980           MOVE #NAME(6) TO #START-NAME
+0990         ELSE
+1000           MOVE 'D' TO #DIR           /* new direction DESCENDING
+1010           IF #NAME(1) = #NAME(6)     /* jump directly to next name
+1020             COMPRESS #NAME(1) H'00' INTO #NAME(1) LEAVING NO
+1030           END-IF
+1040           MOVE #NAME(1) TO #START-NAME
+1050         END-IF
+1060    VALUE 'PF8'        /* Page foreward
+1070         MOVE 'A' TO #DIR             /* new direction ASCENDING
+1080         IF #NAME(1) = #NAME(6)       /* jump directly to next name
+1090           COMPRESS #NAME(6) H'FF' INTO #NAME(6) LEAVING NO
+1100         END-IF
+1110         MOVE #NAME(6) TO #START-NAME
+1120    NONE               /* stay on current direction
+1130         IF #NAME(1) = #NAME(6)       /* jump directly to next name
+1140           IF #DIR = 'D'
+1150             COMPRESS #NAME(6) H'00' INTO #NAME(6) LEAVING NO
+1160           ELSE
+1170             COMPRESS #NAME(6) H'FF' INTO #NAME(6) LEAVING NO
+1180           END-IF
+1190         END-IF
+1200         MOVE #NAME(6) TO #START-NAME
+1210  END-DECIDE
+1220*
+1230  RESET J #NAME(*) #FIRST(*)
+1240*
+1250END-REPEAT
+1260*
+1270END

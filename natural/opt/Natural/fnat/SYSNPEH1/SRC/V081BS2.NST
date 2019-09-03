@@ -1,0 +1,17 @@
+0010&H View JOB-SWITCHES
+0020&L
+0030&L
+0040#Purpose@: Query User-Switches.
+0050&L
+0060&L
+0070#OpSys@  : BS2000/OSD
+0080&L
+0090&L
+0100#Usage@  : This view allows the application to query the User-Switches
+0110           for a specified Userid.
+0120&L
+0130&L
+0140#Notes@  : If running in Single User Mode it is possible to Set and
+0150           Reset the switches belonging to ones own Userid as well
+0160           Querying, Setting and Resetting the Job-Switches of the
+0170           same task.

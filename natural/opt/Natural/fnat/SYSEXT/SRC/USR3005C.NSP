@@ -1,0 +1,126 @@
+0010**     Example program for USR3005N
+0020**     This program shows, how data can be retrieved from Predict.
+0030**     It retrieves all attribute definitions of an object type.
+0040*
+0050DEFINE DATA LOCAL
+00601 REQUEST-RESULT(A) DYNAMIC
+0070*
+0080LOCAL USING PARSER-X               /* Local Data Area is located
+0090                                   /* in Library SYSEXXT
+0100LOCAL
+01101 XML_PARSER_XPATH             (A) DYNAMIC
+01201 XML_PARSER_XPATH_TYPE        (A1)
+01301 XML_PARSER_CONTENT           (A) DYNAMIC
+01401 XML_PARSER_CONTENT_IS_EMPTY  (L)
+01501 XML_PARSER_ERROR_TEXT        (A253)
+01601 XML_PARSER_RESPONSE          (I2)
+01701 #XNAME (A) DYNAMIC
+01801 #XVALUE (A) DYNAMIC
+01901 #MSG-NR(I4)
+02001 #MSG-TEXT(A79)
+02101 #MSG-TYPE(A8)
+0220END-DEFINE
+0230PRINT 'Example program' *PROGRAM 'for USR3005N'
+0240/     'This program shows, how data can be retrieved from Predict.'
+0250/     'It retrieves all attribute definitions of an object type.'
+0260/
+0270COMPRESS
+0280'<Predict>'
+0290  '<Request>'
+0300    '<Select>'
+0310      '<Search>'
+0320**
+0330**   To get the list of all defined attributes use:
+0340**
+0350        '<Object-type value=''#ATTRIBUTE''/>'
+0360        '<Attribute name=''NAMESPACETYPE'' value=''#OT-DEFINITION''/>'
+0370**
+0380** NAMESPACETYPE restricts the search either to Object types
+0390** ( value '#OT-DEFINITION' ) or to associations (value '#ASSOCIATION')
+0400**
+0410        '<Attribute name=''NAMESPACE'' value=''FILE-D''/>'
+0420      '</Search>'
+0430      '<Return>'
+0440        '<Field name=''TITLE''/>'
+0450        '<Field name=''ID''/>'
+0460        '<Field name=''LEVEL''/>'
+0470        '<Field name=''FORMAT''/>'
+0480        '<Field name=''LENGTH''/>'
+0490        '<Field name=''MULTIPLE''/>'
+0500        '<Field name=''Searchable''/>'
+0510      '</Return>'
+0520    '</Select>'
+0530  '</Request>'
+0540'</Predict>'
+0550*
+0560TO REQUEST-RESULT
+0570*
+0580PRINT 'Request passed to USR3005N' /
+0590PRINT REQUEST-RESULT
+0600*
+0610CALLNAT 'USR3005N' REQUEST-RESULT
+0620*
+0630PRINT / 'Result returned from USR3005N'/
+0640*
+0650INCLUDE PARSER_X                    /* Copy Code is located
+0660                                    /* in Library SYSEXXT
+0670                                    /*
+0680  'REQUEST-RESULT'                  /* XML FILE TO BE PARSED
+0690  'XML_PARSER_XPATH'                /* XPATH TO REPESENT ELEMENT...
+0700  'XML_PARSER_XPATH_TYPE'           /* TYPE OF CALLBACK
+0710  'XML_PARSER_CONTENT'              /* CONTENT OF FOUND ELEMENT
+0720  'XML_PARSER_CONTENT_IS_EMPTY'     /* IS TRUE IF ELEMENT IS EMPTY
+0730  'XML_PARSER_ERROR_TEXT'           /* ERROR MESSAGE
+0740  'XML_PARSER_RESPONSE'             /* ERROR NR; 0 = OK
+0750*
+0760DEFINE SUBROUTINE CALLBACK
+0770*
+0780EXAMINE XML_PARSER_XPATH TRANSLATE INTO UPPER
+0790DECIDE ON FIRST VALUE OF XML_PARSER_XPATH
+0800*
+0810  VALUE 'PREDICT/RESULT/MESSAGE/?NUMBER'
+0820    #MSG-NR := VAL(XML_PARSER_CONTENT)
+0830*
+0840  VALUE 'PREDICT/RESULT/MESSAGE/?TEXT'
+0850    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#MSG-TEXT'
+0860**
+0870** With PRCCNVCH
+0880** the coded special characters in XML_PARSER_CONTENT are translated
+0890** into the printable form
+0900**
+0910*
+0920  VALUE 'PREDICT/RESULT/MESSAGE/?TYPE'
+0930    #MSG-TYPE := XML_PARSER_CONTENT
+0940    EXAMINE #MSG-TYPE TRANSLATE INTO UPPER
+0950    IF #MSG-TYPE NE 'SUCCESS'
+0960**
+0970** Possible Values of ?TYPE are SUCCESS, ERROR and WARNING
+0980**
+0990      PRINT #MSG-NR
+1000      PRINT #MSG-TEXT
+1010    END-IF
+1020*
+1030  VALUE 'PREDICT/RESULT/ROW'
+1040**
+1050** New Object type starts here
+1060**
+1070   PRINT ' '
+1080*
+1090  VALUE 'PREDICT/RESULT/ROW/ATTRIBUTE/?NAME'
+1100    #XNAME := XML_PARSER_CONTENT
+1110*
+1120  VALUE 'PREDICT/RESULT/ROW/ATTRIBUTE/?VALUE'
+1130    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#XVALUE'
+1140    PRINT #XNAME ':' #XVALUE
+1150*
+1160  NONE IGNORE
+1170*
+1180END-DECIDE
+1190END-SUBROUTINE /* CALLBACK
+1200*
+1210DEFINE SUBROUTINE PARSER_ERROR
+1220   PRINT 'Parser Error'
+1230   PRINT XML_PARSER_ERROR_TEXT
+1240 END-SUBROUTINE
+1250*
+1260END

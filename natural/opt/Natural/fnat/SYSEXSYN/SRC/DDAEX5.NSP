@@ -1,0 +1,12 @@
+0010** Example 'DDAEX5': DEFINE DATA (initialization)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #START-DATE (D)   INIT <*DATX>
+00501 #UNDERLINE  (A50) INIT FULL LENGTH <'_'>
+00601 #SCALE      (A65) INIT LENGTH 65 <'....+..../'>
+0070END-DEFINE
+0080*
+0090WRITE NOTITLE #START-DATE (DF=L)
+0100            / #UNDERLINE
+0110            / #SCALE
+0120END

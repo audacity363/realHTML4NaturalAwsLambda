@@ -1,0 +1,145 @@
+0010DB: 148 FILE: 010  - CATALOG-UPDATE                   DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:20
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:20
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to MVS and BS2000
+0230*
+0240  1 A1 DSNAME                            A   54    D Fully qualified data
+0250*      Fully qualified data set name.
+0260*      For BS2000, fully qualified
+0270*      file name.
+0280*
+0290*      MVS fields
+0300*
+0310  1 A2 VOLUMES                           A  240    D
+0320  1 A3 DEVICE                            A    8    D
+0330  1 AA FILE-SEQUENCE                     N  3.0    D For tape files. This
+0340*      For tape files. This value is
+0350*      used for the first volume
+0360*      only.
+0370  1 FN FUNCTION                          A    8    D Function to be perfo
+0380*      Function to be performed:
+0390*      CATLG    catalog new entry
+0400*      RECATLG  re-catalog an
+0410*      existing entry
+0420*      UNCATLG  remove a
+0430*      catalog entry
+0440*      BLDX     build an index
+0450*      BLDG     build a
+0460*      generation index
+0470*      DLTX     delete an index
+0480*      BLDA     build an alias for
+0490*      an index
+0500*      DLTA     delete an alias
+0510*      for an index
+0520*      CONNECT  connect CVOLS
+0530*      DISCONN  disconnect CVOLS
+0540*
+0550*      BS2000 fields
+0560*
+0570  1 ES SYSTEM-CODE                       B    2      System error code.
+0580*      System error code.
+0590  1 B1 SHARE                             A    3    D Specifies whether ot
+0600*      Specifies whether other user
+0610*      IDs may access file.
+0620*      YES - other user IDs
+0630*      authorized
+0640*      NO  - other user IDs not
+0650*      authorized (default)
+0660  1 B2 BACKUP-TYPE                       A    1    D Defines the times a
+0670*      Defines the times a file will
+0680*      be saved by ARCHIVE.
+0690*      A: saved with every ARCHIVE
+0700*      run (default)
+0710*      B: saved with run for level B,
+0720*      C and D
+0730*      C: saved with runs for level C
+0740*      and D
+0750*      D: saved with runs for level D
+0760*      E: not automatically saved
+0770  1 B3 ACCESS-TYPE                       A    5    D Specifies authorized
+0780*      Specifies authorized access
+0790*      type expressed as READ or
+0800*      WRITE.
+0810  1 B4 READ-PASSWORD                     A    8    D READ password (4 byt
+0820*      READ password (4 bytes) to be
+0830*      defined for the file.
+0840*      Use '*NONE' to reset existing
+0850*      password. (See also field
+0860*      PASSWORD.)
+0870  1 B5 WRITE-PASSWORD                    A    8    D WRITE password to be
+0880*      WRITE password to be defined
+0890*      for the file.
+0900*      Use '*NONE' to reset existing
+0910*      password. (See also field
+0920*      PASSWORD.)
+0930  1 B6 EXECUTION-PASSWORD                A    8    D EXECUTION password t
+0940*      EXECUTION password to be
+0950*      defined for the file.
+0960*      Use '*NONE' to reset existing
+0970*      password. (See also field
+0980*      PASSWORD.)
+0990  1 B7 AUDIT-TYPE                        A    4    D Fixes the level of c
+1000*      Fixes the level of control
+1010*      of file access.
+1020*      Possible values:
+1030*      SUCC(ESSFULL), FAIL, ALL,
+1040*      NONE (default).
+1050  1 BK RETPD                             N  4.0    D Number of days the f
+1060*      Number of days the file must
+1070*      remain unchanged. (Default: 0)
+1080  1 BA ARCHIVE-OPTION                    A    1    D Specifies the ARCHIV
+1090*      Specifies the ARCHIVE options:
+1100*      (L)ong  : Save whole file.
+1110*      (DEFAULT)
+1120*      (S)hort : Only changed PAM
+1130*      blocks to be saved.
+1140  1 BC DESTROY                           A    3    D YES: Space used for
+1150*      YES: Space used for file will
+1160*      be written with x'00' at
+1170*      erase of file.
+1180*      NO:  (default) file not auto-
+1190*      matically destroyed at
+1200*      erase.
+1210  1 BD FGG-BASE                          B    2    D Only file generation
+1220*      Only file generation groups:
+1230*      Base for relative access to
+1240*      files of FGG.
+1250  1 BE FGG-GENERATIONS                   B    2    D Only file generation
+1260*      Only file generation groups:
+1270*      Number of generations.
+1280  1 BJ FGG-DISPOSITION                   A    8    D Only for FGG's: desc
+1290*      Only for FGG's: describes what
+1300*      to do, if maximum number of
+1310*      generations is reached.
+1320*      Possible values:
+1330*      CYCLE (default)
+1340*      REUSE
+1350*      DELETE
+1360*      KEEP
+1370  1 BH PASSWORD                          A    8    D If file is already p
+1380*      If file is already password
+1390*      protected, the actual password
+1400*      needed for write access must
+1410*      be specified here.
+1420*
+1430*      End of CATALOG-UPDATE
+1440*
+1450******DDM OUTPUT TERMINATED******

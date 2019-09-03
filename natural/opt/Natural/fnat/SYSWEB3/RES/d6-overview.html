@@ -1,0 +1,186 @@
+<! d6-overview.html - start>
+<H1>
+  Natural Example Application using Templates
+</H1>
+<P>
+Natural Version 6 on open system platforms, adds new functionality for templates
+and XML stylesheets to the Web interface (see:
+<A HREF="nat-docu?source=t3index.htm#Templ">Online Documentation</A>).
+<P>
+The examples show the usage of the new interfaces to build a web application.
+Again the example programs works with the employee data stored in ADABAS.
+<H3>
+  New Design
+</H3>
+<P>
+The example program design was implemented using only one single template
+(<A HREF="nat-res?lib=sysweb3&amp;source=d6-template.html">d6-template.html</A>).
+The template contains several parts ($...$ strings). These strings will be
+replaced during runtime with the application data. The template itself makes
+use of css (cascading style sheets) that will be included (&lt;!CSS&gt;)
+inline to the page
+(<A HREF="nat-res?lib=sysweb3&amp;source=d6-css.css">d6-css.css</A>). For
+better performance this stylesheet can be saved at the http server and call
+with an reference, by changing the replacement to another file containing
+the specific link.<BR>
+<H3>
+  Part one: List and Browse
+</H3>
+<P>
+The two menu items Browse and List use internally the same routine
+(<A HREF="nat-list?lib=sysweb3&amp;source=d6emxml">d6emxml</A>) generating
+an XML stream for a given selection. The different look will be done with
+different stylesheet transformations one for the listing
+(<A HREF="nat-res?lib=sysweb3&amp;source=d6-list.xsl">d6-list.xsl</A>) and
+one for the browse
+(<A HREF="nat-res?lib=sysweb3&amp;source=d6-browse.xsl">d6-browse.xsl</A>).
+<H3>
+  Part two: Show, Change, Delete and New
+</H3>
+<P>
+These commands deal only with a single set of data. example use two different
+html templates for implementation: one for only showing data
+(<A HREF="nat-res?lib=sysweb3&amp;source=d6-output.html">d6-output.html</A>),
+and one for modifying data
+(<A HREF="nat-res?lib=sysweb3&amp;source=d6-input.html">d6-input.html</A>).
+All relevant parts that need to be changed are marked with $...$ strings.
+For the delete dialog a replacement is defined (&lt;!SUBMIT&gt;) that will
+be replaced with the delete button...
+<H3>
+  Alternative Template
+</H3>
+<P>
+A second template
+(<A HREF="nat-res?lib=sysweb3&amp;source=d6-template2.html">d6-template2.html</A>)
+has been included to the demo, using a different css
+(<A HREF="nat-res?lib=sysweb3&amp;source=d6-css2.css">d6-css2.css</A>) to
+show the flexibility of templates. The generation of the selection
+(<A HREF="nat-res?lib=sysweb3&amp;source=d6-select-left2.html">d6-select-left2.html</A>)
+needs to be different because it is part of the general layout.<BR>
+Switch between the different templates by changing the variable STYLE2 at
+<A HREF="nat-list?lib=sysweb3&amp;source=d6index">d6index</A> and stow.
+<H3>
+  The Natural Part
+</H3>
+<P>
+The only program that can be called directory from the internet is d6index,
+with is used to dispatch all request to the different program parts and load
+all templates and data.
+<P>
+All <A HREF="nat-dir?lib=sysweb3&amp;start=d6*">sources</A> start with d6
+and can be found in the library SYSWEB3.
+<TABLE BORDER CELLPADDING="2">
+  <TR>
+    <TH COLSPAN=2>Main Program from the Internet</TH>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-list?lib=sysweb3&amp;source=d6INDEX">d6INDEX</A></TD>
+    <TD>Subprogram</TD>
+  </TR>
+  <TR>
+    <TH COLSPAN=2>Database Access</TH>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-list?lib=sysweb3&amp;source=d6EMNEW">d6EMNEW</A></TD>
+    <TD>Subprogram</TD>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-list?lib=sysweb3&amp;source=d6EMPURG">d6EMPURG</A></TD>
+    <TD>Subprogram</TD>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-list?lib=sysweb3&amp;source=d6EMREAD">d6EMREAD</A></TD>
+    <TD>Subprogram</TD>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-list?lib=sysweb3&amp;source=d6EMSAVE">d6EMSAVE</A></TD>
+    <TD>Subprogram</TD>
+  </TR>
+  <TR>
+    <TH COLSPAN=2>Database Access and XML Conversion</TH>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-list?lib=sysweb3&amp;source=d6EM2XML">d6EM2XML</A></TD>
+    <TD>Subprogram</TD>
+  </TR>
+  <TR>
+    <TH COLSPAN=2>Application Data</TH>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-list?lib=sysweb3&amp;source=d6-PARM">d6-PARM</A></TD>
+    <TD>Parameter data area</TD>
+  </TR>
+  <TR>
+    <TH COLSPAN=2>Template for the main page design</TH>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-res?lib=sysweb3&amp;source=d6-template.html">d6-template.html</A></TD>
+    <TD>HTML Document</TD>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-res?lib=sysweb3&amp;source=d6-template2.html">d6-template2.html</A></TD>
+    <TD>HTML Document</TD>
+  </TR>
+  <TR>
+    <TH COLSPAN=2>Predefined html Fragments</TH>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-res?lib=sysweb3&amp;source=d6-input.html">d6-input.html</A></TD>
+    <TD>HTML Document</TD>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-res?lib=sysweb3&amp;source=d6-output.html">d6-output.html</A></TD>
+    <TD>HTML Document</TD>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-res?lib=sysweb3&amp;source=d6-overview.html">d6-overview.html</A></TD>
+    <TD>HTML Document</TD>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-res?lib=sysweb3&amp;source=d6-select-left.html">d6-select-left.html</A></TD>
+    <TD>HTML Document</TD>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-res?lib=sysweb3&amp;source=d6-select-left2.html">d6-select-left2.html</A></TD>
+    <TD>HTML Document</TD>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-res?lib=sysweb3&amp;source=d6-select-none.html">d6-select-none.html</A></TD>
+    <TD>HTML Document</TD>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-res?lib=sysweb3&amp;source=d6-submit.html">d6-submit.html</A></TD>
+    <TD>HTML Document</TD>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-res?lib=sysweb3&amp;source=d6-topmenu.html">d6-topmenu.html</A></TD>
+    <TD>HTML Document</TD>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-res?lib=sysweb3&amp;source=d6-welcome.html">d6-welcome.html</A></TD>
+    <TD>HTML Document</TD>
+  </TR>
+  <TR>
+    <TH COLSPAN=2>Stylesheets for conversion from xml to html</TH>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-res?lib=sysweb3&amp;source=d6-browse.xsl">d6-browse.xsl</A></TD>
+    <TD>XSL Stylesheet</TD>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-res?lib=sysweb3&amp;source=d6-list.xsl">d6-list.xsl</A></TD>
+    <TD>XSL Stylesheet</TD>
+  </TR>
+  <TR>
+    <TH COLSPAN=2>Formatting of the HTML pages</TH>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-res?lib=sysweb3&amp;source=d6-css.css">d6-css.css</A></TD>
+    <TD>Cascading Style Sheet Document</TD>
+  </TR>
+  <TR>
+    <TD><A HREF="nat-res?lib=sysweb3&amp;source=d6-css2.css">d6-css2.css</A></TD>
+    <TD>Cascading Style Sheet Document</TD>
+  </TR>
+</TABLE>
+<! d6-overview.html - end>

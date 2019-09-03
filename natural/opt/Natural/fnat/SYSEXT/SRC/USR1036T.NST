@@ -1,0 +1,116 @@
+0010Maintain user profile of the Software AG editor
+0020.
+0030Documentation ......... USR1036T    /*  Text object
+0040Interface ............. USR1036N    /*  Cataloged subprogram
+0050Example Program ....... USR1036P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. EDITOR
+0100.
+0110Keywords .............. BUFFER, EDITOR, PROFILE, SAG EDITOR, SOURCE
+0120.
+0130Function .............. You can display or modify the user profile
+0140                        of the SAG editor engine for the current
+0150                        editor session.
+0160                        See the chapter 'The program editor' in the
+0170                        'Natural Editors documentation' for UNIX for
+0180                        further information on the user profile
+0190                        parameters.
+0200.
+0210.
+0220Parameters
+0230----------
+0240Define the following parameters with the DEFINE DATA statement:
+0250.
+0260 Input ...... 1 ED-SESNUM (B02)
+0270                   Number of the session. It has to be a number
+0280                   between 1 and 50. Before you can use this
+0290                   program, you have to issue an OPEN command
+0300                   via USR1035N.
+0310.
+0320 Input ...... 1 ED-REQUEST (A04)
+0330                   Editor request; possible values are:
+0340                   'STAT' - Display user profile of current session
+0350                   'PROF' - Modify user profile of current session
+0360.
+0370 Output ..... 1 ED-ERRNUM (B02)
+0380                   Error number:
+0390                    = 0: Ok
+0400                   NE 0: An error occurred
+0410.
+0420 In/Output .. 1 PROFILE-DATA
+0430                   This parameter group contains the user profile
+0440                   data. For a short description of each parameter
+0450                   please have a look at the section 'Parameter layout'.
+0460                   In addition, the possible values for most of the
+0470                   parameters are described. The default value is
+0480                   written in upper case.
+0490.
+0500Parameter layout of PROFILE-DATA:
+0510.
+0520 1 PROFILE-DATA
+0530   2 PROF-CAPS        (A01)    Translate to upper case: Y, n, c
+0540   2 PROF-HEX         (A01)    Hexadecimal mode: y, N
+0550   2 PROF-NULLS       (A01)    Fill end of line with nulls: y, N
+0560   2 PROF-JUSTIFY     (A01)    Justification: N, l, r, b
+0570   2 PROF-LOGCHR      (A01)    Character for logical tab
+0580   2 PROF-RECOVERY    (A01)    Automatic recovery: y, N
+0590   2 PROF-AUTOSAVE    (A01)    Automatic save before end: y, N
+0600   2 PROF-AUTOREN     (A01)    Automatic renumbering: Y, n
+0610   2 PROF-LOG         (A01)    Log file: y, N
+0620   2 PROF-PHSTAB      (B01)    Physical tabulation: y, N
+0630   2 PROF-PHSCHR      (B01)    Character for physical tabulation
+0640   2 PROF-LANGUAGE    (A01)    Language: Default is 1
+0650   2 PROF-DIRECTION   (A01)    Direction of numbers: L, r
+0660   2 PROF-MSO         (A01)    Multi session operation: y, N
+0670   2 PROF-MASK        (A01)    Mask line: y, N
+0680   2 PROF-RENUM       (B01)    Renumbering amount
+0690   2 PROF-FIX         (A01)    Fix: y, N
+0700   2 PROF-FIXLEN      (B01)    Fix length, 0 - is fixed
+0710   2 PROF-ADVANCE     (A01)    Advance: Y, n, p
+0720   2 PROF-PROTECT     (A01)    Protectthe prefix area: y, N, i
+0730   2 PROF-ESCAPE      (A01)    Escape character activated: y, N
+0740   2 PROF-ESCHAR      (A01)    Escape character
+0750   2 PROF-ESCDIR      (A01)    Escape direction '+' or '-'
+0760   2 PROF-ESCDISP     (A01)    Escape char. disposition; default is 0
+0770   2 PROF-EMPTY       (A01)    Empty line to be deleted: y, N
+0780   2 PROF-INSERT      (A01)    Insert lines: 0 thru 9; default is 9
+0790   2 PROF-HYPHENATION (A01)    Hyphenation: y, N
+0800   2 PROF-HSYMBOL     (A01)    Hyphenation symbol
+0810   2 PROF-HCHAR       (B01)    Hyphenation character
+0820   2 PROF-TWOLANG     (B01)    Second language
+0830   2 PROF-DECIMAL     (A01)    Decimal character
+0840   2 PROF-AORDER      (A01)    Auto order: y, N
+0850   2 PROF-ATTRDATA    (A01)    Put attribute characters in data: y, N
+0860   2 PROF-ATTRDEF     (B01)    Default attribute character
+0870   2 PROF-ATTRH       (B01)    Attribute char. for highligthed field
+0880   2 PROF-ATTRP       (B01)    Attribute char. for protected field
+0890   2 PROF-LIMIT       (A01)    Scan limit: y, N
+0900   2 PROF-WINDOW      (A01)    Window: y, N
+0910   2 PROF-CONTROL     (A01)    Control line: y, N
+0920   2 PROF-CONTROL-CHAR(A01)    Control character: y, N
+0930   2 PROF-COLS        (A01)    Column line on top: y, N
+0940   2 PROF-PREFIX      (A01)    User prefix: y, N, a
+0950   2 PROF-PREFIX-CHAR (A01)    User prefix character
+0960   2 PROF-NEWLINE     (A01)    Hard new line: y, N
+0970   2 PROF-NEWLINE-CHAR(A01)    Hard new line character
+0980   2 PROF-STATS       (A01)    Statistics: y, N
+0990   2 PROF-HEADER      (A01)    Header: y, N
+1000   2 PROF-DUMMY       (A32)    For future use
+1010.
+1020.
+1030Interface Call
+1040--------------
+1050Use the interface with the CALLNAT statement:
+1060.
+1070CALLNAT 'USR1036N'  ED-SESNUM ED-REQUEST ED-ERRNUM PROFILE-DATA
+1080.
+1090.
+1100Using the Application Programming Interface:
+1110--------------------------------------------
+1120Copy the subprogram USR1036N to the library SYSTEM or the steplib
+1130library respectively, or to the required library.
+1140.
+1150.
+1160***** End of Description *****

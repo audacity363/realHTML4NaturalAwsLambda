@@ -1,0 +1,97 @@
+0010/* RPC: Set parameters for EntireX
+0020/*
+0030/* Function ... Set parameters for RPC in client and server environment.
+0040/*              Remark: See EntireX Documentation for usage and values
+0050/*                      of parameters.
+0060/*
+0070/* This program serves as example how to design a user-defined
+0080/* program call 'USR4009N'.
+0090/*
+0100/* Parameter ..
+0110/*
+0120/*         FUNCTION         (A01)      /* IN:    function,
+0130/*                                        G= GET, P= PUT
+0140/*         ENVIRONMENT      (A01)      /* IN:    environment,
+0150/*                                        S= SERVER, C= CLIENT, B= BOTH
+0160/*         COMPRESSLEVEL    (A01)      /* INOUT: compression level
+0170/*         ENCRYPTION-LEVEL (I01)      /* INOUT: encryption level
+0180/*         ACIVERS          (B01)      /* OUT:   ACI version used
+0190/*         RC               (B01)      /* OUT:   return code
+0200/*                                               if not equal zero:
+0210/*                                               ACI version required
+0220/*                                               to set the parameter
+0230/*
+0240/***********************************************************************
+0250DEFINE DATA LOCAL
+02601 PARM-INPUT
+0270  2 FUNCTION         (A1)
+0280  2 ENVIRONMENT      (A1)
+0290  2 COMPRESSLEVEL    (A1)
+0300  2 ENCRYPTION-LEVEL (I1)
+0310  2 ACIVERS          (B1)
+0320  2 RC               (B1)
+0330LOCAL
+03401 CMPR-CV (C)
+03501 ENCR-CV (C)
+03601 P2-CMPR            (A1)
+03701 P2-ENCR            (I1)
+0380END-DEFINE
+0390*
+0400*
+0410DEFINE WINDOW RPC-PARM      SIZE 13*70 BASE 5/8
+0420  TITLE ' Retrieve and set parameters for EntireX'
+0430  CONTROL SCREEN
+0440*
+0450*
+0460* ******************************************************************
+0470* Demo 1:
+0480* Call Pgm USR4009P via Stack, and optionally with keywords
+0490* Example: USR4009P P,C,ENCRYPTION-LEVEL=1
+0500* Example: USR4009P P,C,,2
+0510* Example: USR4009P P,C,COMPRESSLEVEL=6,ENCRYPTION-LEVEL=2
+0520* ******************************************************************
+0530IF *DATA > 0
+0540*
+0550  INPUT (AD=T) FUNCTION ENVIRONMENT
+0560               COMPRESSLEVEL    (CV=CMPR-CV)
+0570               ENCRYPTION-LEVEL (CV=ENCR-CV)
+0580  IF FUNCTION = 'P'
+0590*   In case that NOT all keywords are given, read current values
+0600    CALLNAT 'USR4009N' 'G' ENVIRONMENT P2-CMPR P2-ENCR ACIVERS RC
+0610    IF CMPR-CV NOT MODIFIED
+0620      COMPRESSLEVEL := P2-CMPR            /* GET CURRENT VALUE
+0630    END-IF
+0640    IF ENCR-CV NOT MODIFIED
+0650      ENCRYPTION-LEVEL := P2-ENCR         /* GET CURRENT VALUE
+0660    END-IF
+0670  END-IF
+0680  CALLNAT 'USR4009N' PARM-INPUT
+0690ELSE
+0700* ******************************************************************
+0710* Demo 2:
+0720* Get and update fields in window.
+0730* ******************************************************************
+0740  SET KEY PF3
+0750  FUNCTION     := 'G'
+0760  ENVIRONMENT  := 'C'
+0770*
+0780  REPEAT UNTIL *PF-KEY = 'PF3' OR FUNCTION = '.'
+0790    CALLNAT 'USR4009N' USING PARM-INPUT
+0800*
+0810    INPUT WINDOW='RPC-PARM' (AD=MIT'_')
+0820     / 'Please enter Parameters:'
+0830    // '   Function         :' FUNCTION
+0840       '           G= GET, P= PUT'
+0850     / '   Environment      :' ENVIRONMENT
+0860       '           C= CLIENT, S= SERVER, B= BOTH'
+0870     / '   Compression level:' COMPRESSLEVEL
+0880     / '   Encryption level :' ENCRYPTION-LEVEL  (NL=1 EM=9)
+0890     / '   ACI version      :' ACIVERS  (AD=O)
+0900     / '   Return code      :' RC       (AD=O)
+0910    // 'or hit PF3 to leave.'
+0920*
+0930  END-REPEAT
+0940*
+0950END-IF
+0960*
+0970END

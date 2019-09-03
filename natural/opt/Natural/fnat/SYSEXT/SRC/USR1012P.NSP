@@ -1,0 +1,24 @@
+0010/*  Function: Get dynamic error part
+0020/*    If the error tokens are longer than 34 byte, use USR2009*
+0030/********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 01 ERR-PARM  (A34)     /* Dynamic error parts in compressed form
+0070 01 RESPONSE  (N04)     /* Error code
+0080LOCAL
+0090 01 PARM-ARR  (A16/1:9)
+0100END-DEFINE
+0110/*
+0120CALLNAT 'USR1012N' ERR-PARM RESPONSE
+0130/*
+0140/* If there is more than one dynamic error part, the dynamic
+0150/* parts have to be separated:
+0160/*
+0170SEPARATE ERR-PARM INTO PARM-ARR(*) WITH DELIMITER ','
+0180/*
+0190WRITE(CD=TU)
+0200    '=' (TU) ERR-PARM
+0210  / '=' (TU) RESPONSE
+0220  / '=' (TU) PARM-ARR(*)
+0230/*
+0240END

@@ -1,0 +1,59 @@
+0010Get SYSPROD information
+0020.
+0030Documentation ......... USR0050T    /*  Text object
+0040Interface ............. USR0050N    /*  Cataloged subprogram
+0050Example Program ....... USR0050P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. SYSTEM COMMANDS
+0100.
+0110Keywords .............. +PREVIOUS-VERSION,
+0120                        ENVIRONMENT, SYSPROD
+0130.
+0140Interface Versions .... USR0050N, USR2031N
+0150.
+0160Function .............. Information about installed Natural (sub-)
+0170                        products is returned to the calling program.
+0180                        The information is contained in arrays.
+0190.
+0200.
+0210Parameters
+0220----------
+0230Define the following parameters with the DEFINE DATA statement:
+0240.
+0250  01 PA-1  (A20/12)  /*  Product Name
+0260     PA-2  (A04/12)  /*  Product Version and Release
+0270     PA-3  (A02/12)  /*  SM level
+0280     PA-4  (A08/12)  /*  SM date  (EM=YY'-'MM'-'DD)
+0290     PA-5  (A02/12)  /*  Update level
+0300     PA-6  (P01)     /*  Error code
+0310     PA-7  (A48)     /*  Explanation to RC (and Offset Instruction)
+0320.
+0330Interface Call
+0340--------------
+0350Use the interface with the CALLNAT statement:
+0360.
+0370CALLNAT 'USR0050N'
+0380         PA-1 (*) PA-2 (*) PA-3 (*) PA-4 (*) PA-5 (*) PA-6 PA-7
+0390.
+0400.
+0410Using the Application Programming Interface:
+0420--------------------------------------------
+0430Copy the subprogram USR0050N to the library SYSTEM or the steplib
+0440library respectively, or to the required library.
+0450.
+0460Field PA-7 may be filled with 'Offset Instruction' before
+0470calling USR0050N. This instruction must fit into the Natural
+0480mask statement MASK ('+'NN' '). Example: If you want to receive
+0490the list with 11 lines of offset, you should code:
+0500MOVE '+11 ' to PA-7.
+0510.
+0520.
+0530PA-1 (1) always contains information about Natural itself.
+0540.
+0550PA-6 indicates, whether an error has occurred, and
+0560PA-7 contains a short explanation.
+0570.
+0580***** End of Description *****
+0590

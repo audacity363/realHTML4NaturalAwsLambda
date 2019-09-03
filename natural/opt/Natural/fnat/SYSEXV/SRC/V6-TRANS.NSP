@@ -1,0 +1,121 @@
+0010*
+0020* Program .. V6-TRANS
+0030* Library .. SYSEXV
+0040* Version .. 6.1
+0050*
+0060* Functionality: Show new system function *TRANSLATE
+0070************************************************************************
+0080*
+0090DEFINE DATA LOCAL
+01001 #ALPHA1    (A) DYNAMIC
+01101 #ALPHA2    (A) DYNAMIC
+01201 #ALPHA3    (A) DYNAMIC
+01301 #ALPHA     (A20)
+01401 #VAR       (A20)
+0150END-DEFINE
+0160*
+0170FORMAT KD=ON
+0180SET KEY PF3  NAMED 'Exit'
+0190  PF12 NAMED 'Canc'
+0200*
+0210#ALPHA1  := 'Good Morning'
+0220*
+0230#ALPHA2 := *TRANSLATE(#ALPHA1,UPPER)
+0240#ALPHA3 := *TRANSLATE(#ALPHA1,LOWER)
+0250*
+0260INPUT (IP=OFF)
+0270  01T *TIMX  (AD=OTD)
+0280  21T '***** NATURAL 6.1 ENHANCEMENTS *****'
+0290  70T *DATX  (AD=OTD DF=L)
+0300  /
+0310  01T 'User'
+0320  06T *USER  (AD=OILT)
+0330  32T '- *TRANSLATE -'(I)
+0340  64T 'Program'
+0350  72T *PROGRAM (AD=OI)
+0360  ///
+0370  02T 'New system function *TRANSLATE'(I)
+0380  '     * First example *'
+0390  //
+0400  02T 'The system function *TRANSLATE can be used in logical'
+0410  'condition criteria'
+0420  /
+0430  02T 'and assignments with operand of format A or B.'
+0440  'The operand itself will'
+0450  /
+0460  02T 'not be modified.'
+0470  //
+0480  02T '#Alpha1:'  #ALPHA1 (AD=OI AL=20)
+0490  //
+0500  02T '#Alpha2 :=' '*TRANSLATE'(I) '(#Alpha1,UPPER)'
+0510  '   /* set into upper case'
+0520  //
+0530  02T '#Alpha3 :=' '*TRANSLATE'(I) '(#Alpha1,LOWER)'
+0540  '   /* set into lower case'
+0550  //
+0560  02T '#Alpha2:'  #ALPHA2 (AD=OI AL=20)
+0570  /
+0580  02T '#Alpha3:'  #ALPHA3 (AD=OI AL=20)
+0590  //
+0600*
+0610IF *PF-KEY ='PF3'
+0620  ESCAPE ROUTINE
+0630END-IF
+0640IF (*PF-KEY = 'PF12' OR= 'CLR')
+0650  CALLNAT 'UTILSTOP'
+0660END-IF
+0670*
+0680*
+0690#ALPHA := 'text to be checked.'
+0700*
+0710#VAR := #ALPHA
+0720EXAMINE #VAR TRANSLATE INTO LOWER
+0730IF #ALPHA = #VAR
+0740  /* Write 'Text in lower case'
+0750  IGNORE
+0760END-IF
+0770*
+0780IF #ALPHA = *TRANSLATE(#ALPHA,LOWER)
+0790  /* Write 'Text in lower case'
+0800  IGNORE
+0810END-IF
+0820*
+0830*
+0840INPUT (IP=OFF)
+0850  01T *TIMX  (AD=OTD)
+0860  21T '***** NATURAL 6.1 ENHANCEMENTS *****'
+0870  70T *DATX  (AD=OTD DF=L)
+0880  /
+0890  01T 'User'
+0900  06T *USER  (AD=OILT)
+0910  32T '- *TRANSLATE -'(I)
+0920  64T 'Program'
+0930  72T *PROGRAM (AD=OI)
+0940  ///
+0950  02T 'New system function *TRANSLATE'(I)
+0960  '     * Second example *'
+0970  //
+0980  02T 'Several steps are needed with EXAMINE TRANSLATE statement.'
+0990  //
+1000  02T '#Var := #Alpha'
+1010  /
+1020  02T 'EXAMINE'(I) '#Var' 'TRANSLATE'(I) 'INTO LOWER'
+1030  /
+1040  02T 'IF #Alpha = #Var'
+1050  42T '/* check value for lower case'
+1060  ///
+1070  02T 'With *TRANSLATE it is more simple and efficient without'
+1080  'temporary variable.'
+1090  //
+1100  02T 'IF #Alpha =' '*TRANSLATE'(I) '(#Alpha,LOWER)'
+1110  42T '/* check value for lower case'
+1120  //
+1130IF *PF-KEY ='PF3'
+1140  ESCAPE ROUTINE
+1150END-IF
+1160IF (*PF-KEY = 'PF12' OR= 'CLR')
+1170  CALLNAT 'UTILSTOP'
+1180END-IF
+1190*
+1200
+1210END

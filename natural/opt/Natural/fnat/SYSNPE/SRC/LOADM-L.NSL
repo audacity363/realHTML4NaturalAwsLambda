@@ -1,0 +1,14 @@
+0010**DV          0015     V1LOADED-MODULES                  LOADED-MODULES
+0020**DD          0018N 3.0 2ERROR-CODE
+0030**DD          0019A  58 2ERROR-TEXT
+0040**DD          0020N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0021B   4 2TCB-ADDRESS
+0060**DD          0022A   8 2JOB-NAME
+0070**DD          0023A   8 2MODULE
+0080**DD          0024B   4 2ENTRY-POINT
+0090**DD          0025N 3.0 2USE-COUNT
+0100**DD          0026B   4 2PSW
+0110**DD          0027A   4 2TYPE
+0120**DD          0028B   4 2LOAD-ADDRESS
+0130**DD          0029B   3 2LENGTH
+0140**DD          0030A   7 2STATE

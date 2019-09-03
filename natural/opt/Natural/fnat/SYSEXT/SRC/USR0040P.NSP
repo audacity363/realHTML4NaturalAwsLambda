@@ -1,0 +1,17 @@
+0010/* INFORMATION ABOUT TYPE OF LAST ERROR
+0020/**********************
+0030DEFINE DATA LOCAL
+0040  01 TYPE   (A01)   /*  'U'  ---> user error,
+0050                    /*  'S'  ---> NATURAL System Error.
+0060                    /*  'E'  ---> Runtime Error.
+0070  01 NUMBER (P07)   /*  Error Number
+0080END-DEFINE
+0090/*
+0100CALLNAT 'USR0040N' TYPE NUMBER
+0110/*
+0120WRITE NOTITLE (AD=LI)
+0130  10T 'Type of last error .....' TYPE   /
+0140  10T 'Number of last error ...' NUMBER (EM=9999) /
+0150  10T '*ERROR-NR ..............' *ERROR-NR
+0160/*
+0170END

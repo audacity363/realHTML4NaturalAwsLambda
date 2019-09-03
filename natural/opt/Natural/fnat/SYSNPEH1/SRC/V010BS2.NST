@@ -1,0 +1,12 @@
+0010&H View CATALOG-UPDATE
+0020&L
+0030&L
+0040#Purpose@: Perform catalog maintenance functions.
+0050&L
+0060#OpSys@  : z/OS, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : In BS2000 it's only possible to modify existing catalog
+0100           entries.
+0110&L
+0120#Notes@  :

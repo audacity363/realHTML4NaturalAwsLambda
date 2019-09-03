@@ -1,0 +1,86 @@
+0010* Program   DLIBDIR
+0020* View      LIB-DIRECTORY
+0030*
+0040* Function  Display first n records of members in a VSE-library
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* hka 97-12-03   NPE213:   make it y2000 compliant
+0090* ======================================================================
+0100*
+0110DEFINE DATA
+0120            GLOBAL USING TUTO
+0130            LOCAL  USING DLIBDIRL
+0140            LOCAL
+015001  READ-FILE  VIEW  OF  READ-FILE
+0160    02  ERROR-CODE
+0170    02  ERROR-TEXT
+0180    02  RECORD
+0190*
+0200            LOCAL
+021001  #N                 (N2)
+0220END-DEFINE
+0230*
+0240REPEAT
+0250*
+0260RESET
+0270   LIB-DIRECTORY.MEMBER
+0280   LIB-DIRECTORY.MEMBER-TYPE
+0290   LIB-DIRECTORY.VSAM-CATALOG
+0300*
+0310INPUT (AD=MI) // ##TITLE (AD=OI IP=OFF)
+0320              // '  Data set.............:' LIB-DIRECTORY.DSNAME
+0330               / '  Library..............:' LIB-DIRECTORY.LIBRARY
+0340               / '  Sub-library..........:' LIB-DIRECTORY.SUB-LIBRARY
+0350               / '  Volser...............:' LIB-DIRECTORY.VOLSER
+0360               / '  VSAM-Catalog.........:' LIB-DIRECTORY.VSAM-CATALOG
+0370               / '  Member...............:' LIB-DIRECTORY.MEMBER
+0380               / '  Member-Type..........:' LIB-DIRECTORY.MEMBER-TYPE
+0390              // '  Number of lines to'
+0400               / '  list of each member..:' #N (ZP=OFF)
+0410*
+0420   IF LIB-DIRECTORY.MEMBER EQ ' '
+0430      ASSIGN LIB-DIRECTORY.MEMBER = '*'
+0440   END-IF
+0450   IF LIB-DIRECTORY.MEMBER-TYPE EQ ' '
+0460      ASSIGN LIB-DIRECTORY.MEMBER-TYPE = '*'
+0470   END-IF
+0480*
+0490   DIR.
+0500   FIND LIB-DIRECTORY WITH DSNAME       = LIB-DIRECTORY.DSNAME
+0510                       AND LIBRARY      = LIB-DIRECTORY.LIBRARY
+0520                       AND SUB-LIBRARY  = LIB-DIRECTORY.SUB-LIBRARY
+0530                       AND VOLSER       = LIB-DIRECTORY.VOLSER
+0540                       AND VSAM-CATALOG = LIB-DIRECTORY.VSAM-CATALOG
+0550                       AND MEMBER       = LIB-DIRECTORY.MEMBER
+0560                       AND MEMBER-TYPE  = LIB-DIRECTORY.MEMBER-TYPE
+0570                       AND NODE         = ##NODE
+0580*
+0590      IF ERROR-CODE NE 0
+0600         REINPUT ERROR-TEXT
+0610      END-IF
+0620*
+0630      DISPLAY 'Member'     (AD=I)  MEMBER
+0640              'Type'       (AD=I)  MEMBER-TYPE
+0650              'Created'    (AD=I)  DATX-CREATED (EM=YYYY-MM-DD)
+0660              'Changed'    (AD=I)  DATX-CHANGED (EM=YYYY-MM-DD)
+0670              'Attributes' (AD=I)  MODULE-ATTRIBUTES (AL=37)
+0680*
+0690      IF #N NE 0
+0700         FIND (#N) READ-FILE WITH DSNAME       = DSNAME (DIR.)
+0710                              AND MEMBER       = MEMBER (DIR.)
+0720                              AND MEMBER-TYPE  = MEMBER-TYPE (DIR.)
+0730                              AND LIBRARY      = LIBRARY (DIR.)
+0740                              AND SUB-LIBRARY  = SUB-LIBRARY (DIR.)
+0750                              AND VSAM-CATALOG = VSAM-CATALOG (DIR.)
+0760                              AND NODE         = ##NODE
+0770            WRITE NOTITLE 3X RECORD (AL=76)
+0780         END-FIND
+0790         SKIP 2
+0800      END-IF
+0810   END-FIND
+0820END-REPEAT
+0830*
+0840WRITE TITLE 'Directory of' (I) LIB-DIRECTORY.DSNAME (AD=I) /
+0850*
+0860END

@@ -1,0 +1,147 @@
+0010/* Function ... Change NSC user's password on an RPC server
+0020/*
+0030/* This program serves as example how to design a user-defined
+0040/* program to call 'USR2074N'
+0050/*
+0060/* 'USR2007N' is called to preset the node ID and the server name
+0070/* with the DFS setting. This call is optional and may be removed.
+0080/*
+0090/* Program Option ..
+0100/*            #MIXED_CASE(A01)  - Accept User ID's password
+0110/*                                in upper and lower case letters.
+0120/* Parameter ..
+0130/*     INPUT
+0140/*            USER-ID     (A08) - NSC user ID
+0150/*            PASSWORD    (A08) - Password of NSC user ID
+0160/*            NEWPASSWORD (A08) - New password for NSC user ID
+0170/*
+0180/*     IN-OUTPUT
+0190/*            NODE-NAME   (A32) - Node ID of default server
+0200/*            SERVER-NAME (A32) - Server name of default server
+0210/*            TRANSPORT   (A01) - Transport bike: B(Broker)
+0220/*
+0230/*     OUTPUT
+0240/*             RC         (I02) - Message class
+0250/*                        /*      1 - Error from RPC server or Broker'
+0260/*                        /*      2 - Error from interface'
+0270/*                        /*      3 - Error message from Nat.Security
+0280/*            MSG-NR      (N04) - Natural error message number
+0290/*            MSG         (A80) - Error message text
+0300/*
+0310/*
+0320/*
+0330/*
+0340/* Maintenance log ****************************************************
+0350/*
+0360/* Date     User  SAGSIS   Description
+0370/* -------- ----- -------  --------------------------------------------
+0380/* 11.12.04 UHE1  Pxxxxxx  Add mixed case option
+0390/**********************************************************************
+0400DEFINE DATA
+0410LOCAL
+04201 USR2074N-PARM
+0430  2 USER-ID      (A8)     /* IN      NSC user ID
+0440  2 PASSWORD     (A8)     /* IN      Password of NSC user ID
+0450  2 NEWPASSWORD  (A8)     /* IN      New password for NSC user ID
+0460  2 NODE-NAME    (A32)    /* IN-OUT  Node ID of default server
+0470  2 SERVER-NAME  (A32)    /* IN-OUT  Server name of default server
+0480  2 TRANSPORT    (A1)     /* IN-OUT  Transport bike: B(Broker)
+0490*
+0500  2 RC           (I2)     /* OUT  Message class
+0510*                         /*      1 - Error from RPC server or Broker'
+0520*                         /*      2 - Error from interface'
+0530*                         /*      3 - Error message from Nat.Security
+0540  2 MSG-NR       (N4)     /* OUT  Natural error message number
+0550  2 MSG          (A80)    /* OUT
+0560LOCAL
+05701 #A1                  (A1)     /*
+05801 #A8                  (A8)     /*
+05901 NEWPASSWORD2(A8)        /*     Confirm New password for NSC user ID
+0600LOCAL
+06101 USR2007N-PARM
+0620  2 FUNCTION        (A1)      /* IN   /* 'G' get data, 'P' put data
+0630  2 NODE            (A32)     /* OUT
+0640  2 SERVER          (A32)     /* OUT
+0650  2 LOGON           (A1)      /* OUT
+0660  2 BIKE            (A1)      /* OUT
+06701 #MIXED_CASE (A1) INIT<'N'>
+0680END-DEFINE
+0690*
+0700*
+0710DEFINE WINDOW NEWPASSW SIZE 16*75 BASE 5/5
+0720  TITLE 'RPC server request: Change NSC password ' CONTROL SCREEN
+0730*
+0740USER-ID   := *USER
+0750*
+0760*
+0770**  Read DFS as default node ID and server name
+0780*
+0790USR2007N-PARM.FUNCTION := 'G'
+0800CALLNAT 'USR2007N' USR2007N-PARM
+0810USR2074N-PARM.NODE-NAME   := USR2007N-PARM.NODE
+0820USR2074N-PARM.SERVER-NAME := USR2007N-PARM.SERVER
+0830USR2074N-PARM.TRANSPORT   := USR2007N-PARM.BIKE
+0840IF USR2074N-PARM.TRANSPORT = #A1
+0850  USR2074N-PARM.TRANSPORT := 'B'   /* Broker is default
+0860END-IF
+0870*
+0880SET KEY ALL
+0890*
+0900REPEAT
+0910*
+0920  TRANSPORT := 'B'
+0930*
+0940  INPUT WINDOW='NEWPASSW' (AD=MIT'_' IP=OFF CD=NE)
+0950    / 'User ID ..............:' (TU) USER-ID
+0960    / 'Password .............:' (TU) PASSWORD (AD=N)
+0970    / 'New password .........:' (TU) NEWPASSWORD (AD=N)
+0980    / 'Confirm new password .:' (TU) NEWPASSWORD2(AD=N)
+0990    / 'Node name ............:' (TU) NODE-NAME
+1000    / 'Server name ..........:' (TU) SERVER-NAME
+1010    / ' B(Broker) ...........:' (TU) TRANSPORT
+1020    / 'Mixed case ...........:' (TU) #MIXED_CASE
+1030    / 'Message class ........:' (TU) RC (AD=OIL ZP=ON CD=TU)
+1040**  /  '1 -  Error from RPC server or Broker'
+1050**  /  '2 -  Error from interface'
+1060**  /  '3 -  Error message from Natural Security'
+1070    / 'Natural error ........:' (TU) MSG-NR (AD=OIL ZP=ON CD=TU)
+1080    /                                MSG (AD=OIL AL=70)
+1090    // 10T 'Press any PF-key to stop.' (TU)
+1100  /*
+1110  RESET MSG RC MSG-NR
+1120  /*
+1130  IF *PF-KEY NE 'ENTR'
+1140    ESCAPE ROUTINE
+1150  END-IF
+1160  /*
+1170  EXAMINE USR2074N-PARM.USER-ID      TRANSLATE INTO UPPER
+1180  /*
+1190  IF NOT (#MIXED_CASE = 'Y' OR = 'y')
+1200    EXAMINE USR2074N-PARM.PASSWORD     TRANSLATE INTO UPPER
+1210    EXAMINE USR2074N-PARM.NEWPASSWORD  TRANSLATE INTO UPPER
+1220  END-IF
+1230  /*
+1240  IF USR2074N-PARM.NEWPASSWORD  NE NEWPASSWORD2
+1250      OR USR2074N-PARM.NEWPASSWORD  EQ #A8
+1260    MSG := 'New password is not confirmed.'
+1270    RC  := 3
+1280    ESCAPE TOP
+1290  END-IF
+1300  /*
+1310  IF USR2074N-PARM.NEWPASSWORD  EQ USR2074N-PARM.PASSWORD
+1320    MSG := 'New password is not allowed.'
+1330    RC  := 3
+1340    ESCAPE TOP
+1350  END-IF
+1360  /*
+1370  /*
+1380  MOVE LEFT JUSTIFIED NODE-NAME   TO NODE-NAME
+1390  MOVE LEFT JUSTIFIED SERVER-NAME TO SERVER-NAME
+1400  /*
+1410  /*
+1420  CALLNAT 'USR2074N' USR2074N-PARM
+1430  RESET NEWPASSWORD2
+1440  /*
+1450END-REPEAT
+1460*
+1470END

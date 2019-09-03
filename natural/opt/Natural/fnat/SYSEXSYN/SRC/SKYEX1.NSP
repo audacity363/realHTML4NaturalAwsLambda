@@ -1,0 +1,30 @@
+0010** Example 'SKYEX1': SET KEY
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #PF4 (A56)
+0050END-DEFINE
+0060*
+0070MOVE 'LIST VIEW' TO #PF4
+0080*
+0090SET KEY PF1 PF2
+0100SET KEY PF3 = 'MENU'
+0110        PF4 = #PF4
+0120        PF5 = 'LIST VIEW EMPLOYEES' NAMED 'Empl'
+0130*
+0140FORMAT KD=ON
+0150INPUT ////
+0160      10X 'The following function keys are assigned:' //
+0170      10X 'PF1: Function for PF1      ' /
+0180      10X 'PF2: Function for PF2      ' /
+0190      10X 'PF3: Return to MENU program' /
+0200      10X 'PF4: LIST VIEW             ' /
+0210      10X 'PF5: LIST VIEW EMPLOYEES   ' ///
+0220*
+0230IF *PF-KEY = 'PF1'
+0240  WRITE 'Function for PF1 executed.'
+0250END-IF
+0260IF *PF-KEY = 'PF2'
+0270  WRITE 'Function for PF2 executed.'
+0280END-IF
+0290*
+0300END

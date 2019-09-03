@@ -1,0 +1,47 @@
+0010DB: 148 FILE: 084  - HELP-INFO                        DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:22
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:22
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      BS2000 fields
+0230*
+0240  1 ES SYSTEM-CODE                       B    2      System error code.
+0250*      System error code.
+0260  1 A1 OPTION                            A    6    D Help message option:
+0270*      Help message option:
+0280*      FULL  full information
+0290*      (default)
+0300*      MIN   only message text
+0310  1 A2 MESSAGE-ID                        A    7    D BS2000 message ID as
+0320*      BS2000 message ID as returned
+0330*      by some views in field
+0340*      SYSTEM-MESSAGE-CODE.
+0350*      Example: DMS0533
+0360  1 A3 LINE                              A   79      Text line of help te
+0370*      Text line of help text.
+0380  1 A4 LANGUAGE-ID                       N  1.0    D 1   english help tex
+0390*      1   english help text
+0400*      2   german help text
+0410*      Any other LANGUAGE-ID will
+0420*      return english help text.
+0430*      Default: BS2000 default
+0440*
+0450*      End of HELP-INFO
+0460*
+0470******DDM OUTPUT TERMINATED******

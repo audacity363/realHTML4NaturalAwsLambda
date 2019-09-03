@@ -1,0 +1,34 @@
+0010DB: 148 FILE: 030  - DEVICE-NAMES                     DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:21
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:21
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      MVS fields
+0230*
+0240  1 A1 NAME                              A    8    D Generic name defined
+0250*      Generic name defined during
+0260*      system generation.
+0270  1 A2 TYPE                              B    4    D Internal device type
+0280*      Internal device type code.
+0290  1 A3 ADDRESS                           B    2    D Unit address.
+0300*      Unit address.
+0310*
+0320*      End of DEVICE-NAMES
+0330*
+0340******DDM OUTPUT TERMINATED******

@@ -1,0 +1,21 @@
+0010/* ---------------------------------------------------------------------
+0020/* Program:        STACK
+0030/* Library:        SYSEXBAT (Batch mode samples)
+0040/*
+0050/* Functionality:  Stack processing
+0060/*
+0070/* Description:    Data elements that have been placed in the Natural
+0080/*                 stack will be processed by the next INPUT statement
+0090/* ---------------------------------------------------------------------
+0100DEFINE DATA LOCAL
+01101 #name (A10)
+01201 #age  (N3)
+0130END-DEFINE
+0140**
+0150**
+0160**
+0170INPUT (AD=M) #name #age
+0180**
+0190DISPLAY #name #age
+0200**
+0210END

@@ -1,0 +1,346 @@
+0010/**********************************************************************
+0020/* Product ....: Natural Profiler Utility Batch Mode
+0030/* Help Text ..: PRBHELP
+0040/* Description : Help for Profiler Batch.
+0050/* IMPORTANT ..: Do not modify this member
+0060/**********************************************************************
+0070<Text>
+0080$STARS$
+0090<Head>
+0100                  ***** NATURAL PROFILER UTILITY *****
+0110                               - Help -
+0120</Head>
+0130
+0140The Profiler utility batch mode input looks like
+0150  PROFILER
+0160  entry,...
+0170  ...
+0180  END-PROFILER
+0190
+0200An entry looks like
+0210  keyword
+0220or
+0230  keyword = value
+0240
+0250If a value is associated with a keyword but no equal sign is found, the
+0260Profiler expects the value in a separate input line without any other
+0270keyword.
+0280
+0290The maximum input line length is 78 characters.
+0300
+0310In the following, the value given with a keyword is the default value.
+0320
+0330
+0340                        General Keywords
+0350                        ================
+0360
+0370Profiler help
+0380-------------
+0390HELP                    /* Write help information
+0400
+0410
+0420Set Profiler trace level
+0430------------------------
+0440TRACE=2                 /* Profiler internal trace level
+0450
+0460Internal trace levels
+0470  0  No trace
+0480  1  Error messages
+0490  2  Warnings
+0500  3  Statistics
+0510  4  Keyword specific data
+0520  5  Resource block statistics
+0530  6  Detailed information
+0540  7  Not used
+0550  8  Not used
+0560  9  Not used
+0570 10  Internal usage
+0580
+0590
+0600Profiler input comment
+0610----------------------
+0620* This line is ignored
+0630  /* This part is ignored */
+0640  /* End of line is ignored
+0650
+0660
+0670Include Profiler input from Natural text object
+0680-----------------------------------------------
+0690INCLUDE-LIB=...         /* Library with INCLUDE members
+0700INCLUDE=...             /* Natural text object with Profiler input
+0710
+0720Defaults:
+0730Include library ....... SYSPRFLR
+0740Include name .......... (none)
+0750
+0760
+0770End of Profiler input
+0780---------------------
+0790END-PROFILER            /* End of Profiler input
+0800END                     /* End of Profiler input
+0810.                       /* End of Profiler input
+0820
+0830
+0840Switch to online mode (mainframe only)
+0850--------------------------------------
+0860ONLINE                  /* Profiler utility online mode
+0870
+0880All input after the ONLINE keyword is for the Profiler utility online
+0890mode.
+0900
+0910                 Keywords for Data Collection
+0920                 ============================
+0930
+0940Switch profiling on (RDCSIZE=2) for the data collection functions.
+0950
+0960Initialize Profiling (mainframe only)
+0970-------------------------------------
+0980FUNCTION=INIT           /* Initialize profiling
+0990  RESOURCE=ON           /* Write to resource ON/OFF
+1000  RESOURCE-NAME=...     /* Resource name
+1010  RESOURCE-LIB=...      /* Resource library
+1020  REPLACE=NO            /* Replace resource YES/NO
+1030  SAMPLING=OFF          /* Activate sampling ON/OFF
+1040  INTERVAL=100          /* Sampling interval (microsec CPU time)
+1050  CONSOLIDATE=OFF       /* Data consolidation ON/OFF
+1060  WAIT-EMPTY=60         /* Seconds monitor session waits if pool empty
+1070  WAIT-FULL=60          /* Seconds trace session waits if pool full
+1080  CMPRMIN=datasetname   /* Dynamic parameter input data set
+1090  TRACE-EVENT=OFF       /* Profiler event trace ON/OFF
+1100  TRACE-MONITOR=3       /* Monitor session internal trace level 0-10
+1110  TRACE-CONSOLIDATE=OFF /* Profiler consolidation trace ON/OFF
+1120
+1130Defaults:
+1140Resource name ......... *INIT-USER_yyyymmdd_hhiis
+1150Resource type ......... NPRF for CONSOLIDATE=OFF
+1160Resource type ......... NPRC for CONSOLIDATE=ON
+1170Resource library ...... Current library
+1180
+1190The functions INIT and COVERAGE are mutual exclusive.
+1200
+1210
+1220Initialize Natural Code Coverage (mainframe only)
+1230-------------------------------------------------
+1240FUNCTION=COVERAGE       /* Initialize code coverage
+1250  RESOURCE=ON           /* Write to resource ON/OFF
+1260  RESOURCE-NAME=...     /* Resource name
+1270  RESOURCE-LIB=...      /* Resource library
+1280  REPLACE=NO            /* Replace resource YES/NO
+1290  WAIT-EMPTY=60         /* Seconds monitor session waits if pool empty
+1300  WAIT-FULL=60          /* Seconds trace session waits if pool full
+1310  CMPRMIN=datasetname   /* Dynamic parameter input data set
+1320  TRACE-EVENT=OFF       /* Profiler event trace ON/OFF
+1330  TRACE-MONITOR=3       /* Monitor session internal trace level 0-10
+1340  TRACE-COVERAGE=OFF    /* Coverage trace ON/OFF
+1350
+1360Defaults:
+1370Resource name ......... *INIT-USER_yyyymmdd_hhiis
+1380Resource type ......... NCVF
+1390Resource library ...... Current library
+1400
+1410The functions INIT and COVERAGE are mutual exclusive.
+1420
+1430
+1440Start Profiling/Coverage
+1450------------------------
+1460FUNCTION=START          /* Start profiling/coverage
+1470  COUNT=0               /* Set event counter
+1480
+1490
+1500Pause Profiling/Coverage
+1510------------------------
+1520FUNCTION=PAUSE          /* Pause profiling/coverage
+1530
+1540
+1550Set event filter (mainframe only)
+1560---------------------------------
+1570FILTER=EVENT            /* Set event filter
+1580                        /* The following data is collected:
+1590  EVENT=DB DA PL PS PT PR IB IA E CB CA U RS RI RO RW
+1600                        /*  The given events
+1610  EVENT=D P I E C U R   /*  The given event types
+1620  EVENT=ALL             /*  All events
+1630  STATEMENT=...         /*  Statement events OFF/ON/COUNT
+1640  FNAT=OFF              /*  Natural system file events ON/OFF
+1650
+1660Defaults for profiling:
+1670  EVENT=ALL             /* Collect all events
+1680  STATEMENT=OFF         /* Do not collect statement events
+1690
+1700Defaults for coverage:
+1710  EVENT=PS              /* Collect program start events
+1720  STATEMENT=ON          /* Collect statement events
+1730
+1740For coverage, the program start and the statement events are required.
+1750
+1760
+1770Set program filter (mainframe only)
+1780-----------------------------------
+1790FILTER=PROGRAM          /* Set program filter
+1800                        /* Data is collected only
+1810  LIBRARY=...           /*  for the given Natural library
+1820  PROGRAM=...           /*  for the given Natural module
+1830  LINE-FROM=            /*  if line number >= value
+1840  LINE-TO=              /*  if line number <= value (0 = max)
+1850
+1860Library and program value can end with a wildcard ABC*.
+1870
+1880
+1890Set event count filter (mainframe only)
+1900---------------------------------------
+1910FILTER=COUNT            /* Set event count filter
+1920                        /* Data is collected only
+1930  FROM=                 /*  if event number >= value
+1940  TO=                   /*  if event number <= value (0 = max)
+1950
+1960
+1970Set CPU time filter (sec/100) (mainframe only)
+1980----------------------------------------------
+1990FILTER=TIME             /* Set CPU time filter
+2000                        /* Data is collected only
+2010  FROM=                 /*  if CPU time >= value * 10000
+2020  TO=                   /*  if CPU time <= value * 10000 (0=max)
+2030
+2040Add a user-defined event (mainframe only)
+2050-----------------------------------------
+2060FUNCTION=TEXT           /* Add a user-defined event
+2070  TEXT='Text'           /* User-defined event text
+2080  TEXT='continued'      /* Text continued
+2090  TYPE='S'              /* Profiler user-defined event subtype
+2100
+2110If multiple TEXT keywords are specified, the corresponding values are
+2120concatenated. The maximum text size is 249 bytes. Additional
+2130characters will be truncated.
+2140
+2150
+2160Profile/Cover a Natural batch RPC server (mainframe only)
+2170---------------------------------------------------------
+2180RPC                     /* Profile or coverage of RPC server
+2190
+2200The call to the Profiler and the Profiler input data have to be placed
+2210on the Natural stack. The Profiler expects another input format
+2220according to the stack syntax. Keyword and value are entered in
+2230separated input fields (no comma, no equal sign).
+2240Note that the general event data can be viewed in NaturalONE but not
+2250the RPC specific events.
+2260The Profiler MashApp supports all event types including RPC event types.
+2270
+2280Example RPC syntax
+2290------------------
+2300PROFILER RPC:
+2310FUNCTION:INIT:
+2320CMPRMIN:CMPRMINX:
+2330FUNCTION:START:
+2340END-PROFILER;
+2350
+2360
+2370Profiler error situation handling (mainframe only)
+2380--------------------------------------------------
+2390ON-ERROR=TERMINATE      /* Natural session terminates
+2400ON-ERROR=CONTINUE       /* Stop profiling, Natural session continues
+2410
+2420
+2430                 Keywords for Data Processing
+2440                 ============================
+2450
+2460NaturalONE customers can activate the Profiler utility data processing
+2470functions (see Activate Data Processing).
+2480Switch profiling off (RDCSIZE=0) for the data processing functions.
+2490
+2500
+2510List Profiler resources
+2520-----------------------
+2530FUNCTION=LIST           /* List Profiler resources
+2540  RESOURCE-LIB=...      /* Resource library
+2550  RESOURCE-TYPE=...     /* Resource type NPRF/NPRC/NCVF
+2560  PRINT=ON              /* Write to standard output ON/OFF
+2570  EXPORT=OFF            /* Export to work file 7 ON/OFF
+2580  FORMAT=TEXT           /* Export in text format (default)
+2590  FORMAT=SEMICOLON      /* Export in CSV (semicolon) format
+2600  FORMAT=COMMA          /* Export in CSV (comma) format
+2610
+2620Defaults:
+2630Resource type ......... All Profiler resources are listed
+2640
+2650
+2660Consolidate Profiler event data
+2670-------------------------------
+2680FUNCTION=CONSOLIDATE    /* Consolidate Profiler event data
+2690  RESOURCE=ON           /* Write to resource ON/OFF
+2700  RESOURCE-NAME=...     /* Input and output resource name
+2710  RESOURCE-LIB=...      /* Input and output resource library
+2720  REPLACE=YES           /* Replace resource YES/NO
+2730  EXPORT=OFF            /* Export to work file 7 ON/OFF
+2740  FORMAT=TEXT           /* Export in text format (default)
+2750  FORMAT=SEMICOLON      /* Export in CSV (semicolon) format
+2760  FORMAT=COMMA          /* Export in CSV (comma) format
+2770  TRACE-EVENT=OFF       /* Profiler event trace ON/OFF
+2780  TRACE-CONSOLIDATE=OFF /* Profiler consolidation trace ON/OFF
+2790
+2800Defaults:
+2810Resource name ......... Last created NPRF resource in the library
+2820Resource library ...... Current library
+2830
+2840The function expects an NPRF as input resource and writes the
+2850consolidated data to an NPRC resource with the same name.
+2860
+2870
+2880Read Profiler resource data
+2890---------------------------
+2900FUNCTION=READ           /* Read Profiler resource data
+2910  RESOURCE-NAME=...     /* Resource name
+2920  RESOURCE-TYPE=NPRF    /* Resource type NPRF/NPRC/NCVF
+2930  RESOURCE-LIB=...      /* Resource library
+2940  PROGRAM=ON            /* Program trace/summary/coverage ON/OFF
+2950  EVENT=ON              /* Profiler event/consolidation trace/
+2960                           statement coverage ON/OFF
+2970  STATISTICS=ON         /* Profiler statistics ON/OFF
+2980  PRINT=ON              /* Write to standard output ON/OFF
+2990  EXPORT=OFF            /* Export to work file 7 ON/OFF
+3000  FORMAT=TEXT           /* Export in text format (default)
+3010  FORMAT=SEMICOLON      /* Export in CSV (semicolon) format
+3020  FORMAT=COMMA          /* Export in CSV (comma) format
+3030
+3040Defaults:
+3050Resource name ......... Last created resource in the library
+3060Resource library ...... Current library
+3070
+3080
+3090Export Profiler resource data in MashZone format
+3100------------------------------------------------
+3110FUNCTION=MASHZONE       /* Export in MashZone format
+3120  RESOURCE-NAME=...     /* Resource name
+3130  RESOURCE-LIB=...      /* Resource library
+3140
+3150Defaults:
+3160Resource name ......... Last created NPRC resource in the library
+3170Resource type ......... NPRC
+3180Resource library ...... Current library
+3190
+3200The function is only available for NPRC resources.
+3210The data is exported in CSV (semicolon) format to work file 7.
+3220
+3230
+3240Delete a Profiler resource (mainframe only)
+3250-------------------------------------------
+3260FUNCTION=DELETE         /* Delete a Profiler resource
+3270  RESOURCE-NAME=...     /* Resource name
+3280  RESOURCE-TYPE=NPRF    /* Resource type NPRF/NPRC/NCVF/NPRK/NONE
+3290  RESOURCE-LIB=...      /* Resource library
+3300
+3310Defaults:
+3320Resource library ...... Current library
+3330
+3340
+3350Activate Data Processing
+3360------------------------
+3370- Start NaturalONE.
+3380- In the Natural Server view, map to the environment where the Profiler
+3390  resources reside.
+3400- Add the program ACTIVATE from library SYSPRFLR to a new or already
+3410  existing project in NaturalONE (if not done before).
+3420- Profile the program ACTIVATE (context menu: NaturalONE > Profile).
+3430- Verify that the user-defined event data on the Event Trace page of
+3440  the NaturalONE Profiler contains the activation success message.
+3450$STARS$
+3460</Text>

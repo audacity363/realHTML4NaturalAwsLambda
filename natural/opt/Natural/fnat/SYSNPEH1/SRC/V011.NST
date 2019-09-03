@@ -1,0 +1,12 @@
+0010&H View SPOOL-QUEUE
+0020&L
+0030&L
+0040#Purpose@: Display spool queue.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : This view retrieves spool queue information, e.g. Jobname,
+0100           Jobnumber, Class, Queue, Number of spool records etc.
+0110&L
+0120#Notes@  :

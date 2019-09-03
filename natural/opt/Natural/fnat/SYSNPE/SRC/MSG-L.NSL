@@ -1,0 +1,8 @@
+0010**DV          0009     V1SEND-MESSAGE                    SEND-MESSAGE
+0020**DD          0012N 3.0 2ERROR-CODE
+0030**DD          0013A  58 2ERROR-TEXT
+0040**DD          0014N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0015A  79 2MESSAGE
+0060**DD          0016A   8 2DESTINATION
+0070**DD          0017A   8 2STATUS
+0080**DD          0018A   8 2NOLOG

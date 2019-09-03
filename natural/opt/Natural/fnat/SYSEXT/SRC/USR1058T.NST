@@ -1,0 +1,311 @@
+0010Read a DDM source code into an array
+0020.
+0030Documentation ......... USR1058T    /*  Text object
+0040Interface ............. USR1058N    /*  Cataloged subprogram
+0050Example Program ....... USR1058P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DDMS
+0100.
+0110Keywords .............. +MOD-NAT-6.3.14,
+0120                        DDM, FDIC, FNAT, FSEC ENABLED,
+0130                        FUSER, READ, SOURCE, SYSTEM FILE
+0140.
+0150Function .............. This interface reads the source of a DDM
+0160                        into an array. On some platforms a DDM
+0170                        source is not available. On these platforms
+0180                        the output of this program will be similar
+0190                        to the output of the LIST command.
+0200                        With OS6.3.14: code page support is provided
+0210                        according to SRETAIN.
+0220                        With OS6.3.14: support for FSEC switch
+0230.
+0240.
+0250Parameters
+0260----------
+0270Define the following parameters with the DEFINE DATA statement:
+0280.
+02901 USR1058L
+0300  2 OBJECT-KEY
+0310    3 LIBRARY        (A08)
+0320    3 OBJECT-NAME    (A32)
+0330    3 OBJECT-TYPE    (A02)
+0340  2 INPUTS
+0350    3 OPT-ACCESS     (A01)
+0360    3 OPT-UNUSED-1   (L)
+0370    3 OPT-UNUSED-2   (A01)
+0380    3 OPT-LINE-NUM   (A01)
+0390    3 OPT-UNUSED-3   (L)
+0400    3 OPT-REDEF-DIR  (L)
+0410    3 OPT-UNUSED-4   (A01)
+0420    3 OPT-AMOUNT     (I02)
+0430    3 OPT-LINESIZE   (I02)
+0440  2 INPUT-OUTPUTS
+0450    3 INT-HANDLE     (I04)
+0460    3 NEXT-SEQ       (I04)
+0470    3 NEXT-NUM       (I02)
+0480  2 OUTPUTS
+0490    3 RETURNED       (I02)
+0500    3 SRC-NUM        (I02/1:nn)
+0510    3 SRC-TEXT       (A01/1:nn,1:mm)
+0520    3 REDEFINE SRC-TEXT
+0530      4 SRC-GROUP    (1:nn)
+0540        5 SRC-LINE   (A79)
+0550        5 REDEFINE SRC-LINE
+0560          6 #TYP     (A01)
+0570          6 F1       (A01)
+0580          6 #LEV     (A01)
+0590          6 F2       (A01)
+0600          6 #DB      (A02)
+0610          6 F3       (A01)
+0620          6 #NAME    (A32)
+0630          6 F4       (A02)
+0640          6 #FORMAT  (A01)
+0650          6 F5       (A01)
+0660          6 #LENGTH  (A04)
+0670          6 F6       (A02)
+0680          6 #SPE     (A01)
+0690          6 F7       (A01)
+0700          6 #DES     (A01)
+0710          6 F8       (A01)
+0720          6 #REMARK  (A24)
+0730          6 F9       (A01)
+0740    3 REDEFINE SRC-TEXT           /* Header information - Mainframe
+0750      4 HD-DBID          (N05)
+0760      4 HD-FNR           (N05)
+0770      4 HD-DEFSEQ        (A02)
+0780      4 HD-VSAM-SUBTYPE  (A01)
+0790      4 HD-VSAM-NAME     (A08)
+0800    3 REDEFINE SRC-TEXT           /* Directory - UNIX / PC platforms
+0810      4 DIR-OBJNAME      (A32)    /* Object Name
+0820      4 DIR-LIBRARY      (A08)    /* Library ID
+0830      4 DIR-OBJTYPE      (A02)    /* Object Type
+0840      4 DIR-OBJKIND      (A01)    /* Source or Module
+0850      4 DIR-DBID         (A05)    /* DBID of System File
+0860      4 DIR-FNR          (A05)    /* FNR of System File
+0870      4 DIR-DATN         (A08)    /* Date in Format (YYYYMMDD)
+0880      4 DIR-TIMN         (A07)    /* Time in Format (HHIISST)
+0890      4 DIR-USERID       (A08)    /* User ID
+0900      4 DIR-PROGMODE     (A01)    /* Programming Mode
+0910      4 DIR-SRCSIZE      (A10)    /* Source Area Size
+0920      4 DIR-GPSIZE       (A10)    /* Size of Module
+0930      4 DIR-UNIQUE-ID    (A32)    /* Unique ID
+0940      4 DIR-DDM-DBID     (A05)    /* DBID the DDM is cataloged with
+0950      4 DIR-DDM-FNR      (A05)    /* FNR the DDM is cataloged with
+0960    /* End of directory attributes
+0970    3 SRC-SEQ        (I04/1:nn)
+0980    3 SRC-LONG       (A01/1:nn)
+0990.
+10001 USR1058N
+1010  2 VERSION          (I01)     INIT <4>
+1020  2 V0-WORK-AREA     (B125)    /* Work area; do not modify
+1030  2 V0-WORK-AREA1    (B125)    /* Work area; do not modify
+1040  2 V1-OPT-FORMAT    (A01)     /* Mainframe or UNIX/PC format
+1050  2 V2-DBID          (N05)     /* FDIC DBID
+1060  2 V2-FNR           (N05)     /* FDIC FNR
+1070  2 V2-PASSWORD      (A08)     /* FDIC PASSWORD
+1080  2 V2-CIPHERCODE    (N08)     /* FDIC CIPHERCODE
+1090  2 V3-WORK-AREA2    (N03)     /* Work area; do not modify
+1100  2 V4-WORK-AREA3    (A01)     /* MF only
+1110  2 V4-WORK-AREA4    (A256)    /* MF only
+1120  2 V4-ASK-CCHARS    (A01)     /* MF only
+1130  2 V5-FSEC-DBID     (N05)     /* Fsec-dbid
+1140  2 V5-FSEC-FNR      (N05)     /* Fsec-fnr
+1150  2 V5-FSEC-PSW      (A08)     /* Fsec password
+1160  2 V5-FSEC-CIP      (N08)     /* Fsec ciphercode
+11701 REDEFINE USR1058N
+1180  2 EXTENDED-PARMS
+1190    3 EXTENDED-DATA  (A01/1:565)
+1200.
+1210local using USR-MSG   /* Data for message exchange
+1220local using USR-FLD   /* Description of the field in error
+1230.
+1240.
+1250Interface Call
+1260--------------
+1270Use the interface with the CALLNAT statement:
+1280.
+1290CALLNAT 'USR1058N' USR1058L  USR1058N.EXTENDED-PARMS
+1300                   USR-MSG   USR-FLD
+1310.
+1320.
+1330Using the Application Programming Interface:
+1340--------------------------------------------
+1350Copy the subprogram USR1058N to the library SYSTEM or the steplib
+1360library respectively, or to the required library.
+1370.
+1380.
+1390In/Output .. LIBRARY (A08)
+1400                    Library where the object is located. If
+1410                    LIBRARY is blank, the current library is used.
+1420                    This applies not to mainframe platforms.
+1430.
+1440Input ...... OBJECT-NAME (A32)
+1450                    Name of the object.
+1460.
+1470In/Output .. OBJECT-TYPE (A02)
+1480                    Type of the DDM.
+1490                    If OBJECT-TYPE is filled, the object must be
+1500                    of the specified type. This will be checked
+1510                    during the open call.
+1520                    The OBJECT-TYPE will be returned after the
+1530                    open call (Output format 'C' only)
+1540                    For VSAM DDMs the OBJECT-TYPE must not be reset.
+1550.
+1560Input ...... OPT-ACCESS (A01)
+1570                    Access type. An open call starts the processing
+1580                    and returns the directory data. The next calls
+1590                    read the object until its end. The close call
+1600                    is done automatically by the subprogram.
+1610                    Possible values are:
+1620                    'O' - Open processing
+1630                    'R' - Read source lines
+1640                    'C' - Close processing; only necessary in
+1650                          a file system environment to force the end
+1660                          of processing.
+1670.
+1680Input ...... OPT-LINE-NUM (A01)
+1690                    Option if line numbers are to be returned.
+1700                    This applies not to mainframe platforms.
+1710                    Possible values are:
+1720                    'Y' - Return line numbers
+1730                    'N' - Do not return line numbers
+1740.
+1750Input ...... OPT-REDEF-DIR (L)
+1760                    Option if the directory should be redefined
+1770                    and interpreted in a UNIX/PC environment.
+1780                    See USR1058P for the layout of the
+1790                    redefinition.
+1800                    DDMs do not have a directory on mainframe
+1810                    platforms. Therefore the corresponding header
+1820                    information of the DDM will be displayed always.
+1830                    Possible values are:
+1840                    FALSE - Do not interpret directory data
+1850                    TRUE  - Interpret directory data
+1860.
+1870Input ...... OPT-AMOUNT (I02)
+1880                    Amount of lines requested.
+1890                    The maximum value is 255.
+1900.
+1910Input ...... OPT-LINESIZE (I02)
+1920                    Length of each line. The value must be less or
+1930                    equal 80 in a data base environment and up to
+1940                    250 in a file system environment.
+1950.
+1960In/Output .. INT-HANDLE (I04)
+1970                    Do not change. Passed out by the open call to
+1980                    identify the caller during subsequent calls.
+1990.
+2000In/Output .. NEXT-SEQ (I04), NEXT-NUM (I02)
+2010                    Unused.
+2020.
+2030Output ..... RETURNED (I02)
+2040                    Number of filled occurrences.
+2050.
+2060Output ..... SRC-NUM (I02/1:nn), SRC-TEXT (A01/1:nn,1:mm),
+2070             SRC-SEQ (I04/1:nn), SRC-LONG (A01/1:nn)
+2080                    Line number (SRC-NUM), text of the source
+2090                    (SRC-TEXT) sequence number (SRC-SEQ) where the
+2100                    part of the source has been found (only if the
+2110                    module is stored in a data base) and a long
+2120                    line indicator (SRC-LONG).
+2130                    SRC-NUM is always empty on mainframe platforms.
+2140                    SRC-SEQ is always empty on mainframe plarfotms.
+2150                    SRC-LONG (nn) = '-' means that the next line
+2160                    has to be appended.
+2170                    nn, mm: The upper index of the arrays is
+2180                    variable.
+2190                    nn corresponds to OPT-AMOUNT; mm corresponds
+2200                    to OPT-LINESIZE.
+2210                    OPT-ACCESS = 'O' returns the directory or the
+2220                    header information of the DDM. This is the
+2230                    DBID/FNR the DDM is cataloged with and the
+2240                    default sequence.
+2250                    For VSAM DDMs the subtype will be returned and
+2260                    where applicable the file/link/catalog name.
+2270                    The header lines for the DDM listing are
+2280                    returned too.
+2290                    ATTENTION: The size of the output buffer
+2300                    SRC-TEXT must be at least 300 characters.
+2310.
+2320In/Output .. USR1058N.VERSION (I01)
+2330                    Version number of the subprogram.
+2340                    The actual version number is 1. Parameter
+2350                    V1-OPT-FORMAT has been added.
+2360                    The actual version number is 2. Parameter
+2370                    DBID, FNR, PASSWORD, CIPHERCODE have been added.
+2380                    The actual version number is 3. Parameter
+2390                    WORK-AREA2 has been added (do not change).
+2400.
+2410In/Output .. V0-WORK-AREA     (B125)    /* Work area; do not modify
+2420             V0-WORK-AREA1    (B125)    /* Work area; do not modify
+2430.
+2440Input ...... V1-OPT-FORMAT (A01)
+2450                    Option to use a platform independent output
+2460                    format. This option is applicable on
+2470                    mainframe platforms only; on other platforms
+2480                    the default format 'C' is always used.
+2490                    Possible values are:
+2500                    'C' - The source format used on UNIX and PC
+2510                          platforms. The output is identical on
+2520                          all platforms; this option is recommended.
+2530                    'M' - On mainframe system you can choose an
+2540                          output format which is similar to the
+2550                          format used by the LIST VIEW command.
+2560.
+2570Input ...... V2-DBID (N05), V2-FNR (N05),
+2580             V2-PASSWORD (A08), V2-CIPHERCODE (N08)
+2590                    Description of the data base environment. If
+2600                    no values are entered, the current FDIC
+2610                    definition is used.
+2620.
+2630In/Output .. V3-WORK-AREA2 (N03)    /* Work area; do not modify
+2640.
+2650             V4-WORK-AREA3 (A01)    /* Work area; do not modify
+2660                    MF only
+2670.
+2680Input ...... V4-ASK-CCHARS (A01)
+2690                    MF only
+2700.
+2710Input ...... V5-FSEC-DBID (N5)
+2720                    DBID of FSEC system file.
+2730.
+2740Input ...... V5-FSEC-FNR  (N4)
+2750                    FNR of FSEC system file.
+2760.
+2770Input ...... V5-FSEC-PASSWORD (A08)
+2780                    Password for FSEC system file.
+2790.
+2800Input ...... V5-FSEC-CIPHERCODE (N08)
+2810                    Cipher code for FSEC system file.
+2820.
+2830Output ..... USR-MSG
+2840                    Data used for message exchange.
+2850                    For further information see the PDA USR-MSG.
+2860                    The following message numbers are possible:
+2870                    =  0000  Ok
+2880                    =  0100  End of data reached
+2890                    =  1001  Parameter error
+2900                    =  1002  Parameter/internal error
+2910                    =  1003  Parameter value is too small.
+2920                    =  1004  Parameter value is too large.
+2930                    =  1005  Invalid range specified
+2940                    =  1006  Object does not exist
+2950                    = -4125  The requested file description is not
+2960                             available.
+2970                    = -4261  View cannot be read/listed; FSIZE is
+2980                             too small.
+2990                             NSC check
+3000                    = -0806 Library :1: not found.
+3010                    = -0807 Logon to library :1: is not permitted.
+3020                    = -0839 The library SYSSEC :1: has not been found.
+3030                    = -4125 The requested file descr is not available.
+3040                    = -4891 Invalid DBID/FNR specified for a library.
+3050.
+3060Output ..... USR-FLD
+3070                    Description of the field in error.
+3080                    For further information see the PDA USR-FLD.
+3090.
+3100.
+3110*****  End of description  *****

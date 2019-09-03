@@ -1,0 +1,402 @@
+0010*
+0020* Program .. V4-DYNA
+0030* Library .. SYSEXV
+0040* Version .. 4.1
+0050*
+0060* Functionality: Some examples with new dynamic variables
+0070************************************************************************
+0080*
+0090*
+0100DEFINE DATA LOCAL
+01101 #ALPHA        (A) DYNAMIC
+01201 #A-1          (A) DYNAMIC
+01301 #A-2          (A) DYNAMIC
+01401 #A-3          (A) DYNAMIC
+01501 #A-4          (A) DYNAMIC
+01601 #LEN          (I4)
+01701 #NUM1         (I4)
+01801 #NUM2         (I4)
+01901 #NUM3         (I4)
+02001 #NUM4         (I4)
+02101 #NUM5         (I4)
+02201 #NUM6         (I4)
+02301 #RESULT       (A30)
+02401 #RESULT-A     (A50)
+02501 #RESULT-B     (A50)
+02601 #RESULT1      (A30)
+02701 #RESULT2      (A30)
+02801 #RESULT3      (A30)
+02901 #RESULT4      (A30)
+03001 #TEXT         (A20)
+0310END-DEFINE
+0320*
+0330FORMAT KD=ON
+0340SET KEY PF3  NAMED 'Exit'
+0350  PF12 NAMED 'Canc'
+0360*
+0370*
+0380INPUT (IP=OFF)
+0390  01T *TIMX  (AD=OTD  )
+0400  21T '***** NATURAL 4.1 ENHANCEMENTS *****'
+0410  70T *DATX  (AD=OTD DF=L )
+0420  /
+0430  01T 'User'
+0440  06T *USER  (AD=OILT )
+0450  26T '- New Data Type DYNAMIC -'(I)
+0460  64T 'Program'
+0470  72T *PROGRAM (AD=OI)
+0480  //
+0490  02T 'Data definition for new dynamic variables' (I)
+0500  //
+0510  02T 'DEFINE DATA LOCAL'
+0520  /
+0530  02T '  1 #Alpha ' '(A) DYNAMIC' (I)
+0540  '    /* new dynamic alphanumeric variable'
+0550  /
+0560  02T '  1 #Binary' '(B) DYNAMIC' (I)
+0570  '    /* new dynamic binary variable'
+0580  /
+0590  02T 'END-DEFINE '
+0600  ///
+0610  02T 'For dynamic variables the data length can be explicitly ' -
+0620  'defined with'
+0630  //
+0640  04T 'MOVE ALL '' '' TO #Alpha'  ' UNTIL 20'
+0650  //
+0660  02T 'and will be read via the new system variable *LENGTH'
+0670  //
+0680  04T 'MOVE' '*LENGTH(#Alpha)' (I) 'TO #Num'
+0690  //
+0700*
+0710*
+0720IF *PF-KEY = 'PF3'
+0730  ESCAPE ROUTINE
+0740END-IF
+0750IF (*PF-KEY = 'PF12' OR= 'CLR')
+0760  CALLNAT 'UTILSTOP'
+0770END-IF
+0780*
+0790*
+0800* -------------------------------------------------------------------
+0810*
+0820MOVE '  Nice to see you ' TO #ALPHA
+0830MOVE #ALPHA TO #RESULT
+0840#NUM1 := *LENGTH(#ALPHA)
+0850*
+0860MOVE '  Nice to see you ' TO #TEXT
+0870MOVE #TEXT  TO #ALPHA
+0880MOVE #ALPHA TO #RESULT1
+0890#NUM2 := *LENGTH(#ALPHA)
+0900*
+0910COMPRESS #TEXT INTO #ALPHA
+0920MOVE #ALPHA TO #RESULT2
+0930#NUM3 := *LENGTH(#ALPHA)
+0940*
+0950*
+0960INPUT (IP=OFF)
+0970  01T *TIMX  (AD=OTD )
+0980  21T '***** NATURAL 4.1 ENHANCEMENTS *****'
+0990  70T *DATX  (AD=OTD DF=L )
+1000  /
+1010  01T 'User'
+1020  06T *USER  (AD=OILT )
+1030  26T '- New Data Type DYNAMIC -'(I)
+1040  64T 'Program'
+1050  72T *PROGRAM (AD=OI)
+1060  //
+1070  02T 'Direct assignments allocate the data length automatically' (I)
+1080  //
+1090  02T 'MOVE ''  Nice to see you '' TO #Alpha'
+1100  //
+1110  02T '#Alpha:'     #RESULT (AD=OI)
+1120  '    /* with leading and trailing blanks'
+1130  /
+1140  02T '*LENGTH(#Alpha):'   #NUM1 (AD=OI)
+1150  //
+1160  02T 'MOVE ''  Nice to see you '' TO ' -
+1170  '#Text         /* defined as (A20)'
+1180  //
+1190  02T 'MOVE #Text TO #Alpha                     ' -
+1200  '  /* whole variable length   '
+1210  /
+1220  02T '#Alpha:'  #RESULT1 (AD=OI)
+1230  /
+1240  02T '*LENGTH(#Alpha):'  #NUM2 (AD=OI)
+1250  //
+1260  02T 'COMPRESS #Text INTO #Alpha              ' -
+1270  '   /* leading blanks only'
+1280  /
+1290  02T '#Alpha:'  #RESULT2 (AD=OI)
+1300  /
+1310  02T '*LENGTH(#Alpha):'  #NUM3 (AD=OI)
+1320  //
+1330  02T 'Note: Take a look at the different results.'(I)
+1340*
+1350*
+1360*
+1370IF *PF-KEY = 'PF3'
+1380  ESCAPE ROUTINE
+1390END-IF
+1400IF (*PF-KEY = 'PF12' OR= 'CLR')
+1410  CALLNAT 'UTILSTOP'
+1420END-IF
+1430*
+1440*
+1450* -------------------------------------------------------------------
+1460*
+1470MOVE ALL ' ' TO #ALPHA UNTIL 20
+1480MOVE #ALPHA TO #RESULT1
+1490#NUM1 := *LENGTH(#ALPHA)
+1500*
+1510MOVE ALL 'BLUE' TO #ALPHA
+1520MOVE #ALPHA TO #RESULT2
+1530#NUM2 := *LENGTH(#ALPHA)
+1540*
+1550MOVE ALL 'ABC' TO #ALPHA UNTIL 10
+1560MOVE #ALPHA TO #RESULT3
+1570#NUM3 := *LENGTH(#ALPHA)
+1580*
+1590REDUCE DYNAMIC #ALPHA TO 5
+1600MOVE #ALPHA TO #RESULT4
+1610#NUM4 := *LENGTH(#ALPHA)
+1620*
+1630RESET #ALPHA
+1640MOVE #ALPHA TO #RESULT
+1650#NUM5 := *LENGTH(#ALPHA)
+1660*
+1670*
+1680INPUT (IP=OFF)
+1690  01T *TIMX  (AD=OTD )
+1700  21T '***** NATURAL 4.1 ENHANCEMENTS *****'
+1710  70T *DATX  (AD=OTD DF=L )
+1720  /
+1730  01T 'User'
+1740  06T *USER  (AD=OILT )
+1750  26T '- New Data Type DYNAMIC -'(I)
+1760  64T 'Program'
+1770  72T *PROGRAM (AD=OI)
+1780  //
+1790  02T 'Results of MOVE ALL statement'(I)
+1800  //
+1810  02T 'MOVE ALL '' '' TO #Alpha UNTIL 20        Result:'
+1820  #RESULT1 (AD=OI)
+1830  /
+1840  41T '*LENGTH(#Alpha):' #NUM1 (AD=OI)
+1850  //
+1860  02T 'MOVE ALL ''BLUE'' TO #Alpha              Result:'
+1870  #RESULT2 (AD=OI)
+1880  /
+1890  41T '*LENGTH(#Alpha):' #NUM2 (AD=OI)
+1900  //
+1910  02T 'MOVE ALL ''ABC'' TO #Alpha UNTIL 10      Result:'
+1920  #RESULT3 (AD=OI)
+1930  /
+1940  41T '*LENGTH(#Alpha):' #NUM3 (AD=OI)
+1950  //
+1960  02T 'Reduce contents and/or length of a dynamic variable' (I)
+1970  //
+1980  02T 'REDUCE SIZE OF DYNAMIC'(I) '#Alpha TO 5     Result:'
+1990  #RESULT4 (AD=OI)
+2000  /
+2010  41T '*LENGTH(#Alpha):'   #NUM4 (AD=OI)
+2020  //
+2030  02T 'RESET #Alpha                           Result:'
+2040  #RESULT (AD=OI)
+2050  /
+2060  41T '*LENGTH(#Alpha):' #NUM5 (AD=OI)
+2070*
+2080*
+2090IF *PF-KEY = 'PF3'
+2100  ESCAPE ROUTINE
+2110END-IF
+2120IF (*PF-KEY = 'PF12' OR= 'CLR')
+2130  CALLNAT 'UTILSTOP'
+2140END-IF
+2150*
+2160*
+2170* -------------------------------------------------------------------
+2180*
+2190COMPRESS 'Mary' 'Ann' 'in' 'the' 'sky' 'with' 'diamonds' INTO #ALPHA
+2200*
+2210MOVE #ALPHA TO #RESULT-A
+2220#NUM1 := *LENGTH(#ALPHA)
+2230*
+2240EXAMINE #ALPHA FOR 'Mary Ann' REPLACE 'Lucy'
+2250*
+2260MOVE #ALPHA TO #RESULT-B
+2270#NUM2 := *LENGTH(#ALPHA)
+2280*
+2290SEPARATE #ALPHA INTO #A-1 #A-2 #A-3 #A-4 IGNORE
+2300*
+2310MOVE #A-1 TO #RESULT1
+2320MOVE #A-2 TO #RESULT2
+2330MOVE #A-3 TO #RESULT3
+2340MOVE #A-4 TO #RESULT4
+2350MOVE *LENGTH(#A-1) TO #NUM3
+2360MOVE *LENGTH(#A-2) TO #NUM4
+2370MOVE *LENGTH(#A-3) TO #NUM5
+2380MOVE *LENGTH(#A-4) TO #NUM6
+2390*
+2400*
+2410INPUT (IP=OFF)
+2420  01T *TIMX  (AD=OTD )
+2430  21T '***** NATURAL 4.1 ENHANCEMENTS *****'
+2440  70T *DATX  (AD=OTD DF=L )
+2450  /
+2460  01T 'User'
+2470  06T *USER  (AD=OILT )
+2480  26T '- New Data Type DYNAMIC -'(I)
+2490  64T 'Program'
+2500  72T *PROGRAM (AD=OI)
+2510  //
+2520  02T 'Dynamic variables in COMPRESS, EXAMINE and ' -
+2530  'SEPARATE statement'(I)
+2540  //
+2550  02T 'COMPRESS ''Mary'' ''Ann'' ''in'' ''the'' ''sky''' -
+2560  ' ''with'' ''diamonds'' INTO #Alpha'
+2570  //
+2580  02T '#Alpha:         ' #RESULT-A (AD=OI)
+2590  /
+2600  02T '*LENGTH(#Alpha):' #NUM1 (AD=OI)
+2610  //
+2620  02T 'EXAMINE #Alpha FOR ''Mary Ann'' REPLACE ''Lucy'''
+2630  //
+2640  02T '#Alpha:         ' #RESULT-B (AD=OI)
+2650  /
+2660  02T '*LENGTH(#Alpha):' #NUM2 (AD=OI)
+2670  //
+2680  02T 'SEPARATE #Alpha INTO #A-1 #A-2 #A-3 #A-4 IGNORE'
+2690  //
+2700  02T '#A-1:' #RESULT1 (AD=OI  AL=10)
+2710  'with *LENGTH(#A-1):' #NUM3 (AD=OI)
+2720  /
+2730  02T '#A-2:' #RESULT2 (AD=OI  AL=10)
+2740  'with *LENGTH(#A-2):' #NUM4 (AD=OI)
+2750  /
+2760  02T '#A-3:' #RESULT3 (AD=OI  AL=10)
+2770  'with *LENGTH(#A-3):' #NUM5 (AD=OI)
+2780  /
+2790  02T '#A-4:' #RESULT4 (AD=OI AL=10)
+2800  'with *LENGTH(#A-4):' #NUM6 (AD=OI)
+2810*
+2820*
+2830IF *PF-KEY = 'PF3'
+2840  ESCAPE ROUTINE
+2850END-IF
+2860IF (*PF-KEY = 'PF12' OR= 'CLR')
+2870  CALLNAT 'UTILSTOP'
+2880END-IF
+2890*
+2900*
+2910* -------------------------------------------------------------------
+2920*
+2930#ALPHA := 'Have'
+2940MOVE #ALPHA TO #RESULT1
+2950#NUM1 := *LENGTH(#ALPHA)
+2960*
+2970#LEN := *LENGTH(#ALPHA) + 1
+2980*
+2990MOVE ' a nice day.' TO SUBSTR(#ALPHA,#LEN,12)
+3000MOVE #ALPHA TO #RESULT2
+3010#NUM2 := *LENGTH(#ALPHA)
+3020*
+3030*
+3040INPUT (IP=OFF)
+3050  01T *TIMX  (AD=OTD )
+3060  21T '***** NATURAL 4.1 ENHANCEMENTS *****'
+3070  70T *DATX  (AD=OTD DF=L )
+3080  /
+3090  01T 'User'
+3100  06T *USER  (AD=OILT )
+3110  26T '- New Data Type DYNAMIC -'(I)
+3120  64T 'Program'
+3130  72T *PROGRAM (AD=OI)
+3140  //
+3150  02T 'Expand contents of dynamic variable with' -
+3160  ' MOVE SUBSTR statement'(I)
+3170  //
+3180  02T '#Alpha := ''Have'' '
+3190  //
+3200  02T '#Alpha:'  #RESULT1 (AD=OI)
+3210  /
+3220  02T '*LENGTH(#Alpha):'  #NUM1 (AD=OI)
+3230  ///
+3240  02T '#Len := *LENGTH(#Alpha) + 1        ' -
+3250  '   /* only possible at this position'
+3260  //
+3270  02T 'MOVE '' a nice day.'' TO SUBSTR(#Alpha,#Len,12)'
+3280  ///
+3290  02T '#Alpha:'  #RESULT2 (AD=OI)
+3300  /
+3310  02T '*LENGTH(#Alpha):' #NUM2 (AD=OI)
+3320  //
+3330*
+3340*
+3350IF *PF-KEY = 'PF3'
+3360  ESCAPE ROUTINE
+3370END-IF
+3380IF (*PF-KEY = 'PF12' OR= 'CLR')
+3390  CALLNAT 'UTILSTOP'
+3400END-IF
+3410*
+3420*
+3430* -------------------------------------------------------------------
+3440*
+3450#ALPHA := 'Start'
+3460MOVE #ALPHA TO #RESULT1
+3470#NUM1 := *LENGTH(#ALPHA)
+3480*
+3490EXPAND SIZE OF DYNAMIC #ALPHA TO 12000
+3500*
+3510FOR #NUM3 1 TO 500
+3520  COMPRESS #ALPHA 'very long text member' INTO #ALPHA
+3530END-FOR
+3540#NUM2 := *LENGTH(#ALPHA)
+3550*
+3560*
+3570INPUT (IP=OFF)
+3580  01T *TIMX  (AD=OTD )
+3590  21T '***** NATURAL 4.1 ENHANCEMENTS *****'
+3600  70T *DATX  (AD=OTD DF=L )
+3610  /
+3620  01T 'User'
+3630  06T *USER  (AD=OILT )
+3640  26T '- New Data Type DYNAMIC -'
+3650  64T 'Program'
+3660  72T *PROGRAM (AD=OI)
+3670  //
+3680  02T 'Performance hint:'(I)
+3690  //
+3700  02T 'If the content of a dynamic variable is to be ' -
+3710  'increased in several '
+3720  /
+3730  02T 'large amounts, it is recommended that the allocated ' -
+3740  'memory of the '
+3750  /
+3760  02T 'dynamic variable is expanded before the operation.'
+3770  //
+3780  02T '#Alpha:'  #RESULT1 (AD=OI)
+3790  /
+3800  02T '*LENGTH(#Alpha):'  #NUM1 (AD=OI )
+3810  //
+3820  02T 'EXPAND SIZE OF DYNAMIC'(I)
+3830  '#Alpha TO 12000     /* allocating memory space'
+3840  //
+3850  02T 'FOR #Index 1 TO 500'
+3860  /
+3870  02T '   COMPRESS #Alpha ''very long text member'' INTO #Alpha '
+3880  /
+3890  02T 'END-LOOP'
+3900  //
+3910  02T '*LENGTH(#Alpha):'  #NUM2 (AD=OI)
+3920IF *PF-KEY = 'PF3'
+3930  ESCAPE ROUTINE
+3940END-IF
+3950IF (*PF-KEY = 'PF12' OR= 'CLR')
+3960  CALLNAT 'UTILSTOP'
+3970END-IF
+3980*
+3990*
+4000END
+4010
+4020

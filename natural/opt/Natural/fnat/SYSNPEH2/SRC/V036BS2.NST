@@ -1,0 +1,18 @@
+0010&H View SPOOL-FILES
+0020&L
+0030&L
+0040#Zweck@    : Anzeigen von Attributen eines Druckauftrages
+0050&L
+0060&L
+0070#System@   : z/OS, BS2000/OSD.
+0080&L
+0090&L
+0100#Anwendung@: Die Informationen, die dieser View liefert,
+0110             entsprechen denen, die das Kommando '/STA <tsn>'
+0120             bzw. '/SHOW-JOB-STATUS JOB-ID=TSN(<tsn>)' fuer
+0130             einen Druckauftrag ausgibt.
+0140&L
+0150&L
+0160#Anmerkung@:
+0170
+0180

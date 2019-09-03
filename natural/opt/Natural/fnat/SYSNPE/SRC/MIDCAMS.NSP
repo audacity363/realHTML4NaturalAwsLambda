@@ -1,0 +1,27 @@
+0010* Program   MIDCAMS
+0020* View      IDCAMS
+0030*
+0040* Function  Execute IDCAMS Utility
+0050*
+0060* ----------------------------------------------------------------------
+0070*
+0080DEFINE DATA
+0090   GLOBAL USING TUTO
+0100   LOCAL USING IDCAMS-L
+0110END-DEFINE
+0120*
+0130INPUT (AD=MI'_') // ##TITLE (AD=OI IP=OFF)
+0140                 // 'Command:'
+0150                  / ' ' #CMD (AL=78)
+0160*
+0170FIND IDCAMS WITH COMMAND = IDCAMS.COMMAND
+0180            AND NODE = ##NODE
+0190*
+0200   IF ERROR-CODE > 0
+0210      REINPUT ERROR-TEXT
+0220   END-IF
+0230*
+0240   WRITE NOTITLE #LINE
+0250*
+0260END-FIND
+0270END

@@ -1,0 +1,13 @@
+0010&H View FILE-MAINTENANCE
+0020&L
+0030&L
+0040#Purpose@: Compress a PDS or BS2000 file.
+0050&L
+0060#OpSys@  : z/OS, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : This view can be used to release unused space.
+0100           The functionality provided by BS2000 command 'VERIFY'
+0110           is also available with this view.
+0120&L
+0130#Notes@  :

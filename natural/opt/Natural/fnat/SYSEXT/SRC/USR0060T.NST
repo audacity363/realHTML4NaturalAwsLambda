@@ -1,0 +1,49 @@
+0010Copy LFILE definition from FNAT to FUSER
+0020.
+0030Documentation ......... USR0060T    /*  Text object
+0040Interface ............. USR0060N    /*  Cataloged subprogram
+0050Example Program ....... USR0060P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. SYSTEM FILES
+0100.
+0110Keywords .............. FNAT, FNR, FUSER, LFILE
+0120.
+0130Function .............. Copy current definition of the Natural
+0140                        Logical System File 'FNAT' to the definition
+0150                        of the Logical System File 'FUSER', so that
+0160                        all subsequent Natural objects will be read
+0170                        from 'FNAT' instead of 'FUSER'.
+0180                        Note, that the "Restore" function sets the
+0190                        FUSER to the initial value (startup value).
+0200                        If the FUSER had been changed since Natural
+0210                        startup, this will not be considered.
+0220.
+0230.
+0240Parameters
+0250----------
+0260Define the following parameters with the DEFINE DATA statement:
+0270.
+0280 01 FUNCTION (A01)  /*   E=Enable  (copy LFILE FNAT to FUSER)
+0290                    /*  (R=Restore (restore initial FUSER definition)
+0300                    /*   ATTENTION: "R" is only available on mainframe)
+0310 01 ERR-MSG  (A72)  /*  Is <blank>, if no error did occur.
+0320.
+0330.
+0340Interface Call
+0350--------------
+0360Use the interface with the CALLNAT statement:
+0370.
+0380CALLNAT 'USR0060N' FUNCTION ERR-MSG
+0390.
+0400.
+0410Using the Application Programming Interface:
+0420--------------------------------------------
+0430Copy the subprogram USR0060N to the library SYSTEM or the steplib
+0440library respectively, or to the required library.
+0450.
+0460.
+0470ERR-MSG is <blank> when there was no error during execution of USR0060N.
+0480.
+0490***** End of Description *****

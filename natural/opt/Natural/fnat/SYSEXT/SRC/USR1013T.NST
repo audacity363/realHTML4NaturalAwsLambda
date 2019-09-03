@@ -1,0 +1,46 @@
+0010Display current character set
+0020.
+0030Documentation ......... USR1013T    /*  Text object
+0040Interface ............. USR1013N    /*  Source subprogram
+0050Interface ............. USR1013P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. CODE PAGE SUPPORT
+0100.
+0110Keywords .............. EBCDIC, ASCII
+0120.
+0130Function .............. Display current character set on video
+0140                        terminal.
+0150.
+0160.
+0170Parameters
+0180----------
+0190
+0200   none
+0210.
+0220.
+0230Interface Call
+0240--------------
+0250Use the interface with the CALLNAT or FETCH statement:
+0260.
+0270CALLNAT 'USR1013N'
+0280.
+0290or
+0300.
+0310FETCH RETURN 'USR1013P'
+0320.
+0330.
+0340Using the Application Programming Interface:
+0350--------------------------------------------
+0360Copy the subprogram USR1013N and/or program USR1013P to the library
+0370SYSTEM or the steplib library respectively, or to the required library.
+0380.
+0390.
+0400There are two interfaces. Both of them do the same,
+0410use either USR1013P or USR1013N.
+0420USR1013N is exactly the same as USR1013P, except of the different
+0430object type, which is, subprogram.
+0440.
+0450.
+0460***** End of Description *****

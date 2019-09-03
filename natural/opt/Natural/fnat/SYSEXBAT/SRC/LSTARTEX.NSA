@@ -1,0 +1,7 @@
+0010**DS          0         1PROPERTIES
+0020**DKV         0   L     2LOGMODE
+0030**DKV         0   L     2EDITMODE
+0040**DKV         0   L     2BMCONTROL
+0050**DKV         0   L     2USETEMPDIR
+0060**DFVB        0   A     2XML
+0070**DE                     DY

@@ -1,0 +1,123 @@
+0010Get short name of subroutine
+0020.
+0030Documentation ......... USR4209T    /*  Text object
+0040Interface ............. USR4209N    /*  Cataloged subprogram
+0050Example Program ....... USR4209P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL OBJECTS
+0100.
+0110Keywords .............. LONG NAME, NAME, SUBROUTINE
+0120.
+0130Function .............. This interface returns the short name of a
+0140                        given long name of a cataloged subroutine or
+0150                        class.
+0160                        On Open Systems, the short name of a given
+0170                        long function name is also returned.
+0180.
+0190.
+0200Parameters
+0210----------
+0220Define the following parameters with the DEFINE DATA statement:
+0230.
+0240Input ...... LIBRARY-NAME     (A8)
+0250                    Library of OBJECT-NAME
+0260Input ...... OBJECT-NAME      (A32)
+0270                    Long name of the cataloged object
+0280Input ...... LIBRARY-DBID     (N5)
+0290                    DBID for the library
+0300Input ...... LIBRARY-FNR      (N5)
+0310                    FNR for the library
+0320Input ...... LIBRARY-PASSWORD (A8)
+0330                    Password for the library
+0340Input ...... LIBRARY-CIPHER   (N8)
+0350                    Cipher code for the library
+0360Output ..... OUT-NUMBER-RETURNED             (I4)
+0370                    1 = Short name for OBJECT-NAME found
+0380                    0 = OBJECT-NAME not found
+0390             OUT-NAME                        (A8)
+0400                    Short name of OBJECT-NAME
+0410             OUT-S-C                         (A3)
+0420                    Object kind:
+0430                    C   = Object exists as cataloged object only
+0440                    S/C = Object exists as source and cataloged object
+0450             OUT-SA-TYPE                     (A11)
+0460                    Text type of the source object
+0470             OUT-SA-TYPE-SHORT               (A1)
+0480                    Type character of the source object
+0490             OUT-SA-MODE                     (A1)
+0500                    Programming mode of the source object:
+0510                    R = Reporting mode
+0520                    S = Structured mode
+0530             OUT-SA-VERSION                  (A6)
+0540                    Natural version of the source object
+0550             OUT-SA-USER-ID                  (A8)
+0560                    User ID of the source object
+0570             OUT-SA-DATE                     (A10)
+0580                    Date of the source object
+0590             OUT-SA-TIME                     (A8)
+0600                    Time of the source object
+0610             OUT-SA-SIZE                     (A6)
+0620                    Size of the source object
+0630             OUT-CA-TYPE                     (A11)
+0640                    Text type of the cataloged object
+0650             OUT-CA-TYPE-SHORT               (A1)
+0660                    Type character of the cataloged object
+0670             OUT-CA-MODE                     (A1)
+0680                    Programming mode of the cataloged object:
+0690                    R = Reporting mode
+0700                    S = Structured mode
+0710             OUT-CA-VERSION                  (A6)
+0720                    Natural version of the cataloged object
+0730             OUT-CA-USER-ID                  (A8)
+0740                    User ID of the cataloged object
+0750             OUT-CA-DATE                     (A10)
+0760                    Date of the cataloged object
+0770             OUT-CA-TIME                     (A8)
+0780                    Time of the cataloged object
+0790             OUT-CA-BP-SIZE                  (A6)
+0800                    Size in buffer pool of the cataloged object
+0810             OUT-CA-DAT-SIZE                 (A6)
+0820                    DATSIZE of the cataloged object
+0830             OUT-CODE-PAGE-NAME              (A64)
+0840                    Code page of the source object
+0850Input ...... USR4209N.VERSION (I1)
+0860                    Version number of the subprogram;
+0870                    0 is the version number of the original
+0880                    parameter layout.
+0890Output ..... USR-MSG
+0900                    Data used for message exchange.
+0910                    For further information, see the PDA USR-MSG.
+0920                    The following message numbers are possible:
+0930                    =  0000  OK
+0940                    <  0000  Natural runtime error
+0950                    =  0001  non mainframes only: Could not retrieve
+0960                             directory information
+0970                    =  0999  Function is not implemented (version not
+0980                             supported)
+0990                    =  1000  Object not found
+1000                    others, see variable NAD-MSG.MSG
+1010Output ..... USR-FLD
+1020                    Description of the field in error.
+1030                    For further information, see the PDA USR-FLD.
+1040
+1050.
+1060Interface Call
+1070--------------
+1080Use the interface with the CALLNAT statement:
+1090.
+1100CALLNAT 'USR4209N'
+1110         USR4209L
+1120         USR4209N.EXTENDED-DATA (*)
+1130         NAD-MSG
+1140         NAD-FLD
+1150.
+1160.
+1170Using the Application Programming Interface:
+1180--------------------------------------------
+1190Copy the subprogram USR4209N to the library SYSTEM or the steplib
+1200library respectively, or to the required library.
+1210.
+1220.
+1230*****  End of Description  *****

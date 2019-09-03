@@ -1,0 +1,22 @@
+0010**********************************************************************
+0020*
+0030* FILE   : MY3GLSUB.NSN
+0040* PURPOSE: SAMPLE SUBPROGRAM CALLED BY USER EXIT (MYC3GL)
+0050*
+0060* (c) Copyright 1991-2004 by Software AG
+0070*
+0080**********************************************************************
+0090*
+0100DEFINE DATA PARAMETER
+01101  #FIELD1 (A10)
+01201  #FIELD2 (I4)
+0130END-DEFINE
+0140*
+0150* You may modify the contents of the received fields
+0160*
+0170INPUT (AD=M IP=ON)
+0180      / 'These values are received from 3GL function MYC3GL'
+0190      / 'they may be modified now'
+0200     // #FIELD1
+0210      / #FIELD2 (AD=L)
+0220END

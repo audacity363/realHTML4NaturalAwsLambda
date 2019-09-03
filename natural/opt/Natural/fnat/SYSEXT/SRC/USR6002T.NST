@@ -1,0 +1,76 @@
+0010Get the current values of internal counters
+0020.
+0030Documentation ......... USR6002T    /*  Text object
+0040Interface ............. USR6002N    /*  Cataloged subprogram
+0050Example Program ....... USR6002P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. RUNTIME
+0100.
+0110Keywords .............. COUNTER, GET, LT, MADIO, MAINPR, MAXCL, RUNTIME
+0120.
+0130Function .............. With this routine you can retrieve the current
+0140                        values of several parameters at runtime.
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+02101 MADIO-CUR      (I04) /* number of DBMS calls executed since last I/O;
+0220                       /* MADIO subtracted by MADIO-CUR gives the number
+0230                       /* of DBMS calls until NAT1009 will occur
+02401 MAXCL-CUR      (I04) /* number of programs calls executed since last
+0250                       /* I/O; MAXCL subtracted by MAXCL-CUR gives the
+0260                       /* number of program calls until NAT1029 will
+0270                       /* occur
+02801 LT-CUR         (I04) /* gives the number of database records that can
+0290                       /* be read until NAT1003 will occur
+03001 MAINPR         (I01) /* default output report number for all Natural
+0310                       /* reports; valid values are (0 - 31), default
+0320                       /* is 0
+0330The meaning of the value returned by LT-CUR is:
+0340  0: zero, no limit, there will be no error NAT1003
+0350 <0: negative, when reading the next record you will receive error
+0360     NAT1003
+0370 >0: positve, the number of records you can read before error NAT1003
+0380     is received
+0390The LT-CUR value will be decremented by 1 for each record read. After
+0400the value 1 there will be -1 (missing 0), because 0 means "no limit".
+0410.
+0420The values for MADIO and MAXCL can also be retrieved with USR1068N.
+0430.
+0440For MAINPR a physical printer corresponding to the report number
+0450specified must be defined to Natural as described in the Natural
+0460Configuration Utility documentation.
+0470.
+0480.
+0490Interface Call
+0500--------------
+0510Use the interface with the CALLNAT statement:
+0520.
+0530CALLNAT 'USR6002N'
+0540        MADIO-CUR   /* Optional parameter
+0550        MAXCL-CUR   /* Optional parameter
+0560        LT-CUR      /* Optional parameter
+0570        MAINPR      /* Optional parameter
+0580.
+0590.
+0600Using the Application Programming Interface:
+0610--------------------------------------------
+0620Copy the subprogram USR6002N to the library SYSTEM or the steplib
+0630library respectively, or to the required library.
+0640.
+0650.
+0660The parameters listed above are defined as OPTIONAL parameters in
+0670USR6002N. You may optionally skip some parameters by using the
+0680nX notation.
+0690.
+0700For example:
+0710CALLNAT 'USR6002N' 1X MAXCL-CUR LT-CUR
+0720CALLNAT 'USR6002N' 2X LT-CUR
+0730CALLNAT 'USR6002N' MADIO-CUR 1X LT-CUR
+0740CALLNAT 'USR6002N' 3X MAINPR
+0750.
+0760*****  End of Description  *****

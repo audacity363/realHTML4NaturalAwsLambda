@@ -1,0 +1,128 @@
+0010* ---------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Utilities
+0030*
+0040*        NAT-ENV
+0050*
+0060* DESCRIPTION
+0070*               This Program returnes the environment send via
+0080*               HTTP API
+0090*
+0100* AUTHOR        SAG   28.07.97
+0110*
+0120* Version       8.3
+0130*
+0140* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0150*
+0160* HISTORY
+0170* USER    DATE       REASON
+0180* ------+----------+----------------------------------------------
+0190*       ! --.--.-- !
+0200* ------+----------+----------------------------------------------
+0210DEFINE DATA
+0220* ------------------------------------------- standard PDA for HTTP Api
+0230PARAMETER USING W3PARM
+0240* -------------------------------------------- definitions for HTTP Api
+0250LOCAL  USING W3CONST
+0260LOCAL  USING W3PINFO
+0270LOCAL
+0280* ---------------------------------------- parameter W3LIST-ENVIRONMENT
+02901 V                    (I2)  CONST <25>
+03001 ANAME                (A/1:V) DYNAMIC
+03101 ANAMEVALUE           (A/1:V) DYNAMIC
+03201 ANAMEANZ             (I4)
+03301 ANAMESERVER          (L/1:V)
+03401 ANAMESTART           (I4) INIT <1>
+03501 ANAMEMAX             (I4)
+0360* -------------------------------------------------- parmeter W3READENV
+03701 #LEN                 (I4) INIT <0>
+03801 #MAX                 (I4)
+03901 #VALUE               (A) DYNAMIC
+0400* --------------------------------------------------- output generation
+04101 ISSERVER             (A8)
+0420* --------------------------------------------------- Private variables
+04301 #II                  (I4)
+04401 #COL                 (L)
+0450*
+04601 #HTML                (A) DYNAMIC
+0470END-DEFINE
+0480* ---------------------------------------------------- error handling
+0490ON ERROR
+0500  PERFORM W3ERROR ##W3ERROR
+0510  PERFORM W3END ##RPC
+0520*
+0530  ESCAPE ROUTINE
+0540END-ERROR
+0550* ======================================================== Main Program
+0560* ------------------------------------------------------- init HTML API
+0570*
+0580* PERFORM W3WRITE-DYNAMIC 1X 'nat-env.txt' ##RPC.HTTP_HEADER
+0590PERFORM W3INIT ##RPC FALSE TRUE
+0600*
+0610* --------------------------------------------- Set type of return Page
+0620PERFORM W3CONTENT-TYPE 'text/html; charset=utf-8'
+0630* ------------------------------------------- Set head of the HTML page
+0640COMPRESS "<!DOCTYPE 'HTML PUBLIC -//W3C//DTD HTML 3.2//EN'>"
+0650  ##HTTP_NEWLINE
+0660  '<HTML><HEAD><TITLE>HTTP - Environment</TITLE>'-
+0670  '<META HTTP-EQUIV="Content-Type" '-
+0680  'CONTENT="text/html; charset=utf-8"></HEAD>'-
+0690  '<BODY BGCOLOR=#FFFFFF><P>&nbsp;<H1 ALIGN="CENTER">'-
+0700  '<FONT COLOR=NAVY>Environment Variables</FONT></H1>'
+0710  ##HTTP_NEWLINE
+0720  '<TABLE BORDER=0 CELLPADDING=5 CELLSPACING=3>'-
+0730  '<TR BGCOLOR="#999999"><TH>Name</TH><TH WIDTH=100%>'-
+0740  'Value</TH><TH>Length</TH><TH>From</TH></TR>' INTO #HTML LEAVING NO
+0750*
+0760ANAMEANZ := V
+0770PERFORM W3LIST-ENVIRONMENT-TO-DYNAMIC ANAMESTART ANAMEANZ ANAME(1:ANAMEANZ)
+0780  ANAMEVALUE(1:ANAMEANZ)ANAMESERVER(1:ANAMEANZ) ANAMEMAX
+0790*
+0800REPEAT
+0810  FOR #II = 1 TO ANAMEANZ
+0820    IF #COL = TRUE THEN
+0830      COMPRESS #HTML "<TR BGCOLOR='#CCCCCC'>" INTO #HTML LEAVING NO
+0840      #COL := FALSE
+0850    ELSE
+0860      COMPRESS #HTML "<TR>" INTO #HTML LEAVING NO
+0870      #COL := TRUE
+0880    END-IF
+0890    #VALUE := ANAME(#II)
+0900    PERFORM W3TEXT-TO-HTML #VALUE
+0910    COMPRESS #HTML "<TD>" #VALUE "</TD><TD>" INTO #HTML LEAVING NO
+0920/*
+0930    IF ANAMEVALUE(#II) NE " " THEN
+0940      #VALUE := ANAMEVALUE(#II)
+0950      PERFORM W3TEXT-TO-HTML #VALUE
+0960    ELSE
+0970      #VALUE := '&nbsp;'
+0980    END-IF
+0990    IF ANAMESERVER(#II)
+1000      ISSERVER := 'Server'
+1010    ELSE
+1020      ISSERVER := 'Page'
+1030    END-IF
+1040    COMPRESS #HTML #VALUE "</TD><TD ALIGN=CENTER>"
+1050       *LENGTH(ANAMEVALUE(#II)) "</TD><TD ALIGN=CENTER>" ISSERVER
+1060      "</TD></TR>" ##HTTP_NEWLINE INTO #HTML LEAVING NO
+1070  END-FOR
+1080  IF ANAMESTART EQ 0 THEN
+1090    ESCAPE BOTTOM
+1100  ELSE
+1110    PERFORM W3LIST-ENVIRONMENT-TO-DYNAMIC ANAMESTART ANAMEANZ ANAME(1:ANAMEANZ)
+1120      ANAMEVALUE(1:ANAMEANZ) ANAMESERVER(1:ANAMEANZ) ANAMEMAX
+1130  END-IF
+1140END-REPEAT
+1150* -------------------------- Display current time/date and program name
+1160* ------------------------------------------------- and close HTML page
+1170PERFORM W3INFO ##W3INFO
+1180COMPRESS #HTML "</TABLE><BR><TABLE BORDER='0' WIDTH='100%' CELLSPACING='0' "-
+1190  "CELLPADDING='5'>"
+1200  '<TR BGCOLOR="#00cc66"><TD>' *PROGRAM '&#32;-&#32;' ##W3INFO.LOG-TIME
+1210  "</TD><TD>" ANAMEMAX '&#32;variables</TD>' "<TD ALIGN='RIGHT'>"
+1220  'Natural' "</TD></TR></TABLE></BODY></HTML>" INTO #HTML LEAVING NO
+1230PERFORM W3TEXTDYNAMIC #HTML
+1240* ------------------------------------------------------ close HTTP Api
+1250PERFORM W3END ##RPC
+1260*
+1270* ================================================================= End
+1280END

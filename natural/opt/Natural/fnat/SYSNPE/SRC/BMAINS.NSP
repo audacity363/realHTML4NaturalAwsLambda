@@ -1,0 +1,103 @@
+0010*
+0020* Display main storage
+0030*
+0040DEFINE DATA GLOBAL USING TUTO
+0050            LOCAL  USING BMAINS-L
+0060            LOCAL
+0070*
+008001 #POOL-ID                 (A54)
+009001 #EXPIRATION-DATN         (N8)
+010001 #SCOPE                   (A6)    INIT <'GROUP'>
+011001 #ADDRESS                 (B4)
+012001 #OFFSET                  (B4)
+013001 #HEX-10                  (B4)    INIT <H'00000010'>
+014001 #CV-MAP                  (C)
+015001 #CV-POOL-ID              (C)
+0160*
+017001 #DISPLAY                 (15)
+0180   02  #AREA                (A18)
+0190   02  REDEFINE #AREA
+0200       03  #AREA-F1         (A1)
+0210       03  #AREA-CONT       (A16)
+0220       03  #AREA-F2         (A1)
+0230   02  #AREA-ADR            (B4)
+0240   02  #AREA-HEX            (B4/1:4)
+0250*
+026001 #I                       (P2)
+0270END-DEFINE
+0280PERFORM PF-KEY
+0290SET KEY PF7=PGM NAMED '-'
+0300SET KEY PF8=PGM NAMED '+'
+0310*
+0320* ------------------------------ MAIN LOOP ----------------------------
+0330*
+0340REPEAT
+0350  PERFORM SCREEN-IO
+0360FOR.
+0370  FOR #I = 1 TO 15
+0380FND.
+0390    FIND MAIN-STORAGE
+0400         WITH  NODE     = ##NODE
+0410          AND  POOL-ID  = #POOL-ID
+0420          AND  SCOPE    = #SCOPE
+0430          AND  ADDRESS  = #ADDRESS
+0440          AND  OFFSET   = H'00000000'
+0450          AND  LENGTH   = 16
+0460*
+0470      IF ERROR-CODE NE 0
+0480         INCLUDE BERR---C
+0490         RESET #AREA-CONT (#I:15) #AREA-ADR (#I:15) #AREA-HEX (#I:15,*)
+0500         ESCAPE BOTTOM (FOR.)
+0510      END-IF
+0520*
+0530      ASSIGN #AREA-ADR  (#I)   = #ADDRESS
+0540      ASSIGN #AREA-F1   (#I)   = '*'
+0550      ASSIGN #AREA-F2   (#I)   = '*'
+0560      ASSIGN #AREA-CONT (#I)   = AREA-CONT (FND.)
+0570      ASSIGN #AREA-HEX  (#I,*) = AREA-HEX (FND.,*)
+0580      CALLNAT 'HEX-ADD' #ADDRESS #HEX-10
+0590    END-FIND
+0600  END-FOR
+0610END-REPEAT
+0620*
+0630* ------------------------------ SCREEN-IO ----------------------------
+0640*
+0650DEFINE SUBROUTINE SCREEN-IO
+0660REPEAT
+0670*
+0680   ASSIGN #CV-MAP = (AD=I)
+0690   INPUT WITH TEXT *##MSG-NR,
+0700                    ##MSG-TXT1,
+0710                    ##MSG-TXT2
+0720         USING MAP 'BMAINS-&'
+0730   RESET ##MSG
+0740     DECIDE FOR FIRST CONDITION
+0750       WHEN #CV-POOL-ID MODIFIED
+0760            RESET #ADDRESS #OFFSET
+0770            ESCAPE BOTTOM
+0780       WHEN *PF-KEY = 'PF8' OR #CV-MAP MODIFIED
+0790            ESCAPE BOTTOM
+0800       WHEN *PF-KEY = 'PF7' OR #CV-MAP MODIFIED
+0810            IF #ADDRESS >= H'000001E0'
+0820               ASSIGN #HEX-10 = H'000001E0'
+0830               CALLNAT 'HEX-SUB' #ADDRESS #HEX-10
+0840               RESET INITIAL #HEX-10
+0850             ELSE
+0860               RESET #ADDRESS
+0870            END-IF
+0880            ESCAPE BOTTOM
+0890       WHEN NONE
+0900            IGNORE
+0910   END-DECIDE
+0920*
+0930END-REPEAT
+0940*
+0950CALLNAT 'HEX-ADD' #ADDRESS #OFFSET
+0960RESET #OFFSET
+0970*
+0980END-SUBROUTINE
+0990*
+1000* ------------------------------ PF-KEY -------------------------------
+1010*
+1020INCLUDE C-PFKEY
+1030END

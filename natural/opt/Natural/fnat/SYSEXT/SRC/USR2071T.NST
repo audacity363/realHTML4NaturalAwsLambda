@@ -1,0 +1,95 @@
+0010Support EntireX Security on client side
+0020.
+0030Documentation ......... USR2071T    /*  Text object
+0040Interface ............. USR2071N    /*  Cataloged subprogram
+0050Example Program ....... USR2071P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC - SECURITY
+0100.
+0110Keywords .............. CLIENT, ENTIREX, RPC, SECURITY
+0120.
+0130Function .............. Logon/Logoff to/from EntireX Broker
+0140                        on Client side.
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+0210    INPUT
+0220         FUNCTION  (A08)  - Function code
+0230                            value 'LOGON'  logon  to   EntireX Broker
+0240                            value 'LOGOFF' logoff from EntireX Broker
+0250         BROKER_ID (A192) - Broker ID
+0260         USER_ID   (A32)  - User ID
+0270         PASSWORD  (A32)  - User ID's password
+0280         NEWPASSW  (A32)  - User ID's new password
+0290.
+0300    OUTPUT
+0310         RC        (N04)  - return value
+0320                            0     ok
+0330                            1     invalid function code
+0340                            9999  Broker error     (see MESSAGE)
+0350         MESSAGE   (A80)  - message text, returned by Broker
+0360.
+0370Interface Call
+0380--------------
+0390Use the interface with the CALLNAT statement:
+0400.
+0410CALLNAT 'USR2071N' FUNCTION BROKER_ID USER_ID PASSWORD NEWPASSW
+0420                   RC MESSAGE
+0430.
+0440All input parameters to USR2071N are case-sensitive.
+0450.
+0460If you use the sample caller USR2071P to call USR2071N an uppercase
+0470translation takes place in USR2071P.
+0480.
+0490.
+0500Using the Application Programming Interface:
+0510--------------------------------------------
+0520Copy the subprogram USR2071N to the library SYSTEM or the steplib
+0530library respectively, or to the required library.
+0540.
+0550.
+0560Functionality:
+0570--------------
+05801) LOGON
+0590   An EntireX Broker LOGON function is executed to the named Broker
+0600   BROKER_ID with the passed user ID USER_ID and password PASSWORD.
+0610   After a successfull LOGON call, the client can communicate with
+0620   the EntireX Broker BROKER_ID as usual.
+0630   With NEWPASSW the client can change his password via the EntireX
+0640   Security features.
+0650.
+0660   Notes:
+0670   - If a successfull LOGON has been performed, the user ID used in
+0680     this LOGON will be passed to the named EntireX Broker on all
+0690     all subsequent remote procedure CALLNATs which are routed via
+0700     this EntireX Broker.
+0710.
+0720     The USER_ID is not restricted to the contents of *USER.
+0730.
+0740     Without an explicit LOGON the current contents of *USER is used.
+0750     The same applies if you have issued a LOGON to EntireX Broker 1
+0760     but your remote procedure CALLNAT is routed via EntireX Broker 2.
+0770.
+0780   - Only the last LOGON is internally maintained and can be used to
+0790     access the named EntireX Broker.
+0800     (restriction will be dropped in the next release)
+0810.
+0820   - Before a new LOGON is executed a LOGOFF is done with the data
+0830     of the last successfull LOGON.
+0840.
+0850   - An internal reLOGON is done after an EntireX Broker timeout has
+0860     occurred if the original LOGON was done without a password.
+0870     (the password used in the LOGON is not saved)
+0880     If no internal reLOGON is possible after a timeout has occurred
+0890     the client has to explicitely reissue the LOGON.
+0900.
+09102) LOGOFF
+0920   An EntireX Broker LOGOFF function is executed to the named Broker
+0930   BROKER_ID for the passed user ID USER_ID.
+0940.
+0950***** End of Description *****

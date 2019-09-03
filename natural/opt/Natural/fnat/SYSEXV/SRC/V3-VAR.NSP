@@ -1,0 +1,70 @@
+0010*
+0020* Program .. V3-VAR
+0030* Library .. SYSEXV
+0040* Version .. 3.1
+0050*
+0060* Functionality: Show new system variables
+0070************************************************************************
+0080*
+0090*
+0100FORMAT KD=ON
+0110SET KEY PF3         NAMED 'Exit'
+0120  PF12        NAMED 'Canc'
+0130*
+0140INPUT (IP=OFF )
+0150  01T *TIMX  (AD=OTD  )
+0160  21T '***** NATURAL 3.1 ENHANCEMENTS *****'
+0170  70T *DATX  (AD=OTD DF=L )
+0180  /
+0190  01T 'User'
+0200  06T *USER  (AD=OILT )
+0210  26T '- Statement Enhancements -'(I)
+0220  64T 'Program'
+0230  72T *PROGRAM (AD=OI)
+0240  //
+0250  02T 'New System Variables'(I)
+0260  ///
+0270  02T '*HARDWARE'(I)
+0280  'contains the current hardware platform ..........'
+0290  63T *HARDWARE (AD=OI)
+0300  /
+0310  02T '*MACHINE-CLASS'(I)
+0320  'contains the current machine class .........'
+0330  63T *MACHINE-CLASS (AD=OI)
+0340  /
+0350  02T '*OS'(I)
+0360  'contains the name of the current operating system .....'
+0370  63T *OS (AD=OI AL=15)
+0380  /
+0390  02T '*OSVERS'(I)
+0400  'contains the version number of the operating system '
+0410  63T *OSVERS (AD=OI)
+0420  /
+0430  02T '*UI'(I)
+0440  'contains the current type of user interface ...........'
+0450  63T *UI (AD=OI)
+0460  ///
+0470  02T '*DAT4D'(I) 'contains date in format DD.MM.YYYY ......'
+0480  *DAT4D (AD=OI)
+0490  /
+0500  02T '*DAT4E'(I) 'contains date in format DD/MM/YYYY ......'
+0510  *DAT4E (AD=OI)
+0520  /
+0530  02T '*DAT4I'(I) 'contains date in format YYYY-MM-DD ......'
+0540  *DAT4I (AD=OI)
+0550  /
+0560  02T '*DAT4J'(I) 'contains date in Julian format YYYYDDD ..'
+0570  *DAT4J (AD=OI)
+0580  /
+0590  02T '*DAT4U'(I) 'contains date in format MM/DD/YYYY ......'
+0600  *DAT4U (AD=OI)
+0610  / /
+0620IF *PF-KEY = 'PF3'
+0630  ESCAPE ROUTINE
+0640END-IF
+0650IF (*PF-KEY = 'PF12' OR= 'CLR')
+0660  CALLNAT 'UTILSTOP'
+0670END-IF
+0680*
+0690*
+0700END

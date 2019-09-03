@@ -1,0 +1,49 @@
+0010Get the Natural and NSC version
+0020.
+0030Documentation ......... USR8215T    /*  Text object
+0040Interface ............. USR8215N    /*  Cataloged subprogram
+0050Example Program ....... USR8215P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL ENVIRONMENT
+0100.
+0110Keywords .............. +NEW-NAT-8.3.6,
+0120                        NATVERS, NSC, SECURITY, VERSION
+0130.
+0140Function .............. Reads the Natural version from the Natural
+0150                        Nucleus.
+0160                        Available format (N4): aaii
+0170                        a - major version
+0180                        i - minor version
+0190.
+0200                        Reads the NSC version from the Natural
+0210                        Nucleus.
+0220                        Available format (N4): aaii
+0230                        a - major version
+0240                        i - minor version
+0250.
+0260                        This API is good for future use when the
+0270                        versions will become two digits long.
+0280.
+0290Parameters
+0300----------
+0310Define the following parameters with the DEFINE DATA statement:
+0320.
+0330   1 NATURAL-VERSION (N4)
+0340   1 NSC-VERSION     (N4)
+0350.
+0360Interface Call
+0370--------------
+0380Use the interface with the CALLNAT statement:
+0390.
+0400CALLNAT 'USR8215N'  NATURAL-VERSION  NSC-VERSION
+0410.
+0420.
+0430Using the Application Programming Interface:
+0440--------------------------------------------
+0450Copy the subprogram USR8215N to the library SYSTEM or the steplib
+0460library respectively, or to the required library.
+0470.
+0480.
+0490***** End of Description *****

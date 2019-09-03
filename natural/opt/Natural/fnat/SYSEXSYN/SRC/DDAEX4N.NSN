@@ -1,0 +1,10 @@
+0010** Example 'DDAEX4N': DEFINE DATA PARAMETER (called by DDAEX4)
+0020************************************************************************
+0030DEFINE DATA
+0040PARAMETER
+00501 #FIELDA (A10)
+00601 #FIELDB (N5)
+0070END-DEFINE
+0080*
+0090WRITE '=' #FIELDA '=' #FIELDB
+0100END

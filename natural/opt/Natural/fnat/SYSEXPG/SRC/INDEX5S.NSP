@@ -1,0 +1,25 @@
+0010** Example 'INDEX5S': Array definition with constants (structured mode)
+0020**                   (multiple definition of same database field)
+0030***********************************************************************
+0040DEFINE DATA LOCAL
+00501 EMPLOY-VIEW VIEW OF EMPLOYEES
+0060  2 NAME
+0070  2 CITY
+0080  2 LANG (1:10)
+0090  2 LANG (5:10)
+0100*
+01101 I (I2)
+01201 J (I2)
+0130END-DEFINE
+0140*
+0150*
+0160I := 1
+0170J := 2
+0180*
+0190READ (1) EMPLOY-VIEW WITH NAME = 'WINTER' WHERE CITY = 'LONDON'
+0200  WRITE 'LANG(1.1:10) :' LANG (1.1:10) /
+0210        'LANG(1.I:I+2):' LANG (1.I:I+2) //
+0220  WRITE 'LANG(5.1:5)  :' LANG (5.1:5)  /
+0230        'LANG(5.J)    :' LANG (5.J)
+0240END-READ
+0250END

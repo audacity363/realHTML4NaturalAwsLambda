@@ -1,0 +1,15 @@
+0010&H View AUTHORIZED-LIBRARIES
+0020&L
+0030&L
+0040#Purpose@: List APF authorized Datasets/Libraries
+0050&L
+0060#OpSys@  : z/OS
+0070&L
+0080&L
+0090#Usage@  : This view displays all APF authorized Datasets, which may
+0100           be defined static during IPL or dynamic with operator
+0110           command.
+0120           Many Products need APF authorized Libraries, so we can
+0130           check if a given Dataset is actually authorized.
+0140&L
+0150#Notes@  :

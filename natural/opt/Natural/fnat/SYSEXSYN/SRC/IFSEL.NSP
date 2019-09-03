@@ -1,0 +1,23 @@
+0010** Example 'IFSEL': IF SELECTION
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #A (A1)
+00501 #B (A1)
+0060END-DEFINE
+0070*
+0080INPUT 'Select one function:' //
+0090   9X 'Function A:' #A
+0100   9X 'Function B:' #B
+0110*
+0120IF SELECTION NOT UNIQUE #A #B
+0130  REINPUT 'Please enter one function only.'
+0140END-IF
+0150*
+0160IF #A NE ' '
+0170  WRITE 'Function A selected.'
+0180END-IF
+0190IF #B NE ' '
+0200  WRITE 'Function B selected.'
+0210END-IF
+0220*
+0230END

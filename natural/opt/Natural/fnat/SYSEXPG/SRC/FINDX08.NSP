@@ -1,0 +1,16 @@
+0010** Example 'FINDX08': FIND (with LIMIT)
+0020**                    Demonstrates FIND statement with LIMIT option to
+0030**                    terminate program with an error message if the
+0040**                    number of records selected exceeds a specified
+0050**                    limit (no output).
+0060************************************************************************
+0070DEFINE DATA LOCAL
+00801 EMPLOY-VIEW VIEW OF EMPLOYEES
+0090  2 NAME
+0100  2 JOB-TITLE
+0110END-DEFINE
+0120*
+0130FIND EMPLOY-VIEW WITH LIMIT (5) JOB-TITLE = 'SALES PERSON'
+0140  DISPLAY NAME JOB-TITLE
+0150END-FIND
+0160END

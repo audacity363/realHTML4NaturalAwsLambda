@@ -1,0 +1,67 @@
+0010*
+0020* Program .. V6-EXAM2
+0030* Library .. SYSEXV
+0040* Version .. 6.1
+0050*
+0060* Functionality: Show arrays for replacements(n:m) in EXAMINE stmt
+0070************************************************************************
+0080*
+0090DEFINE DATA LOCAL
+0100  1 #HTML   (A7/1:3)  INIT <'&lt;','&gt;','&slash;'>
+0110  1 #TAB    (A1/1:3)  INIT <'<','>','/'>
+0120  1 #TEXT   (A50)
+0130  1 #TEXT1  (A50)
+0140  1 #TEXT2  (A50)
+0150END-DEFINE
+0160*
+0170FORMAT KD=ON
+0180SET KEY PF3  NAMED 'Exit'
+0190        PF12 NAMED 'Canc'
+0200*
+0210#TEXT := '<Birth>1955-06-20</Birth>'
+0220*
+0230#TEXT1 := #TEXT
+0240EXAMINE #TEXT1 FOR #TAB(1:3) REPLACE #HTML(1:3)
+0250/*
+0260#TEXT2 := #TEXT1
+0270EXAMINE #TEXT2 FOR #HTML(1:3) REPLACE #TAB(1:3)
+0280*
+0290*
+0300INPUT (IP=OFF)
+0310  01T *TIMX  (AD=OTD)
+0320  21T '***** NATURAL 6.1 ENHANCEMENTS *****'
+0330  70T *DATX  (AD=OTD DF=L)
+0340  /
+0350  01T 'User'
+0360  06T *USER  (AD=OILT)
+0370  28T '- EXAMINE Statement -'(I)
+0380  64T 'Program'
+0390  72T *PROGRAM (AD=OI)
+0400  ///
+0410  02T 'EXAMINE statement enhanced for a replacement with arrays'(I)
+0420  //
+0430  02T '#Html (A7/1:3)  INIT <''&lt;'',''&gt;'',''&slash;''>'
+0440  /
+0450  02T '#Tab  (A1/1:3)  INIT <''<'',''>'',''/''>'
+0460  //
+0470  02T '#Text:' #TEXT (AD=OI)
+0480  ///
+0490  02T 'EXAMINE #Text FOR' '#Html(1:3)'(I) 'REPLACE'
+0500      '#Tab(1:3)'(I)
+0510  //
+0520  02T '#Text:'  #TEXT1  (AD=OI)
+0530  //
+0540  02T 'EXAMINE #Text FOR' '#Tab(1:3)'(I) 'REPLACE'
+0550      '#Html(1:3)'(I)
+0560  //
+0570  02T '#Text:' #TEXT2  (AD=OI)
+0580  //
+0590IF *PF-KEY = 'PF3'
+0600  ESCAPE ROUTINE
+0610END-IF
+0620IF (*PF-KEY = 'PF12' OR= 'CLR')
+0630  CALLNAT 'UTILSTOP'
+0640END-IF
+0650*
+0660*
+0670END

@@ -1,0 +1,55 @@
+0010** Example 'FNDSISN': FIND ( with STARTING WITH ISN)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 EMPL VIEW OF EMPLOYEES
+0050  2 NAME
+0060  2 FIRST-NAME
+0070  2 BIRTH
+0080*
+00901 #ISN           (N10/1:10)
+01001 #NAME          (A20/1:10)
+01101 #FIRST-NAME    (A20/1:10)
+01201 #BIRTH         (D/1:10)
+01301 #RECORD-COUNT  (I2)
+01401 #STARTISN      (N10)
+0150END-DEFINE
+0160*
+0170SET KEY PF3
+0180*
+0190REPEAT
+0200  RESET #RECORD-COUNT #ISN(*) #NAME(*) #FIRST-NAME(*) #BIRTH(*)
+0210*
+0220  FIND (10) EMPL WITH NAME = 'A' THRU 'D'
+0230                 STARTING WITH ISN = #STARTISN
+0240    MOVE *ISN TO #STARTISN
+0250    ADD 1 TO #RECORD-COUNT
+0260    MOVE *ISN       TO #ISN (#RECORD-COUNT)
+0270    MOVE NAME       TO #NAME (#RECORD-COUNT)
+0280    MOVE FIRST-NAME TO #FIRST-NAME (#RECORD-COUNT)
+0290    MOVE BIRTH      TO #BIRTH (#RECORD-COUNT)
+0300  END-FIND
+0310*
+0320  INPUT (IP=OFF AD=O SG=OFF ZP=OFF)
+0330      '*---------!-------------------!---------------------!----------*'
+0340    / '*   ISN   !       NAME        !    FIRST-NAME       !  BIRTH   *'
+0350    / '*---------!-------------------!---------------------!----------*'
+0360    / #ISN(1)  #NAME(1)  #FIRST-NAME(1)  #BIRTH(1) (EM=YYYY-MM-DD)
+0370    / #ISN(2)  #NAME(2)  #FIRST-NAME(2)  #BIRTH(2) (EM=YYYY-MM-DD)
+0380    / #ISN(3)  #NAME(3)  #FIRST-NAME(3)  #BIRTH(3) (EM=YYYY-MM-DD)
+0390    / #ISN(4)  #NAME(4)  #FIRST-NAME(4)  #BIRTH(4) (EM=YYYY-MM-DD)
+0400    / #ISN(5)  #NAME(5)  #FIRST-NAME(5)  #BIRTH(5) (EM=YYYY-MM-DD)
+0410    / #ISN(6)  #NAME(6)  #FIRST-NAME(6)  #BIRTH(6) (EM=YYYY-MM-DD)
+0420    / #ISN(7)  #NAME(7)  #FIRST-NAME(7)  #BIRTH(7) (EM=YYYY-MM-DD)
+0430    / #ISN(8)  #NAME(8)  #FIRST-NAME(8)  #BIRTH(8) (EM=YYYY-MM-DD)
+0440    / #ISN(9)  #NAME(9)  #FIRST-NAME(9)  #BIRTH(9) (EM=YYYY-MM-DD)
+0450    / #ISN(10) #NAME(10) #FIRST-NAME(10) #BIRTH(10) (EM=YYYY-MM-DD)
+0460    //  'STARTISN:' #STARTISN (AD=M)
+0470    //  'Enter ISN value used to restart FIND loop. The record after'
+0480    /   'the ISN specified is the first record returned.'
+0490    /// 'Press PF3 to stop.'
+0500  /*
+0510  IF *PF-KEY = 'PF3'
+0520    STOP
+0530  END-IF
+0540END-REPEAT
+0550END

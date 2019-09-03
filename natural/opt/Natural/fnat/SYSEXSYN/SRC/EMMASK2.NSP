@@ -1,0 +1,17 @@
+0010** Example 'EMMASK2': Edit mask
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #TEXT1 (A2)
+00501 #TEXT2 (N2)
+0060END-DEFINE
+0070*
+0080ASSIGN #TEXT1 = 'AB'
+0090ASSIGN #TEXT2 =  10
+0100*
+0110WRITE NOTITLE
+0120        'MASK (EM=HH)  :' 18T #TEXT1 (EM=HH)    30T #TEXT2 (EM=HH)
+0130      / 'MASK (EM=H^H) :' 18T #TEXT1 (EM=H^H)   30T #TEXT2 (EM=H^H)
+0140      / 'MASK (EM=HH^H):' 18T #TEXT1 (EM=HH^H)  30T #TEXT2 (EM=HH^H)
+0150      / 'MASK (EM=H-H) :' 18T #TEXT1 (EM=H-H)   30T #TEXT2 (EM=H-H)
+0160      / 'MASK (EM=H)   :' 18T #TEXT1 (EM=H)     30T #TEXT2 (EM=H)
+0170END

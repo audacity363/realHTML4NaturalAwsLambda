@@ -1,0 +1,19 @@
+0010** Example 'DECEX3': DECIDE ON (with FIRST option)
+0020************************************************************************
+0030*
+0040SET KEY ALL
+0050INPUT 'Enter any PF key' /
+0060      'and check result' /
+0070*
+0080DECIDE ON FIRST VALUE OF *PF-KEY
+0090  VALUE 'PF1'
+0100    WRITE 'PF1 key entered.'
+0110  VALUE 'PF2'
+0120    WRITE 'PF2 key entered.'
+0130  ANY VALUE
+0140    WRITE 'PF1 or PF2 key entered.'
+0150  NONE VALUE
+0160    WRITE 'Neither PF1 nor PF2 key entered.'
+0170END-DECIDE
+0180*
+0190END

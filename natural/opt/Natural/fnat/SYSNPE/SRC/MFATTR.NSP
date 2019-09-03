@@ -1,0 +1,47 @@
+0010* Program   MFATTR
+0020* View      FILE-ATTRIBUTES
+0030*
+0040* Function  Display attributes of a specific data set
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* hka 97-12-03   NPE213:   make it y2000 compliant
+0090* ======================================================================
+0100*
+0110DEFINE DATA
+0120   GLOBAL USING TUTO
+0130   LOCAL  USING FATTRIBL
+0140END-DEFINE
+0150*
+0160INPUT (AD=MI'_')  ##TITLE (AD=OI IP=OFF)
+0170               // '  Data set ..:' FILE-ATTRIBUTES.DSNAME
+0180                / '  Volume ....:' FILE-ATTRIBUTES.VOLSER
+0190*
+0200FIND FILE-ATTRIBUTES WITH DSNAME = FILE-ATTRIBUTES.DSNAME
+0210                      AND VOLSER = FILE-ATTRIBUTES.VOLSER
+0220                      AND NODE   = ##NODE
+0230*
+0240   IF ERROR-CODE > 0
+0250      REINPUT ERROR-TEXT
+0260   END-IF
+0270*
+0280   WRITE NOTITLE (AD=IL)
+0290     /  'Data Set Info For' (I) DSNAME
+0300    //  'Volser...........:' VOLSER
+0310   45T  'Creation date....:' CREATION-DATX       (EM=YYYY-MM-DD)
+0320     /  'Unit.............:' UNIT
+0330   45T  'Expiration date..:' EXPIRATION-DATX     (EM=YYYY-MM-DD)
+0340     /  'Series...........:' SERIES
+0350   45T  'Last reference...:' LAST-REFERENCE-DATX (EM=YYYY-MM-DD)
+0360     /  'Dsorg............:' DSORG
+0370     /  'Lrecl............:' LRECL
+0380     /  'Blksize..........:' BLKSIZE
+0390     /  'Recfm............:' RECFM
+0400     /  'Number of extents:' NUMBER-OF-EXTENTS
+0410     /  'Security.........:' SECURITY
+0420    //  'Allocation type..:' ALLOCATION-TYPE
+0430     /  'Cyls allocated...:' CYLINDERS-ALLOCATED
+0440     /  'Tracks allocated.:' TRACKS-ALLOCATED
+0450     /  'Percent used.....:' PERCENT-USED
+0460END-FIND
+0470END

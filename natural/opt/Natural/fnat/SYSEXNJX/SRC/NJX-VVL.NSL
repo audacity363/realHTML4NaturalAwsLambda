@@ -1,0 +1,7 @@
+0010/*DS I             S0001             1VALIDVALUES                                                     DA:00.00ED:00.00PF:WNV:09010100
+0020/*DF                    U   DYNAMIC  2ID
+0030/*DF                    U   DYNAMIC  2TEXT
+0040/*DF                    A   DYNAMIC  1VALIDVALUES_ALL-IDS
+0050/*DF                    A   DYNAMIC  1VALIDVALUES_ALL-TEXTS
+0060/*HA0001
+0070/*A1:*

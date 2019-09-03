@@ -1,0 +1,40 @@
+0010* Program   MCOPYFI
+0020* View      COPY-FILE
+0030*
+0040* Function  Copy files from node to node
+0050*
+0060* ----------------------------------------------------------------------
+0070*
+0080DEFINE DATA
+0090   GLOBAL USING TUTO
+0100   LOCAL  USING COPYFI-L
+0110END-DEFINE
+0120*
+0130REPEAT
+0140   INPUT (AD=MI'_' ZP=OFF)
+0150                 // ##TITLE (AD=OI IP = OFF)
+0160                 // '  from' (I)
+0170                 // '    Data set..:' COPY-FILE.FROM-DSNAME
+0180                  / '    Member....:' COPY-FILE.FROM-MEMBER
+0190                  / '    Volser....:' COPY-FILE.FROM-VOLSER
+0200                  / '    Node......:' COPY-FILE.FROM-NODE
+0210                 // '  to' (I)
+0220                 // '    Data set..:' COPY-FILE.TO-DSNAME
+0230                  / '    Member....:' COPY-FILE.TO-MEMBER
+0240                  / '    Volser....:' COPY-FILE.TO-VOLSER
+0250                  / '    Node......:' COPY-FILE.TO-NODE
+0260*
+0270   PROCESS COPY-FILE
+0280           USING FROM-DSNAME = COPY-FILE.FROM-DSNAME
+0290             ,   FROM-MEMBER = COPY-FILE.FROM-MEMBER
+0300             ,   FROM-VOLSER = COPY-FILE.FROM-VOLSER
+0310             ,   FROM-NODE   = COPY-FILE.FROM-NODE
+0320             ,   TO-DSNAME   = COPY-FILE.TO-DSNAME
+0330             ,   TO-MEMBER   = COPY-FILE.TO-MEMBER
+0340             ,   TO-VOLSER   = COPY-FILE.TO-VOLSER
+0350             ,   TO-NODE     = COPY-FILE.TO-NODE
+0360             ,   NODE        = ##NODE
+0370   REINPUT ERROR-TEXT
+0380*
+0390END-REPEAT
+0400END

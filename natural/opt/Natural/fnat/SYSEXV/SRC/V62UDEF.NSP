@@ -1,0 +1,155 @@
+0010* Program ...... V62UDEF
+0020* Library ...... SYSEXV
+0030* Version ...... 6.2
+0040* Machine .....  UNIX
+0050*
+0060* Functionality  Natural Unicode Support
+0070*                Unicode Data Definition
+0080************************************************************************
+0090*
+0100*
+0110DEFINE DATA LOCAL
+01201 UNICODE     (U10)        /* Unicode field definition
+01301 U-DYN       (U) DYNAMIC  /* Dynamic Unicode field
+0140*
+01501 UNICODE-U  (U20)
+01601 REDEFINE UNICODE-U
+0170  2 U-PART-1 (U06)
+0180  2 U-PART-2 (U08)
+0190  2 U-PART-3 (U06)
+0200*
+02101 UNICODE-B   (U10)
+02201 REDEFINE UNICODE-B
+0230  2 BINARY    (B20)
+0240END-DEFINE
+0250*
+0260FORMAT KD=ON
+0270SET KEY PF3  NAMED 'Exit'
+0280  PF12 NAMED 'Canc'
+0290*
+0300*
+0310INPUT  (IP=OFF)
+0320  01T *TIMX  (AD=OTD)
+0330  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0340  70T *DATX  (AD=OTD DF=L)
+0350  /
+0360  01T 'User'
+0370  06T *USER  (AD=OLTI)
+0380  25T     '- Natural Unicode Support  -'(I)
+0390  64T 'Program'
+0400  72T *PROGRAM   (AD=OI)
+0410  /
+0420  15T '          - Unicode Data Definition  -' (I)
+0430  //
+0440  2T 'New'  'format ''U''' (I)
+0450  'for Unicode variables:'  /
+0460  /
+0470  2T '  DEFINE DATA LOCAL'  /
+0480  2T '  1'  'UNICODE (U10)' (I)
+0490  '      /* Unicode field definition'  /
+0500  2T '  1'  'U-DYN (U) DYNAMIC' (I)
+0510  '  /* Dynamic Unicode field'  /
+0520  2T '  END-DEFINE'  /
+0530  /
+0540  2T 'The length of a Unicode variable is the number of'
+0550  'code units of the variable'  /
+0560  2T 'which is normally the number of displayed characters.'  /
+0570  2T 'Because Natural encodes the Unicode variables in UTF-16,'
+0580  'each code unit'  /
+0590  2T 'occupies two bytes in the storage.'  /
+0600*
+0610IF *PF-KEY = 'PF3'
+0620  ESCAPE ROUTINE
+0630END-IF
+0640IF (*PF-KEY = 'PF12' OR= 'CLR')
+0650  CALLNAT 'UTILSTOP'
+0660END-IF
+0670*
+0680* Unicode Data Redefinition (U)
+0690*
+0700MOVE 'Hello'   TO U-PART-1
+0710MOVE 'Unicode' TO U-PART-2
+0720MOVE 'World'   TO U-PART-3
+0730INPUT  (IP=OFF)
+0740  01T *TIMX  (AD=OTD)
+0750  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0760  70T *DATX  (AD=OTD DF=L)
+0770  /
+0780  01T 'User'
+0790  06T *USER  (AD=OLTI)
+0800  25T     '- Natural Unicode Support  -' (I)
+0810  64T 'Program'
+0820  72T *PROGRAM   (AD=OI)
+0830  /
+0840  15T '         - Unicode Data Redefinition  -' (I)
+0850  //
+0860  02T 'Unicode fields can be redefined with other Unicode fields:' /
+0870  /
+0880  02T '  DEFINE DATA LOCAL' /
+0890  02T '  1 UNICODE-U' '(U20)' (I) /
+0900  02T '  1'  'REDEFINE' (I) 'UNICODE-U'  /
+0910  02T '    2 U-PART-1'  '(U06)' (I) /
+0920  02T '    2 U-PART-2'  '(U08)' (I) /
+0930  02T '    2 U-PART-3'  '(U06)' (I) /
+0940  02T '  END-DEFINE'  /
+0950  02T '  MOVE ''Hello''   TO U-PART-1'  /
+0960  02T '  MOVE ''Unicode'' TO U-PART-2'  /
+0970  02T '  MOVE ''World''   TO U-PART-3'  /
+0980  02T '  WRITE UNICODE-U'  /
+0990  /
+1000  02T 'UNICODE-U:'
+1010  UNICODE-U (AD=OI)
+1020*
+1030IF *PF-KEY = 'PF3'
+1040  ESCAPE ROUTINE
+1050END-IF
+1060IF (*PF-KEY = 'PF12' OR= 'CLR')
+1070  CALLNAT 'UTILSTOP'
+1080END-IF
+1090*
+1100* Unicode Data Redefinition (B)
+1110*
+1120MOVE 'ABCabc123' TO UNICODE-B
+1130INPUT  (IP=OFF)
+1140  01T *TIMX  (AD=OTD)
+1150  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+1160  70T *DATX  (AD=OTD DF=L)
+1170  /
+1180  01T 'User'
+1190  06T *USER  (AD=OLTI)
+1200  25T     '- Natural Unicode Support  -' (I)
+1210  64T 'Program'
+1220  72T *PROGRAM   (AD=OI)
+1230  /
+1240  15T '         - Unicode Data Redefinition  -' (I)
+1250  //
+1260  02T 'Redefinitions of Unicode fields with binary fields result'
+1270
+1280  'in the internal re-'  /
+1290  02T 'presentation of the Unicode characters.'
+1300  'One Unicode unit uses 2 bytes storage.'  /
+1310  /
+1320  02T '  DEFINE DATA LOCAL'  /
+1330  02T '  1 UNICODE-B'  '  (U10)' (I) /
+1340  02T '  1'  'REDEFINE' (I) 'UNICODE-B'  /
+1350  02T '    2 BINARY'  '   (B20)' (I) /
+1360  02T '  END-DEFINE'  /
+1370  02T '  MOVE ''ABCabc123'' TO UNICODE-B'  /
+1380  02T '  WRITE ''UNICODE:'' UNICODE-B ''BINARY:'' BINARY'  /
+1390  /
+1400  02T 'UNICODE:'  UNICODE-B (AD=OI)
+1410  'BINARY:'  BINARY (AD=OI) /
+1420  /
+1430  02T 'Hint: Unicode fields should not be redefined'
+1440  'as alphanumeric(A) or numeric(N).'
+1450*
+1460IF *PF-KEY = 'PF3'
+1470  ESCAPE ROUTINE
+1480END-IF
+1490IF (*PF-KEY = 'PF12' OR= 'CLR')
+1500  CALLNAT 'UTILSTOP'
+1510END-IF
+1520*
+1530*
+1540END
+1550

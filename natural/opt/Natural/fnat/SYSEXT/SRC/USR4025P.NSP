@@ -1,0 +1,73 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR4025N'.
+0030/***********************************************************************
+0040DEFINE DATA LOCAL
+0050  /*
+0060  01 USR4025L
+0070     02 INPUTS
+0080        03 ACTION        (A01)     /* 'D', 'A', 'P'
+0090     02 INPUT-OUTPUTS
+0100        03 STEPLIB-ID    (A08/1:8) /* ID of steplib
+0110        03 DBID          (I04/1:8) /* DBID of steplib
+0120        03 FNR           (I04/1:8) /* FNR of steplib
+0130        03 NSC-PROTECTED (A01/1:8) /* FNR of steplib
+0140        03 PASSWORD      (A08)     /* Input for ACTION 'A'
+0150        03 CIPHERCODE    (N08)     /* Input for ACTION 'A'
+0160        03 POSITION      (N01)     /* Pos. of lib to be added/deleted
+0170        03 AST-STEPLIB   (A08)     /* Value of *STEPLIB
+0180        03 AST-DBID      (I04)     /* DBID of *STEPLIB
+0190        03 AST-FNR       (I04)     /* FNR of *STEPLIB
+0200        03 NUMBER-ACTIVE (N01)     /* Number of active steplibs
+0210     02 OUTPUTS
+0220        03 RESPONSE      (I04)     /* Error code
+0230        03 INFOTEXT      (A65)     /* Text for RESPONSE field
+0240  /*
+0250  01 USR4025N
+0260     02 VERSION          (I01)     INIT <0>
+0270  01 REDEFINE USR4025N
+0280     02 EXTENDED-PARMS
+0290        03 EXTENDED-DATA (A01/1:1)
+0300  /*
+0310END-DEFINE
+0320/*
+0330/* Set up some defaults:
+0340/*
+0350SET KEY ALL
+0360ACTION := 'D'                /* Display active steplibs
+0370/*
+0380REPEAT
+0390  /*
+0400  INPUT (AD=OIL IP=OFF ZP=OFF SG=OFF) WITH TEXT INFOTEXT
+0410      'NSC Environment: Maintain steplib table:' (I)
+0420    / '-' (49) (I) /
+0430    / 'Action ..........' ACTION (AD=MIT'_') '(D,A,P)'
+0440      4X 'No. of steplibs ...' NUMBER-ACTIVE (AD=OI ZP=ON)
+0450    / 'Add/Delete No. ..' POSITION (AD=MIT'_' ZP=ON)
+0460      14X 'Response ..........' RESPONSE   (AD=OI ZP=ON)
+0470   // '   ------------- Steplibs ----------------'
+0480    / '   Library  DBID       FNR        N Password Ciphercode'
+0490    / '1.' STEPLIB-ID(1) (AD=MIT'_')
+0500           DBID(1)       (AD=MIT'_' ZP=ON)
+0510           FNR(1)        (AD=MIT'_' ZP=ON)
+0520           NSC-PROTECTED (1)(AD=OI)
+0530           PASSWORD      (AD=MIT'_')
+0540           CIPHERCODE    (AD=MIT'_' ZP=ON)
+0550    / '2.' STEPLIB-ID(2) DBID(2) FNR(2) NSC-PROTECTED (2)(AD=OI)
+0560    / '3.' STEPLIB-ID(3) DBID(3) FNR(3) NSC-PROTECTED (3)(AD=OI)
+0570    / '4.' STEPLIB-ID(4) DBID(4) FNR(4) NSC-PROTECTED (4)(AD=OI)
+0580    / '5.' STEPLIB-ID(5) DBID(5) FNR(5) NSC-PROTECTED (5)(AD=OI)
+0590    / '6.' STEPLIB-ID(6) DBID(6) FNR(6) NSC-PROTECTED (6)(AD=OI)
+0600    / '7.' STEPLIB-ID(7) DBID(7) FNR(7) NSC-PROTECTED (7)(AD=OI)
+0610    / '8.' STEPLIB-ID(8) DBID(8) FNR(8) NSC-PROTECTED (8)(AD=OI)
+0620    / '  ' AST-STEPLIB (AD=O) AST-DBID (AD=O)
+0630           AST-FNR (AD=O) 35T '( *STEPLIB )'
+0640    /// 'Press any PF-Key to stop.'
+0650    /*
+0660  IF *PF-KEY NE 'ENTR'
+0670    ESCAPE ROUTINE
+0680  END-IF
+0690  /*
+0700  CALLNAT 'USR4025N' USR4025L USR4025N.EXTENDED-PARMS
+0710  /*
+0720END-REPEAT
+0730END

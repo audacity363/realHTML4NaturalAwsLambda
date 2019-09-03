@@ -1,0 +1,58 @@
+0010/*  Get Natural long error text from system file
+0020/*  This program serves as example how to design a user-defined
+0030/*  program to call 'USR0221N'
+0040/*********************************************************************
+0050DEFINE DATA LOCAL
+0060  01 PARM-AREA
+0070     02 ERROR-NUMBER (N04)     /* 1 thru 9999
+0080     02 LANG-NUMB    (I01)     /* 1 thru 60 , similar to *LANGUAGE
+0090     02 RESPONSE     (N04)     /* Error during execution of USR0220N
+0100     02 LONG-TEXT    (A78/1:20)
+0110  01 INFO (A64)
+0120END-DEFINE
+0130/*
+0140/* Set up some defaults:
+0150/*
+0160MOVE 1 TO ERROR-NUMBER
+0170/*
+0180MOVE *LANGUAGE  TO LANG-NUMB       /* Current language number
+0190SET KEY ALL
+0200/*
+0210REPEAT
+0220  /*
+0230  RESET RESPONSE
+0240  RESET LONG-TEXT (*)
+0250  /*
+0260  INPUT (AD=MITL'_' IP=OFF SG=OFF) ///
+0270    15T  'Read NATURAL long error message' /
+0280    15T  'from FNAT System File:' /
+0290    15T  '-' (36) //
+0300    15T  'Error number ....' ERROR-NUMBER /
+0310    15T  'Language number ..' LANG-NUMB   ///
+0320    15T  'Press ENTER to receive the text.' /
+0330    15T  'Press any PF-Key to stop.'
+0340    /*
+0350  IF *PF-KEY NE 'ENTR'
+0360    ESCAPE BOTTOM
+0370  END-IF
+0380  /*
+0390  CALLNAT 'USR0221N' PARM-AREA
+0400  /*
+0410  IF RESPONSE NE 0
+0420    DECIDE ON FIRST VALUE OF RESPONSE
+0430      VALUE 3    REINPUT 'Invalid Error Number.'
+0440      VALUE 4    REINPUT 'Invalid Language Number.'
+0450                   MARK *LANG-NUMB
+0460      VALUE 8    REINPUT 'Record found, but text is empty.'
+0470      VALUE 9    REINPUT 'Record not found.'
+0480      NONE
+0490        INPUT 'Response code from USR0221N:' (I) RESPONSE (AD=OIL)
+0500    END-DECIDE
+0510  ELSE
+0520    /* Build a header line:
+0530    WRITE NOTITLE
+0540      'NATURAL long error text' (I) ERROR-NUMBER (EM=9999 AD=I)
+0550      // LONG-TEXT (*)
+0560  END-IF
+0570END-REPEAT
+0580END

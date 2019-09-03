@@ -1,0 +1,44 @@
+0010/* This program serves as an example of how to design a user-defined
+0020/* program to call USR8210N.
+0030/* Maintain the Natural Profiler monitoring.
+0040/* The Profiler must be initialized before the start or pause function
+0050/* can be performed.
+0060/***********************************************************************
+0070DEFINE DATA
+0080LOCAL
+00901 P-RETURN   (I4)                   /* return code
+01001 P-MESSAGE  (A) DYNAMIC            /* message
+0110LOCAL
+01201 X-MAX      (I4)                   /* max counter
+01301 X-COUNT    (I4)                   /* counter
+01401 X-SUM      (I4)                   /* sum
+01501 X-WORK     (A) DYNAMIC            /* work
+0160END-DEFINE
+0170
+0180INPUT 'Summarize the numbers from 1 to' X-MAX
+0190
+0200/* Get the Natural Profiler monitoring state
+0210CALLNAT 'USR8210N' 'State' P-RETURN P-MESSAGE
+0220COMPRESS 'RC=' P-RETURN INTO X-WORK LEAVING NO
+0230PRINT 'USR8210N' X-WORK '-' P-MESSAGE
+0240
+0250/* Start Natural Profiler monitoring
+0260CALLNAT 'USR8210N' 'Start' P-RETURN P-MESSAGE
+0270COMPRESS 'RC=' P-RETURN INTO X-WORK LEAVING NO
+0280PRINT 'USR8210N' X-WORK '-' P-MESSAGE
+0290
+0300/* Monitor this part
+0310X-SUM := 0
+0320FOR X-COUNT := 1 TO X-MAX
+0330  ADD X-COUNT TO X-SUM
+0340END-FOR
+0350
+0360/* Pause Natural Profiler monitoring
+0370CALLNAT 'USR8210N' 'Pause' P-RETURN P-MESSAGE
+0380COMPRESS 'RC=' P-RETURN INTO X-WORK LEAVING NO
+0390PRINT 'USR8210N' X-WORK '-' P-MESSAGE
+0400
+0410COMPRESS 'Sum 1 to ' X-MAX ':' X-SUM INTO X-WORK
+0420PRINT / X-WORK
+0430
+0440END

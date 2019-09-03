@@ -1,0 +1,75 @@
+0010Get or set value of an environment variable
+0020.
+0030Documentation ......... USR6202T    /*  Text object
+0040Interface ............. USR6202N    /*  Cataloged subprogram
+0050Example Program ....... USR6202P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL ENVIRONMENT
+0100.
+0110Keywords .............. ENVIRONMENT, GET, SET, VARIABLE
+0120.
+0130Function .............. This interface gets and sets the character
+0140                        string for an environment variable.
+0150                        User environment variables can also be created
+0160                        for the current session.
+0170                        USR1053N is similar to the get function.
+0180.
+0190                        Exception:
+0200                        For NATROOT etc. the routine can set
+0210                        the assignment but with the get function only
+0220                        the current Natural environment variable will be
+0230                        found.
+0240.
+0250.
+0260Parameters
+0270----------
+0280Define the following parameters with the DEFINE DATA statement:
+0290.
+0300Input ......... 1 FUNCTION     (A01)
+0310                     G - Get environment variable
+0320                     S - Set environment variable
+0330.
+0340Input ......... 1 ENV-VARIABLE (A80)
+0350                     Environment variable. It must be entered
+0360                     without leading special character (e.g. $).
+0370.
+0380Input/output .. 1 CHAR-STRING (A253)
+0390                     The character string which has to be assigned to /
+0400                     is set by the environment variable.
+0410.
+0420Output ........ 1 RESPONSE (I04)
+0430                     Response code.
+0440                     Possible values are for Function 'G':
+0450                        0 - Ok
+0460                        1 - Environment variable doesn't fit into field
+0470                       -1 - Environment variable does not exist
+0480                      -90 - Invalid function code
+0490                      -91 - Name of environment variable is empty.
+0500                     Possible values are for Function 'S':
+0510                        0 - Ok. Environment variable set.
+0520                        1 - Environment variable set, but modification
+0530                            will only be seen by operating system
+0540                            (using called external programs)
+0550                            The Get function will only receive the
+0560                            value after the Natural startup.
+0570                       -1 - Environment variable could not be set
+0580                       -9 - No more storage available
+0590                      -90 - Invalid function code
+0600                      -91 - Name of environment variable is empty.
+0610.
+0620.
+0630Interface Call
+0640--------------
+0650Use the interface with the CALLNAT statement:
+0660.
+0670CALLNAT 'USR6202N'  FUNCTION ENV-VARIABLE CHAR-STRING RESPONSE
+0680.
+0690.
+0700Using the Application Programming Interface:
+0710--------------------------------------------
+0720Copy the subprogram USR6202N to the library SYSTEM or the steplib
+0730library respectively, or to the required library.
+0740.
+0750*****  End of description  *****

@@ -1,0 +1,14 @@
+0010** Example 'FUNCCX01': Parameter changed within function (Program)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+0040  1 #I      (I2) INIT <1>
+0050  1 #RESULT (I2)
+0060END-DEFINE
+0070*
+0080COMPUTE #RESULT := #I + F#RETURN(<#I>)  /* First evaluate function call,
+0090                                        /* then execute the addition.
+0100*
+0110WRITE '#I     :' #I /
+0120      '#RESULT:' #RESULT
+0130*
+0140END

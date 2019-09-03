@@ -1,0 +1,121 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR2036N' or to include 'USR2036Z'.
+0030/*
+0040/*
+0050/*  First Step:
+0060/*  Determine start and end time with *TIMESTMP
+0070/*
+0080/*  Second Step:
+0090/*  Use subprogram USR2036N to convert value into numeric value
+0100/*
+0110/*  Third Step:
+0120/*  Use copycode USR2036Z to convert value into numeric value
+0130/*
+0140/*
+0150/*  For this example we assume that bit position 59 of *TIMESTMP
+0160/*  represents 3,90625 nano seconds. See IBM documentation of the
+0170/*  STORE CLOCK.
+0180/*
+0190/***********************************************************************
+0200/*
+0210DEFINE DATA
+0220LOCAL
+023001 TIME-START       (B08)    /* Paramters for USR2036N and USR2036Z
+024001 TIME-END         (B08)
+025001 VALUE-START      (P20)
+026001 VALUE-END        (P20)
+0270*
+02801 USR2036_B8        (B8)  /* Local variables used in copycode USR2036Z
+02901 REDEFINE USR2036_B8
+0300  2 USR2036_B81     (B3)
+0310  2 USR2036_B82     (B3)
+0320  2 USR2036_B83     (B2)
+03301 USR2036_I41       (I4)
+03401 USR2036_I42       (I4)
+03501 USR2036_I43       (I4)
+0360/*
+0370LOCAL
+038001 #I               (I04)
+039001 #NUM             (I04)
+040001 #TEXT            (A45)
+041001 NANO-UNIT        (P20.5) INIT<3.90625> /* bit 59 in nano units
+042001 ELAPSED-TIME     (P20)
+043001 NANO-START       (P20)
+044001 NANO-END         (P20)
+045001 ELAPSED-TIME-A   (A40)
+0460END-DEFINE
+0470/***********************************************************************
+0480/*
+0490/*  First Step:
+0500/*  Determine start and end time with *TIMESTMP
+0510/*
+0520MOVE *TIMESTMP TO  TIME-START     /* start time
+0530/*
+0540/* Statements to be checked
+0550/*
+0560FOR #I = 1 TO 1000
+0570  MOVE 'ABC   A B C   .A.  .B.  .C.    -A-  -B-  -C- ' TO #TEXT
+0580  EXAMINE #TEXT FOR 'A' GIVING NUMBER #NUM
+0590END-FOR
+0600/*
+0610/*  Stop the stop watch
+0620/*
+0630MOVE *TIMESTMP TO TIME-END        /* end time
+0640/*
+0650/*  Second Step:
+0660/*  Use subprogram USR2036N to convert value into numeric value
+0670/*
+0680CALLNAT 'USR2036N' TIME-START VALUE-START
+0690CALLNAT 'USR2036N' TIME-END   VALUE-END
+0700/*
+0710VALUE-START := VALUE-START / 16         /* unit in 3.90625 nano seconds
+0720NANO-START  := VALUE-START * NANO-UNIT  /* unit in 1 nano second
+0730*
+0740VALUE-END := VALUE-END / 16             /* unit in 3.90625 nano seconds
+0750NANO-END  := VALUE-END * NANO-UNIT      /* unit in 1 nano second
+0760*
+0770ELAPSED-TIME := NANO-END - NANO-START
+0780/*
+0790/* Show elapsed time in milli seconds with precision of nano seconds
+0800/*
+0810MOVE EDITED ELAPSED-TIME (EM=Z(12)9'.'9(6)) TO ELAPSED-TIME-A
+0820MOVE LEFT ELAPSED-TIME-A TO ELAPSED-TIME-A
+0830/*
+0840WRITE 'Convert *TIMESTMP to nano seconds using subprogram USR2036N'
+0850  /   '-----------------------------------------------------------' /
+0860WRITE 'Start timestamp ...................' TIME-START
+0870  /   'Start timestamp in nano seconds ...' NANO-START (AD=L)
+0880WRITE 'End timestamp .....................' TIME-END
+0890  /   'End timestamp in nano seconds .....' NANO-END (AD=L)
+0900WRITE 'Elapsed time in milli seconds .....' ELAPSED-TIME-A  //
+0910/*
+0920RESET VALUE-START VALUE-END             /* reset to initial value
+0930/*
+0940/*  Third Step:
+0950/*  Use copycode USR2036Z to convert value into numeric value
+0960/*
+0970INCLUDE USR2036Z 'TIME-START' 'VALUE-START'
+0980INCLUDE USR2036Z 'TIME-END'   'VALUE-END'
+0990/*
+1000VALUE-START := VALUE-START / 16         /* unit in 3.90625 nano seconds
+1010NANO-START  := VALUE-START * NANO-UNIT  /* unit in 1 nano second
+1020/*
+1030VALUE-END := VALUE-END / 16             /* unit in 3.90625 nano seconds
+1040NANO-END  := VALUE-END * NANO-UNIT      /* unit in 1 nano second
+1050/*
+1060ELAPSED-TIME := NANO-END - NANO-START
+1070/*
+1080/* Show elapsed time in milli seconds with precision of nano seconds
+1090/*
+1100MOVE EDITED ELAPSED-TIME (EM=Z(12)9'.'9(6)) TO ELAPSED-TIME-A
+1110MOVE LEFT ELAPSED-TIME-A TO ELAPSED-TIME-A
+1120/*
+1130WRITE 'Convert *TIMESTMP to nano seconds using copycode USR2036Z'
+1140  /   '---------------------------------------------------------'  /
+1150WRITE 'Start timestamp ...................' TIME-START
+1160  /   'Start timestamp in nano seconds ...' NANO-START (AD=L)
+1170WRITE 'End timestamp .....................' TIME-END
+1180  /   'End timestamp in nano seconds .....' NANO-END (AD=L)
+1190WRITE 'Elapsed time in milli seconds .....' ELAPSED-TIME-A  //
+1200/*
+1210END

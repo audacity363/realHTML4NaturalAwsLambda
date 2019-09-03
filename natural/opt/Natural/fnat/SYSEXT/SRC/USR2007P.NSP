@@ -1,0 +1,92 @@
+0010* Set a default server for NATURAL RPC or
+0020* Get information about which default server is set
+0030*
+0040* SET/GET RPC DEFAULT SERVER INFORMATION
+0050*
+0060*
+0070* FUNCTION ................  SET OR GET INFORMATION ABOUT THE
+0080*                            NATURAL RPC DEFAULT SERVER
+0090*
+0100* KEYWORDS ................  RPC, SERVER
+0110*
+0120*
+0130* Change with NAT414/NAT62:                                      /* V41
+0140* 1) The parameters NODE and SERVER are increased from (A8) to (A32).
+0150*    Since these parameters are transferred 'BY VALUE RESULT', the
+0160*    former version of USR2007P is still compatible for use.
+0170* 2) A new parameter NOSERVDIR is added. This parameter is optional.
+0180*
+0190*
+0200*
+0210* PARAMETER LAYOUT:
+0220* -----------------
+0230* 01 FUNCTION  (A1)  -  G: GET DATA, P: PUT DATA (SET NEW SERVER DATA)
+0240* 01 NODE      (A32) -  NODE ID OF DEFAULT SERVER                /* V41
+0250* 01 SERVER    (A32) -  SERVER NAME OF DEFAULT SERVER            /* V41
+0260* 01 LOGON     (A1)  -  LOGON REQUESTED? Y/' '
+0270* 01 BIKE      (A1)  -  TRANSPORT BIKE - B(BROKER), C(CSCI)
+0280* 01 NOSERVDIR (A1)  -  SERVICE DIRECTORY: Y (NOT REQUIRED)      /* V41
+0290*                                          N (REQUIRED)
+0300*
+0310* Maintenance log ****************************************************
+0320*
+0330* Date     User  SAGSIS   Description
+0340* -------- ----- -------  --------------------------------------------
+0350* 30.03.05 GWA   P253795  Increase NODE/SERVER to (A32)          /* V41
+0360*                         Add option NOSERVDIR
+0370**********************************************************************
+0380*
+0390DEFINE DATA LOCAL
+04001 PFUNCTION   (A1)   /* 'G' get data, 'P' put data
+04101 PREF-NODE   (A32)                                              /* V41
+04201 PREF-SERVER (A32)                                              /* V41
+04301 PREF-LOGON  (A1)
+04401 PREF-BIKE   (A1)
+04501 NOSERVDIR   (A1)
+04601 MSG-TEXT    (A70)
+0470END-DEFINE
+0480*
+0490DEFINE WINDOW DEF-SERVER
+0500  SIZE AUTO
+0510  BASE 05/9
+0520  TITLE  '- RPC Default Server -'
+0530  CONTROL SCREEN
+0540  FRAMED ON
+0550*
+0560RESET PREF-NODE PREF-SERVER PREF-LOGON PREF-BIKE
+0570RESET MSG-TEXT
+0580*
+0590REPEAT
+0600  RESET PFUNCTION
+0610  INPUT WINDOW='DEF-SERVER'                                      /* V41
+0620    WITH TEXT MSG-TEXT
+0630    / ' Function:' PFUNCTION (AD=MT) '                     (G/P/.)' /
+0640    ' ****************************************' /
+0650    ' Node  :' PREF-NODE (AD=MT) '    (node name)' /
+0660    ' Server:' PREF-SERVER (AD=MT) '    (server name)' /
+0670    ' Logon required  :' PREF-LOGON (AD=MT) '   (Y/blank)' /
+0680    ' Transport Bike  :' PREF-BIKE (AD=MT) '   (B/C)' /
+0690    ' No ServDirectory:' NOSERVDIR (AD=MT) '   (Y/N)' /          /* V41
+0700*
+0710  RESET MSG-TEXT
+0720*
+0730  IF PFUNCTION = '.'
+0740    ESCAPE BOTTOM
+0750  END-IF
+0760*
+0770  IF PFUNCTION NE 'G' AND PFUNCTION NE 'P'
+0780    ASSIGN MSG-TEXT = 'Please enter Function G or P.'
+0790    ESCAPE TOP
+0800  END-IF
+0810*
+0820  CALLNAT 'USR2007N' PFUNCTION PREF-NODE PREF-SERVER
+0830    PREF-LOGON PREF-BIKE NOSERVDIR                               /* V41
+0840*
+0850  IF PFUNCTION = 'G'
+0860    ESCAPE TOP
+0870  END-IF
+0880*
+0890  ESCAPE BOTTOM
+0900END-REPEAT
+0910*
+0920END

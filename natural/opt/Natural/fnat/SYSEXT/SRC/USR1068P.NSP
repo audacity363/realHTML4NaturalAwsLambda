@@ -1,0 +1,43 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1068N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR1068L
+0070   2 INPUTS
+0080     3 FUNCTION       (A02)
+0090   2 INPUT-OUTPUTS
+0100     3 MADIO          (I02)
+0110     3 MAXCL          (I02)
+0120   2 OUTPUTS
+0130     3 DBMS-CALLS     (I02)
+0140     3 RESPONSE       (I04)
+0150 /*
+0160 1 USR1068N
+0170   2 VERSION          (I01)     INIT <0>
+0180 1 REDEFINE USR1068N
+0190   2 EXTENDED-PARMS
+0200     3 EXTENDED-DATA  (A01/1:1)
+0210END-DEFINE
+0220/*
+0230SET KEY ALL
+0240FUNCTION := 'G'
+0250/*
+0260REPEAT
+0270  INPUT (AD=MITL'_' IP=OFF)
+0280    /  'Get or reset the value of DBMS calls:' (I)
+0290    /  '-' (37) (I) /
+0300    /  'Function .............' FUNCTION  5X '(G, SM, SX, RC)'
+0310    /  'MADIO ................' MADIO
+0320    /  'MAXCL ................' MAXCL
+0330    /  'Counter DBMS Calls ...' DBMS-CALLS (AD=O)
+0340   //  'Response .............' RESPONSE (AD=O)
+0350  ///  'Press any PF-key to stop.'
+0360  /*
+0370  IF *PF-KEY NE 'ENTR'
+0380    ESCAPE BOTTOM
+0390  END-IF
+0400  /*
+0410  CALLNAT 'USR1068N' USR1068L USR1068N.EXTENDED-PARMS
+0420END-REPEAT
+0430END

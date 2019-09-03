@@ -1,0 +1,68 @@
+0010Get or set parameters for SSL support
+0020.
+0030Documentation ......... USR2035T    /*  Text object
+0040Interface ............. USR2035N    /*  Cataloged subprogram
+0050Example Program ....... USR2035P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC
+0100.
+0110Keywords .............. CLIENT, ENTIREX, RPC, SERVER, SSL
+0120.
+0130Function .............. Set/Get the SSL parameters to be used for the
+0140                        communication to EntireX Broker via SSL.
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+0210    INPUT
+0220         FUNCTION  (A1)   - P: set SSL parameter, G: get SSL parameter
+0230.
+0240    INOUT
+0250         SSLPARMS  (A128) - Parameter string used for SSL communication
+0260                            P: passed parameter string is saved
+0270                            G: saved  parameter string is returned
+0280.
+0290Interface Call
+0300--------------
+0310Use the interface with the CALLNAT statement:
+0320.
+0330CALLNAT 'USR2035N' FUNCTION SSLPARMS
+0340.
+0350.
+0360Using the Application Programming Interface:
+0370--------------------------------------------
+0380Copy the subprogram USR2035N to the library SYSTEM or the steplib
+0390library respectively, or to the required library.
+0400.
+0410To set SSL parameters:
+0420The calling program has to be executed before an EntireX Broker using
+0430SSL communication is referenced the first time.
+0440.
+0450To accomplish this in case of an Natural RPC server, put the name of
+0460the calling program onto the Natural STACK when starting the server.
+0470Sample STACK option:
+0480STACK=(LOGON "server library";USR2035P P "SSL parameter string")
+0490.
+0500Functionality:
+0510--------------
+0520Function P (set SSL parameters):
+0530The passed SSL parameter string SSLPARMS is saved and afterwards used
+0540for the internal execution of the EntireX Broker function SETSSLPARMS.
+0550SETSSLPARMS is implicitely executed each time before an EntireX Broker
+0560using SSL communication is referenced the first time.
+0570.
+0580Notes:
+0590- SETSSLPARMS is only executed if the referenced EntireX Broker name
+0600  either ends with :SSL or begins with SSL://
+0610- If USR2035N is called for a Natural RPC server the passed parameter
+0620  string is used for the server connection as well as for RPC calls
+0630  executed by the server.
+0640.
+0650Function G (get SSL parameters):
+0660The internally saved SSL parameter string is returned.
+0670.
+0680***** End of Description *****

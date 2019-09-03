@@ -1,0 +1,48 @@
+0010* >Natural Source Header 000000
+0020* :Mode S
+0030* :CP
+0040* <Natural Source Header
+0050/** New Subprogram AUTOCOMP.
+0060/**
+0070DEFINE DATA
+0080PARAMETER
+00901 ID (U) DYNAMIC /* The dataset to be delivered.
+01001 TERM (U) DYNAMIC /* The filtering term.
+01101 SUGGEST (U) DYNAMIC /* The suggested data in JSON format.
+0120LOCAL
+01301 I (I2)
+01401 LCITY (U) DYNAMIC
+01501 CCITY (I2) CONST <7>
+01601 CITY (U/1:CCITY) DYNAMIC INIT
+0170  <
+0180  "Aschaffenburg",
+0190  "Bielefeld",
+0200  "Darmstadt",
+0210  "Frankfurt",
+0220  "Lingen",
+0230  "Karlsruhe",
+0240  "Zwickau"
+0250  >
+0260END-DEFINE
+0270*
+0280OPTIONS TQMARK=OFF /* Otherwise " is turned to ' ...
+0290TERM := *TRANSLATE(TERM, LOWER)
+0300*
+0310DECIDE ON FIRST ID
+0320  VALUE 'countries'
+0330    SUGGEST := '["France","Germany","Russia"]'
+0340*
+0350  VALUE 'cities'
+0360    FOR I := 1 TO CCITY
+0370    LCITY := *TRANSLATE(CITY(I), LOWER)
+0380      IF LCITY = SCAN TERM
+0390        COMPRESS SUGGEST '"' CITY(I) '",' TO SUGGEST LEAVING NO
+0400      END-IF
+0410    END-FOR
+0420    COMPRESS "[" SUGGEST "]" TO SUGGEST LEAVING NO
+0430*
+0440  NONE
+0450    SUGGEST := '[]'
+0460END-DECIDE
+0470*
+0480END

@@ -1,0 +1,24 @@
+0010/* Check type of all available data bases
+0020/*
+0030/* This program serves as example how to design a user-defined
+0040/* program to call 'USR1022N'
+0050/**********************
+0060DEFINE DATA
+0070LOCAL
+0080 1 DB-TYPE  (A01/0:255)
+0090 1 CNT      (P03)
+0100END-DEFINE
+0110/*
+0120CALLNAT 'USR1022N' DB-TYPE (*)
+0130/*
+0140WRITE 'Type of DB   0 ......' DB-TYPE (000)
+0150  /   'Type of DB 255 ......' DB-TYPE (255)
+0160  /   '-' (23)
+0170/*
+0180FOR CNT 1 254
+0190  IF DB-TYPE (CNT) NE DB-TYPE (0)
+0200    WRITE 'Type of DB' CNT (SG=F) '......' DB-TYPE (CNT)
+0210  END-IF
+0220END-FOR
+0230/*
+0240END

@@ -1,0 +1,179 @@
+0010Convert date and time format
+0020.
+0030Documentation ......... USR1023T    /*  Text object
+0040Interface ............. USR1023N    /*  Cataloged subprogram
+0050Copycode Interface .... USR1023W    /*  Copycode source
+0060                        USR1023X    /*  Copycode source
+0070                        USR1023Y    /*  Copycode source
+0080                        USR1023Z    /*  Copycode source
+0090Example Program ....... USR1023P    /*  Source program
+0100.
+0110Product Code .......... NAT
+0120.
+0130Category .............. DATE / TIME SUPPORT
+0140.
+0150Keywords .............. +MOD-NAT-8.2.6,
+0160                        *DATX, *TIMESTMP, *TIMX, COPYCODE-INTERFACE,
+0170                        DATE, STORE CLOCK, TIME
+0180.
+0190Function .............. Converts *TIMESTMP and other variables
+0200                        containing time information into different
+0210                        format.
+0220                        Note:
+0230                        With NAT 8.2.6 the performance is enhanced.
+0240                        Additionally, the copycodes USR1023W, USR1023X,
+0250                        USR1023Y and USR1023Z are available which
+0260                        provide a better performance than calling the
+0270                        subprogram.
+0280.
+0290Copycode Function ..... USR1023W - Convert microseconds into a store
+0300                                   clock value.
+0310                        USR1023X - Convert microseconds into Natural
+0320                                   time.
+0330                        USR1023Y - Convert a store clock value into
+0340                                   microseconds.
+0350                        USR1023Z - Convert Natural time into
+0360                                   microseconds.
+0370.
+0380.
+0390Subprogram Description
+0400======================
+0410.
+0420Parameters
+0430----------
+0440Define the following parameters with the DEFINE DATA statement:
+0450.
+0460Definitions for subprogram USR1023N
+04701 P-FUNCTION          (A1)   /* Input
+04801 P-RETURN-CODE       (N4)   /* Output
+04901 P-VALUES
+0500  2 P-TIME            (T)    /* Input:  P-FUNCTION='T'
+0510                             /* Output: P-FUNCTION='D', 'M' or 'S'
+0520  2 P-DATE            (D)    /* Input:  P-FUNCTION='T' or 'D'
+0530                             /* Output: P-FUNCTION='M' or 'S'
+0540  2 P-STORECLOCK      (B8)   /* Input:  P-FUNCTION='S'
+0550                             /* Output: P-FUNCTION='T', 'D' or 'M'
+0560  2 P-MICROSECONDS    (P19)  /* Input:  P-FUNCTION='M'
+0570                             /* Output: P-FUNCTION='T', 'D' or 'S'
+0580.
+0590.
+0600Description of the parameters:
+0610.
+0620P-FUNCTION
+0630  Function code; possible values are:
+0640    'T' - Convert P-TIME and P-DATE into P-STORECLOCK and P-MICROSECONDS
+0650          It combines the time (hh:mm:ss.t) from P-TIME and the
+0660          date (yyyy-mm-dd) from P-DATE for the conversion.
+0670    'D' - Convert P-DATE into P-TIME, P-STORECLOCK and P-MICROSECONDS
+0680    'M' - Convert P-MICROSECONDS into P-DATE, P-TIME and P-STORECLOCK
+0690    'S' - Convert P-STORECLOCK into P-DATE, P-TIME and P-MICROSECONDS
+0700P-RETURN-CODE
+0710  Return code; possible values are:
+0720    0000  No error occurred
+0730    0001  Invalid function specified
+0740    0002  Value outside of Natural time range
+0750    0003  Value outside of store clock range
+0760    0004  Error during conversion from store clock into
+0770          microseconds (UNIX/Windows only)
+0780    0005  Error during conversion from microseconds into
+0790          store clock (UNIX/Windows only)
+0800P-TIME
+0810  Value in Natural time (T) format (such as *TIMX).
+0820  The range for Natural time values goes from
+0830  0000-01-02 00:00:00.0 to 3168-11-16 09:46:39.9.
+0840P-DATE
+0850  Value in Natural date (D) format (such as *DATX).
+0860P-STORECLOCK
+0870  Value in store clock format (such as *TIMESTMP).
+0880  The range for store clock values goes from
+0890  1900-01-01 00:00:00.0 (GMT) to 2042-09-17 23:53:47.3 (GMT).
+0900P-MICROSECONDS
+0910  Value in microseconds (since 1900-01-01 00:00:00.000000).
+0920  Valid microsecond values for conversion to store clock:
+0930                     0 -  4503599627370495
+0940  Valid microsecond values for conversion to Natural time:
+0950    -59958144000099999 - 40041855999999999
+0960.
+0970.
+0980Interface Call
+0990--------------
+1000Use the subprogram with the CALLNAT statement:
+1010  CALLNAT 'USR1023N' P-FUNCTION P-RETURN-CODE P-VALUES
+1020.
+1030.
+1040Using the Application Programming Interface:
+1050--------------------------------------------
+1060Copy the subprogram USR1023N to the library SYSTEM or the steplib
+1070library respectively, or to the required library.
+1080.
+1090.
+1100Copycode Description
+1110====================
+1120.
+1130Parameters
+1140----------
+1150Define the following parameters with the DEFINE DATA statement:
+1160.
+1170Definitions for copycode USR1023W
+11801 C-MICROSECONDS      (P19) or (N19) or (F8) /* input
+11901 C-STORECLOCK        (B8)                   /* output
+1200.
+1210Definitions for copycode USR1023X
+12201 C-MICROSECONDS      (P19) or (N19) or (F8) /* input
+12301 C-TIME-T            (T)
+12401 REDEFINE C-TIME-T
+1250  2 C-TIME-P12        (P12)                  /* output
+1260.
+1270Definitions for copycode USR1023Y
+12801 C-STORECLOCK        (B8)                   /* input
+12901 C-MICROSECONDS      (P19) or (N19) or (F8) /* output
+1300.
+1310Definitions for copycode USR1023Z
+13201 C-TIME-T            (T)
+13301 REDEFINE C-TIME-T
+1340  2 C-TIME-P12        (P12)                  /* input
+13501 C-MICROSECONDS      (P19) or (N19) or (F8) /* output
+1360.
+1370.
+1380Description of the parameters:
+1390.
+1400C-MICROSECONDS
+1410  Value in microseconds (since 1900-01-01 00:00:00).
+1420C-STORECLOCK
+1430  Value in store clock format (such as *TIMESTMP).
+1440C-TIME-P12
+1450  In format (P12) redefined Natural time value (T) (such as *TIMX).
+1460.
+1470.
+1480Additional Data Definitions for Copycodes USR1023W and USR1023Y
+1490--------------------------------------------------------------
+1500Define the following variables with the DEFINE DATA statement:
+1510.
+15201 USR1023_B8     (B8)  /* variables used in copycode USR1023W/Y
+15301 REDEFINE USR1023_B8
+1540  2 USR1023_B81  (B3)
+1550  2 USR1023_B82  (B3)
+1560  2 USR1023_B83A (B1)
+1570  2 USR1023_B83B (B1)
+15801 USR1023_I41    (I4)
+15901 USR1023_I42    (I4)
+16001 USR1023_I43    (I4)
+1610.
+1620.
+1630Interface Call
+1640--------------
+1650Use the copycodes with the INCLUDE statement:
+1660  INCLUDE USR1023W 'C-MICROSECONDS' 'C-STORECLOCK'
+1670  INCLUDE USR1023X 'C-MICROSECONDS' 'C-TIME-P12'
+1680  INCLUDE USR1023Y 'C-STORECLOCK'   'C-MICROSECONDS'
+1690  INCLUDE USR1023Z 'C-TIME-P12'     'C-MICROSECONDS'
+1700.
+1710.
+1720Using the Application Programming Interface:
+1730--------------------------------------------
+1740Copy the copycode USR1023W, USR1023X, USR1023Y or USR1023Z to the
+1750required library. Add the additional data definitions for the copycodes
+1760USR1023W and USR1023Y to the data definitions of your program.
+1770.
+1780.
+1790***** End of Description *****

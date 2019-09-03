@@ -1,0 +1,20 @@
+0010** Example 'PCDOEX2': DOWNLOAD PC FILE
+0020**
+0030** NOTE: Example requires that Natural Connection is installed.
+0040************************************************************************
+0050DEFINE DATA LOCAL
+006001 PERS VIEW OF EMPLOYEES
+0070  02 PERSONNEL-ID
+0080  02 NAME
+0090  02 CITY
+010001 CMD (A80)                                   /* Variable for transfer
+0110END-DEFINE                                     /* of the PC command
+0120*
+0130MOVE 'SET PCFILE 7 DOWN DATA PERS.NCD' TO CMD  /* PC command to define
+0140*
+0150DOWNLOAD PC FILE 6 COMMAND CMD                 /* Command download
+0160*
+0170FIND PERS WITH CITY = 'NEW YORK'               /* Data selection
+0180  DOWNLOAD PC FILE 7 CITY NAME PERSONNEL-ID    /* Data download
+0190END-FIND
+0200END

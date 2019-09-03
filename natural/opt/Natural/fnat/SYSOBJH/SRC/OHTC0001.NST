@@ -1,0 +1,28 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Function
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180The Compact Mode of the Natural Object Handler offers
+0190the following functions:
+0200
+0210  U   Unload: You use the unload function to unload data from
+0220        the Natural system environment into Natural work files.
+0230  L   Load: You use the load function to load data from
+0240        work files into the Natural environment.
+0250  S   Scan: You use the scan function to scan a work file
+0260        for specific objects or for the whole contents.
+0270
+0280<HelpTextEnd>

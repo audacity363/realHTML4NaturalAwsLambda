@@ -1,0 +1,52 @@
+0010Convert language code
+0020.
+0030Documentation ......... USR1030T    /*  Text object
+0040Interface ............. USR1030N    /*  Cataloged subprogram
+0050Example Program ....... USR1030P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATA HANDLING
+0100.
+0110Keywords .............. *LANGUAGE
+0120.
+0130Function .............. Converts language code into language number
+0140                        and vice versa, along with the language name.
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+0210 1 LANG-NUMBER    (I01)   /* Language number (similar to *LANGUAGE)
+0220 1 LANG-CODE-MAP  (A01)   /* Language code in map names
+0230 1 LANG-TEXT      (A40)   /* Name of language
+0240.
+0250Interface Call
+0260--------------
+0270Use the interface with the CALLNAT statement:
+0280.
+0290CALLNAT 'USR1030N' LANG-NUMBER LANG-CODE-MAP LANG-TEXT
+0300.
+0310.
+0320Using the Application Programming Interface:
+0330--------------------------------------------
+0340Copy the subprogram USR1030N to the library SYSTEM or the steplib
+0350library respectively, or to the required library.
+0360.
+0370Description of the parameters:
+0380.
+0390LANG-NUMBER, LANG-CODE-MAP (Input/output)
+0400  If LANG-NUMBER is filled, the corresponding code in a map
+0410  will be returned in LANG-CODE-MAP.
+0420  If LANG-CODE-MAP is filled, the corresponding language
+0430  code will be returned in LANG-NUMBER.
+0440  LANG-NUMBER has a higher priority if both parameters are filled.
+0450.
+0460LANG-TEXT (Output)
+0470  LANG-TEXT returns the language. Blank indicates that LANG-NUMBER
+0480  and/or LANG-CODE-MAP was invalid.
+0490  An error occurs if LANG-NUMBER = 0 and LANG-CODE-MAP = ' '.
+0500.
+0510.
+0520*****  End of Description  *****

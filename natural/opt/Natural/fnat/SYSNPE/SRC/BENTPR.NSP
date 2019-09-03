@@ -1,0 +1,158 @@
+0010* Program   BENTPR
+0020* View      ENTER-PROCEDURE
+0030*
+0040* Function  Submit a Job using ENTER-PROCEDURE
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* STL 10-07-01   NPE351:   initial version
+0090* ======================================================================
+0100*
+0110DEFINE DATA GLOBAL USING TUTO
+0120            LOCAL  USING BENTPR-L
+0130            LOCAL
+0140*
+015001 #OBJECT                  (A6)
+016001 #DSNAME                  (A54)
+017001 #PASSWORD                (A8)
+018001 #FUNCTION                (A8)
+019001 #ELEMENT                 (A64)
+020001 #USERID                  (A8)
+021001 #JOB-NAME                (A8)
+022001 #ACCOUNT-NUMBER          (A8)
+023001 #PRIORITY                (A3)
+024001 #EXPRESS                 (A3)
+025001 #TIME                    (A5)
+026001 #SYSTEM-JOB-VARIABLE     (A54)
+027001 #JOB-VARIABLE-PASSWORD   (A4)
+028001 #USER-PASSWORD           (A8)
+029001 #JOB-CLASS               (A8)
+030001 #RUN-PRIORITY            (A3)
+031001 #START-OPTION            (A17)
+032001 #START-DATX              (D)
+033001 #START-TIMX              (T)
+034001 #REPEAT-OPTION           (A17)
+035001 #REPEAT-TIME             (A5)
+036001 #COMMAND-RESPONSE        (A253)
+037001 #I                       (P1)
+0380END-DEFINE
+0390PERFORM PF-KEY
+0400*
+0410* ------------------------------ MAIN LOOP ----------------------------
+0420*
+0430REPEAT
+0440  PERFORM SCREEN-IO
+0450  DECIDE ON FIRST #OBJECT
+0460    VALUE 'FILE'   PERFORM SUBMIT-BS2000-FILE
+0470    VALUE 'MEMBER' PERFORM SUBMIT-LMS-MEMBER
+0480    NONE         IGNORE
+0490  END-DECIDE
+0500END-REPEAT
+0510*
+0520* ------------------------------ submit-bs2000-file -------------------
+0530*
+0540DEFINE SUBROUTINE SUBMIT-BS2000-FILE
+0550PROCESS ENTER-PROCEDURE
+0560        USING NODE                  = ##NODE
+0570          ,   DSNAME                = #DSNAME
+0580          ,   PASSWORD              = #PASSWORD
+0590          ,   USERID                = #USERID
+0600          ,   JOB-NAME              = #JOB-NAME
+0610          ,   ACCOUNT-NUMBER        = #ACCOUNT-NUMBER
+0620          ,   JOB-PRIORITY          = #PRIORITY
+0630          ,   TIME                  = #TIME
+0640          ,   MONITOR-JOB-VARIABLE  = #SYSTEM-JOB-VARIABLE
+0650          ,   JOB-VARIABLE-PASSWORD = #JOB-VARIABLE-PASSWORD
+0660          ,   USER-PASSWORD         = #USER-PASSWORD
+0670          ,   JOB-CLASS             = #JOB-CLASS
+0680          ,   START-OPTION          = #START-OPTION
+0690          ,   REPEAT-OPTION         = #REPEAT-OPTION
+0700          ,   REPEAT-TIME           = #REPEAT-TIME
+0710       GIVING ERROR-CODE
+0720              ERROR-TEXT
+0730              SYSTEM-CODE
+0740              COMMAND-RESPONSE
+0750IF ERROR-CODE NE 0
+0760   INCLUDE BERR---C
+0770   ESCAPE ROUTINE
+0780END-IF
+0790*
+0800PROCESS ENTER-PROCEDURE
+0810        USING NODE                  = ##NODE
+0820          ,   DSNAME                = #DSNAME
+0830          ,   FUNCTION              = 'CLOSE'
+0840       GIVING ERROR-CODE
+0850              ERROR-TEXT
+0860              SYSTEM-CODE
+0870              COMMAND-RESPONSE
+0880              JOB-ID
+0890IF ERROR-CODE NE 0
+0900   INCLUDE BERR---C
+0910  ELSE
+0920   WRITE '=' COMMAND-RESPONSE (EM=X(79))
+0930   ASSIGN ##MSG-NR   = 1035
+0940   ASSIGN ##MSG-TXT1 = JOB-ID
+0950END-IF
+0960END-SUBROUTINE
+0970*
+0980* ------------------------------ submit-lms-member --------------------
+0990*
+1000DEFINE SUBROUTINE SUBMIT-LMS-MEMBER
+1010PROCESS ENTER-PROCEDURE
+1020        USING NODE                  = ##NODE
+1030          ,   DSNAME                = #DSNAME
+1040          ,   ELEMENT               = #ELEMENT
+1050          ,   PASSWORD              = #PASSWORD
+1060          ,   USERID                = #USERID
+1070          ,   JOB-NAME              = #JOB-NAME
+1080          ,   ACCOUNT-NUMBER        = #ACCOUNT-NUMBER
+1090          ,   JOB-PRIORITY          = #PRIORITY
+1100          ,   TIME                  = #TIME
+1110          ,   MONITOR-JOB-VARIABLE  = #SYSTEM-JOB-VARIABLE
+1120          ,   JOB-VARIABLE-PASSWORD = #JOB-VARIABLE-PASSWORD
+1130          ,   USER-PASSWORD         = #USER-PASSWORD
+1140          ,   JOB-CLASS             = #JOB-CLASS
+1150          ,   START-OPTION          = #START-OPTION
+1160          ,   REPEAT-OPTION         = #REPEAT-OPTION
+1170          ,   REPEAT-TIME           = #REPEAT-TIME
+1180       GIVING ERROR-CODE
+1190              ERROR-TEXT
+1200              SYSTEM-CODE
+1210              COMMAND-RESPONSE
+1220              JOB-ID
+1230IF ERROR-CODE NE 0
+1240   INCLUDE BERR---C
+1250   ESCAPE ROUTINE
+1260END-IF
+1270PROCESS ENTER-PROCEDURE
+1280        USING NODE                  = ##NODE
+1290          ,   DSNAME                = #DSNAME
+1300          ,   FUNCTION              = 'CLOSE'
+1310       GIVING ERROR-CODE
+1320              ERROR-TEXT
+1330              SYSTEM-CODE
+1340              COMMAND-RESPONSE
+1350              JOB-ID
+1360IF ERROR-CODE NE 0
+1370   INCLUDE BERR---C
+1380  ELSE
+1390   WRITE '=' COMMAND-RESPONSE (EM=X(79))
+1400   ASSIGN ##MSG-NR   = 1035
+1410   ASSIGN ##MSG-TXT1 = JOB-ID
+1420END-IF
+1430END-SUBROUTINE
+1440*
+1450* ------------------------------ SCREEN-IO ----------------------------
+1460*
+1470DEFINE SUBROUTINE SCREEN-IO
+1480INPUT WITH TEXT *##MSG-NR,
+1490                 ##MSG-TXT1,
+1500                 ##MSG-TXT2
+1510      USING MAP 'BENTPR-&'
+1520RESET ##MSG
+1530END-SUBROUTINE
+1540*
+1550* ------------------------------ PF-KEY -------------------------------
+1560*
+1570INCLUDE C-PFKEY
+1580END

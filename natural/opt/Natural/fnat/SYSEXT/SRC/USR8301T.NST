@@ -1,0 +1,43 @@
+0010Get Natural hotfix information
+0020.
+0030Documentation ......... USR8301T    /*  Text object
+0040Interface ............. USR8301N    /*  Cataloged subprogram
+0050Example Program ....... USR8301P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. SYSTEM COMMANDS
+0100.
+0110Keywords .............. +NEW-NAT-8.3.7, ENVIRONMENT, HOTFIX,
+0120                        SYSPROD
+0130.
+0140Function .............. Information about installed Natural Hotfixes
+0150                        is returned to the calling program.
+0160                        The information is contained in arrays.
+0170                        With USR2031N, get more information of SYSPROD.
+0180.
+0190.
+0200Parameters
+0210----------
+0220Define the following parameters with the DEFINE DATA statement:
+0230.
+0240.
+0250Output ..... #HF-NAME-A (A13/1:*)       Hotfix Name
+0260.
+0270.
+0280Interface Call
+0290--------------
+0300Use the interface with the CALLNAT statement:
+0310.
+0320CALLNAT 'USR8301N'
+0330         #HF-NAME-A(*)
+0340.
+0350.
+0360Using the Application Programming Interface:
+0370--------------------------------------------
+0380Copy the subprogram USR8301N to the library SYSTEM or the steplib
+0390library respectively, or to the required library.
+0400.
+0410.
+0420***** End of Description *****
+0430

@@ -1,0 +1,359 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Utilities
+0030*
+0040*        NAT-DIR
+0050*
+0060* DESCRIPTION
+0070*               This Program returnes the directory of a NATURAL
+0080*               LIBRARY
+0090*
+0100* AUTHOR        SAG   28.07.97
+0110*
+0120* Version       8.3
+0130*
+0140* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0150*
+0160* HISTORY
+0170* USER    DATE       REASON
+0180* ------+------------+----------------------------------------------
+0190* SAG   ! 02.03.1998 ! Library to call NAT-LIST/NAT-DIR is SYSWEB
+0200*       !            ! not *Library.
+0210* SAG   ! 01.03.2001 ! New type "APD"
+0220* SAG   ! 13.03.2003 ! New type "Function"
+0230* SAG   ! 29.11.2006 ! New type "Adapter"
+0240* ------+------------+----------------------------------------------
+0250*
+0260DEFINE DATA
+0270* ------------------------------------------- standard PDA for HTTP Api
+0280PARAMETER USING W3PARM
+0290* -------------------------------------------- definitions for HTTP Api
+0300LOCAL  USING W3CONST
+0310LOCAL  USING W3PINFO
+0320* ---------------------------------------------- parameter for USR1055N
+0330LOCAL USING USR-MSG   /* Data for message exchange
+0340LOCAL USING USR-FLD   /* Description of the field in error
+0350LOCAL
+03601 V                   (I002) CONST <100>
+03701 USR1055L
+0380  2 OBJECT-KEY
+0390    3 LIBRARY         (A008)
+0400    3 OBJECT-FROM     (A033)
+0410    3 OBJECT-TO       (A033)
+0420    3 OBJECT-KIND     (A001)
+0430*
+0440  2 INPUTS
+0450    3 OPT-ACCESS      (A001)
+0460    3 OPT-TYPE-OP     (A001)
+0470    3 OPT-TYPE        (A024)
+0480    3 OPT-SCROLL      (A001)
+0490    3 OPT-WILDCARD    (A001)
+0500    3 OPT-ASTERISK    (A001)
+0510    3 OPT-AMOUNT      (I002)
+0520*
+0530  2 INPUT-OUTPUTS
+0540    3 INT-HANDLE      (I004)
+0550    3 NEXT-OBJ        (A032)
+0560  2 OUTPUTS
+0570    3 RETURNED        (I002)
+0580    3 LIST-OBJ        (A032/1:V)
+0590    3 LIST-TYPE-SRC   (A001/1:V)
+0600    3 LIST-TYPE-MOD   (A001/1:V)
+0610*
+06201 USR1055N
+0630  2 VERSION           (I001) INIT <0>
+06401 REDEFINE USR1055N
+0650  2 EXTENDED-PARMS
+0660    3 EXTENDED-DATA   (A001/1:1)
+0670* ----------------------------------------------------- local parameter
+06801 TYPE                (A001)
+06901 IX                  (I004)
+0700* -------------------------------------------------- parmeter W3READENV
+07101 #LEN                (I004) INIT <0>
+07201 #MAX                (I004)
+07301 #VALUE2             (A) DYNAMIC
+07401 #VALUE              (A) DYNAMIC
+0750* --------------------------------------------------- output generation
+07601 OTYP                (A032)
+07701 OUTNUM              (A008)
+07801 REDEFINE OUTNUM
+0790  2  NUMOUT           (N008)
+0800* --------------------------------------------------- parameter W3FREE
+08101 #W3COUNT            (I004)
+08201 #W3COUNT-MAX        (I004)
+08301 #W3FREE             (I004)
+0840* ------------------------------------------------- internal parameter
+08501 #COL                (   L)
+08601 II                  (I004)
+08701 #FIRST              (N008) INIT <0>
+08801 #COUNT              (N008) INIT <9999999>
+08901 #OUTLINE            (N008) INIT <0>
+09001 #SOURCELINE         (N008) INIT <0>
+0910* ---------------------------------------------------- set exprire
+09201 #EXPIRES            (A029)
+09301 REDEFINE #EXPIRES
+0940  2 RDATE             (A017)
+0950  2 RTIME             (A008)
+0960  2 RZONE             (A004)
+09701 ATIME               (   T)
+09801 ADATE               (   D)
+09901 #ADDDAY             (I004) INIT <0>
+10001 LANG                (I004)
+1010* ----------------------------------------------------- check Version
+10201 #VERSION            (A) DYNAMIC
+10301 #VERSION-TYPE       (A) DYNAMIC
+1040END-DEFINE
+1050* ---------------------------------------------------- error handling
+1060ON ERROR
+1070  PERFORM W3ERROR ##W3ERROR
+1080  PERFORM W3END ##RPC
+1090  ESCAPE ROUTINE
+1100END-ERROR
+1110* ======================================================== Main Program
+1120* ------------------------------------------------------- init HTML API
+1130PERFORM W3INIT ##RPC
+1140* --------------------------------------------- Library to be displayed
+1150PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC 'LIB' " " #VALUE
+1160IF *LENGTH(#VALUE) = 0 THEN
+1170  LIBRARY := *LIBRARY-ID
+1180ELSE
+1190  LIBRARY := #VALUE
+1200  EXAMINE LIBRARY TRANSLATE INTO UPPER
+1210END-IF
+1220* -------------------------------------------------------- Start Value
+1230PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC 'START' " " #VALUE
+1240IF *LENGTH(#VALUE) EQ 0 THEN
+1250  OBJECT-FROM := '*        '
+1260ELSE
+1270  OBJECT-FROM := #VALUE
+1280  EXAMINE OBJECT-FROM TRANSLATE INTO UPPER
+1290END-IF
+1300* ---------------------------------------- Start from this Line Number
+1310PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "FIRST" " " #VALUE
+1320IF *LENGTH(#VALUE) > 0 AND #VALUE IS (N8) THEN
+1330  #FIRST := VAL(#VALUE)
+1340ELSE
+1350  #FIRST := 0
+1360END-IF
+1370* ------------------------------------------ Read this ammount of Lines
+1380PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "COUNT" " " #VALUE
+1390IF *LENGTH(#VALUE) > 0 AND #VALUE IS (N8) THEN
+1400  #COUNT := VAL(#VALUE)
+1410ELSE
+1420  #COUNT := 9999999
+1430END-IF
+1440* ------------------------------------------ Set expire Date
+1450PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "EXPIRE" "P" #VALUE
+1460IF *LENGTH(#VALUE) > 0 THEN
+1470  IF #VALUE IS (N8) THEN
+1480    #ADDDAY := VAL(#VALUE)
+1490  END-IF
+1500*
+1510  ADATE := *DATX + #ADDDAY
+1520  ATIME := *TIMX
+1530  LANG  := *LANGUAGE
+1540   *LANGUAGE := 1
+1550  MOVE EDITED ADATE (EM=NNN', 'DD' 'LLL' 'YYYY) TO RDATE
+1560  MOVE EDITED ATIME (EM=HH:II:SS) TO RTIME
+1570  MOVE " GMT" TO RZONE
+1580   *LANGUAGE := LANG
+1590END-IF
+1600* ------------------------------------------ Read this ammount of Lines
+1610PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "VERSION" " " #VERSION
+1620IF *LENGTH(#VERSION) > 0 AND "NO" = *TRANSLATE(#VERSION,UPPER)
+1630  #VERSION := ##NULL-STRING
+1640ELSE
+1650  PERFORM W3INFO ##W3INFO
+1660  IF ##W3INFO.WEBAPI = SCAN "(DYN)"
+1670    #VERSION := 'SYSWEB3'
+1680  ELSE
+1690    #VERSION := 'SYSWEB'
+1700  END-IF
+1710END-IF
+1720* --------------------------------------------- Set type of return Page
+1730PERFORM W3CONTENT-TYPE 'text/html'
+1740* ------------------------------------------- Set head of the HTML page
+1750#VALUE := "<!DOCTYPE 'HTML PUBLIC -//W3C//DTD HTML 3.2//EN'>"
+1760IF #ADDDAY > 0 THEN
+1770  COMPRESS #VALUE '<HTML><HEAD>' ##HTTP_NEWLINE
+1780    '<META HTTP-EQUIV="Expires" CONTENT="' #EXPIRES'">' ##HTTP_NEWLINE
+1790    '<TITLE>' INTO #VALUE LEAVING NO
+1800ELSE
+1810  COMPRESS #VALUE '<HTML><HEAD><TITLE>' INTO #VALUE
+1820END-IF
+1830*
+1840* --------------------------------- Page heading and start output table
+1850COMPRESS #VALUE 'List NATURAL Library</TITLE>'-
+1860  '<META HTTP-EQUIV="Content-Type" '-
+1870  'CONTENT="text/html; charset=iso-8859-1"></HEAD>'
+1880  ##HTTP_NEWLINE '<BODY BGCOLOR="#FFFFFF"><P>&nbsp;'-
+1890  "<H2 ALIGN='CENTER'><FONT COLOR='NAVY'>"-
+1900  'List NATURAL Library</FONT></H2>'-
+1910  "<BR><TABLE WIDTH='100%' BORDER='0' CELLPADDING='5' CELLSPACING='3'>"
+1920  ##HTTP_NEWLINE '<TR BGCOLOR="#999999"><TH COLSPAN="4">Library:' LIBRARY
+1930  '- Start Value:' OBJECT-FROM "</TH></TR>" ##HTTP_NEWLINE
+1940* ---------------------------------------- Headline of the output table
+1950  '<TR BGCOLOR="#999999"><TH WIDTH="30%">'-
+1960  'Source</TH><TH>Module</TH>' INTO #VALUE
+1970IF *LENGTH(#VERSION) >0
+1980  COMPRESS #VALUE '<TH>Run with</TH>' INTO #VALUE LEAVING NO
+1990END-IF
+2000COMPRESS #VALUE '<TH WIDTH="65%">Type</TH></TR>' ##HTTP_NEWLINE INTO #VALUE LEAVING NO
+2010PERFORM W3TEXTDYNAMIC #VALUE
+2020* ------------------------------------------------- Initialize URS1055N
+2030OBJECT-TO   := '         '
+2040OBJECT-KIND := 'A'
+2050OPT-TYPE-OP := ' '
+2060OPT-TYPE    := '*        '
+2070OPT-SCROLL  := 'D'
+2080OPT-AMOUNT  := V
+2090OPT-ACCESS  := 'O'
+2100* --------------------------------------------------- Read all objects
+2110REPEAT
+2120  CALLNAT 'USR1055N' USR1055L  USR1055N.EXTENDED-PARMS NAD-MSG NAD-FLD
+2130  OPT-ACCESS := 'R'
+2140* --------------------------------------------- Return library objects
+2150  FOR IX = 1 TO RETURNED
+2160    ADD 1 TO #SOURCELINE
+2170* ------------------------------------------------- Display this 'page'
+2180    IF #SOURCELINE >= #FIRST AND #OUTLINE <= #COUNT THEN
+2190      IF LIST-TYPE-SRC (IX) NE " " OR LIST-TYPE-MOD (IX) NE " " THEN
+2200        ADD 1 TO #OUTLINE
+2210* ------------------------------------------------------ Display source
+2220        IF #COL = TRUE THEN
+2230          #VALUE2 := "<TR BGCOLOR='#CCCCCC'><TD>"
+2240          #COL := FALSE
+2250        ELSE
+2260          #VALUE2 := "<TR><TD>"
+2270          #COL := TRUE
+2280        END-IF
+2290        IF LIST-TYPE-SRC (IX) NE " " THEN
+2300          TYPE := LIST-TYPE-SRC(IX)
+2310* --------------------------------------- Create link to display source
+2320          COMPRESS  #VALUE2 "<A HREF='NAT-LIST?LIB=" LIBRARY
+2330            "&SOURCE=" LIST-OBJ(IX) "'>" LIST-OBJ(IX) "</A></TD>"
+2340            INTO #VALUE LEAVING NO
+2350        ELSE
+2360          TYPE := LIST-TYPE-MOD(IX)
+2370          IF LIST-OBJ(IX) NE " " THEN
+2380            COMPRESS  #VALUE2 LIST-OBJ(IX) "</TD>"
+2390              INTO #VALUE LEAVING NO
+2400          ELSE
+2410            COMPRESS  #VALUE2 '&nbsp;</TD>' INTO #VALUE LEAVING NO
+2420          END-IF
+2430        END-IF
+2440* ------------------------------------------------------ Display module
+2450        IF LIST-TYPE-MOD(IX) NE " " THEN
+2460* -------------------------------- Only subprograms may run with NATweb
+2470          IF LIST-TYPE-MOD (IX) = "N" THEN
+2480            IF *LENGTH(#VERSION) > 0
+2490              PERFORM W3INTERFACE LIBRARY LIST-OBJ(IX) #VERSION-TYPE
+2500            END-IF
+2510            IF #VERSION-TYPE = #VERSION
+2520              COMPRESS #VALUE '<TD ALIGN="CENTER"><A HREF="../' LIBRARY '/'
+2530                LIST-OBJ(IX) '">run</A></TD>' INTO #VALUE LEAVING NO
+2540            ELSE
+2550              COMPRESS #VALUE '<TD ALIGN="CENTER">yes</TD>' INTO #VALUE LEAVING NO
+2560            END-IF
+2570            IF *LENGTH(#VERSION) > 0
+2580              COMPRESS #VALUE "<TD ALIGN='CENTER'>"
+2590                #VERSION-TYPE "</TD>" INTO #VALUE LEAVING NO
+2600            END-IF
+2610          ELSE
+2620            COMPRESS #VALUE '<TD ALIGN="CENTER">yes</TD>'
+2630              INTO #VALUE LEAVING NO
+2640            IF *LENGTH(#VERSION) > 0
+2650              COMPRESS #VALUE '<TD>&nbsp;</TD>' INTO #VALUE LEAVING NO
+2660            END-IF
+2670          END-IF
+2680        ELSE
+2690          COMPRESS #VALUE '<TD>&nbsp;</TD>' INTO #VALUE LEAVING NO
+2700          IF *LENGTH(#VERSION) > 0
+2710            COMPRESS #VALUE '<TD>&nbsp;</TD>' INTO #VALUE LEAVING NO
+2720          END-IF
+2730        END-IF
+2740* --------------------------------------- Display type of source/module
+2750        DECIDE ON FIRST VALUE OF TYPE
+2760          VALUE "P"
+2770            OTYP := 'Program'
+2780          VALUE "S"
+2790            OTYP := 'Subroutine'
+2800          VALUE "N"
+2810            OTYP := 'Subprogram'
+2820          VALUE "M"
+2830            OTYP := 'Map'
+2840          VALUE "H"
+2850            OTYP := 'Helproutine'
+2860          VALUE "C"
+2870            OTYP := 'Copycode'
+2880          VALUE "G"
+2890            OTYP := 'Global Data Area'
+2900          VALUE "A"
+2910            OTYP := 'Parameter Data Area'
+2920          VALUE "L"
+2930            OTYP := 'Local Data Area'
+2940          VALUE "K"
+2950            OTYP := 'Server Program'
+2960          VALUE "T"
+2970            OTYP := 'Text'
+2980          VALUE "3"
+2990            OTYP := 'Dialog'
+3000          VALUE "6"
+3010            OTYP := 'Object View'
+3020          VALUE "7"
+3030            OTYP := 'Function'
+3040          VALUE 'x'
+3050            OTYP := 'APD'
+3060          VALUE "4"
+3070            OTYP := 'Class'
+3080          VALUE "8"
+3090            OTYP := 'Adapter'
+3100          NONE
+3110            COMPRESS "(" LIST-TYPE-SRC(IX) ")" INTO OTYP LEAVING NO
+3120        END-DECIDE
+3130        COMPRESS #VALUE "<TD ALIGN='CENTER'>" OTYP "</TD></TR>"
+3140          ##HTTP_NEWLINE INTO #VALUE LEAVING NO
+3150        PERFORM W3TEXTDYNAMIC #VALUE
+3160* -------------------------------------------- Check the written Output
+3170        PERFORM W3COUNTER #W3COUNT #W3COUNT-MAX #W3FREE
+3180        IF #W3FREE < 1500 THEN
+3190          #COUNT := #OUTLINE - 1
+3200        END-IF
+3210      END-IF
+3220    END-IF
+3230  END-FOR
+3240* -------------------------------------------- exit if an error occured
+3250  IF MSG-NR NE 0 THEN
+3260    ESCAPE BOTTOM
+3270  END-IF
+3280END-REPEAT
+3290* ----------------------------------------------------- close USR1055N
+3300OPT-ACCESS := 'C'
+3310CALLNAT 'USR1055N' USR1055L USR1055N.EXTENDED-PARMS NAD-MSG NAD-FLD
+3320* ------------------------------------------------- close output table
+3330COMPRESS "</TABLE><BR>" ##HTTP_NEWLINE INTO #VALUE
+3340* ------------------------ Output to large, create 'next pages' index
+3350IF #COUNT < #OUTLINE OR #FIRST NE 0 THEN
+3360  COMPRESS #VALUE '<P ALIGN="CENTER"><I>Next Pages: ' INTO #VALUE
+3370  FOR II = 1 TO #SOURCELINE STEP #COUNT
+3380    NUMOUT := II
+3390    COMPRESS #VALUE "<A HREF='NAT-DIR?LIB="
+3400      LIBRARY "&FIRST=" II "&COUNT=" #COUNT '">' II
+3410      "</A>" ##HTTP_NEWLINE INTO #VALUE LEAVING NO
+3420  END-FOR
+3430  COMPRESS #VALUE '</I><BR>&nbsp;' ##HTTP_NEWLINE INTO #VALUE
+3440END-IF
+3450* -------------------------- Display current time/date and program name
+3460* ------------------------------------------------- and close HTML page
+3470PERFORM W3INFO ##W3INFO
+3480COMPRESS #VALUE "<TABLE BORDER='0' WIDTH='100%' CELLSPACING='0' "-
+3490  "CELLPADDING='5'>"
+3500  '<TR BGCOLOR="#00cc66"><TD>' *PROGRAM '&#32;-&#32;' ##W3INFO.LOG-TIME
+3510  "</TD><TD>" #SOURCELINE '&#32;objects found</TD>'
+3520  "<TD ALIGN='RIGHT'>" 'Natural'
+3530  "</TD></TR></TABLE></BODY></HTML>"
+3540  INTO #VALUE LEAVING NO
+3550PERFORM W3TEXTDYNAMIC #VALUE
+3560* ------------------------------------------------------ close HTTP Api
+3570PERFORM W3END ##RPC
+3580* ================================================================= End
+3590END

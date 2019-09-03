@@ -1,0 +1,34 @@
+0010/* This program serves as an example of how to design a user-defined
+0020/* program to call USR8217N.
+0030/***********************************************************************
+0040OPTIONS LOWSRCE=ON
+0050/*---------------------------------------------------------------------
+0060/*---------------- Data definitions -----------------------------------
+0070/*---------------------------------------------------------------------
+0080Define Data Local
+00901 USR8217-Parameters
+0100  2 P-Object-Name                     (A8)       /* In
+0110  2 P-Object-Library                  (A8)       /* Out
+0120  2 P-Library-DBID                    (I4)       /* Out
+0130  2 P-Library-FNR                     (I4)       /* Out
+0140  2 P-Return-Code                     (I4)       /* Out
+0150  2 P-Return-Message                  (A250)     /* Out
+0160End-Define
+0170/***********************************************************************
+0180/*
+0190P-Object-Name := 'SYSSUBST'
+0200/*
+0210Callnat 'USR8217N'
+0220        USR8217-Parameters
+0230/*
+0240If (P-Return-Code = 0)
+0250  Print / 'Found cataloged' P-Object-Name
+0260        / 'in library ....' P-Object-Library
+0270        / 'with DBID .....' P-Library-DBID (AD=L)
+0280        / 'FNR ...........' P-Library-FNR (AD=L)
+0290Else
+0300  Print 'Return code' P-Return-Code (AD=L) 'from USR8217N with message:'
+0310  Print P-Return-Message
+0320End-If
+0330/***********************************************************************
+0340End

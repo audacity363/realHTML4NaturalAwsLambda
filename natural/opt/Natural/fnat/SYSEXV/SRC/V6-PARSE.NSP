@@ -1,0 +1,233 @@
+0010*
+0020* Program .. V6-PARSE
+0030* Library .. SYSEXV
+0040* Version .. 6.1
+0050*
+0060* Functionality: Show new PARSE XML statement
+0070************************************************************************
+0080*
+0090*
+0100DEFINE DATA LOCAL
+0110*
+0120* File structure
+0130*
+01401 EMPLOYEE
+0150*
+0160  2 ATTRIBUTES_OF_EMPLOYEE
+0170    3 PERSONNEL-ID   (A8)
+0180*
+0190  2 FULL-NAME
+0200    3 FIRST-NAME     (A20)
+0210    3 NAME           (A20)
+0220    3 MIDDLE-NAME    (A20)
+0230*
+0240  2 MAR-STAT         (A1)
+0250  2 SEX              (A1)
+0260  2 BIRTH            (A10)
+0270*
+0280  2 FULL-ADDRESS
+0290    3 C@ADDRESS-LINE (I4)
+0300    3 ADDRESS-LINE   (A20/1:6)
+0310    3 CITY           (A20)
+0320    3 ZIP            (A20)
+0330    3 POST-CODE      (A10)
+0340    3 COUNTRY        (A3)
+0350*
+0360  2 TELEPHONE
+0370    3 AREA-CODE      (A6)
+0380    3 PHONE          (A15)
+0390*
+0400  2 DEPT             (A6)
+0410  2 JOB-TITLE        (A25)
+0420*
+0430  2 C@INCOME         (I4)
+0440  2 INCOME           (1:6)
+0450    3 CURR-CODE      (A3)
+0460    3 SALARY         (N9)
+0470    3 C@BONUS        (I4)
+0480    3 BONUS          (N9/1:4)
+0490*
+0500  2 LEAVE-DATA
+0510    3 LEAVE-DUE      (N2)
+0520    3 LEAVE-TAKEN    (N2)
+0530*
+0540  2 C@LEAVE-BOOKED   (I4)
+0550  2 LEAVE-BOOKED     (1:4)
+0560    3 LEAVE-START    (N8)
+0570    3 LEAVE-END      (N8)
+0580*
+0590  2 C@LANG           (I4)
+0600  2 LANG             (A3/1:4)
+0610*
+0620* ----------------------------------------------------------------------
+06301 #IX           (I4)
+06401 #IY           (I4)
+0650*
+06601 #OPERAND1     (A) DYNAMIC
+06701 #OPERAND2     (A) DYNAMIC
+06801 #OPERAND3     (A) DYNAMIC
+06901 #OPERAND4     (A) DYNAMIC
+0700END-DEFINE
+0710*
+0720FORMAT KD=ON
+0730SET KEY PF3   NAMED 'Exit'
+0740  PF12  NAMED 'Canc'
+0750*
+0760*
+0770COMPRESS
+0780  '<?xml version="1.0" ?>'-
+0790  '<Employee Personnel-ID="50015200">'-
+0800  '<Full-Name>'-
+0810  '<First-Name>JEAN</First-Name>'-
+0820  '<Middle-Name>DANIEL</Middle-Name>'-
+0830  '<Name>GOYER</Name>'-
+0840  '</Full-Name>'-
+0850  '<Mar-Stat>S</Mar-Stat>'-
+0860  '<Sex>M</Sex>'-
+0870  '<Birth>1955-06-20</Birth>'-
+0880  '<Full-Address>'-
+0890  '<Address-Line>CEDEX 527 X</Address-Line>'-
+0900  '<City>TROYES CEDEX</City>'-
+0910  '<Zip>10081</Zip>'-
+0920  '<Post-Code>10081</Post-Code>'-
+0930  '<Country>F</Country>'-
+0940  '</Full-Address>'-
+0950  '<Telephone>'-
+0960  '<Phone>39780736</Phone>'-
+0970  '<Area-Code>1033</Area-Code>'-
+0980  '</Telephone>'-
+0990  '<Dept>TECH54</Dept>'-
+1000  '<Job-Title>INGENIEUR TECHNICO. COMM.</Job-Title>'-
+1010  '<Income>'-
+1020  '<Curr-Code>FRA</Curr-Code>'-
+1030  '<Salary>204100</Salary>'-
+1040  '<Bonus>50000</Bonus>'-
+1050  '</Income>'-
+1060  '<Leave-Data>'-
+1070  '<Leave-Due>33</Leave-Due>'-
+1080  '<Leave-Taken>19</Leave-Taken>'-
+1090  '</Leave-Data>'-
+1100  '<Leave-Booked>'-
+1110  '<Leave-Start>19990901</Leave-Start>'-
+1120  '<Leave-End>19990901</Leave-End>'-
+1130  '</Leave-Booked>'-
+1140  '<Lang>FRE</Lang>'-
+1150  '</Employee>'
+1160  INTO #OPERAND1 LEAVING NO
+1170*
+1180*
+1190PARSE XML #OPERAND1 INTO PATH #OPERAND2 NAME #OPERAND3 VALUE #OPERAND4
+1200*
+1210  DECIDE ON FIRST #OPERAND2
+1220    VALUE 'Employee'
+1230      RESET EMPLOYEE
+1240    VALUE 'Employee/@Personnel-ID'
+1250      EMPLOYEE.PERSONNEL-ID := #OPERAND4
+1260    VALUE 'Employee/Full-Name/First-Name/$'
+1270      EMPLOYEE.FIRST-NAME := #OPERAND4
+1280    VALUE 'Employee/Full-Name/Name/$'
+1290      EMPLOYEE.NAME := #OPERAND4
+1300    VALUE 'Employee/Full-Name/Middle-Name/$'
+1310      EMPLOYEE.MIDDLE-NAME := #OPERAND4
+1320    VALUE 'Employee/Mar-Stat/$'
+1330      EMPLOYEE.MAR-STAT := #OPERAND4
+1340    VALUE 'Employee/Sex/$'
+1350      EMPLOYEE.SEX := #OPERAND4
+1360    VALUE 'Employee/Birth/$'
+1370      EMPLOYEE.BIRTH := #OPERAND4
+1380    VALUE 'Employee/Full-Address/Address-Line'
+1390      ADD 1 TO EMPLOYEE.C@ADDRESS-LINE
+1400    VALUE 'Employee/Full-Address/Address-Line/$'
+1410      #IX := EMPLOYEE.C@ADDRESS-LINE
+1420      EMPLOYEE.ADDRESS-LINE(#IX) := #OPERAND4
+1430    VALUE 'Employee/Full-Address/City/$'
+1440      EMPLOYEE.CITY := #OPERAND4
+1450    VALUE 'Employee/Full-Address/Zip/$'
+1460      EMPLOYEE.ZIP := #OPERAND4
+1470    VALUE 'Employee/Full-Address/Post-Code/$'
+1480      EMPLOYEE.POST-CODE := #OPERAND4
+1490    VALUE 'Employee/Full-Address/Country/$'
+1500      EMPLOYEE.COUNTRY := #OPERAND4
+1510    VALUE 'Employee/Telephone/Area-Code/$'
+1520      EMPLOYEE.AREA-CODE := #OPERAND4
+1530    VALUE 'Employee/Telephone/Phone/$'
+1540      EMPLOYEE.PHONE := #OPERAND4
+1550    VALUE 'Employee/Dept/$'
+1560      EMPLOYEE.DEPT := #OPERAND4
+1570    VALUE 'Employee/Job-Title/$'
+1580      EMPLOYEE.JOB-TITLE := #OPERAND4
+1590    VALUE 'Employee/Income'
+1600      ADD 1 TO EMPLOYEE.C@INCOME
+1610    VALUE 'Employee/Income/Curr-Code/$'
+1620      #IX := EMPLOYEE.C@INCOME
+1630      EMPLOYEE.CURR-CODE(#IX) := #OPERAND4
+1640    VALUE 'Employee/Income/Salary/$'
+1650      #IX := EMPLOYEE.C@INCOME
+1660      EMPLOYEE.SALARY(#IX) := VAL(#OPERAND4)
+1670    VALUE 'Employee/Income/Bonus'
+1680      #IX := EMPLOYEE.C@INCOME
+1690      ADD 1 TO EMPLOYEE.C@BONUS(#IX)
+1700    VALUE 'Employee/Income/Bonus/$'
+1710      #IX := EMPLOYEE.C@INCOME
+1720      #IY := EMPLOYEE.C@BONUS(#IX)
+1730      EMPLOYEE.BONUS(#IX,#IY) := VAL(#OPERAND4)
+1740    VALUE 'Employee/Leave-Data/Leave-Due/$'
+1750      EMPLOYEE.LEAVE-DUE := VAL(#OPERAND4)
+1760    VALUE 'Employee/Leave-Data/Leave-Taken/$'
+1770      EMPLOYEE.LEAVE-TAKEN := VAL(#OPERAND4)
+1780    VALUE 'Employee/Leave-Booked'
+1790      ADD 1 TO EMPLOYEE.C@LEAVE-BOOKED
+1800    VALUE 'Employee/Leave-Booked/Leave-Start/$'
+1810      #IX := EMPLOYEE.C@LEAVE-BOOKED
+1820      EMPLOYEE.LEAVE-START(#IX) := VAL(#OPERAND4)
+1830    VALUE 'Employee/Leave-Booked/Leave-End/$'
+1840      #IX := EMPLOYEE.C@LEAVE-BOOKED
+1850      EMPLOYEE.LEAVE-END(#IX) := VAL(#OPERAND4)
+1860    VALUE 'Employee/Lang'
+1870      ADD 1 TO EMPLOYEE.C@LANG
+1880    VALUE 'Employee/Lang/$'
+1890      #IX := EMPLOYEE.C@LANG
+1900      EMPLOYEE.LANG(#IX) := #OPERAND4
+1910    NONE
+1920      IGNORE
+1930  END-DECIDE
+1940END-PARSE
+1950*
+1960INPUT (IP=OFF AD=OI)
+1970  01T *TIMX  (AD=OTD)
+1980  21T '***** NATURAL 6.1 ENHANCEMENTS *****'
+1990  70T *DATX  (AD=OTD DF=L)
+2000  /
+2010  01T 'User'
+2020  06T *USER  (AD=OILT)
+2030  27T '- PARSE XML Statement -'(I)
+2040  64T 'Program'
+2050  72T *PROGRAM (AD=OI)
+2060  ///
+2070  02T 'New PARSE XML statement'(I) /* executed on a defined' (I)
+2080/* 'XML page' (I)
+2090  ///
+2100  02T 'PARSE XML'(I) '#Operand1 INTO PATH #Operand2 NAME #Operand3'
+2110  'VALUE #Operand4'
+2120  ///
+2130  02T 'Parse data within XML format and get the following information'
+2140  //
+2150  05T 'First Name           Middle-Name          Name'
+2160  /
+2170  05T FIRST-NAME MIDDLE-NAME NAME
+2180  //
+2190  05T 'City                 ZIP Code'
+2200  /
+2210  05T CITY ZIP
+2220  //
+2230  05T 'Birth'
+2240  /
+2250  05T BIRTH
+2260IF *PF-KEY = 'PF3'
+2270  ESCAPE ROUTINE
+2280END-IF
+2290IF (*PF-KEY = 'PF12' OR= 'CLR')
+2300  CALLNAT 'UTILSTOP'
+2310END-IF
+2320*
+2330END

@@ -1,0 +1,27 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1059N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060   USING USR1059L
+0070LOCAL
+0080   1 RET-CODE    (I4)
+0090END-DEFINE
+0100/*
+0110/* initialize the NATURAL/Reporter interface
+0120/*
+0130CALLNAT NRPTINIT RET-CODE
+0140/*
+0150IF RET-CODE NE 0
+0160   PERFORM SHOW-ERR RET-CODE FALSE
+0170ELSE
+0180   WRITE 'Natural/Reporter interface initialized successfully.' //
+0190         'The sample programs corresponding to the following interfaces' /
+0200         'can now be used:' //
+0210         10T 'Function' 30T 'Interface' /
+0220         10T '--------' 30T '---------' /
+0230         10T 'open report'    28T ' ' NRPTOPEN /
+0240         10T 'terminate'      28T ' ' NRPTTERM /
+0250         10T 'Select printer' 28T ' ' NRPTSELP
+0260END-IF
+0270END

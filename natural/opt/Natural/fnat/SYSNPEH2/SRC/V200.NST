@@ -1,0 +1,15 @@
+0010&H View SUBMIT
+0020&L
+0030&L
+0040#Zweck@    : Uebergabe eines auszufuehrenden Jobs ans Betriebssystem.
+0050&L
+0060&L
+0070#System@   : z/OS, z/VSE, BS2000/OSD.
+0080&L
+0090&L
+0100#Anwendung@: Dieser View erlaubt dem Benutzer oder der Anwendung
+0110             das Uebergeben eines auszufuehrenden Jobs ans Betriebs-
+0120             system. Der Job kann sich entweder auf Platte oder im
+0130             Speicher befinden.
+0140&L
+0150#Anmerkung@:

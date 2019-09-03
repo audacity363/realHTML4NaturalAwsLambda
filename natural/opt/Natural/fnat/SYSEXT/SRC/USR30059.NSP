@@ -1,0 +1,415 @@
+0010**  Example program for USR3005N
+0020**  This program shows, how data can be added to Predict.
+0030**  It appends new field to an existing field list of a file.
+0040**
+0050DEFINE DATA LOCAL
+00601 REQUEST-RESULT(A) DYNAMIC
+00701 UPD-STATEMENT(A) DYNAMIC
+0080*
+0090LOCAL USING PARSER-X                /* Local Data Area is located
+0100                                    /* in Library SYSEXXT
+0110LOCAL
+01201 XML_PARSER_XPATH             (A) DYNAMIC
+01301 XML_PARSER_XPATH_TYPE        (A1)
+01401 XML_PARSER_CONTENT           (A) DYNAMIC
+01501 XML_PARSER_CONTENT_IS_EMPTY  (L)
+01601 XML_PARSER_ERROR_TEXT        (A253)
+01701 XML_PARSER_RESPONSE          (I2)
+01801 #XNAME (A) DYNAMIC
+01901 #XVALUE (A) DYNAMIC
+02001 #MSG-NR(I4)
+02101 #MSG-TEXT(A79)
+02201 #MSG-TYPE(A8)
+02301 #ADDITIONAL-MSG-NR(I4)
+02401 #ADDITIONAL-MSG-TEXT(A79)
+02501 #INVALID-ATTRIBUTE(A32)
+02601 #INDEX-IN-INVALID-ATTRIBUTE(I4)
+02701 #COMPOSE-STATEMENT (L)
+0280END-DEFINE
+0290PRINT 'Example program' *PROGRAM 'for USR3005N'
+0300/     'This program shows, how data can be added to Predict.'
+0310/     'It appends new fields to an existing field list of a file.'
+0320/
+0330**
+0340** First lock the object to be updated
+0350**
+0360COMPRESS
+0370'<Predict>'
+0380  '<Request>'
+0390    '<Lock>'
+0400      '<Search>'
+0410         '<Object-type value=''FILE-U''/>'
+0420         '<Attribute name=''ID'' value=''EXAMPLE-EMP''/>'
+0430      '</Search>'
+0440    '</Lock>'
+0450  '</Request>'
+0460'</Predict>'
+0470**
+0480TO REQUEST-RESULT
+0490*
+0500PERFORM CALL-USR3005N
+0510*
+0520IF #MSG-TYPE NE 'SUCCESS'
+0530  ESCAPE ROUTINE
+0540END-IF
+0550**
+0560** Now read the existing field list of file EXAMPLE-EMP
+0570**
+0580COMPRESS
+0590'<Predict>'
+0600  '<Request>'
+0610    '<Select>'
+0620**
+0630** Search the Adabas Userview EXMPLE-EMP
+0640**
+0650      '<Search>'
+0660        '<Object-type value=''FILE-U''/>'
+0670        '<Attribute name=''ID'' value=''EXAMPLE-EMP'' />'
+0680      '</Search>'
+0690**
+0700** Return the following attributes
+0710**
+0720      '<Return>'
+0730        '<Field name=''ELEMENT-LIST-TAB''/>'
+0740      '</Return>'
+0750    '</Select>'
+0760  '</Request>'
+0770'</Predict>'
+0780*
+0790TO REQUEST-RESULT
+0800*
+0810#COMPOSE-STATEMENT := TRUE
+0820PERFORM CALL-USR3005N
+0830**
+0840** Now update
+0850**
+0860REQUEST-RESULT := UPD-STATEMENT
+0870PERFORM CALL-USR3005N
+0880*
+0890**
+0900** Now unlock the updated object
+0910**
+0920COMPRESS
+0930'<Predict>'
+0940  '<Request>'
+0950    '<Unlock>'
+0960      '<Search>'
+0970         '<Object-type value=''FILE-U''/>'
+0980         '<Attribute name=''ID'' value=''EXAMPLE-EMP''/>'
+0990      '</Search>'
+1000    '</Unlock>'
+1010  '</Request>'
+1020'</Predict>'
+1030**
+1040TO REQUEST-RESULT
+1050*
+1060PERFORM CALL-USR3005N
+1070*
+1080DEFINE SUBROUTINE CALL-USR3005N
+1090*
+1100PRINT 'Request passed to USR3005N' /
+1110PRINT REQUEST-RESULT
+1120*
+1130CALLNAT 'USR3005N' REQUEST-RESULT
+1140*
+1150PRINT / 'Result returned from USR3005N' /
+1160*
+1170INCLUDE PARSER_X                    /* Copy Code is located
+1180                                    /* in Library SYSEXXT
+1190                                    /*
+1200  'REQUEST-RESULT'                  /* XML FILE TO BE PARSED
+1210  'XML_PARSER_XPATH'                /* XPATH TO REPESENT ELEMENT...
+1220  'XML_PARSER_XPATH_TYPE'           /* TYPE OF CALLBACK
+1230  'XML_PARSER_CONTENT'              /* CONTENT OF FOUND ELEMENT
+1240  'XML_PARSER_CONTENT_IS_EMPTY'     /* IS TRUE IF ELEMENT IS EMPTY
+1250  'XML_PARSER_ERROR_TEXT'           /* ERROR MESSAGE
+1260  'XML_PARSER_RESPONSE'             /* ERROR NR; 0 = OK
+1270END-SUBROUTINE
+1280*
+1290DEFINE SUBROUTINE CALLBACK
+1300*
+1310EXAMINE XML_PARSER_XPATH TRANSLATE INTO UPPER
+1320DECIDE ON FIRST VALUE OF XML_PARSER_XPATH
+1330*
+1340  VALUE 'PREDICT/RESULT/MESSAGE/?NUMBER'
+1350    #MSG-NR := VAL(XML_PARSER_CONTENT)
+1360*
+1370  VALUE 'PREDICT/RESULT/MESSAGE/?TEXT'
+1380    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#MSG-TEXT'
+1390*
+1400  VALUE 'PREDICT/RESULT/MESSAGE/?TYPE'
+1410    #MSG-TYPE := XML_PARSER_CONTENT
+1420    EXAMINE #MSG-TYPE TRANSLATE INTO UPPER
+1430    IF #MSG-TYPE NE 'SUCCESS'
+1440**
+1450** Possible Values of ?TYPE are SUCCESS, ERROR and WARNING
+1460**
+1470      PRINT #MSG-NR
+1480      PRINT #MSG-TEXT
+1490    END-IF
+1500  VALUE 'PREDICT/RESULT/MESSAGE/?ADDITIONAL-MSG-NUMBER'
+1510    #ADDITIONAL-MSG-NR := VAL(XML_PARSER_CONTENT)
+1520*
+1530  VALUE 'PREDICT/RESULT/MESSAGE/?ADDITIONAL-MSG-TEXT'
+1540    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#ADDITIONAL-MSG-TEXT'
+1550    PRINT #ADDITIONAL-MSG-NR
+1560    PRINT #ADDITIONAL-MSG-TEXT
+1570  VALUE 'PREDICT/RESULT/MESSAGE/?INVALID-ATTRIBUTE'
+1580    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#INVALID-ATTRIBUTE'
+1590    PRINT #INVALID-ATTRIBUTE 'is invalid'
+1600  VALUE 'PREDICT/RESULT/MESSAGE/?INDEX-IN-INVALID-ATTRIBUTE'
+1610    #INDEX-IN-INVALID-ATTRIBUTE := VAL(XML_PARSER_CONTENT)
+1620    PRINT 'Occurrence' #INDEX-IN-INVALID-ATTRIBUTE
+1630    'of' #INVALID-ATTRIBUTE 'is invalid'
+1640*
+1650  VALUE 'PREDICT/RESULT/ROW'
+1660**
+1670** New File Object starts here
+1680**
+1690    PRINT ' '
+1700    IF #COMPOSE-STATEMENT
+1710      COMPRESS
+1720       '<Predict>'
+1730          '<Request>'
+1740             '<Update>'
+1750                '<Search>'
+1760                  '<Object-type value=''FILE-U''/>'
+1770                  '<Attribute name=''ID'' value=''EXAMPLE-EMP''/>'
+1780                '</Search>'
+1790                '<Set>'
+1800                  '<Row>'
+1810      TO UPD-STATEMENT
+1820    END-IF
+1830*
+1840  VALUE 'PREDICT/RESULT/ROW//'
+1850    IF #COMPOSE-STATEMENT
+1860      COMPRESS UPD-STATEMENT
+1870      '</Row></Set></Update></Request></Predict>'  TO UPD-STATEMENT
+1880    END-IF
+1890*
+1900  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/?NAME'
+1910**
+1920** Field list starts here
+1930**
+1940    #XNAME:= XML_PARSER_CONTENT
+1950    IF #COMPOSE-STATEMENT
+1960      COMPRESS UPD-STATEMENT
+1970       '<Structure' XML_PARSER_CONTENT '>' TO UPD-STATEMENT
+1980    END-IF
+1990*
+2000  VALUE 'PREDICT/RESULT/ROW/STRUCTURE//'
+2010    IF #COMPOSE-STATEMENT
+2020      COMPRESS UPD-STATEMENT
+2030      '<Group>'
+2040        '<Attribute Name=''FIELD-TYPE'' Value=''GR'' />'
+2050        '<Attribute Name=''LEVEL'' Value=''1'' />'
+2060        '<Attribute Name=''FIELD-ID'' Value=''FULL-NAME'' />'
+2070        '<Attribute Name=''FORMAT'' Value='''' />'
+2080        '<Attribute Name=''CHARACTER-SET'' Value='''' />'
+2090        '<Attribute Name=''LENGTH'' Value=''0'' />'
+2100        '<Attribute Name=''OCCURRENCES'' Value=''0'' />'
+2110        '<Attribute Name=''DESCRIPTOR'' Value='''' />'
+2120        '<Attribute Name=''UNIQUE'' Value='''' />'
+2130        '<Attribute Name=''DB-SHORT-NAME'' Value=''AB'' />'
+2140        '<Attribute Name=''SUPPRESSION-NULL-VALUE'' Value='''' />'
+2150        '<Attribute Name=''EL-UNIQUE-ID'' Value='''' />'
+2160        '<Structure Name=''RELATED-TO-STD-FIELD''>'
+2170          '<Attribute Name=''RELATED-STD-FILE'' Value='''' />'
+2180          '<Attribute Name=''RELATED-STD-FIELD'' Value='''' />'
+2190          '<Attribute Name=''CHECK-AGAINST-STD'' Value=''Y'' />'
+2200        '</Structure>'
+2210      '</Group>'
+2220      '<Group>'
+2230        '<Attribute Name=''FIELD-TYPE'' Value='''' />'
+2240        '<Attribute Name=''LEVEL'' Value=''2'' />'
+2250        '<Attribute Name=''FIELD-ID'' Value=''FIRST-NAME'' />'
+2260        '<Attribute Name=''FORMAT'' Value=''A'' />'
+2270        '<Attribute Name=''CHARACTER-SET'' Value='''' />'
+2280        '<Attribute Name=''LENGTH'' Value=''2000'' />'
+2290        '<Attribute Name=''OCCURRENCES'' Value=''0'' />'
+2300        '<Attribute Name=''DESCRIPTOR'' Value='''' />'
+2310        '<Attribute Name=''UNIQUE'' Value='''' />'
+2320        '<Attribute Name=''DB-SHORT-NAME'' Value=''AC'' />'
+2330        '<Attribute Name=''SUPPRESSION-NULL-VALUE'' Value=''N'' />'
+2340        '<Attribute Name=''EL-UNIQUE-ID'' Value='''' />'
+2350        '<Structure Name=''RELATED-TO-STD-FIELD''>'
+2360          '<Attribute Name=''RELATED-STD-FILE'' Value='''' />'
+2370          '<Attribute Name=''RELATED-STD-FIELD'' Value='''' />'
+2380          '<Attribute Name=''CHECK-AGAINST-STD'' Value=''Y'' />'
+2390        '</Structure>'
+2400      '</Group>'
+2410    '</Structure>' TO UPD-STATEMENT
+2420    END-IF
+2430*
+2440  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/GROUP'
+2450**
+2460** New Field starts here
+2470**
+2480    PRINT ' '
+2490    IF #COMPOSE-STATEMENT
+2500      COMPRESS UPD-STATEMENT
+2510       '<Group>' TO UPD-STATEMENT
+2520    END-IF
+2530*
+2540  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/GROUP//'
+2550    IF #COMPOSE-STATEMENT
+2560      COMPRESS UPD-STATEMENT
+2570       '</Group>'  TO UPD-STATEMENT
+2580    END-IF
+2590*
+2600  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/GROUP/ATTRIBUTE/?NAME'
+2610**
+2620** Name of Field attribute found
+2630**
+2640    #XNAME := XML_PARSER_CONTENT
+2650    IF #COMPOSE-STATEMENT
+2660      COMPRESS 'Name=' '"' #XNAME '"' TO #XNAME LEAVING NO
+2670      COMPRESS UPD-STATEMENT
+2680       '<Attribute ' #XNAME TO UPD-STATEMENT
+2690    END-IF
+2700*
+2710  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/GROUP/ATTRIBUTE/?VALUE'
+2720**
+2730** Value of Field attribute found
+2740**
+2750    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#XVALUE'
+2760**
+2770** With PRCCNVCH
+2780** the coded special characters in XML_PARSER_CONTENT are translated
+2790** into the printable form
+2800**
+2810    PRINT #XNAME ':' #XVALUE
+2820    IF #COMPOSE-STATEMENT
+2830      COMPRESS 'Value=' '"' XML_PARSER_CONTENT '"' TO XML_PARSER_CONTENT
+2840                    LEAVING NO
+2850      COMPRESS UPD-STATEMENT
+2860         XML_PARSER_CONTENT '/>' TO UPD-STATEMENT
+2870    END-IF
+2880*
+2890  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/GROUP/STRUCTURE/?NAME'
+2900**
+2910** ?Name indicates if the following
+2920** contains information about the coupled standard field
+2930** or the composition of a SB-, SP-, PH- or HY-Descriptor
+2940**
+2950    #XNAME := XML_PARSER_CONTENT
+2960    PRINT #XNAME
+2970    IF #COMPOSE-STATEMENT
+2980      COMPRESS UPD-STATEMENT
+2990       '<Structure' XML_PARSER_CONTENT '>' TO UPD-STATEMENT
+3000    END-IF
+3010*
+3020  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/GROUP/STRUCTURE//'
+3030    IF #COMPOSE-STATEMENT
+3040      COMPRESS UPD-STATEMENT
+3050       '</Structure>' TO UPD-STATEMENT
+3060    END-IF
+3070*
+3080  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/GROUP/STRUCTURE/ATTRIBUTE/?NAME'
+3090**
+3100** Name of Attribute
+3110** containing information about the coupled standard field
+3120** or the composition of a SB-, SP-, PH- or HY-Descriptor
+3130**
+3140    #XNAME := XML_PARSER_CONTENT
+3150    IF #COMPOSE-STATEMENT
+3160      COMPRESS 'Name=' '"' #XNAME '"' TO #XNAME LEAVING NO
+3170      COMPRESS UPD-STATEMENT
+3180       '<Attribute ' #XNAME TO UPD-STATEMENT
+3190    END-IF
+3200*
+3210  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/GROUP/STRUCTURE/ATTRIBUTE/?VALUE'
+3220**
+3230** Value of Attribute
+3240** containing information about the coupled standard field
+3250** or the composition of a SB-, SP-, PH- or HY-Descriptor
+3260**
+3270    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#XVALUE'
+3280    PRINT #XNAME ':' #XVALUE
+3290    IF #COMPOSE-STATEMENT
+3300      COMPRESS 'Value=' '"' XML_PARSER_CONTENT '"' TO XML_PARSER_CONTENT
+3310                    LEAVING NO
+3320      COMPRESS UPD-STATEMENT
+3330         XML_PARSER_CONTENT '/>' TO UPD-STATEMENT
+3340    END-IF
+3350*
+3360  VALUE
+3370  'PREDICT/RESULT/ROW/STRUCTURE'-
+3380  '/GROUP/STRUCTURE/STRUCTURE/?NAME'
+3390**
+3400** Name of Attribute
+3410** containing information about
+3420** the composition of a SB-, SP-, PH- or HY-Descriptor
+3430**
+3440    #XNAME := XML_PARSER_CONTENT
+3450    PRINT #XNAME
+3460    IF #COMPOSE-STATEMENT
+3470      COMPRESS UPD-STATEMENT
+3480       '<Structure' XML_PARSER_CONTENT '>' TO UPD-STATEMENT
+3490    END-IF
+3500*
+3510  VALUE
+3520  'PREDICT/RESULT/ROW/STRUCTURE'-
+3530  '/GROUP/STRUCTURE/STRUCTURE//'
+3540    IF #COMPOSE-STATEMENT
+3550      COMPRESS UPD-STATEMENT
+3560       '</Structure>' TO UPD-STATEMENT
+3570    END-IF
+3580*
+3590  VALUE
+3600  'PREDICT/RESULT/ROW/STRUCTURE/GROUP/STRUCTURE/STRUCTURE/GROUP'
+3610    IF #COMPOSE-STATEMENT
+3620      COMPRESS UPD-STATEMENT
+3630       '<Group>' TO UPD-STATEMENT
+3640    END-IF
+3650*
+3660  VALUE
+3670  'PREDICT/RESULT/ROW/STRUCTURE/GROUP/STRUCTURE/STRUCTURE/GROUP//'
+3680    IF #COMPOSE-STATEMENT
+3690      COMPRESS UPD-STATEMENT
+3700       '</Group>' TO UPD-STATEMENT
+3710    END-IF
+3720*
+3730  VALUE
+3740  'PREDICT/RESULT/ROW/STRUCTURE'-
+3750  '/GROUP/STRUCTURE/STRUCTURE/GROUP/ATTRIBUTE/?NAME'
+3760**
+3770** Name of Attribute
+3780** containing information about
+3790** the composition of a SB-, SP-, PH- or HY-Descriptor
+3800**
+3810    #XNAME := XML_PARSER_CONTENT
+3820    IF #COMPOSE-STATEMENT
+3830      COMPRESS 'Name=' '"' #XNAME '"' TO #XNAME LEAVING NO
+3840      COMPRESS UPD-STATEMENT
+3850       '<Attribute ' #XNAME TO UPD-STATEMENT
+3860    END-IF
+3870*
+3880  VALUE
+3890  'PREDICT/RESULT/ROW/STRUCTURE'-
+3900  '/GROUP/STRUCTURE/STRUCTURE/GROUP/ATTRIBUTE/?VALUE'
+3910**
+3920** Value of Attribute
+3930** containing information about
+3940** the composition of a SB-, SP-, PH- or HY-Descriptor
+3950**
+3960    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#XVALUE'
+3970    PRINT #XNAME ':' #XVALUE
+3980    IF #COMPOSE-STATEMENT
+3990      COMPRESS 'Value=' '"' XML_PARSER_CONTENT '"' TO XML_PARSER_CONTENT
+4000                    LEAVING NO
+4010      COMPRESS UPD-STATEMENT
+4020         XML_PARSER_CONTENT '/>' TO UPD-STATEMENT
+4030    END-IF
+4040*
+4050  NONE IGNORE
+4060*
+4070END-DECIDE
+4080END-SUBROUTINE /* CALLBACK
+4090*
+4100DEFINE SUBROUTINE PARSER_ERROR
+4110   PRINT 'Parser Error'
+4120   PRINT XML_PARSER_ERROR_TEXT
+4130 END-SUBROUTINE
+4140*
+4150END

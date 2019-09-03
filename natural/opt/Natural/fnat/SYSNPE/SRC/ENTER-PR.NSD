@@ -1,0 +1,139 @@
+0010DB: 148 FILE: 217  - ENTER-PROCEDURE                  DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:21
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:21
+0080*      by user ESY351
+0090*
+0100  1 DB NODE                              N  5.0    D Node ID (DBID).
+0110*      Node ID (DBID).
+0120  1 EC ERROR-CODE                        N  3.0      Message code.
+0130*      Message code.
+0140  1 ES SYSTEM-CODE                       B    2      System error code.
+0150*      System error code.
+0160  1 ET ERROR-TEXT                        A   58      Text describing mess
+0170*      Text describing message.
+0180  1 ND NODE-NAME                         A   16    D
+0190  1 SM SYSTEM-MESSAGE-CODE               A   10      System message code.
+0200*      System message code.
+0210  1 ID IDENTIFIER                        A    8    D Needed if multiple u
+0220*      Needed if multiple update
+0230*      views are executing in
+0240*      parallel, all requests for the
+0250*      same process must have the
+0260*      same identifier.
+0270  1 FN FUNCTION                          A    8    D Function to be perfo
+0280*      Function to be performed:
+0290*      blank   Write a record
+0300*      CLOSE   All records have
+0310*      been written
+0320  1 A1 CARD                              A   80    D Job control record t
+0330*      Job control record to create a
+0340*      temporary procedure file card
+0350*      by card.
+0360  1 AA DSNAME                            A   54    D Fully qualified file
+0370*      Fully qualified file name
+0380*      which contains the procedure
+0390*      to be entered, or name of the
+0400*      LMS library containing the
+0410*      procedure as type J element.
+0420  1 AB ELEMENT                           A   64    D Element that contain
+0430*      Element that contains the
+0440*      procedure to be entered.
+0450  1 AC PASSWORD                          A    8    D Password for protect
+0460*      Password for protected file.
+0470  1 AK JOB-NAME                          A    8    D Name of job to be en
+0480*      Name of job to be entered.
+0490  1 B1 USERID                            A    8    D Specifies USERID und
+0500*      Specifies USERID under which
+0510*      the job is to be entered.
+0520  1 B2 ACCOUNT-NUMBER                    A    8    D Gives the account nu
+0530*      Gives the account number for
+0540*      the job.
+0550  1 B5 TIME                              A    5    D Maximum CPU time for
+0560*      Maximum CPU time for the job
+0570*      in seconds or STD or NO.
+0580*      See CPU-LIMIT operand of
+0590*      ENTER-PROCEDURE command.
+0600  1 B9 MONITOR-JOB-VARIABLE              A   54    D Name of a monitoring
+0610*      Name of a monitoring job
+0620*      variable which shows status:
+0630*      $S = job in input queue,
+0640  1 BA JOB-VARIABLE-PASSWORD             A    4    D Password for protect
+0650*      Password for protected
+0660*      monitoring job variable.
+0670  1 BD USER-PASSWORD                     A    8    D Password of user id
+0680*      Password of user id for which
+0690*      the job is to be entered.
+0700  1 BE JOB-CLASS                         A    8    D Name of the job clas
+0710*      Name of the job class where
+0720*      job is to be entered.
+0730  1 BF JOB-PRIORITY                      A    3    D Scheduling priority
+0740*      Scheduling priority for job or
+0750*      STD (job class default).
+0760*      STD is default.
+0770  1 BG RUN-PRIORITY                      A    3    D Job priority during
+0780*      Job priority during execution
+0790*      of the job or
+0800*      STD (job class default).
+0810  1 BH START-OPTION                      A   17    D Specifies start time
+0820*      Specifies start time of job.
+0830*      Possible values:
+0840*      AT or
+0850*      AT-STREAM-STARTUP or
+0860*      EARLIEST or
+0870*      IMMEDIATELY or
+0880*      LATEST or
+0890*      SOON or
+0900*      STD or
+0910*      WITHIN.
+0920*      See START operand of
+0930*      ENTER-PROCEDURE command.
+0940  1 BI START-DATE                        A    8    D Value for start date
+0950*      Value for start date:
+0960*      yy-mm-dd  yy = year
+0970*      mm = month
+0980*      dd = day
+0990  1 BJ START-TIME                        A    5    D Value for start time
+1000*      Value for start time:
+1010*      hh:mm    hh = hours
+1020*      mm = minutes
+1030  1 BK REPEAT-OPTION                     A   17    D Specifies repeat opt
+1040*      Specifies repeat option of job
+1050*      Possible values:
+1060*      AT-STREAM-STARTUP or
+1070*      DAILY or
+1080*      PERIOD or
+1090*      NO or
+1100*      STD or
+1110*      WEEKLY.
+1120*      See REPEAT-JOB operand of
+1130*      ENTER-PROCEDURE command.
+1140  1 BL REPEAT-TIME                       A    5    D Specifies time for R
+1150*      Specifies time for REPEAT-
+1160*      OPTION. Format HH:MM.
+1170  1 BM ELEMENT-PASSWORD                  A    8    D Password for protect
+1180*      Password for protected LMS
+1190*      element. (LMS V2 or above)
+1200  1 BV PARAMETER-SET-1                   A  253    D List of comma separa
+1210*      List of comma separated
+1220*      KEY=VALUE pairs which will be
+1230*      used as argument for operand
+1240*      PROCEDURE-PARAMETERS.
+1250  1 BW PARAMETER-SET-2                   A  253    D Another list of comm
+1260*      Another list of comma
+1270*      separated KEY=VALUE pairs
+1280*      which will be used as
+1290*      argument for operand
+1300*      PROCEDURE-PARAMETERS.
+1310  1 CR COMMAND-RESPONSE                  A  253      Unformatted command
+1320*      Unformatted command response.
+1330  1 DI START-DATX                        D    6      Start date in NATURA
+1340*      Start date in NATURAL format.
+1350  1 TJ START-TIMX                        T   12      Start time in NATURA
+1360*      Start time in NATURAL format.
+1370  1 JA JOB-ID                            A    5      TSN of job.
+1380*      TSN of job.
+1390******DDM OUTPUT TERMINATED******

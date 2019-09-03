@@ -1,0 +1,35 @@
+0010Trigger termination of current RPC server
+0020.
+0030Documentation ......... USR8220T    /*  Text object
+0040Interface ............. USR8220N    /*  Cataloged subprogram
+0050Example Program ....... USR8220P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC
+0100.
+0110Keywords .............. +NEW-NAT-8.3.7, RPC, SERVER, TERMINATE
+0120.
+0130Function .............. The internal shutdown flag is set in order to
+0140.                       terminate the RPC server after the current RPC
+0150.                       request has finished.
+0160.
+0170Remark ................ The subprogram USR8220N is intended to run on
+0180.                       Natural RPC server site only.
+0190Parameters
+0200----------
+0210No parameters are needed.
+0220.
+0230Interface Call
+0240--------------
+0250Use the interface with the CALLNAT statement:
+0260.
+0270CALLNAT 'USR8220N'
+0280.
+0290.
+0300Using the Application Programming Interface:
+0310--------------------------------------------
+0320On the server site copy the subprogram USR8220N to the library SYSTEM,
+0330to the appropriate steplib library, or to the required library.
+0340.
+0350***** End of Description *****

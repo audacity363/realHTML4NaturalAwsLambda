@@ -1,0 +1,355 @@
+0010DB: 148 FILE: 211  - ARCHIVE                          DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:19
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:19
+0080*      by user ESY351
+0090*
+0100*      Please refer to user's manual of
+0110*      SNI software product ARCHIVE for
+0120*      detailed information.
+0130*      Some field descriptions simply
+0140*      refer to the corresponding
+0150*      ARCHIVE command option because
+0160*      explanation would have result
+0170*      in rewriting the ARCHIVE manual.
+0180*      ------------------------------
+0190*
+0200*      Global fields
+0210*
+0220  1 EC ERROR-CODE                        N  3.0      Message code.
+0230*      Message code.
+0240  1 ET ERROR-TEXT                        A   58      Text describing mess
+0250*      Text describing message.
+0260  1 DB NODE                              N  5.0    D Node ID (DBID).
+0270*      Node ID (DBID).
+0280  1 ND NODE-NAME                         A   16    D
+0290  1 SM SYSTEM-MESSAGE-CODE               A   10
+0300*
+0310*      BS2000 fields
+0320*
+0330  1 ES SYSTEM-CODE                       B    2      System error code.
+0340*      System error code.
+0350  1 FN FUNCTION                          A    8    D Allowed functions:
+0360*      Allowed functions:
+0370*      FILES / FILESC (=contin. of
+0380*      FILES for more file defin.
+0390*      than possible within one
+0400*      call with function FILES) /
+0410*      JOBVAR / JOBVARC (=contin. of
+0420*      JOBVAR - see FILESC) /
+0430*      SAVE / RESTORE
+0440*      IMPORT / EXPORT /
+0450*      POOL / PURGE / INQUIRE / LIST/
+0460*      STATUS / PROCESS / DELETE /
+0470*      CLOSE (must be last call -
+0480*      starts ARCHIVE execution)
+0490  1 A1 NOW                               A    5    D YES : start immediat
+0500*      YES : start immediately (after
+0510*      function CLOSE has been
+0520*      given); default
+0530*      NO  : put ARCHIVE command to
+0540*      file for later execution
+0550*      with function PROCESS
+0560*      (or cancel with DELETE)
+0570*      time in seconds : same as NO
+0580*      but with execution time
+0590*      limit for later started
+0600*      ARCHIVE task
+0610*      Function SAVE, EXPORT,
+0620*      RESTORE, IMPORT,
+0630*      POOL, PURGE, LIST.
+0640  1 A2 DIRECTORY                         A   54    D Name of directory fi
+0650*      Name of directory file or NONE
+0660*      (default).
+0670*      Function SAVE, EXPORT,
+0680*      RESTORE, IMPORT,
+0690*      POOL, LIST, PURGE,
+0700*      INQUIRE.
+0710  1 A3 NEW-DIRECTORY                     A    3    D YES   DIRECTORY spec
+0720*      YES   DIRECTORY specifies new
+0730*      directory.
+0740*      NO    DIRECTORY specifies an
+0750*      existing directory
+0760*      (default).
+0770*      Function SAVE, EXPORT, POOL.
+0780  1 A4 CAT-ONLY                          A    3    D NO   Files are saved
+0790*      NO   Files are saved including
+0800*      catalog entry. (default)
+0810*      YES  Only catalog entries are
+0820*      saved.
+0830*      Function SAVE, EXPORT.
+0840  1 A5 ERASE                             A    7    D Erase objects after
+0850*      Erase objects after save:
+0860*      NO    (default)
+0870*      YES   Erase, if access, retpd
+0880*      and password-definition
+0890*      allow erase.
+0900*      ALL   Erase, ignoring access
+0910*      and retpd.
+0920*      ALLP  Only for TSOS: erase,
+0930*      ignoring access, retpd
+0940*      and passwords.
+0950*      ALLCNS   Same as ALL, but also
+0960*      for CNS files.
+0970*      ALLCNSP  Only for TSOS: same
+0980*      as ALLCNS, ignoring
+0990*      passwords.
+1000*      Function SAVE, EXPORT.
+1010  1 A6 SHARE                             A    3    D YES   Saved objects
+1020*      YES   Saved objects and vols
+1030*      are shareable.
+1040*      NO    Not shareable.
+1050*      Default depending on function.
+1060*      Function SAVE, EXPORT.
+1070  1 A7 LIST                              A   10    D Destination for ARCH
+1080*      Destination for ARCHIVE report
+1090*      SYSLST / SYSOUT / BOTH / NONE
+1100*      Some functions allow adding
+1110*      of ',ALL' (s. ARCHIVE manual).
+1120*      *** Note ***
+1130*      Please keep in mind that if
+1140*      ARCHIVE is called in multi
+1150*      user mode of ENTIRE SYSTEM
+1160*      SERVER, SYSLST and SYSOUT will
+1170*      be SYSLST / SYSOUT of the ESY
+1180*      server task.
+1190*      Function SAVE, EXPORT,
+1200*      RESTORE, IMPORT,
+1210*      PURGE, LIST, INQUIRE.
+1220M 1 A8 PASSWORD-ARRAY                    A    8    D Max. 10 passwords, i
+1230*      Max. 10 passwords, if files or
+1240*      jv are password protected.
+1250*      Only the first password will
+1260*      be used with function INQUIRE.
+1270*      Function SAVE, EXPORT,
+1280*      RESTORE, IMPORT,
+1290*      POOL, PURGE, LIST,
+1300*      INQUIRE.
+1310  1 A9 SAVE-PASSWORD                     A    8    D Password for the sav
+1320*      Password for the save run.
+1330*      Function SAVE, EXPORT,
+1340*      RESTORE, IMPORT.
+1350  1 AA DRIVES                            N  2.0    D Number of drives to
+1360*      Number of drives to be used in
+1370*      parallel.
+1380*      Function SAVE, EXPORT,
+1390*      RESTORE, IMPORT,
+1400*      LIST.
+1410  1 AB DEVICE                            A    8    D Device type (e.g. 'T
+1420*      Device type (e.g. 'T9G').
+1430*      Function SAVE, EXPORT,
+1440*      RESTORE, IMPORT,
+1450*      POOl, LIST.
+1460  1 AC SAVE-DIRECTORY                    A    3    D YES  Save directory
+1470*      YES  Save directory also
+1480*      NO   Directory is not saved
+1490*      Function SAVE, EXPORT.
+1500  1 AD DAYS-UNUSED                       N  5.0    D Number of days objec
+1510*      Number of days object to be
+1520*      saved must have been unused.
+1530*      Function SAVE, EXPORT.
+1540  1 AE SAVE-ID                           A   15    D ARCHIVE Save Identif
+1550*      ARCHIVE Save Identifier in
+1560*      case keyword 'SVID' has been
+1570*      specified in field FROM or
+1580*      CONTINUE.
+1590*      Function SAVE, EXPORT,
+1600*      PROCESS, DELETE
+1610M 1 AF CONTINUE-VOLSER-ARRAY             A    6    D Max. 5 volumes, if k
+1620*      Max. 5 volumes, if keyword
+1630*      'VSN-LIST' was specified in
+1640*      field CONTINUE.
+1650*      Function SAVE, EXPORT.
+1660M 1 AG VOLSER-ARRAY                      A    6    D Max. 10 volumes can
+1670*      Max. 10 volumes can be
+1680*      specified.
+1690*      Functions SAVE, EXPORT, POOL.
+1700  1 AH TAPES                             A    8    D POOL     Volumes are
+1710*      POOL     Volumes are taken
+1720*      from pool of
+1730*      directory.
+1740*      OPERATOR Volumes are required
+1750*      from operator.
+1760*      VSN-LIST Volumes are specified
+1770*      in field VOLSER-ARRAY
+1780*      Function SAVE, EXPORT.
+1790  1 AI RETENTION-PERIOD                  N  5.0    D Retention period for
+1800*      Retention period for save
+1810*      version in number of days.
+1820*      Function SAVE, EXPORT.
+1830  1 AJ CHANGED                           A   12    D Possible values:
+1840*      Possible values:
+1850*      YES       save only changed
+1860*      files (default)
+1870*      YES,LARGE save only changed
+1880*      LARGE files
+1890*      YES,n     same as 'YES,LARGE'
+1900*      with min. file size
+1910*      in pam pages (n)
+1920*      NO        save all objects
+1930*      Function SAVE.
+1940  1 AK BACKUP-TYPE                       A    1    D Minimum backup level
+1950*      Minimum backup level.
+1960*      Function SAVE.
+1970M 1 AL FILE-ARRAY                        A   61    D Max. 20 file express
+1980*      Max. 20 file expressions,
+1990*      where a file expression can
+2000*      be a file name or a file name
+2010*      prefixed by 'THRU=' or
+2020*      'RENAME='.
+2030*      Functions FILES, FILESC,
+2040*      INQUIRE.
+2050M 1 AM JOB-VARIABLE-ARRAY                A   61    D Max. 20 jv expressio
+2060*      Max. 20 jv expressions,
+2070*      where a jv expression can be
+2080*      a jv name or a jv name
+2090*      prefixed by 'THRU=' or
+2100*      'RENAME='.
+2110*      Functions JOBVAR, JOBVARC,
+2120*      INQUIRE.
+2130M 1 AN EXCEPT-FILE-ARRAY                 A   61    D Max. 20 file express
+2140*      Max. 20 file expressions for
+2150*      'EXCEPT' option of ARCHIVE
+2160*      FILES command. Same syntax as
+2170*      for FILE-ARRAY.
+2180*      Functions FILES, FILESC.
+2190M 1 AO EXCEPT-JOB-VARIABLE-ARRAY         A   61    D Max. 20 jv expressio
+2200*      Max. 20 jv expressions for
+2210*      'EXCEPT' option of ARCHIVE
+2220*      JOBVAR command. Same syntax as
+2230*      JOB-VARIABLE-ARRAY.
+2240*      Functions: JOBVAR, JOBVARC.
+2250  1 AP CONTINUE                          A   13    D Continuation of a pr
+2260*      Continuation of a previous
+2270*      SAVE/EXPORT run.
+2280*      Possible values
+2290*      SVID           SAVE-ID must
+2300*      be given.
+2310*      SVID,VSN-LIST  SAVE-ID and
+2320*      CONTINUE-VOLSER
+2330*      -ARRAY must be
+2340*      given.
+2350*      VSN-LIST       CONTINUE-VOLSER
+2360*      -ARRAY must be
+2370*      given.
+2380*      Function SAVE, EXPORT.
+2390  1 AQ REPLACE                           A    4    D Possible values:
+2400*      Possible values:
+2410*      NO (default) / YES / ALL /
+2420*      ALLP (only for TSOS)
+2430*      (same meaning as for ERASE)
+2440*      Function RESTORE, IMPORT.
+2450  1 AR SPACE                             A    5    D Possible values:
+2460*      Possible values:
+2470*      REORG  (default)
+2480*      KEEP
+2490*      Function RESTORE, IMPORT.
+2500  1 AS FROM-OPTION                       A   24    D Possible values:
+2510*      Possible values:
+2520*      SVID
+2530*      VSN-LIST
+2540*      SVID,VSN-LIST
+2550*      LATEST
+2560*      LATEST,STATE
+2570*      yymmdd.hhmmss
+2580*      yymmdd.hhmmss,STATE
+2590*      SVID,STATE,yymmdd.hhmmss
+2600*
+2610*      If SVID is specified, SAVE-ID
+2620*      must be given.
+2630*      If VSN-LIST is specified,
+2640*      VOLSER-ARRAY must be given.
+2650*
+2660*      Function RESTORE, IMPORT, LIST
+2670  1 AT SV-OPTION                         A  100    D Possible values see
+2680*      Possible values see option
+2690*      'SV' of ARCHIVE commands
+2700*      INQUIRE and PURGE.
+2710*      Function INQUIRE, PURGE.
+2720  1 AU INQUIRE-POOL-OPTION               A   14    D Possible values:
+2730*      Possible values:
+2740*      POOL
+2750*      POOL,AVAILABLE
+2760*      Function INQUIRE.
+2770  1 AV POOL-OPERATION                    A    6    D Possible values:
+2780*      Possible values:
+2790*      ADD / REMOVE
+2800*      Function POOL.
+2810  1 AW FORCE-PURGE                       A    3    D Force purge of save
+2820*      Force purge of save versions.
+2830*      YES / NO (default).
+2840*      Function PURGE.
+2850  1 AX STATUS-TYPE                       A    6    D Type of ARCHIVE task
+2860*      Type of ARCHIVE tasks for
+2870*      which status information is
+2880*      required.
+2890*      LATER (default) / ACTIVE
+2900*      Function STATUS.
+2910  1 AY STATUS-USER                       A    8    D Only for TSOS: useri
+2920*      Only for TSOS: userid for
+2930*      which status information about
+2940*      ARCHIVE tasks is required.
+2950*      Function STATUS.
+2960  1 AZ TAPE-BLOCK-SIZE                   N  2.0    D Block size in number
+2970*      Block size in number of PAM
+2980*      pages (max. 15).
+2990*      Function SAVE, EXPORT.
+3000  1 C1 COMPRESS                          A    3    D Compress to be done
+3010*      Compress to be done with save.
+3020*      YES / NO (default)
+3030*      Function SAVE, EXPORT
+3040  1 C2 SAVE-ACL                          A    3    D Only for SECOS / FAC
+3050*      Only for SECOS / FACS:
+3060*      Save ACL entries
+3070*      NO (default) / YES
+3080*      Function SAVE.
+3090  1 C3 CONVERSION                        A    4    D PAM key conversion r
+3100*      PAM key conversion required
+3110*      for import / restore of files
+3120*      to non-key discs:
+3130*      NO (default) / STD / CONV
+3140*      Function RESTORE, IMPORT.
+3150*
+3160*      Following fields correspond to
+3170*      parameters of ARCHIVE command
+3180*      PARAM. They can be set only with
+3190*      the first call and will be
+3200*      ignored for all following calls
+3210*
+3220  1 B1 PAR-CNS                           A    3    D Possible values:
+3230*      Possible values:
+3240*      YES (default) / NO
+3250  1 B2 PAR-RESTART                       A    3    D Possible values
+3260*      Possible values
+3270*      YES (default) / NO
+3280  1 B3 PAR-UNLOAD                        A    3    D Possible values
+3290*      Possible values
+3300*      YES / NO (default)
+3310  1 B4 PAR-OPERATOR                      A    3    D Possible values
+3320*      Possible values
+3330*      YES / NO (default)
+3340  1 B5 PAR-WRCHK                         A    3    D Possible values
+3350*      Possible values
+3360*      YES / NO (default)
+3370  1 B6 PAR-SNR                           A    3    D Possible values
+3380*      Possible values
+3390*      YES (default) / NO
+3400  1 B7 PAR-DESTROY                       A    3    D Possible values
+3410*      Possible values
+3420*      YES / NO (default)
+3430  1 B8 PAR-CATID                         A    3    D Possible values
+3440*      Possible values
+3450*      YES / NO (default)
+3460  1 B9 PAR-STREAM                        A    3    D Possible values
+3470*      Possible values
+3480*      YES / NO (default)
+3490  1 BA PAR-OLS                           A    3    D Possible values
+3500*      Possible values
+3510*      YES / NO (default)
+3520*
+3530*      End of ARCHIVE
+3540*
+3550******DDM OUTPUT TERMINATED******

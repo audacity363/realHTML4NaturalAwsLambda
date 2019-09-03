@@ -1,0 +1,71 @@
+0010Read Natural long error message
+0020.
+0030Documentation ......... USR0221T    /*  Text object
+0040Interface ............. USR0221N    /*  Cataloged subprogram
+0050Example Program ....... USR0221P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR MESSAGES
+0100.
+0110Keyword ............... +CURRENT-VERSION,
+0120                        *ERROR-NR, *LANGUAGE, ERROR, FNAT, SYSERR
+0130.
+0140Interface Versions .... USR0220N, USR0221N
+0150.
+0160Function .............. Read NATURAL long error message from FNAT.
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+023001 PARM-AREA
+0240   02 ERROR-NUMBER (N04)  /*  May be 0001 to 9999
+0250   02 LANGUAGE     (I01)  /*  Can be 1 thru 60
+0260   02 RESPONSE     (N04)  /*  Error code
+0270   02 L-TEXT  (A78/1:20)  /*  Contains the long text
+0280.
+0290Interface Call
+0300--------------
+0310Use the interface with the CALLNAT statement:
+0320.
+0330CALLNAT 'USR0221N' PARM-AREA
+0340.
+0350.
+0360Using the Application Programming Interface:
+0370--------------------------------------------
+0380Copy the subprogram USR0221N to the library SYSTEM or the steplib
+0390library respectively, or to the required library.
+0400.
+0410.
+0420The interface reads the requested information from
+0430Natural system file 'FNAT'.
+0440.
+0450This interface is a special one on UNIX, Windows, and OpenVMS.
+0460The LANGUAGE parameter is ignored on Mainframe.
+0470On Mainframe use the already existing interface USR0220N.
+0480.
+0490.
+0500Description of the parameters:
+0510.
+0520ERROR-NUMBER (Input)
+0530  Can be any value from 0001 to 9999
+0540.
+0550LANGUAGE (Input)
+0560  Language number (*LANGUAGE, for example).
+0570  If LANGUAGE is set to 0, then *LANGUAGE is assumed.
+0580.
+0590RESPONSE (Output)
+0600  indicates whether field L-TEXT (*) is filled correctly:
+0610  0000 ...  L-TEXT (*) is available
+0620  0003 ...  Invalid ERROR-NUMBER
+0630  0004 ...  Invalid LANGUAGE
+0640  0008 ...  L-TEXT (*) is empty
+0650  0009 ...  Long text not found
+0660  other ... internal error (please report to Software AG)
+0670.
+0680L-TEXT(*) (Output)
+0690  contains the long text of the error message arranged on 20 lines.
+0700.
+0710***** End of description *****

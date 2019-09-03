@@ -1,0 +1,59 @@
+0010/* Function ... Ping or terminate an RPC server
+0020/*
+0030/* This program serves as example how to design a user-defined
+0040/* program to call 'USR2073N'
+0050/***********************************************************************
+0060* Logon data are sent to the server under the following conditions:
+0070*     1. UID .and. PWD are given, no matter how the LOGON flag is set
+0080*     2. LOGON='Y' but neither UID nor PWD are given (they may have been
+0090*                      applied by NAT1071N)
+0100*
+0110DEFINE DATA
+0120 LOCAL
+0130 1 USR2073-PARMS
+0140   2 FUNCTION (A10)    /* IN   /* ping, terminate
+0150   2 SRVNODE  (A192)   /* IN
+0160   2 SRVNAME  (A192)   /* IN
+0170   2 LOGON    (A1)     /* IN   the logon flag
+0180   2 USER-ID  (A8)     /* IN
+0190   2 PASSWORD (A8)     /* IN
+0200   2 MSG      (A79)    /* OUT
+0210   2 RC       (I2)     /* OUT  0=O.K., 1=Error Broker,
+0220                       /*      2=Error API, 3=Error NSC
+0230*
+0240END-DEFINE
+0250*
+0260FUNCTION  := 'PING'
+0270*
+0280SET KEY ALL
+0290/*
+0300REPEAT
+0310  /*
+0320  INPUT (AD=MIT'_' IP=OFF CD=NE)
+0330      10T 'PING or TERMINATE an RPC server:' (YEI)
+0340   // 10T 'Command .........' (TU) FUNCTION
+0350   // 10T 'Node name .......' (TU) SRVNODE (AL=40)
+0360    / 10T 'Server name .....' (TU) SRVNAME (AL=40)
+0370    / 10T 'Logon flag ......' (TU) LOGON '(Y/'' '')' (TU)
+0380    / 10T 'User ID .........' (TU) USER-ID
+0390    / 10T 'Password ........' (TU) PASSWORD (AD=N)
+0400   // 10T 'Response: ' (TU) RC (AD=OIL ZP=ON CD=TU)
+0410      28T  '0 -  message from RPC server or Broker'
+0420    / 28T  '1 -  error message from RPC server or Broker'
+0430    / 28T  '2 -  error message from the interface'
+0440    / 28T  '3 -  error message from Natural Security'
+0450    / 10T 'Message:' (TU) MSG (AD=OIL AL=58  CD=TU)
+0460   // 10T 'Press any PF-key to stop.' (TU)
+0470 /*
+0480  IF *PF-KEY NE 'ENTR'
+0490    ESCAPE ROUTINE
+0500  END-IF
+0510  /*
+0520  MOVE LEFT JUSTIFIED SRVNODE TO SRVNODE
+0530  MOVE LEFT JUSTIFIED SRVNAME TO SRVNAME
+0540  /*
+0550  CALLNAT 'USR2073N' USR2073-PARMS
+0560  /*
+0570END-REPEAT
+0580*
+0590END

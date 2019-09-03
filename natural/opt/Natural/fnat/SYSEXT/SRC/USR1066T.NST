@@ -1,0 +1,48 @@
+0010Enable or disable the Natural message 'Executing ...'
+0020.
+0030Documentation ......... USR1066T    /*  Text object
+0040Interface ............. USR1066N    /*  Cataloged subprogram
+0050Example Program ....... USR1066P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR HANDLING
+0100.
+0110Keywords .............. EXECUTING, MESSAGE
+0120.
+0130Function .............. The message 'Executing ...' can be displayed
+0140                        while Natural is processing a program. It can
+0150                        be switched on or off with this interface.
+0160                        This applies to the output of Natural programs
+0170                        in the UNIX character version. The setting is
+0180                        valid until the end of the Natural session,
+0190                        unless it's changed again.
+0200.
+0210.
+0220Parameters
+0230----------
+0240.
+0250 1 DISPLAY-EXECUTING-MSG  (L)
+0260.
+0270.
+0280Interface Call
+0290--------------
+0300Use the interface with the CALLNAT statement:
+0310.
+0320CALLNAT 'USR1066N'  DISPLAY-EXECUTING-MSG
+0330.
+0340.
+0350Using the Application Programming Interface:
+0360--------------------------------------------
+0370Copy the subprogram USR1066N to the library SYSTEM or the steplib
+0380library respectively, or to the required library.
+0390.
+0400Description of the parameters:
+0410.
+0420DISPLAY-EXECUTING-MSG (Input)
+0430  TRUE:  Display the Natural 'Executing ...' Message
+0440  FALSE: Suppress the Natural 'Executing ...' Message
+0450.
+0460.
+0470*****  End of Description  *****
+0480

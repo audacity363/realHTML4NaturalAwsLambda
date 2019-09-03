@@ -1,0 +1,37 @@
+0010* Program   MIEBCPY
+0020* View      IEBCOPY
+0030*
+0040* Function  Execute IEBCOPY Utility
+0050*
+0060* ----------------------------------------------------------------------
+0070*
+0080DEFINE DATA
+0090   GLOBAL USING TUTO
+0100   LOCAL  USING IEBCOP-L
+0110END-DEFINE
+0120*
+0130REPEAT
+0140   INPUT (AD=MI'_') // ##TITLE (AD=OI IP=OFF)
+0150                // '  Input Dsname ...:' IEBCOPY.FROM-DSNAME
+0160                 / '  Volser .........:' IEBCOPY.FROM-VOLSER
+0170                // '  Output Dsname ..:' IEBCOPY.TO-DSNAME
+0180                 / '  Volser .........:' IEBCOPY.TO-VOLSER
+0190                // '  Member .........:' IEBCOPY.FROM-MEMBER
+0200                 / '  New Name .......:' IEBCOPY.TO-MEMBER
+0210                // '  Replace ........:' IEBCOPY.REPLACE '(yes/no)'
+0220   FIND IEBCOPY
+0230        WITH FROM-DSNAME = IEBCOPY.FROM-DSNAME
+0240         AND FROM-VOLSER = IEBCOPY.FROM-VOLSER
+0250         AND TO-DSNAME   = IEBCOPY.TO-DSNAME
+0260         AND TO-VOLSER   = IEBCOPY.TO-VOLSER
+0270         AND FROM-MEMBER = IEBCOPY.FROM-MEMBER
+0280         AND TO-MEMBER   = IEBCOPY.TO-MEMBER
+0290         AND REPLACE     = IEBCOPY.REPLACE
+0300         AND NODE        = ##NODE
+0310      IF ERROR-CODE > 0
+0320         REINPUT ERROR-TEXT
+0330      END-IF
+0340      WRITE NOTITLE LINE (AL=79)
+0350   END-FIND
+0360END-REPEAT
+0370END

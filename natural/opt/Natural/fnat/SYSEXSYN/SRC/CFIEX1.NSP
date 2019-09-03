@@ -1,0 +1,20 @@
+0010** Example 'CFIEX1': CALL FILE
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #CONTROL (A3)
+00501 #RECORD
+0060  2 #A     (A10)
+0070  2 #B     (N3.2)
+0080  2 #FILL1 (A3)
+0090  2 #C     (P3.1)
+0100END-DEFINE
+0110*
+0120CALL FILE 'USER1' #CONTROL #RECORD
+0130  IF #CONTROL = 'END'
+0140    ESCAPE BOTTOM
+0150  END-IF
+0160END-FILE
+0170/*****************************
+0180/* ... PROCESS RECORD ...
+0190/*****************************
+0200END

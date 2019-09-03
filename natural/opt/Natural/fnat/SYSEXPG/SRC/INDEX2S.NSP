@@ -1,0 +1,18 @@
+0010** Example 'INDEX2S': Array definition with constants (structured mode)
+0020**                   (multiple definition of same database field)
+0030***********************************************************************
+0040DEFINE DATA LOCAL
+00501 EMPLOY-VIEW VIEW OF EMPLOYEES
+0060  2 NAME
+0070  2 CITY
+0080  2 LANG (1:5)
+0090  2 LANG (4:8)
+0100END-DEFINE
+0110*
+0120READ (1) EMPLOY-VIEW WITH NAME = 'WINTER' WHERE CITY = 'LONDON'
+0130  DISPLAY 'NAME'         NAME
+0140          'LANGUAGE/1:3' LANG (1.1:3)
+0150          'LANGUAGE/6:8' LANG (4.3:5)
+0160END-READ
+0170*
+0180END

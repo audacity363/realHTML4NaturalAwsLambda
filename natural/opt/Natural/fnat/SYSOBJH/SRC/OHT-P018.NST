@@ -1,0 +1,25 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Error Number Difference
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180A 4-digit positive or negative number can be entered.
+0190
+0200It can only be specified when Error number start and
+0210end values are specified in selection criterion,
+0220otherwise it is not possible to check if the result
+0230is valid (is in the range of 1 to 9999).
+0240
+0250<HelpTextEnd>

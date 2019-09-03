@@ -1,0 +1,11 @@
+0010** Example 'INDEX1R': Array definition with constants  (reporting mode)
+0020***********************************************************************
+0030*
+0040READ (1) EMPLOYEES WITH NAME = 'WINTER' WHERE CITY = 'LONDON'
+0050  OBTAIN LANG (1:10)
+0060  /*
+0070  WRITE 'LANG(1:10):' LANG (1:10) //
+0080  WRITE 'LANG(1)   :' LANG (1)    /  'LANG(5:9) :' LANG (5:9)
+0090LOOP
+0100*
+0110END

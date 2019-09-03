@@ -1,0 +1,12 @@
+0010&H View LIB-ZAP
+0020&L
+0030&L
+0040#Zweck@    : Einspielen von Zaps in ein Lademodul.
+0050&L
+0060#System@   : z/OS.
+0070&L
+0080&L
+0090#Anwendung@: Einspielen von Zaps in ein Lademodul unter Verwendung
+0100             von AMASPZAP ohne Ausfuehrung eines Batch-Jobs.
+0110&L
+0120#Anmerkung@:

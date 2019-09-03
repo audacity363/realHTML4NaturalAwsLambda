@@ -1,0 +1,80 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3BUTTON
+0050*
+0060* DESCRIPTION   Creates a reset/submit button.
+0070*
+0080* AUTHOR        SAG   08.09.1998
+0090*
+0100* Version       8.3
+0110*
+0120* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0130*
+0140* HISTORY
+0150* USER    DATE       REASON
+0160* ------+----------+----------------------------------------------
+0170*       ! --.--.-- !
+0180* ------+----------+----------------------------------------------
+0190*
+0200* ------ PARAMETER -----------------------------------------------
+0210DEFINE DATA
+0220PARAMETER USING W3PARM
+0230LOCAL USING W3CONST
+0240LOCAL
+02501 H3VALUE            (A) DYNAMIC
+02601 H3URL              (A) DYNAMIC
+0270*
+02801 GIF                (A) DYNAMIC
+0290END-DEFINE
+0300* --- ERROR HANDLING ---
+0310ON ERROR
+0320  PERFORM W3ERROR ##W3ERROR
+0330  PERFORM W3END ##RPC
+0340  ESCAPE ROUTINE
+0350END-ERROR
+0360*
+0370* --- INITIALIZE Web Interface ---
+0380PERFORM W3INIT ##RPC
+0390*
+0400* ---------------------------------------- Name of pictues path
+0410PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "PICTURES" ' ' H3VALUE
+0420IF *LENGTH(H3VALUE) EQ 0 THEN
+0430  GIF  := "/pictures"
+0440ELSE
+0450  GIF  := H3VALUE
+0460END-IF
+0470*
+0480* --- START HTML Generation ---
+0490PERFORM H3-OPEN-HTML 'HTML Generation - Button' ' ' ' '
+0500* --- THE LEVEL 2 HEADER ---
+0510PERFORM H3-HEADER 2 'Button'
+0520*
+0530* --- Form with GET -> Parameter will be added after a ? at the URL
+0540PERFORM H3-OPEN-FORM "G" "NAT-ENV"
+0550*
+0560* --- Input field ---
+0570PERFORM H3-INPUT "T" "A-FIELD" "NONE" 32 32
+0580PERFORM H3-LINE-BREAK
+0590PERFORM H3-LINE-BREAK
+0600*
+0610* --- Submit button ---
+0620PERFORM H3-BUTTON  'S' ' ' 'Submit with GET' ' '
+0630*
+0640* --- Reset  button ---
+0650PERFORM H3-BUTTON  'R' ' ' 'Reset input field' ' '
+0660*
+0670* --- Image  button ---
+0680COMPRESS GIF '/natw_plg.gif' INTO H3URL LEAVING NO
+0690PERFORM H3-BUTTON "I" ' ' 'Image Button to submit'  H3URL
+0700*
+0710PERFORM H3-CLOSE-FORM
+0720*
+0730PERFORM E3-EXAMPLE-END
+0740*
+0750* --- END HTML Generation ---
+0760PERFORM H3-CLOSE-HTML
+0770* --- END Web Interface ---
+0780PERFORM W3END ##RPC
+0790*
+0800END

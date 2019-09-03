@@ -1,0 +1,156 @@
+0010************************************************************************
+0020* Application: SYSOBJH (Object Handler)
+0030* Program:     SRC-EX04
+0040* Platforms:   Mainframe 8.2.3
+0050**----------------------------------------------------------------------
+0060* Function:    Source of the user exit OBJHEX04;
+0070*              User Exit interface of SYSOBJH
+0080*              To activate this exit catalog or stow as OBJHEX04 in
+0090*              library SYSOBJH
+0100**----------------------------------------------------------------------
+0110* Remarks: This Exit is invoked after a unload, load or scan command
+0120*          (in batch and command mode only).
+0130*          The index of the arrays below corresponds to the Natural
+0140*          object type:
+0150*             1 = Programs
+0160*             2 = Subprograms
+0170*             3 = Subroutines
+0180*             4 = Helproutines
+0190*             5 = Maps
+0200*             6 = Globals
+0210*             7 = Locals
+0220*             8 = Parameters
+0230*             9 = Copycodes
+0240*            10 = Texts
+0250*            11 = Classes
+0260*            12 = Functions
+0270*            13 = Adapters
+0280*            14 = Dialogs
+0290*            15 = all other object types
+0300*
+0310* Parameters:
+0320*            OBJHEX04-SOURCES-PROCESSED        (N6/1:15) (Input)
+0330*               Number of sources unloaded, loaded or scanned
+0340*
+0350*            OBJHEX04-SOURCES-REPLACED         (N6/1:15) (Input)
+0360*               Number of sources replaced
+0370*               (load function only)
+0380*
+0390*            OBJHEX04-SOURCES-NOT-REPLACED     (N6/1:15) (Input)
+0400*               Number of sources not replaced
+0410*               (load function only)
+0420*
+0430*            OBJHEX04-CATALOGED-PROCESSED      (N6/1:15) (Input)
+0440*               Number of cataloged objects unloaded, loaded or scanned
+0450*
+0460*            OBJHEX04-CATALOGED-REPLACED       (N6/1:15) (Input)
+0470*               Number of cataloged objects replaced
+0480*               (load function only)
+0490*
+0500*            OBJHEX04-CATALOGED-NOT-REPLACED   (N6/1:15) (Input)
+0510*               Number of cataloged objects not replaced
+0520*               (load function only)
+0530*
+0540*            OBJHEX04-CATALOGED-REJECTED       (N6/1:15) (Input)
+0550*               Number of cataloged objects not rejected
+0560*               (load function only)
+0570*
+0580*            OBJHEX04-Termination-Code         (I4) (input/output)
+0590*                   Set to 0 by SYSOBJH.
+0600*                   (can be changed by this user exit)
+0610*
+0620*            OBJHEX04-Terminate-SYSOBJH        (L) (input/output)
+0630*                   Set to FALSE by SYSOBJH.
+0640*                   If set to FALSE by this user exit, SYSOBJH will
+0650*                   continue.
+0660*                   If set to TRUE by this user exit, SYSOBJH will
+0670*                   terminate with condition code
+0680*                   OBJHEX04-Termination-Code (in batch mode only).
+0690*
+0700*          CONTROL must be returned to SYSOBJH.
+0710************************************************************************
+0720DEFINE DATA PARAMETER
+07301 OBJHEX04-STATISTICS
+0740  2 OBJHEX04-SOURCES-PROCESSED        (N6/1:15)
+0750  2 OBJHEX04-SOURCES-REPLACED         (N6/1:15)
+0760  2 OBJHEX04-SOURCES-NOT-REPLACED     (N6/1:15)
+0770  2 OBJHEX04-CATALOGED-PROCESSED      (N6/1:15)
+0780  2 OBJHEX04-CATALOGED-REPLACED       (N6/1:15)
+0790  2 OBJHEX04-CATALOGED-NOT-REPLACED   (N6/1:15)
+0800  2 OBJHEX04-CATALOGED-REJECTED       (N6/1:15)
+08101 OBJHEX04-PARAMETERS
+0820  2 OBJHEX04-TERMINATION-CODE         (I4)
+0830  2 OBJHEX04-TERMINATE-SYSOBJH        (L)
+08401 OBJHEX04-ADDITIONALS                (A1/1:V)
+0850LOCAL
+08601 LOCAL-ADDITIONALS                   (A1/1:2)
+08701 REDEFINE LOCAL-ADDITIONALS
+0880  2 LOCAL-ADDITIONALS-VERSION         (N2)
+08901 TYPE-TEXT                           (A15)
+09001 IND                                 (I1)
+0910END-DEFINE
+0920/*---------------------------------------------------------------------
+0930/* Sample code:
+0940/*
+0950IF *OCCURRENCE (OBJHEX04-ADDITIONALS) > 1
+0960  LOCAL-ADDITIONALS (1:2) := OBJHEX04-ADDITIONALS (1:2)
+0970  IF LOCAL-ADDITIONALS-VERSION > 0
+0980    PRINT 'New version of user exit' *PROGRAM '(SRC-EX04) available.'
+0990  END-IF
+1000END-IF
+1010NEWPAGE
+1020PRINT *PROGRAM 'Display Natural Object Type Statistics' /
+1030PRINT 16T
+1040      'Sources Replaced Not repl  Cataloged Replaced Not repl Rejected'
+1050PRINT 16T
+1060      '------- -------- --------  --------- -------- -------- --------'
+1070FOR IND = 1 TO 15
+1080  DECIDE ON FIRST VALUE OF IND
+1090    VALUE  1    TYPE-TEXT := 'Programs ......'
+1100    VALUE  2    TYPE-TEXT := 'Subprograms ...'
+1110    VALUE  3    TYPE-TEXT := 'Subroutines ...'
+1120    VALUE  4    TYPE-TEXT := 'Helproutines ..'
+1130    VALUE  5    TYPE-TEXT := 'Maps ..........'
+1140    VALUE  6    TYPE-TEXT := 'Globals .......'
+1150    VALUE  7    TYPE-TEXT := 'Locals ........'
+1160    VALUE  8    TYPE-TEXT := 'Parameters ....'
+1170    VALUE  9    TYPE-TEXT := 'Copycodes .....'
+1180    VALUE 10    TYPE-TEXT := 'Texts .........'
+1190    VALUE 11    TYPE-TEXT := 'Classes .......'
+1200    VALUE 12    TYPE-TEXT := 'Functions .....'
+1210    VALUE 13    TYPE-TEXT := 'Adapters ......'
+1220    VALUE 14    TYPE-TEXT := 'Dialogs .......'
+1230    VALUE 15    TYPE-TEXT := 'Others ........'
+1240    NONE VALUE  IGNORE
+1250  END-DECIDE
+1260  PRINT (SG=OFF)
+1270            TYPE-TEXT
+1280        17T OBJHEX04-SOURCES-PROCESSED (IND)
+1290         3X OBJHEX04-SOURCES-REPLACED (IND)
+1300         3X OBJHEX04-SOURCES-NOT-REPLACED (IND)
+1310         5X OBJHEX04-CATALOGED-PROCESSED (IND)
+1320         3X OBJHEX04-CATALOGED-REPLACED (IND)
+1330         3X OBJHEX04-CATALOGED-NOT-REPLACED (IND)
+1340         3X OBJHEX04-CATALOGED-REJECTED (IND)
+1350END-FOR
+1360/*
+1370IF (OBJHEX04-CATALOGED-NOT-REPLACED (*) <> 0) OR
+1380   (OBJHEX04-CATALOGED-REJECTED (*) <> 0)
+1390  IF OBJHEX04-TERMINATION-CODE = 0
+1400    OBJHEX04-TERMINATION-CODE  := 102
+1410    PRINT 'Termination Code set to' OBJHEX04-TERMINATION-CODE
+1420          'by' *PROGRAM
+1430  ELSE
+1440    PRINT *PROGRAM 'Termination Code was already set to'
+1450          OBJHEX04-TERMINATION-CODE (AD=L)
+1460  END-IF
+1470  IF NOT OBJHEX04-TERMINATE-SYSOBJH
+1480    OBJHEX04-TERMINATE-SYSOBJH := TRUE
+1490  END-IF
+1500  PRINT 'Terminate Natural ..' OBJHEX04-TERMINATE-SYSOBJH (EM=NO/YES)
+1510END-IF
+1520/* End of sample code
+1530/*
+1540ESCAPE ROUTINE                /* RETURN TO CALLING PROGRAM
+1550/*---------------------------------------------------------------------
+1560END

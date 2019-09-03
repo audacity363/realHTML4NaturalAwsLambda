@@ -1,0 +1,49 @@
+0010/*  This copycode can directly be used. For more information read the
+0020/*  text object 'USR1023T' in library SYSEXT.
+0030/***********************************************************************
+0040/*
+0050/*  Copycode Interface .... USR1023X    /*  Copycode source
+0060/*  Documentation ......... USR1023T    /*  Text object
+0070/*  Example Program ....... USR1023P    /*  Source program
+0080/*
+0090/*  Function .............. Convert microseconds into Natural time.
+0100/*
+0110/*
+0120/*  Transferred Parameters
+0130/*  ----------------------
+0140/*  &1&   Input:  microseconds since 1900-01-01 00:00:00,
+0150/*                format (P19), (N19) or (F8)
+0160/*  &2&   Output: Packed field (P12), redefinition of Natural time
+0170/*                value (T)
+0180/*
+0190/*
+0200/*  Natural Time Field Redefinition
+0210/*  -------------------------------
+0220/*  For the conversion of Natural time format, redefine the Natural
+0230/*  time field as (P12). For example:
+0240/*
+0250/*  1 C-TIME-T (T)
+0260/*  1 REDEFINE C-TIME-T
+0270/*    2 C-TIME-P12 (P12)                 /* copycode parameter
+0280/*
+0290/*
+0300/*  Using Copycode Interface
+0310/*  ------------------------
+0320/*  Copy the copycode USR1023X to the required library.
+0330/*
+0340/*  Before execution of the copycode, check that a valid
+0350/*  Natural time value is requested:
+0360/*      IF C-MICROSECONDS < -59958144000099999 /* first Natural time
+0370/*      OR C-MICROSECONDS >  40041855999999999 /* last Natural time
+0380/*        PRINT 'Value outside of Natural time range.'
+0390/*        ESCAPE ROUTINE
+0400/*      END-IF
+0410/*
+0420/*  Use the copycode with the INCLUDE statement
+0430/*     INCLUDE USR1023X 'C-MICROSECONDS' 'C-TIME-P12'
+0440***********************************************************************
+0450*
+0460* Convert time format
+0470*
+0480&2& := ( &1& / 100000 ) + 599581440000
+0490***********************************************************************

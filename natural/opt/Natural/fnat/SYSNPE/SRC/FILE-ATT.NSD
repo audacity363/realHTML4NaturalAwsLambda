@@ -1,0 +1,323 @@
+0010DB: 148 FILE: 001  - FILE-ATTRIBUTES                  DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:21
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:21
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A1 VOLSER                            A    6    D Volume serial number
+0250*      Volume serial number.
+0260*      If not specified, the catalog
+0270*      entry for the data set is
+0280*      used.
+0290*      BS2000: Only relevant for tape
+0300*      files: Returns first volser.
+0310*      For multi-volume-file see
+0320*      field VOLSER-ARRAY.
+0330  1 A2 DSNAME                            A   54    D Fully qualified data
+0340*      Fully qualified data set name.
+0350  1 A3 DSORG                             A    4      Data set organisatio
+0360*      Data set organisation (PS, PO,
+0370*      VS, ...).
+0380*      BS2000: FCBTYPE (SAM, ISAM,
+0390*      PAM).
+0400*      VSE   : (SD, VS, IS, DA, ...)
+0410*      If the file is SD or
+0420*      VS librarian, the text
+0430*      '/L' is appended to
+0440*      the end of the DSORG
+0450*      type, i.e SD/L.
+0460  1 A7 CREATION-DATE                     A    8      Creation date;
+0470*      Creation date;
+0480*      DD/MM/YY format.
+0490*      (If no creation date,
+0500*      field will contain all "*"s.)
+0510  1 A8 EXPIRATION-DATE                   A    8      Expiration date;
+0520*      Expiration date;
+0530*      DD/MM/YY format.
+0540*      (If no expiration date,
+0550*      field will contain all "*"s.)
+0560  1 AA LAST-TTR                          B    3      For BS2000, last
+0570*      For BS2000, last
+0580*      used page of the file.
+0590*      For MVS, Track information.
+0600*      (Not supported in VSE).
+0610  1 AF FILE-SIZE                         N 10.0      MVS/VSE: Number of t
+0620*      MVS/VSE: Number of tracks
+0630*      currently allocated
+0640*      (CYLINDERS-ALLOCATED
+0650*      in tracks +
+0660*      TRACKS-ALLOCATED).
+0670*      BS2000:  Number of PAM pages
+0680*      allocated.
+0690*      (number of blocks for
+0700*      tape files.)
+0710  1 AL SECURITY                          A    5      Security status:
+0720*      Security status:
+0730*      NONE   not password protected
+0740*      WRITE  write protected
+0750*      READ   read protected
+0760*      Additional values for BS2000
+0770*      EXEC   execute protected
+0780*      R/W    read and write protec.
+0790*      R/E    read and exec protec.
+0800*      W/E    write and exec protec.
+0810*      R/W/E  read, write end exec
+0820*      protected.
+0830*      (Not supported in VSE)
+0840  1 AK SERIES                            A    8      Device series for th
+0850*      Device series for the unit.
+0860*      (e.g. '3380')
+0870*      For BS2000: e.g. 'D3480'
+0880  1 D7 CREATION-DATX                     D    6      Creation date in NAT
+0890*      Creation date in NATURAL
+0900*      format.
+0910  1 D8 EXPIRATION-DATX                   D    6      Expiration date in N
+0920*      Expiration date in NATURAL
+0930*      format.
+0940  1 AX PRODUCT                           A    1    D P  Panvalet
+0950*      P  Panvalet
+0960*      L  Librarian
+0970*      M  LMS (only for PLAM lib)
+0980  1 A9 NUMBER-OF-EXTENTS                 N  3.0      Number of extents.
+0990*      Number of extents.
+1000*      MVS    : 1-16
+1010*      VSE    : 1-256
+1020*      BS2000 : 1-255
+1030*
+1040*      Fields common to MVS and VSE
+1050*
+1060  1 AE EXTENTS                           A  192      Extent information.
+1070*      Extent information.
+1080*      16 entries, each 12 bytes
+1090*      long.
+1100*      Each entry contains:
+1110*      low   cchh;
+1120*      high  cchh;
+1130*      no. of cylinders in extent;
+1140*      number of tracks (remainder).
+1150  1 AH CYLINDERS-ALLOCATED               N  7.0      Number of integral c
+1160*      Number of integral cylinders
+1170*      allocated.
+1180  1 AI TRACKS-ALLOCATED                  N  3.0      Number of remaining
+1190*      Number of remaining tracks
+1200*      allocated.
+1210  1 AJ UNIT                              A    4      Unit on which the da
+1220*      Unit on which the data set is
+1230*      currently mounted.
+1240M 1 AB EXTENTS-ARRAY                     A  192      Array of Extents for
+1250*      Array of Extents for
+1260*      Multi-Volume Datasets.
+1270*      Each Element reflects one
+1280*      Volume.
+1290*
+1300*      Fields common to MVS and BS2000
+1310*
+1320  1 A4 LRECL                             N  5.0      Logical record lengt
+1330*      Logical record length.
+1340  1 A5 BLKSIZE                           N  5.0      Block size.
+1350*      Block size.
+1360  1 A6 RECFM                             A    5      Record format.
+1370*      Record format.
+1380  1 AC ALLOCATION-TYPE                   A    4      Allocation type spec
+1390*      Allocation type specified:
+1400*      TRK  track
+1410*      CYL  cylinder
+1420*      BLK  block
+1430*      ABS  abstr
+1440*      Possible values for BS2000:
+1450*      PAM  PAM blocks (standard)
+1460*      NSTD non standard blocks
+1470*      (tape files)
+1480*      FGG  file generation group
+1490*      NONE undefined
+1500  1 AD SECONDARY-QTY                     N 10.0      Secondary allocation
+1510*      Secondary allocation quantity.
+1520  1 AG PERCENT-USED                      N  3.0      Tracks used / total
+1530*      Tracks used / total tracks
+1540*      allocated. For BS2000,
+1550*      PAM-pages used / total PAM-
+1560*      pages allocated.
+1570  1 AM LAST-REFERENCE                    A    8      Last reference date;
+1580*      Last reference date;
+1590*      DD/MM/YY format.
+1600*      (if last reference date is
+1610*      null, field will contain all
+1620*      "*"s.)
+1630  1 DM LAST-REFERENCE-DATX               D    6      Last reference date
+1640*      Last reference date in
+1650*      internal format.
+1660M 1 BW VOLSER-ARRAY                      A    6      Array of Volumes for
+1670*      Array of Volumes for
+1680*      Multi-Volume-Datasets.
+1690M 1 BV SERIES-ARRAY                      A    8      Arrray of Series for
+1700*      Arrray of Series for
+1710*      Multi-Volume-Datasets.
+1720*
+1730*      MVS fields
+1740*
+1750  1 AN NUMBER-OF-MEMBERS                 N  7.0      Number of members; o
+1760*      Number of members; or 0 if
+1770*      data set is not a PDS.
+1780  1 AO TOTAL-DIRECTORY-BLOCKS            N  5.0      Number of directory
+1790*      Number of directory blocks;
+1800*      or 0 if data set is not a PDS.
+1810  1 AP UNUSED-DIRECTORY-BLOCKS           N  5.0      Number of unused dir
+1820*      Number of unused directory
+1830*      blocks; or 0 if data set is
+1840*      not a PDS.
+1850  1 AQ PASSWORD                          A    8    D Supply password for
+1860*      Supply password for protected
+1870*      dataset.
+1880  1 AV UPDATED-SINCE-BACKUP              A    3      File updated since l
+1890*      File updated since last
+1900*      backup :
+1910*      YES
+1920*      NO
+1930  1 AW SMS                               A    3      SMS managed file :
+1940*      SMS managed file :
+1950*      YES
+1960*      NO
+1970  1 AY PRODUCT-OPTIONS                   A   80      Options for PANVALET
+1980*      Options for PANVALET,LIBRARIAN
+1990*      etc.
+2000  1 BA LAST-TTTR                         B    4      Last used track and
+2010*      Last used track and block on
+2020*      track (TTTR).
+2030  1 BB DSNTYPE                           A    8      Data Set Type Specif
+2040*      Data Set Type Specification
+2050  1 BC PRIMARY-QTY                       N 10.0      Primary allocation q
+2060*      Primary allocation quantity.
+2070  1 C9 SMS-STORAGE-CLASS                 A    8      Storage class of SMS
+2080*      Storage class of SMS managed
+2090*      file.
+2100  1 CA SMS-MANAGEMENT-CLASS              A    8      Management class of
+2110*      Management class of SMS
+2120*      managed file.
+2130  1 CB SMS-DATA-CLASS                    A    8      Data class of SMS ma
+2140*      Data class of SMS managed
+2150*      file.
+2160  1 CC PAGES-USED                        N 10.0      PDSE only:
+2170*      PDSE only:
+2180*      Number of used pages.
+2190*
+2200*      VSE fields
+2210*
+2220  1 AZ VSAM-CATALOG                      A    8    D VSAM catalog name
+2230*      VSAM catalog name
+2240*
+2250*      BS2000 fields
+2260*
+2270  1 ES SYSTEM-CODE                       B    2      System error code.
+2280*      System error code.
+2290  1 B1 SHARE                             A    4      Shows whether the fi
+2300*      Shows whether the file
+2310*      is accessible to other users.
+2320  1 B2 KEY-LENGTH                        N  4.0      Gives the key-length
+2330*      Gives the key-length for ISAM
+2340*      files.
+2350  1 B3 KEY-POSITION                      N  5.0      Gives the position o
+2360*      Gives the position of the
+2370*      first byte of the key within
+2380*      the record.
+2390  1 B4 ACCESS-NUMBER                     N  4.0      Shows how many times
+2400*      Shows how many times the file
+2410*      was accessed.
+2420  1 B5 VERSION-NUMBER                    N  4.0      Version number of fi
+2430*      Version number of file.
+2440  1 B6 BACKUP-TYPE                       A    1      Shows how often the
+2450*      Shows how often the file
+2460*      should be saved by ARCHIVE.
+2470  1 B7 ACCESS-TYPE                       A    5      Shows whether the al
+2480*      Shows whether the allowed
+2490*      access is READ or WRITE.
+2500  1 B9 AUDIT-TYPE                        A    4      Shows which type of
+2510*      Shows which type of access to
+2520*      the file must be controlled.
+2530  1 DU MODIFICATION-DATX                 D    6      Date of last modific
+2540*      Date of last modification.
+2550*      Only available for BS2000
+2560*      V11 (OSD V1) or above.
+2570  1 TV MODIFICATION-TIMX                 T   12      Time of last modific
+2580*      Time of last modification.
+2590*      Only available for BS2000
+2600*      V11 (OSD V1) or above.
+2610  1 BR READ-PASSWORD                     A    8      If caller is TSOS an
+2620*      If caller is TSOS and ESY is
+2630*      running under TSOS, the READ
+2640*      password of the file is
+2650*      returned, if one exists (see
+2660*      field SECURITY).
+2670  1 BS WRITE-PASSWORD                    A    8      If caller is TSOS an
+2680*      If caller is TSOS and ESY is
+2690*      running under TSOS, the WRITE
+2700*      password of the file is
+2710*      returned, if one exists (see
+2720*      field SECURITY).
+2730  1 BT EXEC-PASSWORD                     A    8      If caller is TSOS an
+2740*      If caller is TSOS and ESY is
+2750*      running under TSOS, the EXEC
+2760*      password of the file is
+2770*      returned, if one exists (see
+2780*      field SECURITY).
+2790  1 BX BLOCK-CONTROL                     A    6      PAMKEY  PAM key sepa
+2800*      PAMKEY  PAM key separate from
+2810*      data
+2820*      DATA    PAM key within data
+2830*      (NK-discs only)
+2840*      NO      No PAM key information
+2850*      (NK-discs only)
+2860*      NONE    blkcntrl undefined
+2870  1 BZ FILE-SEQUENCE-NUMBER              N  3.0      Only for tape-files:
+2880*      Only for tape-files:
+2890*      File sequence number on tape.
+2900  1 BD LABEL                             A    7      Type of label (for t
+2910*      Type of label (for tape files
+2920*      only).
+2930  1 BE CODE                              A    6      Code of tape file.
+2940*      Code of tape file.
+2950  1 BF BACKUP-INFO                       A   19      Additional informati
+2960*      Additional information about
+2970*      BACKUP status:
+2980*      LARG  LARGE = YES
+2990*      MIGR  MIGRATED = YES
+3000*      OPEN  OPEN BACKUP
+3010*      PART  PARTIAL RESTORE
+3020  1 BG BACKUP-VERSION-NUMBER             N  5.0      Internal attribute f
+3030*      Internal attribute for change
+3040*      save with the ARCHIVE or HSMS
+3050*      utility routine.
+3060  1 BH MIGRATE                           A    9      Indicates whether th
+3070*      Indicates whether the file may
+3080*      be migrated:
+3090*      ALLOWED
+3100*      INHIBITED
+3110  1 BI STORAGE-LEVEL                     A    2      Indicates the storag
+3120*      Indicates the storage level
+3130*      for migrated files.
+3140  1 BJ LAST-HALF-PAGE-POINTER            N 10.0      Last half page point
+3150*      Last half page pointer value
+3160*      supporting large files.
+3170  1 BK FILE-SIZE-LARGE                   N 10.0      File size value supp
+3180*      File size value supporting
+3190*      large files.
+3200*
+3210*      End of FILE-ATTRIBUTES
+3220*
+3230******DDM OUTPUT TERMINATED******

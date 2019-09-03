@@ -1,0 +1,17 @@
+0010&H View CONSOLE-LOG
+0020&L
+0030&L
+0040#Purpose@: Retrieve records from the CONSOLE-LOG file to which all
+0050           system activity messages are written.
+0060&L
+0070#OpSys@  : z/OS, z/VSE
+0080&L
+0090&L
+0100#Usage@  : This view may be used to retrieve current and past console
+0110           log data, containing information about the start & end of
+0120           jobs & tasks and important error and abend messages.
+0130&L
+0140#Notes@  :
+0150
+0160
+0170

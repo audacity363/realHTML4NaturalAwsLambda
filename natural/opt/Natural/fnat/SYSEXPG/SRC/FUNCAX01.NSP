@@ -1,0 +1,7 @@
+0010** Example 'FUNCAX01': Calling a function  (Program)
+0020************************************************************************
+0030*
+0040WRITE 'Function call' F#ADD(< 2,3 >)  /* Function call.
+0050                                      /* No temporary variables needed.
+0060*
+0070END

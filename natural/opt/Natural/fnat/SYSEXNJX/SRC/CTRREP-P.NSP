@@ -1,0 +1,93 @@
+0010* >Natural Source Header 000000
+0020* :Mode S
+0030* :CP
+0040* <Natural Source Header
+0050* Name: Reporting/Report /*<RO>
+0060*
+0070DEFINE DATA LOCAL
+00801 INFOPAGENAME (U) DYNAMIC INIT <'html/ctrlreport.html'>
+00901 REPORT
+0100  2 CHANGEINDEX (U) DYNAMIC /* <== to be set, signal that report has to be re-rendered
+0110  2 HTML (U) DYNAMIC
+0120  2 PARAGRAPH (1:*)
+0130    3 HORIZONTALINDENT (U) DYNAMIC /* <== number of pixels of indent (optional)
+0140    3 REPCELL (1:*) /* <== cell of table
+0150      4 ISHEADER (L) /* <== TRUE if it is a headline cell
+0160      4 ISLINEBREAK (L) /* <== TRUE if cell is a linebreak
+0170      4 STYLE (U) DYNAMIC /* <== style ID (must be defined in repstyle section), (optional)
+0180        /* INFO: Next variable name renamed to make unique.
+0190      4 TEXT_001 (U) DYNAMIC /* <== text of cell
+0200      4 WIDTH (U) DYNAMIC /* <== width of cell (obligatory with header cells)
+0210    3 TEXT (U) DYNAMIC /* <== text that is output (optional)
+0220    3 TEXTSTYLE (U) DYNAMIC
+0230    3 VERTICALDISTANCEPOST (U) DYNAMIC /* <== number of pixels vertical space at beginning (optional)
+0240    3 VERTICALDISTANCEPRE (U) DYNAMIC /* <== number of pixels vertical space at end (optional)
+0250  2 REPSTYLE (1:*) /* <== style element (optional) that can be used for output
+0260    3 ALIGN (U) DYNAMIC /* <== alignment
+0270    3 BACKGROUNDCOLOR (U) DYNAMIC
+0280    3 FONTFAMILY (U) DYNAMIC
+0290    3 FONTSIZE (U) DYNAMIC
+0300    3 FONTWEIGHT (U) DYNAMIC /* <== e.g. "bold","italic"
+0310    3 ID (U) DYNAMIC /* <== style element (optional) that can be used for output
+0320    3 TEXTCOLOR (U) DYNAMIC /* <== e.g. "#FF0000" for red
+0330  2 SHOWICONCOLUMN (L)
+0340  2 SHOWPDF (L)
+0350  2 SHOWPRINTVERSION (L)
+0360  2 SHOWUPLOAD (L)
+0370END-DEFINE
+0380*
+0390EXPAND ARRAY REPORT.PARAGRAPH TO (1:1)
+0400EXPAND ARRAY REPORT.REPCELL   TO (*,1:9)
+0410EXPAND ARRAY REPORT.REPSTYLE  TO (1:1)
+0420
+0430PROCESS PAGE USING "CTRREP-A"
+0440*
+0450/*( DEFINE EVENT HANDLER
+0460DECIDE ON FIRST *PAGE-EVENT
+0470  VALUE U'nat:page.end'
+0480    /* Page closed.
+0490    IGNORE
+0500  VALUE U'onFillReport'
+0510    REPORT.CHANGEINDEX := '4711'
+0520    /* repstyle
+0530    REPORT.TEXTCOLOR(1) := '#8C0000'
+0540    REPORT.FONTFAMILY(1) := 'Arial'
+0550    REPORT.FONTWEIGHT(1) := 'bold'
+0560    REPORT.ID(1) := 'EXTRA'
+0570    /* paragraph
+0580    REPORT.TEXT(1) := 'This is a demo report:'
+0590    REPORT.HORIZONTALINDENT(1) := '100'
+0600    REPORT.VERTICALDISTANCEPRE(1) := '50'
+0610    REPORT.VERTICALDISTANCEPRE(1) := '50'
+0620    /* repcell
+0630    REPORT.TEXT_001(1,1) := 'Region'
+0640    REPORT.WIDTH(1,1) := '100'
+0650    REPORT.ISHEADER(1,1) := TRUE
+0660    /* repcell
+0670    REPORT.TEXT_001(1,2) := 'Sales'
+0680    REPORT.WIDTH(1,2) := '100'
+0690    REPORT.ISHEADER(1,2) := TRUE
+0700    /* repcell
+0710    REPORT.ISLINEBREAK(1,3) := TRUE
+0720    /* repcell
+0730    REPORT.TEXT_001(1,4) := 'North'
+0740    /* repcell
+0750    REPORT.TEXT_001(1,5) := '2.000.000'
+0760    /* repcell
+0770    REPORT.ISLINEBREAK(1,6) := TRUE
+0780    /* repcell
+0790    REPORT.TEXT_001(1,7) := 'South'
+0800    /* repcell
+0810    REPORT.TEXT_001(1,8) := '4.000.000'
+0820    REPORT.STYLE(1,8) := 'EXTRA'
+0830    /* repcell
+0840    REPORT.ISLINEBREAK(1,9) := TRUE
+0850    /*
+0860    PROCESS PAGE UPDATE FULL
+0870  NONE VALUE
+0880    /* Unhandled events.
+0890    PROCESS PAGE UPDATE
+0900END-DECIDE
+0910/*) END-HANDLER
+0920*
+0930END

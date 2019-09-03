@@ -1,0 +1,24 @@
+0010*
+0020*                                                       Natural
+0030*
+0040*                       Natural Web Interface
+0050*                       =====================
+0060*
+0070*  This is the DCOM extension part of the Natural Web Interface.
+0080*
+0090*  Run this program to unregister the classes of the
+0100*  Natural Web Interface. Once the classes are unregistered,
+0110*  they can be used only in the local NATURAL session.
+0120*
+0130*  To unregister classes, you need the permission to modify
+0140*  the system registry. This will be the case if you have
+0150*  administrator rights on the machine. Otherwise you will get
+0160*  an error message when you run this register script. In this
+0170*  case ask your administrator for help.
+0180*
+0190*  See the NaturalX documentation for more information about
+0200*  unregistration.
+0210*
+0220STACK TOP COMMAND "UNREGISTER SYSWEB3 * "
+0230*
+0240END

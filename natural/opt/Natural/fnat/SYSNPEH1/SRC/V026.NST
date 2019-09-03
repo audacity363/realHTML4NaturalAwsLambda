@@ -1,0 +1,17 @@
+0010&H View SYSTEM-INFO
+0020&L
+0030&L
+0040#Purpose@: Retrieve information from the Operating System
+0050           on which this ENTIRE-SYSTEM-SERVER is running.
+0060&L
+0070#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0080&L
+0090&L
+0100#Usage@  : This view may be used in a NET-WORK environment to
+0110           determine which operating systems are to be supported.
+0120&L
+0130&L
+0140#Notes@  :
+0150
+0160
+0170

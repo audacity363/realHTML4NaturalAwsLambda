@@ -1,0 +1,72 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3TXAREA
+0050*
+0060* DESCRIPTION   Creates a text area.
+0070*
+0080* AUTHOR        SAG   08.09.1998
+0090*
+0100* Version       8.3
+0110*
+0120* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0130*
+0140* HISTORY
+0150* USER    DATE       REASON
+0160* ------+----------+----------------------------------------------
+0170*       ! --.--.-- !
+0180* ------+----------+----------------------------------------------
+0190*
+0200* ------ PARAMETER -----------------------------------------------
+0210DEFINE DATA
+0220PARAMETER USING W3PARM
+0230LOCAL USING W3CONST
+0240LOCAL
+02501 H3ARRAYTEXT        (A/1:10) DYNAMIC
+0260*
+02701 II                 (I1)
+0280END-DEFINE
+0290* --- ERROR HANDLING ---
+0300ON ERROR
+0310  PERFORM W3ERROR ##W3ERROR
+0320  PERFORM W3END ##RPC
+0330  ESCAPE ROUTINE
+0340END-ERROR
+0350*
+0360* --- INITIALIZE Web Interface ---
+0370PERFORM W3INIT ##RPC
+0380*
+0390* --- START HTML Generation ---
+0400PERFORM H3-OPEN-HTML 'HTML Generation - Text Area' " " ' '
+0410* --- THE LEVEL 2 HEADER ---
+0420PERFORM H3-HEADER 2 'Text Area'
+0430*
+0440* PERFORM H3-RULE 0
+0450*
+0460* --- Form with POST ---
+0470PERFORM H3-OPEN-FORM "P" "NAT-ENV"
+0480*
+0490FOR II = 1 TO 4
+0500    COMPRESS 'This is Line' II INTO H3ARRAYTEXT(II)
+0510END-FOR
+0520*
+0530PERFORM H3-TEXT-AREA 10 "TEXT" H3ARRAYTEXT(*) 5 50
+0540* -------------------------------------------------
+0550*
+0560PERFORM H3-LINE-BREAK
+0570PERFORM H3-LINE-BREAK
+0580* --- Submit button ---
+0590PERFORM H3-BUTTON "S" " " 'Submit with Post' ' '
+0600*
+0610PERFORM H3-CLOSE-FORM
+0620*
+0630* PERFORM H3-RULE 0
+0640*
+0650PERFORM E3-EXAMPLE-END
+0660*
+0670* --- END HTML Generation ---
+0680PERFORM H3-CLOSE-HTML
+0690* --- END Web Interface ---
+0700PERFORM W3END ##RPC
+0710*
+0720END

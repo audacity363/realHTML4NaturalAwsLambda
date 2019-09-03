@@ -1,0 +1,29 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Use FDDM file for processing DDMs
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180If this field is marked, only the FDDM system file is used
+0190for processing DDMs.
+0200During the unload function, DDMs in libraries are ignored.
+0210If you want to unload DDMs from the FDDM system file, in
+0220the Natural Library Object Details screen, set the field
+0230Natural Types to 'V' and the Library to 'SYSTEM'.
+0240In this case, any specified DBID/FNR values is ignored.
+0250
+0260During the load function, all DDMs are loaded into the
+0270FDDM system file.
+0280The parameter NEWLIBRARY is ignored.
+0290<HelpTextEnd>

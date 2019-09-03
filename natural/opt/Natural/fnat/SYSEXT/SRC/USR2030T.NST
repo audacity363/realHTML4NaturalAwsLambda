@@ -1,0 +1,46 @@
+0010Get dynamic error message parts from the last error
+0020.
+0030Documentation ......... USR2030T    /*  Text object
+0040Interface ............. USR2030N    /*  Cataloged subprogram
+0050Example Program ....... USR2030P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR MESSAGES
+0100.
+0110Keywords .............. +CURRENT-VERSION,
+0120                        *ERROR-NR, DYNAMIC, ERROR, SYSERR
+0130.
+0140Interface Versions .... USR1012N, USR2009N, USR2030N
+0150.
+0160Function .............. Read dynamic error parts for use with
+0170                        ":1:,:2:,:3:, ...". You can read the dynamic
+0180                        error parts of the last occurred error.
+0190                        With USR2030N, the error parts can be up to
+0200                        253 byte long and the response code is no
+0210                        more used.
+0220.
+0230.
+0240Parameters
+0250----------
+0260Define the following parameters with the DEFINE DATA statement:
+0270.
+028001 ERR-PARM     (A253/1:9)
+029001 OCC          (N01)     /*  Number of occurences
+030001 RESPONSE     (N04)     /*  Error code, not used
+0310.
+0320.
+0330Interface Call
+0340--------------
+0350Use the interface with the CALLNAT statement:
+0360.
+0370CALLNAT 'USR2030N' ERR-PARM  OCC RESPONSE
+0380.
+0390.
+0400Using the Application Programming Interface:
+0410--------------------------------------------
+0420Copy the subprogram USR2030N to the library SYSTEM or the steplib
+0430library respectively, or to the required library.
+0440.
+0450.
+0460***** End of Description *****

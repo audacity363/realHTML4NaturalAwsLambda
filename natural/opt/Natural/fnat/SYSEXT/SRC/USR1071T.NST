@@ -1,0 +1,118 @@
+0010Set credentials for RPC server
+0020.
+0030Documentation ......... USR1071T    /*  Text object
+0040Interface ............. USR1071N    /*  Cataloged subprogram
+0050Example Program ....... USR1071P    /*  Source program
+0060                                    /*  to set user ID and password.
+0070                        USR1071X    /*  Source program
+0080                                    /*  to set ticket criteria.
+0090.
+0100Product Code .......... RPC
+0110.
+0120Category .............. RPC - SECURITY
+0130.
+0140Keywords .............. +PREVIOUS-VERSION,
+0150                        PASSWORD, RPC, SECURITY, TICKET, USER ID
+0160.
+0170Interface Versions .... USR1071N, USR4371N
+0180.
+0190Function .............. On RPC client, this API sets user ID and
+0200                        password for RPC servers.
+0210                        This text member contains the description of
+0220                        USR1071P and USR1071X (extended version).
+0230.
+0240.
+0250Parameters
+0260----------
+0270Define the following parameters with the DEFINE DATA statement:
+0280.
+02901 PARM-USR1071N
+0300  2 FUNCTION (A02)      /* - Function code to maintain RPC save area
+0310                        /*   USR1071P:
+0320                        /*   value 'ST' - set user ID and/or password.
+0330                        /*   If NSC is installed on client, *USER
+0340                        /*   and password are set by NSC logon.
+0350                        /*   However, the interface may be used to set
+0360                        /*   another user ID and password.
+0370                        /*
+0380                        /*   USR1071X:
+0390                        /*   Extended version of USR1071X. This may be
+0400                        /*   used to set miscellaneous data.
+0410                        /*   Write data:
+0420                        /*   value 'SC' Set ticket criteria:
+0430                        /*   - number of events
+0440                        /*   value 'SU' Set user data buffer
+0450                        /*   Get data:
+0460                        /*   value 'GC'  Get ticket criteria
+0470                        /*   value 'GT'  Get data of client RPC save
+0480                        /*   area; password not returned
+0490                        /*   value 'GU'  Get user data
+0500                        /*   Reset data:
+0510                        /*   value 'RC'  Reset ticket criteria
+0520                        /*   value 'RT'  Reset RPC save area
+0530                        /*   value 'RU'  Reset RPC save area
+0540                        /*   Write data:
+0550                        /*   value 'SC' Set ticket criteria:
+0560                        /*   - number of events
+0570                        /*   value 'SU' Set user data
+0580  2 EXPIRATION-CRITERIA (A20)
+0590  2 REDEFINE EXPIRATION-CRITERIA
+0600    3 USE-COUNT (N03)      /* Max. use counter of RPC ticket.
+0610    3 EXP-DATE  (N03)      /* Expiration date of ticket
+0620                           /* (nnn days max. 100).
+0630    3 EXP-TIME  (A04)      /* Expiration time of ticket.
+0640    3 REDEFINE EXP-TIME
+0650      4 HOURS   (N2)       /* Hours of expiration time.
+0660      4 MINUTES (N2)       /* Minutes of expiration time.
+0670    3 OVWR-DATA (A01)      /* Allow modification of expiration criteria
+0680                           /* before expiration;
+0690                           /* if this is set a new logon is required.
+0700    3 OVWR-USER (A01)      /* Allow overwriting of user data.
+0710.
+0720    3 EXPIRARION-REST(A08) /* Reserved for future use.
+0730.
+0740  2 USERID   (A08)         /* User ID to be used.
+0750  2 PASSWORD (A08)         /* Password to validate user ID. This
+0760                           /* password is not validated on client.
+0770  2 USER-DATA(A32)         /* Any data which may transferred to the
+0780                           /* Natural RPC server.
+0790  2 MSG-TEXT (A50)         /* If PRC is greater 0, a message text is
+0800                           /* returned.
+0810  2 PRC     (N04)          /* - return value
+0820                           /*   0     OK
+0830                           /*   4     Internal error
+0840                           /*   1x     Error in exp. crit. handling
+0850                           /*   2x     Error in write handling
+0860                           /*   3x     Error in read handling
+0870                           /*   9999   Invalid function code
+0880.
+0890Interface Call
+0900--------------
+0910Use the interface with the CALLNAT statement:
+0920.
+0930CALLNAT 'USR1071N'  PARM-USR1071N
+0940.
+0950.
+0960Using the Application Programming Interface:
+0970--------------------------------------------
+0980Copy the subprogram USR1071N to the library SYSTEM or the steplib
+0990library respectively, or to the required library.
+1000.
+1010Steps:
+1020 1.) Initialize phase:
+1030   - Set expiration criteria if these are required.
+1040   - Set user ID and password ; please note there is no validation
+1050     on client. The password will be validated on the RPC server.
+1060   - Set user data ; you may add your own data to RPC save area
+1070     up to 32 bytes. When using RPC across platforms, specify only
+1080     alphanumeric characters, as these data will be converted.
+1090 2.) Runtime phase:
+1100   - Specify new expiration criteria if it is necessary or possible.
+1110     Whether it is possible depends on your setting of the
+1120     OVWR-DATA flag: Value 'Y' means that overwriting is rejected
+1130     until the defined criteria have expired.
+1140 3.) End phase:
+1150     The contents of the area are only available until the end of
+1160     Natural session.
+1170.
+1180***** End of Description *****

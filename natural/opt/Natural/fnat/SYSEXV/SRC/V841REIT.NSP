@@ -1,0 +1,59 @@
+0010* Program .. V841REIT
+0020* Library .. SYSEXV
+0030* Version .. 8.4.1
+0040*
+0050* Functionality: Enhanced feature of the REINPUT Statement with TEXT
+0060*                option.
+0070*
+0080************************************************************************
+0090DEFINE DATA LOCAL
+010001 #NAME   (A8)
+011001 #TEXT   (A20)
+0120END-DEFINE
+0130*
+0140FORMAT KD=ON
+0150SET KEY PF3  NAMED 'Exit'
+0160  PF12 NAMED 'Canc'
+0170*
+0180INPUT(IP=OFF PS=100 LS=150 AD=MI)
+0190*
+0200  01T *TIMX  (AD=OTD)
+0210  21T '***** NATURAL 8.4.1 ENHANCEMENTS *****'
+0220  70T *DATX  (AD=OTD DF=L)
+0230  /
+0240  01T 'User'
+0250  06T *USER  (AD=OILT )
+0260  26T '- Statement Enhancements -'(I)
+0270  64T 'Program'
+0280  72T *PROGRAM (AD=OI)
+0290  ///
+0300  02T 'WITH TEXT is used to provide text which is to be displayed in'-
+0310  ' the message line.'(I)
+0320  //
+0330  02T 'REINPUT WITH TEXT "Input missing. Enter a name."'
+0340  /
+0350  02T 'REINPUT WITH TEXT ":1: Name must start with a letter ,#TEXT" '
+0360  ///
+0370  02T 'Enter a program name' #NAME
+0380
+0390IF *PF-KEY = 'PF3'
+0400  ESCAPE ROUTINE
+0410END-IF
+0420IF (*PF-KEY = 'PF12' OR= 'CLR')
+0430  CALLNAT 'UTILSTOP'
+0440END-IF
+0450*
+0460IF #NAME = ' '
+0470  REINPUT WITH TEXT 'Input missing. Enter a name.'
+0480END-IF
+0490*
+0500IF #NAME NE MASK (A)
+0510  MOVE 'Invalid input.' TO #TEXT
+0520  REINPUT WITH TEXT ':1: Name must start with a letter.',#TEXT
+0530ELSE
+0540  /* Using Natural error message 7600 for demonstration
+0550  COMPRESS *INIT-USER 'on' *DAT4I INTO #TEXT
+0560  INPUT WITH TEXT *-7600,#NAME,#TEXT 'Input accepted.'
+0570END-IF
+0580
+0590END

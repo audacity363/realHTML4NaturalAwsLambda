@@ -1,0 +1,252 @@
+0010List DDMs on the FDIC file or in a library
+0020.
+0030Documentation ......... USR1056T    /*  Text object
+0040Interface ............. USR1056N    /*  Cataloged subprogram
+0050Example Program ....... USR1056P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DDMS
+0100.
+0110Keywords .............. +MOD-NAT-6.3.14,
+0120                        DDM, FDIC, FNAT, FSEC ENABLED, FUSER, LIST,
+0130                        MODULE, SOURCE, SYSTEM FILE
+0140.
+0150Function .............. This interface lists the names of sources
+0160                        and/or modules of DDMs. The DDM can be stored
+0170                        either in a FDIC file or in a file system.
+0180                        Sources of DDMs are not available on all
+0190                        platforms.
+0200                        With OS6.3.14: support for FSEC switch
+0210.
+0220.
+0230Parameters
+0240----------
+0250Define the following parameters with the DEFINE DATA statement:
+0260.
+02701 USR1056L
+0280  2 OBJECT-KEY
+0290    3 LIBRARY        (A08)
+0300    3 OBJECT-FROM    (A33)
+0310    3 OBJECT-TO      (A33)
+0320    3 OBJECT-KIND    (A01)
+0330  2 INPUTS
+0340    3 OPT-ACCESS     (A01)
+0350    3 OPT-TYPE-OP    (A01)
+0360    3 OPT-TYPE       (A24)
+0370    3 OPT-DBID       (I04)
+0380    3 OPT-FNR        (I04)
+0390    3 OPT-SCROLL     (A01)
+0400    3 OPT-WILDCARD   (A01)
+0410    3 OPT-ASTERISK   (A01)
+0420    3 OPT-AMOUNT     (I02)
+0430  2 INPUT-OUTPUTS
+0440    3 INT-HANDLE     (I04)
+0450    3 NEXT-OBJ       (A32)
+0460  2 OUTPUTS
+0470    3 RETURNED       (I02)
+0480    3 LIST-OBJ       (A32/1:nn)
+0490    3 LIST-TYPE      (A01/1:nn)
+0500    3 LIST-DBID      (I04/1:nn)
+0510    3 LIST-FNR       (I04/1:nn)
+0520    3 LIST-KIND      (A01/1:nn)
+0530.
+05401 USR1056N
+0550  2 VERSION          (I01)     INIT <1>
+0560  2 DBID             (N05)
+0570  2 FNR              (N05)
+0580  2 PASSWORD         (A08)
+0590  2 CIPHERCODE       (N08)
+06001 REDEFINE USR1056N
+0610  2 EXTENDED-PARMS
+0620    3 EXTENDED-DATA  (A01/1:27)
+0630.
+0640LOCAL USING USR-MSG   /* Data for message exchange
+0650LOCAL USING USR-FLD   /* Description of the field in error
+0660.
+0670.
+0680Interface Call
+0690--------------
+0700Use the interface with the CALLNAT statement:
+0710.
+0720CALLNAT 'USR1056N' USR1056L  USR1056N.EXTENDED-PARMS
+0730                   USR-MSG   USR-FLD
+0740.
+0750.
+0760Using the Application Programming Interface:
+0770--------------------------------------------
+0780Copy the subprogram USR1056N to the library SYSTEM or the steplib
+0790library respectively, or to the required library.
+0800.
+0810.
+0820In/Output .. LIBRARY (A08)
+0830                    Library where the object is located. If
+0840                    LIBRARY is blank, the current library is used.
+0850                    This applies not to mainframe platforms.
+0860.
+0870Input ...... OBJECT-FROM (A33), OBJECT-TO (A33)
+0880                    Full wildcard support is available.
+0890                    You can specify in OBJECT-FROM an object set,
+0900                    e.g. SYS*. Or you can specify a range of objects
+0910                    to be listed, e.g. D>, K<.
+0920.
+0930Some examples:
+0940--------------
+0950 Description of object set               : OBJECT-FROM : OBJECT-TO :
+0960 ----------------------------------------:-------------:-----------:
+0970 1) Object names starting with USR       : USR*        : --        :
+0980                                         :             :           :
+0990 2) Object names after USR               :             :           :
+1000    a) Including USR                     : USR         : --        :
+1010    b) Excluding USR                     : USR>        : --        :
+1020                                         :             :           :
+1030 3) Object names before USR              :             :           :
+1040    a) Including USR                     : --          : USR       :
+1050    b) Excluding USR                     : --          : USR<      :
+1060                                         :             :           :
+1070 4) The range of object names is a       :             :           :
+1080    combination of 2) and 3):            :             :           :
+1090    Select names starting with R,S,T     : R           : U<        :
+1100                                         :             :           :
+1110Some Rules:
+1120-----------
+1130 1) The wildcard '?' and the asterisk '*' are supported in the
+1140    field OBJECT-FROM only. If they are used, OBJECT-TO must be
+1150    blank.
+1160.
+1170 2) The field OBJECT-TO is used only to specify a range with
+1180    the special characters '>' and '<', not '*' and '?'.
+1190.
+1200 3) The special characters '>' and '<' are allowed only at the
+1210    end of the string. For example, 'ABC<DEF' is an invalid
+1220    expression.
+1230.
+1240.
+1250Input ...... OBJECT-KIND (A01)
+1260                    Saved, cataloged, stowed or all DDMs in a
+1270                    library could be listed.
+1280                    Possible values are:
+1290                    'S' - Saved objects
+1300                    'C' - Cataloged objects
+1310                    'A' - Saved or cataloged objects
+1320                    'B' - Saved and cataloged objects
+1330.
+1340Input ...... OPT-ACCESS (A01)
+1350                    Access type.
+1360                    Possible values are:
+1370                    'O' - Open processing
+1380                    'R' - Read objects
+1390                    'C' - Close processing; only necessary to
+1400                          force the end of processing. An automatic
+1410                          close is done by the subprogram if the
+1420                          request has been successfully satisfied.
+1430                    The open/close processing is only necessary
+1440                    if the objects are stored in a file system.
+1450.
+1460Input ...... OPT-TYPE-OP (A01)
+1470                    Object type operator; corresponds to OPT-TYPE.
+1480                    Possible values are:
+1490                    'I' - Include OPT-TYPE objects
+1500                    'E' - Exclude OPT-TYPE objects
+1510                    ' ' - Include all objects
+1520.
+1530Input ...... OPT-TYPE (A24)
+1540                    List of DDM types; corresponds to
+1550                    OPT-TYPE-OP. If an '*' is specified, all
+1560                    DDMs will be listed.
+1570                    This applies to mainframe platforms only.
+1580.
+1590Input ...... OPT-DBID (I04)
+1600                    Select DDMs with a specific DBID. OPT-DBID = -1
+1610                    selects all DDMs.
+1620.
+1630Input ...... OPT-FNR (I04)
+1640                    Select DDMs with a specific FNR. OPT-FNR = -1
+1650                    selects all DDMs.
+1660.
+1670Input ...... OPT-SCROLL (A01)
+1680                    Scrolling direction.
+1690                    Possible values are:
+1700                    'D' - Scroll forward
+1710                    'T' - Start at top of the object set
+1720.
+1730In/Output .. OPT-WILDCARD (A01)
+1740                    This wildcard character will be substituted by
+1750                    exactly one character. If this field is left
+1760                    blank, the default wildcard character '?'
+1770                    will apply.
+1780.
+1790In/Output .. OPT-ASTERISK (A01)
+1800                    This wildcard character will be substituted by
+1810                    any character string. If this field is left
+1820                    blank, the default wildcard character '*'
+1830                    will apply.
+1840.
+1850Input ...... OPT-AMOUNT (I02)
+1860                    Amount of requested occurrences.
+1870                    The maximum value is 255.
+1880.
+1890In/Output .. INT-HANDLE (I04)
+1900                    Do not change. Passed out by the open call to
+1910                    identify the caller during subsequent calls.
+1920.
+1930In/Output .. NEXT-OBJ (A32)
+1940                    Do not change. The object to be used as
+1950                    starting value for the next subprogram call.
+1960                    Filled by the subprogram to initialize the
+1970                    next loop.
+1980.
+1990Output ..... RETURNED (I02)
+2000                    Number of filled occurrences.
+2010.
+2020Output ..... LIST-OBJ (A32/1:nn), LIST-TYPE (A01/1:nn),
+2030             LIST-DBID (I04/1:nn), LIST-FNR (I04/1:nn),
+2040             LIST-KIND (A01/1:nn)
+2050                    List of objects and for each object: the type
+2060                    of the DDM, the kind of the DDM and the
+2070                    DBID/FNR the DDM is  cataloged with.
+2080                    The values of LIST-KIND are the same as defined
+2090                    for OBJECT-KIND.
+2100                    The possible values for LIST-TYPE correspond
+2110                    to the values used by the SYSDDM utility.
+2120                    LIST-TYPE is filled only on mainframe platforms.
+2130                    nn: The upper index of the arrays is variable.
+2140                    nn corresponds to OPT-AMOUNT.
+2150.
+2160In/Output .. USR1056N.VERSION (I01)
+2170                    Version number of the subprogram.
+2180                    The actual version number is 2.
+2190                    V1: Parameter DBID, FNR, PASSWORD, CIPHERCODE
+2200                    have been added.
+2210                    V2: Parameter FSEC-DBID, FSEC-FNR, FSEC-PSW,
+2220                    FSEC-CIP have been added.
+2230.
+2240Input V1 ... DBID (N05), FNR (N05), PASSWORD (A08), CIPHERCODE (N08)
+2250                      Description of the data base environment. If
+2260                      no values are entered, the current FDIC
+2270                      definition is used.
+2280.
+2290Output ..... USR-MSG
+2300                    Data used for message exchange.
+2310                    For further information see the PDA USR-MSG.
+2320                    The following message numbers are possible:
+2330                    =  0000  Ok
+2340                    =  0100  End of data reached
+2350                    =  1001  Parameter error
+2360                    =  1002  Parameter/internal error
+2370                    =  1005  Invalid range specified
+2380                    =  1010  Invalid range specified - wildcard notation
+2390                    <  0000  Natural system messages
+2400                             NSC messages
+2410                      -0806 Library :1: not found.
+2420                      -0807 Logon to library :1: is not permitted.
+2430                      -0839 The library 'SYSSEC' :1: has not been found.
+2440                      -0972 User is not authorized to use command: :1:.
+2450                      -4891 Invalid DBID/FNR specified for a library.
+2460.
+2470Output ..... USR-FLD
+2480                    Description of the field in error.
+2490                    For further information see the PDA USR-FLD.
+2500.
+2510.
+2520*****  End of Description  *****

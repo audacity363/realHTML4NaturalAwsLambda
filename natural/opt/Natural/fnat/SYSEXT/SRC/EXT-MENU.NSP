@@ -1,0 +1,765 @@
+0010*
+0020*  Member ......... EXT-MENU
+0030*  Type ........... Program
+0040*  Library ........ SYSEXTC
+0050*
+0060*  Function ....... Main Program for SYSEXT  ---- NEW VERSION ----
+0070*                   called by program SYSEXT
+0080*
+0090************************************************************************
+0100*
+0110       /***********************************************/
+0120       /* Parts of this library are released in       */
+0130       /* source form, too. The customers may modify  */
+0140       /* these sources according to their needs.     */
+0150       /***********************************************/
+0160*
+0170*
+0180*
+0190DEFINE DATA
+0200GLOBAL USING EXT-GDA
+0210LOCAL  USING EXTXPDA1              /* Current data of selection
+0220LOCAL
+0230  01 TABLES
+0240     02 MAX-INTERFACE          (N02)
+0250     02 M-INTERFACE            (A08/1:32)
+0260     02 REDEFINE M-INTERFACE
+0270        03 M-INTERFACE-GRP     (1:32)
+0280           04 M-INTERFACE-NAME (A07)
+0290           04 M-INTERFACE-TYPE (A01)
+0300     02 M-DESCRIPTION          (A61/1:32)
+0310     02 M-PRODUCT              (A03/1:32)
+0320     02 M-CATEGORY             (A30/1:32)
+0330     02 M-KEYWORD-FLAG         (A01/1:32)
+0340     02 M-NUMBER-CURRENT       (I04/1:32)
+0350  01 CV-INTERFACE      (C/1:32)
+0360  01 CV-PROD           (C/1:32)
+0370  01 M-MARKS           (A32)
+0380  01 REDEFINE M-MARKS
+0390     02 M-MARK         (A01/1:32)
+0400  01 CV-MARK           (C/1:32)
+0410  01 CMD               (A66)
+0420  01 REDEFINE CMD
+0430     02 CMDBYTE        (A01/1:66)
+0440  01 TEXT-CATEGORY     (A47)
+0450  01 TEXT-PRODUCT      (A21)
+0460**
+0470  01 LIST-INTERFACE    (A8)            /* Selection fields
+0480  01 LIST-DESC         (A61)
+0490  01 LIST-PROD         (A3)
+0500  01 LIST-CATEGORY     (A30)
+0510  01 SEL-KEYWORD       (A20)
+0520  01 SEL-CURRENT       (L)
+0530  01 SEL-SORT-ASC      (L)
+0540**
+0550  01 CV-LIST-INTERFACE (C)
+0560  01 CV-LIST-DESC      (C)
+0570  01 CV-LIST-PROD      (C)
+0580  01 CV-LIST-CATEGORY  (C)
+0590  01 SEL-CATEGORY      (A30)
+0600  01 CV-SEL-CATEGORY   (C)
+0610  01 CV-SEL-KEYWORD    (C)
+0620*
+0630  01 NEW-SELECTION     (L)
+0640  01 NEW-INTERFACE     (A8)
+0650  01 NEW-DESC          (A61)
+0660  01 NEW-PROD          (A3)
+0670  01 NEW-CATEGORY      (A30)
+0680  01 NEW-KEYWORD       (A20)
+0690  01 NEW-CURRENT       (A01)
+0700  01 NEW-SORT          (A01)
+0710  01 NEW-MAP-START-POS (I04)
+0720*
+0730  01 MAP-START-POS     (I04)
+0740  01 OLD-MAP-START-POS (I04)
+0750  01 CURRENT-MAP       (A01)
+0760  01 SEL-STRING        (A30)
+0770  01 EXEC-TAB          (A50/1:28)
+0780  01 EXEC-PTR          (P02)
+0790  01 MSG               (A79)
+0800  01 MSG1              (A79)
+0810  01 READ-NEW-MAP      (L)
+0820  01 SCREEN-PAGE       (A02)
+0830  01 SCREEN-LINES      (N03)
+0840  01 SCREEN-LINES-N    (N03.2)
+0850*
+0860  01 IX                (I04)
+0870  01 #NUM              (N6.4)
+0880  01 #POS1             (I04)
+0890  01 #POS2             (I04)
+0900  01 #PGM-NAME         (A08)
+0910  01 #STRING-A50       (A50)
+0920  01 REDEFINE #STRING-A50
+0930     02 #STRING-PGM    (A08)
+0940     02 FILLER         1X
+0950     02 #STRING-NUM    (A04)
+0960     02 FILLER         1X
+0970     02 #STRING-NAME   (A08)
+0980  01 #ALPHA-A4         (A04)
+0990  01 REDEFINE #ALPHA-A4
+1000     02 #ALPHA-N4      (N04)
+1010  01 API-KEYWORDS      (A20/1:80)
+1020  01 #EDITOR-FLAG      (L)
+1030END-DEFINE
+1040*
+1050*  Define all settings
+1060*
+1070*
+1080SET KEY
+1090  TREQ        NAMED ' '
+1100  PF1  = HELP NAMED 'Help'
+1110  PF2         NAMED 'Reset'  /* Reset selection fields
+1120  PF3         NAMED 'Exit'
+1130  PF4         NAMED 'Desc'   /* Sort order
+1140  PF5         NAMED 'Curr'   /* Current / all APIs
+1150  PF6         NAMED '--'     /* Page on top
+1160  PF7         NAMED '-'      /* Page backward
+1170  PF8         NAMED '+'      /* Page forward
+1180  PF9         NAMED '++'     /* Page on bottom
+1190  PF10        NAMED ' '      /* Shift to first page
+1200  PF11        NAMED '>'      /* Shift to second page
+1210  PF12        NAMED 'Canc'
+1220  PF13 PF14 PF15 PF16 PF17 PF18
+1230  PF19 PF20 PF21 PF22 PF23 PF24
+1240*
+1250IF GDA-SAVE-ENVIRONMENT = ' '   /*  Init the GDA
+1260* SET CONTROL 'N'           /*  Non-convers. mode
+1270* INPUT 'Please wait ...'   /*  Clear screen
+1280  CALLNAT 'USR1002N' 'S'
+1290  MOVE 'S' TO GDA-SAVE-ENVIRONMENT  /* Save current environment settings
+1300  IF *ERROR-TA = ' '
+1310    MOVE 'EXT-RTA' TO *ERROR-TA
+1320  END-IF
+1330END-IF
+1340*
+1350SET CONTROL 'M-4'           /*  Position message line
+1360SET CONTROL 'YB'            /*  Position PF-key line
+1370SET CONTROL 'M=RE'          /*  Colour message line
+1380SET CONTROL 'Y=GRGR'        /*  Colour PF-key line
+1390SET CONTROL 'K00'           /*  Force to ENTR
+1400SET CONTROL 'WB'            /*  In case there was a window
+1410SET CONTROL 'L'             /*  Allow lower case input
+1420MOVE 'EXT-RTA' TO *ERROR-TA /*  Global error transaction
+1430RESET *STARTUP              /*  Allow Exit and NEXT prompt
+1440*
+1450* IF *PAGESIZE GE 42          /* Get physical pagesize
+1460IF *WINDOW-PS GE 42           /* Get pagesize on UNIX
+1470  SCREEN-PAGE  := 'F3'
+1480  SCREEN-LINES := SCREEN-LINES-N := 32
+1490ELSE
+1500* IF *PAGESIZE GE 31
+1510  IF *WINDOW-PS GE 31           /* Get pagesize on UNIX
+1520    SCREEN-PAGE  := 'F2'
+1530    SCREEN-LINES := SCREEN-LINES-N := 21
+1540  ELSE
+1550    SCREEN-PAGE  := 'F1'
+1560    SCREEN-LINES := SCREEN-LINES-N := 13
+1570  END-IF
+1580END-IF
+1590*
+1600*  Get start values for selection
+1610*
+1620RESET NEW-INTERFACE NEW-DESC NEW-PROD NEW-CATEGORY
+1630RESET NEW-MAP-START-POS
+1640NEW-KEYWORD    := '*'
+1650NEW-CURRENT    := 'A'
+1660NEW-SELECTION  := TRUE
+1670SEL-CATEGORY   := ' '
+1680CURRENT-MAP    := '1'
+1690MAP-START-POS  := 1
+1700NEW-SORT       := 'A'
+1710RESET TEXT-CATEGORY
+1720RESET TEXT-PRODUCT
+1730READ-NEW-MAP := TRUE
+1740*
+1750*
+1760IF *DATA > 0
+1770  /*
+1780  /*  Get previous selection values (after line commands)
+1790  /*  or via direct command SYSEXT
+1800  /*
+1810  INPUT (LS=80)
+1820        LIST-INTERFACE / LIST-DESC / LIST-PROD / LIST-CATEGORY /
+1830        SEL-KEYWORD / SEL-CURRENT / SEL-SORT-ASC /
+1840        CURRENT-MAP / MAP-START-POS / MSG
+1850  /*
+1860  /*  Check values for new selection
+1870  /*
+1880  IF LIST-INTERFACE NE 'USR*'
+1890    NEW-INTERFACE := LIST-INTERFACE
+1900  END-IF
+1910  IF LIST-DESC NE ' '
+1920    NEW-DESC      := LIST-DESC
+1930  END-IF
+1940  IF LIST-PROD NE '*'
+1950    NEW-PROD      := LIST-PROD
+1960    COMPRESS LIST-PROD ')' INTO TEXT-PRODUCT LEAVING NO
+1970    COMPRESS '(Product:' TEXT-PRODUCT INTO TEXT-PRODUCT
+1980  END-IF
+1990  IF LIST-CATEGORY NE '*'
+2000    NEW-CATEGORY  := LIST-CATEGORY
+2010    COMPRESS LIST-CATEGORY ')' INTO TEXT-CATEGORY LEAVING NO
+2020    COMPRESS '(Category:' TEXT-CATEGORY INTO TEXT-CATEGORY
+2030  END-IF
+2040  IF SEL-KEYWORD NE ' '
+2050    NEW-KEYWORD   := SEL-KEYWORD
+2060  END-IF
+2070  IF SEL-CURRENT
+2080    NEW-CURRENT   := 'C'    /* only current APIs
+2090    SET KEY PF5 = PGM NAMED 'All'
+2100  ELSE
+2110    NEW-CURRENT   := 'A'    /* all APIs
+2120  END-IF
+2130  IF NOT SEL-SORT-ASC
+2140    SET KEY PF4 = PGM NAMED 'Asc'
+2150  END-IF
+2160  IF CURRENT-MAP = '2'
+2170    SET KEY PF10 = PGM NAMED '<'
+2180            PF11 = PGM NAMED ' '
+2190  END-IF
+2200  NEW-MAP-START-POS  := MAP-START-POS
+2210ELSE
+2220  /*
+2230  RELEASE STACK  /*  No other STACK TOP COMMANDs are accepted
+2240  /*
+2250  LIST-INTERFACE  := 'USR*'        /* default values for selection
+2260  LIST-DESC       := ' '
+2270  LIST-PROD       := '*'
+2280  LIST-CATEGORY   := '*'
+2290  SEL-KEYWORD     := ' '
+2300  SEL-CURRENT     := FALSE
+2310  SEL-SORT-ASC    := TRUE
+2320END-IF
+2330/***********************************************************************
+2340*
+2350*  Read all data from XML lists
+2360*
+2370CALLNAT 'EXTXDATA'
+2380*
+2390*
+2400REPEAT
+2410  IF READ-NEW-MAP
+2420    MOVE (AD=I) TO CV-MARK (*)
+2430    MOVE (AD=D CD=TU) TO CV-INTERFACE (*)
+2440    MOVE (AD=D CD=TU) TO CV-PROD(*)
+2450    /*
+2460    /*  Get all map fields for current selection criteria
+2470    /*
+2480    CALLNAT 'EXTXMMAP' TABLES MAP-START-POS SCREEN-LINES
+2490                       NEW-SELECTION NEW-INTERFACE NEW-DESC NEW-PROD
+2500                       NEW-CATEGORY NEW-KEYWORD NEW-CURRENT
+2510                       NEW-MAP-START-POS SEL-SORT-ASC
+2520                       XML-CURRENT
+2530    /*
+2540    /*  Protect unused lines
+2550    /*
+2560    IF MAX-INTERFACE < SCREEN-LINES
+2570      ADD 1 TO MAX-INTERFACE
+2580      MOVE (AD=NP) TO CV-MARK (MAX-INTERFACE:SCREEN-LINES)
+2590      SUBTRACT 1 FROM MAX-INTERFACE
+2600    END-IF
+2610    IF MAX-INTERFACE > SCREEN-LINES
+2620      MOVE SCREEN-LINES TO MAX-INTERFACE
+2630    END-IF
+2640    /*
+2650    /*  Highlight map fields (interface and product code)
+2660    /*
+2670    FOR IX 1 SCREEN-LINES
+2680      IF M-KEYWORD-FLAG(IX) NE ' '
+2690        MOVE (AD=I CD=NE) TO CV-INTERFACE(IX)
+2700      END-IF
+2710      IF M-PRODUCT(IX) NE 'NAT'
+2720        MOVE (AD=I CD=NE) TO CV-PROD(IX)
+2730      END-IF
+2740    END-FOR
+2750  END-IF
+2760  /*
+2770  RESET M-MARKS
+2780  IF M-INTERFACE (1) = ' '
+2790    MOVE 'Nothing found for the selection criteria.' TO MSG
+2800  END-IF
+2810  /*
+2820  /*********************************************************************
+2830  IF SCREEN-PAGE = 'F3'
+2840    IF CURRENT-MAP = '1'
+2850      INPUT WITH TEXT MSG USING MAP 'EXT-MAP5'
+2860    ELSE
+2870      INPUT WITH TEXT MSG USING MAP 'EXT-MAP6'
+2880    END-IF
+2890  ELSE
+2900    IF SCREEN-PAGE = 'F2'
+2910      IF CURRENT-MAP = '1'
+2920        INPUT WITH TEXT MSG USING MAP 'EXT-MAP3'
+2930      ELSE
+2940        INPUT WITH TEXT MSG USING MAP 'EXT-MAP4'
+2950      END-IF
+2960    ELSE
+2970      IF CURRENT-MAP = '1'
+2980        INPUT WITH TEXT MSG USING MAP 'EXT-MAP1'
+2990      ELSE
+3000        INPUT WITH TEXT MSG USING MAP 'EXT-MAP2'
+3010      END-IF
+3020    END-IF
+3030  END-IF
+3040  /*********************************************************************
+3050  /*
+3060  RESET MSG
+3070  RESET NEW-SELECTION
+3080        NEW-CURRENT NEW-MAP-START-POS NEW-SORT
+3090  READ-NEW-MAP := TRUE
+3100  /*
+3110  /*  Cancel / Exit commands
+3120  /*
+3130  IF (CMD = '.' OR= 'EXIT' OR= 'CANCEL' OR= 'CANC') OR
+3140     (*PF-KEY = 'PF3' OR= 'PF12') OR      /* 'Exit', 'Cancel'
+3150     (M-MARKS = SCAN '.')
+3160    IF GDA-SAVE-ENVIRONMENT = 'S'
+3170      CALLNAT 'USR1002N' 'R'
+3180      MOVE ' ' TO GDA-SAVE-ENVIRONMENT
+3190    END-IF
+3200    CALLNAT 'EXTXDAT2'                /* Reset AIVs
+3210    STACK TOP COMMAND 'RETURN'
+3220    STOP
+3230  END-IF
+3240  /*
+3250  /*  Direct command on command line
+3260  /*
+3270  IF CMD NE ' '
+3280    /*
+3290    EXAMINE FULL CMD '_' REPLACE H'20'  /* on OS only
+3300    MOVE LEFT CMD TO CMD
+3310    /*
+3320    /*  Use '/' before command to come back to SYSEXT
+3330    /*
+3340    IF CMDBYTE (1) = '/'        /* Return to MENU after COMMAND
+3350      RESET CMDBYTE (1)
+3360      MOVE LEFT CMD TO CMD
+3370      IF CMDBYTE (1) NE ' '
+3380        STACK TOP COMMAND 'EXT-MENU'
+3390      END-IF
+3400    ELSE
+3410      IF CMD = 'REFRESH'        /* Local generation of XML texts
+3420        CALLNAT 'EXTXDAT2'           /* Reset AIVs
+3430        MOVE 'EXT-GEN X L' TO CMD    /* local generation on lib SYSEXT
+3440        STACK TOP COMMAND 'EXT-MENU'
+3450      END-IF
+3460      IF GDA-SAVE-ENVIRONMENT = 'S'
+3470        CALLNAT 'USR1002N' 'R'
+3480        GDA-SAVE-ENVIRONMENT := ' '
+3490      END-IF
+3500    END-IF
+3510    /*
+3520    IF CMDBYTE (1) NE ' '
+3530      STACK TOP COMMAND CMD
+3540      STOP
+3550    ELSE
+3560      REINPUT FULL 'Command not accepted.' MARK *CMD ALARM
+3570    END-IF
+3580  END-IF
+3590  /*
+3600  /*  Get all new selections
+3610  /*
+3620  IF *PF-KEY = 'PF2'                 /* Reset all selection values
+3630    LIST-INTERFACE  := 'USR*'        /* default values for selection
+3640    LIST-DESC       := ' '
+3650    LIST-PROD       := '*'
+3660    LIST-CATEGORY   := '*'
+3670    SEL-KEYWORD     := ' '
+3680    TEXT-CATEGORY   := ' '
+3690    TEXT-PRODUCT    := ' '
+3700    /*
+3710    NEW-SELECTION := TRUE
+3720    IF SEL-CURRENT
+3730      NEW-CURRENT := 'C'     /* show only the current APIs
+3740    ELSE
+3750      NEW-CURRENT := 'A'     /* show all APIs
+3760    END-IF
+3770  END-IF
+3780  IF *PF-KEY = 'PF4'                 /* Change 'Asc' / 'Desc'
+3790    IF SEL-SORT-ASC
+3800      SET KEY PF4 = PGM NAMED 'Asc'
+3810      SEL-SORT-ASC := FALSE          /* Descending sort
+3820      NEW-SORT     := 'D'            /* new selection required
+3830    ELSE
+3840      SET KEY PF4 = PGM NAMED 'Desc'
+3850      SEL-SORT-ASC := TRUE           /* Ascending sort
+3860      NEW-SORT     := 'A'            /* new selection required
+3870    END-IF
+3880  END-IF
+3890  IF *PF-KEY = 'PF5'                 /* Change 'Curr' / 'All'
+3900    IF SEL-CURRENT
+3910      SET KEY PF5 = PGM NAMED 'Curr'
+3920      NEW-CURRENT := 'A'             /* Show all APIs
+3930      SEL-CURRENT := FALSE
+3940    ELSE
+3950      SET KEY PF5 = PGM NAMED 'All'
+3960      NEW-CURRENT := 'C'             /* Show only current APIs
+3970      SEL-CURRENT := TRUE
+3980    END-IF
+3990  END-IF
+4000  /*
+4010  /*  Check all selection criteria
+4020  /*
+4030  RESET NEW-INTERFACE NEW-DESC NEW-PROD NEW-CATEGORY NEW-KEYWORD
+4040  /*
+4050  IF CV-LIST-INTERFACE MODIFIED OR CV-LIST-DESC     MODIFIED OR
+4060     CV-LIST-PROD      MODIFIED OR CV-LIST-CATEGORY MODIFIED OR
+4070     CV-SEL-CATEGORY   MODIFIED OR CV-SEL-KEYWORD   MODIFIED OR
+4080     NEW-CURRENT NE ' '         OR
+4090     NEW-SORT    NE ' '
+4100    /*
+4110    NEW-SELECTION := TRUE
+4120    /*
+4130    IF LIST-INTERFACE = ' ' OR= '*'
+4140      LIST-INTERFACE := 'USR*'
+4150    END-IF
+4160    IF LIST-INTERFACE NE 'USR*'
+4170      EXAMINE LIST-INTERFACE FOR '*'
+4180              GIVING POSITION #POS1
+4190              GIVING LENGTH #POS2
+4200      IF #POS1 > 0
+4210        IF #POS1 < #POS2        /* Reset after first asterisk
+4220          #POS1 := #POS1 + 1
+4230          MOVE ' ' TO SUBSTRING(LIST-INTERFACE,#POS1)
+4240        END-IF
+4250      ELSE                      /* use always asterisk
+4260        IF #POS2 = 8
+4270          MOVE '*' TO SUBSTRING(LIST-INTERFACE,8)
+4280        ELSE
+4290          COMPRESS LIST-INTERFACE '*' INTO LIST-INTERFACE LEAVING NO
+4300        END-IF
+4310      END-IF
+4320      MOVE LIST-INTERFACE TO NEW-INTERFACE
+4330    END-IF
+4340    /*
+4350    IF LIST-DESC NE ' '
+4360      MOVE LEFT LIST-DESC TO NEW-DESC
+4370    END-IF
+4380    /*
+4390    IF LIST-PROD = ' '
+4400      LIST-PROD := '*'
+4410    END-IF
+4420    IF LIST-PROD NE '*'
+4430      EXAMINE LIST-PROD FOR '*'
+4440              GIVING POSITION #POS1
+4450              GIVING LENGTH #POS2
+4460      IF #POS1 > 0
+4470        IF #POS1 < #POS2        /* Reset after asterisk
+4480          #POS1 := #POS1 + 1
+4490          MOVE ' ' TO SUBSTRING(LIST-PROD,#POS1)
+4500        END-IF
+4510      END-IF
+4520      MOVE LIST-PROD TO NEW-PROD
+4530      /*
+4540      /* Show selected product code on second map
+4550      /*
+4560      COMPRESS LIST-PROD ')' INTO TEXT-PRODUCT LEAVING NO
+4570      COMPRESS '(Product:' TEXT-PRODUCT INTO TEXT-PRODUCT
+4580    ELSE
+4590      RESET TEXT-PRODUCT
+4600    END-IF
+4610    /*
+4620    /* Category field (for search window)
+4630    /*
+4640    IF SEL-CATEGORY NE ' '
+4650      IF SEL-CATEGORY = SCAN '*'
+4660        EXAMINE SEL-CATEGORY FOR '*'
+4670                GIVING POSITION #POS1
+4680                GIVING LENGTH #POS2
+4690        IF #POS1 > 0
+4700          IF #POS1 < #POS2        /* Reset after asterisk
+4710            #POS1 := #POS1 + 1
+4720            MOVE ' ' TO SUBSTRING(SEL-CATEGORY,#POS1)
+4730          END-IF
+4740        END-IF
+4750        MOVE SEL-CATEGORY TO SEL-STRING
+4760      ELSE
+4770        COMPRESS SEL-CATEGORY '*' INTO SEL-STRING LEAVING NO
+4780      END-IF
+4790      /*
+4800      /* Selection box for categories
+4810      /*
+4820      CALLNAT 'EXT-MENS' 'C' SEL-STRING
+4830      MOVE SEL-STRING TO LIST-CATEGORY NEW-CATEGORY
+4840      RESET SEL-CATEGORY
+4850    END-IF
+4860    /*
+4870    /* Category field for current selection
+4880    /*
+4890    IF LIST-CATEGORY = ' '
+4900      LIST-CATEGORY := '*'
+4910    END-IF
+4920    IF LIST-CATEGORY NE '*'
+4930      EXAMINE LIST-CATEGORY FOR '*'
+4940              GIVING POSITION #POS1
+4950              GIVING LENGTH #POS2
+4960      IF #POS1 > 0
+4970        IF #POS1 < #POS2        /* Reset after asterisk
+4980          #POS1 := #POS1 + 1
+4990          MOVE ' ' TO SUBSTRING(LIST-CATEGORY,#POS1)
+5000        END-IF
+5010      END-IF
+5020      MOVE LIST-CATEGORY TO NEW-CATEGORY
+5030      /*
+5040      /* Show selected category on first map
+5050      /*
+5060      COMPRESS LIST-CATEGORY ')' INTO TEXT-CATEGORY LEAVING NO
+5070      COMPRESS '(Category:' TEXT-CATEGORY INTO TEXT-CATEGORY
+5080    ELSE
+5090      RESET TEXT-CATEGORY
+5100    END-IF
+5110    /*
+5120    /* Keyword field for selection or search window
+5130    /*
+5140    IF SEL-KEYWORD = ' '
+5150      MOVE '*' TO NEW-KEYWORD
+5160    ELSE
+5170      IF SEL-KEYWORD = SCAN '*'
+5180        EXAMINE DIRECTION BACKWARD SEL-KEYWORD FOR '*'
+5190                GIVING POSITION #POS1
+5200                GIVING LENGTH #POS2
+5210        IF #POS1 LT #POS2             /* keyword name with '*'
+5220          MOVE SEL-KEYWORD TO NEW-KEYWORD
+5230        ELSE                          /* asterisk selection
+5240          MOVE SEL-KEYWORD TO SEL-STRING
+5250          /*
+5260          /* Selection box for keywords
+5270          /*
+5280          CALLNAT 'EXT-MENS' 'K' SEL-STRING
+5290          MOVE SEL-STRING TO SEL-KEYWORD NEW-KEYWORD
+5300        END-IF
+5310      ELSE
+5320        MOVE SEL-KEYWORD TO NEW-KEYWORD
+5330      END-IF
+5340    END-IF
+5350    /*
+5360    IF NEW-CURRENT = ' '       /* PF5 wasn't used
+5370      IF SEL-CURRENT
+5380        NEW-CURRENT := 'C'     /* show only the current APIs
+5390      ELSE
+5400        NEW-CURRENT := 'A'     /* show all APIs
+5410      END-IF
+5420    END-IF
+5430  END-IF
+5440  IF NEW-SELECTION
+5450    /* ==========>
+5460    ESCAPE TOP
+5470    /* ==========>
+5480  END-IF
+5490  /*
+5500  /*********************************************************************
+5510  /*
+5520  /*  Execute all paging commands
+5530  /*
+5540  MOVE MAP-START-POS TO OLD-MAP-START-POS
+5550  DECIDE ON FIRST *PF-KEY
+5560    /***********
+5570    VALUE 'PF6'  /* '--'
+5580                 IF SEL-SORT-ASC
+5590                   MOVE 1 TO MAP-START-POS
+5600                 ELSE
+5610                   MOVE XML-CURRENT.C-USEREXIT TO MAP-START-POS
+5620                 END-IF
+5630    /***********
+5640    VALUE 'PF7'  /* '-'
+5650                 IF SEL-SORT-ASC
+5660                   SUBTRACT SCREEN-LINES FROM MAP-START-POS
+5670                   IF MAP-START-POS < 1
+5680                     MAP-START-POS := 1
+5690                   END-IF
+5700                 ELSE
+5710                   IF MAP-START-POS + SCREEN-LINES LE
+5720                      XML-CURRENT.C-USEREXIT
+5730                     ADD SCREEN-LINES TO MAP-START-POS
+5740                   END-IF
+5750                 END-IF
+5760    /***********
+5770    VALUE 'PF8'  /* '+'
+5780                 IF SEL-SORT-ASC
+5790                   IF MAP-START-POS + SCREEN-LINES LE
+5800                      XML-CURRENT.C-USEREXIT
+5810                     ADD SCREEN-LINES TO MAP-START-POS
+5820                   END-IF
+5830                 ELSE
+5840                   IF MAP-START-POS - SCREEN-LINES > 0
+5850                     SUBTRACT SCREEN-LINES FROM MAP-START-POS
+5860                   END-IF
+5870                 END-IF
+5880    /***********
+5890    VALUE 'PF9'  /* '++'
+5900                 IF XML-CURRENT.C-USEREXIT > 0
+5910                   #NUM := XML-CURRENT.C-USEREXIT / SCREEN-LINES-N
+5920                   IF SEL-SORT-ASC
+5930                     IF FRAC(#NUM) NE 0
+5940                       MAP-START-POS :=
+5950                       (INT(#NUM) * SCREEN-LINES) + 1
+5960                     ELSE
+5970                       MAP-START-POS :=
+5980                       (INT(#NUM) * SCREEN-LINES) - SCREEN-LINES + 1
+5990                     END-IF
+6000                   ELSE
+6010                     IF FRAC(#NUM) NE 0
+6020                       MAP-START-POS := XML-CURRENT.C-USEREXIT -
+6030                                        (INT(#NUM) * SCREEN-LINES)
+6040                     ELSE
+6050                       MAP-START-POS := SCREEN-LINES
+6060                     END-IF
+6070                   END-IF
+6080                   IF MAP-START-POS < 1
+6090                     MAP-START-POS := 1
+6100                   END-IF
+6110                 END-IF
+6120    /***********
+6130    VALUE 'PF10' /* '<'
+6140                 CURRENT-MAP := '1'             /* Shift to first page
+6150                 SET KEY PF10 = PGM NAMED ' '
+6160                         PF11 = PGM NAMED '>'
+6170                 READ-NEW-MAP := FALSE
+6180    /***********
+6190    VALUE 'PF11' /* '>'
+6200                 CURRENT-MAP := '2'             /* Shift to second page
+6210                 SET KEY PF10 = PGM NAMED '<'
+6220                         PF11 = PGM NAMED ' '
+6230                 READ-NEW-MAP := FALSE
+6240    /***********
+6250    ANY VALUE    /* any of the paging commands
+6260                 IF XML-CURRENT.C-USEREXIT = 0 OR
+6270                    MAP-START-POS = OLD-MAP-START-POS
+6280                   READ-NEW-MAP := FALSE
+6290                 END-IF
+6300                 /* ==========>
+6310                 ESCAPE TOP
+6320                 /* ==========>
+6330    /***********
+6340    NONE         IGNORE
+6350  END-DECIDE
+6360  /*
+6370  IF *PF-KEY NE 'ENTR'
+6380    REINPUT 'This function key is not defined.' ALARM
+6390  END-IF
+6400  /*********************************************************************
+6410  /*
+6420  /*  Execute all line commands
+6430  /*
+6440  IF M-MARKS > ' '                       /*  Anything marked?
+6450    RESET EXEC-TAB (*) EXEC-PTR          /*  Clear 'Stack'
+6460    /* Check if EDIT command is allowed
+6470    CALLNAT 'EXTXMENE' #EDITOR-FLAG
+6480    /*
+6490    FOR IX MAX-INTERFACE 1 -1            /*  Examine line commands
+6500      /*
+6510      IF M-MARK(IX) NE ' '
+6520        DECIDE ON FIRST M-MARK(IX)
+6530          VALUE '.' STOP                 /*  Should never happen
+6540          VALUE 'K','T','E','L','R','X'
+6550            /*
+6560            IF M-MARK(IX) = 'E' AND NOT #EDITOR-FLAG
+6570              COMPRESS 'Editor is disabled in Natural. '
+6580                       'Use NaturalONE instead.'
+6590                       INTO MSG1
+6600              REINPUT MSG1 MARK *M-MARK(IX) ALARM
+6610            END-IF
+6620            /*
+6630            /* Exceptions are only of type 'Subprogram'
+6640            IF (M-INTERFACE-NAME(IX) = 'USR0070' OR= 'USR2002'
+6650                                   OR= 'USR2003')
+6660            AND (M-MARK(IX) = 'X' OR= 'R')
+6670              COMPRESS M-INTERFACE(IX) 'cannot be executed.'
+6680                       'See information about it.' INTO MSG1
+6690              REINPUT MSG1 MARK *M-MARK(IX) ALARM
+6700            ELSE
+6710              PERFORM GET-LINE-COMMAND   /* Handle all line commands
+6720            END-IF
+6730          NONE
+6740            REINPUT 'Enter valid line command. Press "PF1" for help.'
+6750                    MARK *M-MARK(IX) ALARM
+6760        END-DECIDE
+6770      END-IF
+6780      /*
+6790    END-FOR
+6800    /*
+6810    IF EXEC-PTR > 0                      /*  At least one command found
+6820      /*
+6830      /*  Return to menu program with current selection criteria
+6840      /*
+6850      STACK TOP DATA FORMATTED
+6860            LIST-INTERFACE LIST-DESC LIST-PROD LIST-CATEGORY
+6870            SEL-KEYWORD SEL-CURRENT SEL-SORT-ASC
+6880            CURRENT-MAP MAP-START-POS
+6890      STACK TOP COMMAND 'EXT-MENU'
+6900      /*
+6910      FOR IX 1 EXEC-PTR
+6920*         IF EXEC-TAB(IX) = MASK ('L ')
+6930*           /* List source without numbers /* not available on OS
+6940*           COMPRESS EXEC-TAB(IX) 'NU OFF' INTO EXEC-TAB (IX)
+6950*         END-IF
+6960        IF EXEC-TAB(IX) = MASK ('EXT-MENK ')
+6970          MOVE EXEC-TAB(IX) TO #STRING-A50
+6980          MOVE #STRING-NUM TO #ALPHA-A4
+6990          MOVE 'EXT-MENK' TO EXEC-TAB(IX)
+7000          RESET API-KEYWORDS (*)
+7010          /*
+7020          /* Get all keywords of required API
+7030          /*
+7040          SEPARATE XML-CURRENT.KEYWORD (#ALPHA-N4) LEFT INTO
+7050                   API-KEYWORDS (*) IGNORE WITH DELIMITER ','
+7060          /*
+7070          /*  Put number and all keywords of API on stack
+7080          /*
+7090          STACK TOP DATA FORMATTED
+7100                #STRING-NAME
+7110                XML-CURRENT.C-KEYWORD(#ALPHA-N4)
+7120                API-KEYWORDS(*)
+7130        END-IF
+7140       STACK TOP COMMAND EXEC-TAB(IX)
+7150      END-FOR
+7160     /*
+7170      IF GDA-SAVE-ENVIRONMENT = 'S'
+7180        CALLNAT 'USR1002N' 'R'
+7190        RESET GDA-SAVE-ENVIRONMENT
+7200      END-IF
+7210      /* ==========>
+7220      STOP
+7230      /* ==========>
+7240    END-IF
+7250  END-IF
+7260  /*
+7270  /*
+7280END-REPEAT
+7290*
+7300*
+7310************************************************************************
+7320*
+7330*  Execute the line commands
+7340*
+7350DEFINE SUBROUTINE GET-LINE-COMMAND
+7360  IF M-INTERFACE(IX) NE ' '        /*  Name found
+7370    COMPRESS M-INTERFACE-NAME(IX) 'P' INTO #PGM-NAME LEAVING NO
+7380    /*
+7390    IF M-MARK(IX) = 'X'            /*  Execute
+7400      MOVE #PGM-NAME TO CMD
+7410    ELSE
+7420      IF M-MARK(IX) = 'T'          /*  Text object
+7430                  OR= 'K'          /*  Keywords
+7440        IF M-MARK (IX) = 'T'
+7450          COMPRESS M-INTERFACE-NAME(IX) 'T' INTO CMD LEAVING NO
+7460          COMPRESS 'L' CMD TO CMD
+7470        ELSE
+7480          /* Get name of API and number in XML-CURRENT array
+7490          MOVE M-NUMBER-CURRENT(IX) TO #ALPHA-N4
+7500          COMPRESS 'EXT-MENK' #ALPHA-A4 M-INTERFACE(IX) INTO CMD
+7510        END-IF
+7520      ELSE                          /* Edit, Run, List
+7530        COMPRESS M-MARK(IX) #PGM-NAME INTO CMD
+7540      END-IF
+7550    END-IF
+7560    /*
+7570    ADD 1 TO EXEC-PTR
+7580    MOVE CMD TO EXEC-TAB(EXEC-PTR) /* Get command for Stack
+7590  ELSE
+7600    REINPUT 'This item must not be marked.' MARK *M-MARK(IX) ALARM
+7610  END-IF
+7620  RESET CMD
+7630END-SUBROUTINE
+7640*
+7650END

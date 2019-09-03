@@ -1,0 +1,79 @@
+0010/*  EXAM-SA - SET 'all' fields
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 GETSET-FIELD-NAME
+0070     02 GETSET-FIELD-VALUE
+0080     02 NATURAL-ERROR
+0090  01 IX (P7)
+0100  01 IY (P7)
+0110  01 FIELD-NAME (A16/1:5) CONST <
+0120       'C-DELIMITER     ',      /*  Multiple command delimiter
+0130       'PF-KEY          ',      /*  PF-KEY may be command
+0140       'KEYWORD-SEQ     ',      /*  Default keyword sequence
+0150       'ALT-KEYWORD-SEQ ',      /*  Alternative keyword seq.
+0160       'CURR-LOCATION   '   >   /*  Current location (IFN)
+0170  01 CURR-VALUE (A16/1:5)
+0180  01 MSG (A72)
+0190  01 MOD (C)
+0200END-DEFINE
+0210DEFINE WINDOW GETSET
+0220  SIZE 10 * 36
+0230  BASE IY / IY
+0240  TITLE ' (SA) Set allowed fields'
+0250  CONTROL SCREEN
+0260  FRAMED POSITION OFF
+0270SET KEY ALL
+0280IY := *LEVEL * 2
+0290/**********************************************************************
+0300REPEAT
+0310  FOR IX 1 5
+0320    MOVE FIELD-NAME (IX) TO GETSET-FIELD-NAME
+0330    /*
+0340    PROCESS COMMAND ACTION GET USING
+0350      PROCESSOR-NAME = ' '                     /*  Current processor
+0360      GETSET-FIELD-NAME = GETSET-FIELD-NAME
+0370    /*
+0380    IF NATURAL-ERROR NE 0
+0390      WRITE '*** NCPWORK currently not accessible ***' (I)
+0400      ESCAPE ROUTINE
+0410    END-IF
+0420    /*
+0430    MOVE GETSET-FIELD-VALUE TO CURR-VALUE (IX)
+0440    /*
+0450  END-FOR
+0460  /********************************************************************
+0470  INPUT WINDOW = 'GETSET' (AD=MI CD=NE IP=OFF SG=OFF CV=MOD )
+0480     FIELD-NAME (01) (AD=OD)  CURR-VALUE (1) /
+0490     FIELD-NAME (02) (AD=OD)  CURR-VALUE (2) /
+0500     FIELD-NAME (03) (AD=OD)  CURR-VALUE (3) /
+0510     FIELD-NAME (04) (AD=OD)  CURR-VALUE (4) /
+0520     FIELD-NAME (05) (AD=OD)  CURR-VALUE (5) /
+0530     / MSG
+0540  SET WINDOW OFF
+0550  RESET MSG
+0560  /********************************************************************
+0570  IF *PF-KEY NE 'ENTR'
+0580  OR MOD NOT MODIFIED
+0590    ESCAPE ROUTINE
+0600  END-IF
+0610  /********************************************************************
+0620  FOR IX 1 5
+0630    MOVE FIELD-NAME (IX) TO GETSET-FIELD-NAME
+0640    /*
+0650    PROCESS COMMAND ACTION SET USING
+0660      PROCESSOR-NAME = ' '                     /*  Current processor
+0670      GETSET-FIELD-NAME = GETSET-FIELD-NAME
+0680      GETSET-FIELD-VALUE = CURR-VALUE (IX)
+0690    /*
+0700    IF NATURAL-ERROR NE 0
+0710      CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0720      REINPUT FULL ' ' MARK IX
+0730    END-IF
+0740    /*
+0750    MOVE 'Settings are now valid.' TO MSG
+0760    /*
+0770  END-FOR
+0780END-REPEAT
+0790END

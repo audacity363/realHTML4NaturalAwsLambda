@@ -1,0 +1,107 @@
+0010Send a command to the operating system
+0020.
+0030Documentation ......... USR1052T    /*  Text object
+0040Interface ............. USR1052N    /*  Cataloged subprogram
+0050Example Program ....... USR1052P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. RUNTIME
+0100.
+0110Keywords .............. +MOD-NAT-8.4.1,
+0120                        COMMAND, EXTERNAL
+0130.
+0140Function .............. This interface sends a system command to the
+0150                        operating system. It is available on
+0160                        MS Windows, OS/2, OpenVMS and UNIX systems.
+0170.
+0180                        Note: With NAT841 (PC, UNIX, Linux) onward
+0190                        the two optional parameters CMD-OPTIONS and
+0200                        CMD-OUTPUT are available. If CMD-OPTIONS
+0210                        (if specified) contains the option STDOUT, the
+0220                        command output is returned in the optional
+0230                        parameter CMD-OUTPUT (if specified).
+0240.
+0250Parameters
+0260----------
+0270Define the following parameters with the DEFINE DATA statement:
+0280.
+0290 1 USR1052L
+0300   2 OS-COMMAND         (A253)
+0310   2 RESPONSE           (I04)
+0320   2 CMD-OPTIONS        (A253)          /* OPTIONAL PARAMETER
+0330   2 CMD-OUTPUT         (A/1:*) DYNAMIC /* OPTIONAL PARAMETER
+0340.
+0350.
+0360Interface Call
+0370--------------
+0380Use the interface with the CALLNAT statement:
+0390.
+0400CALLNAT 'USR1052N' USR1052L
+0410.
+0420.
+0430Using the Application Programming Interface:
+0440--------------------------------------------
+0450Copy the subprogram USR1052N to the library SYSTEM or the steplib
+0460library respectively, or to the required library.
+0470.
+0480.
+0490Input ...... 1 OS-COMMAND (A253)
+0500                     Command string to be send to the operating
+0510                     system, concatenated with necessary options
+0520.
+0530             1  CMD-OPTIONS (A253) /* OPTIONAL PARAMETER for USR1052N
+0540                     If specified, this parameter should be used to
+0550                     specify the command options (see below).
+0560                     If this parameter contains the command options,
+0570                     they should not be specified in OS-COMMAND.
+0580                     Define the options only once.
+0590.
+0600Output .....
+0610             1 CMD-OUTPUT (A/1:*) DYNAMIC /* OPTIONAL PARAMETER
+0620                                          /* for USR1052N
+0630                     If the internal option STDOUT is set in
+0640                     CMD-OPTIONS, in this parameter the command output
+0650                     is returned.
+0660.
+0670             1 RESPONSE   (I04)
+0680                     Response code from the operating system.
+0690                     0    - Command successfully executed
+0700                     4    - Illegal parameter specified
+0710                     else - depending on the operating system
+0720                             2 - WINNT: ERROR_FILE_NOT_FOUND
+0730                             2 - UNIX:  no such file or directory
+0740                             2 - OVMS:  file not found
+0750                             3       :  path not found
+0760                            11       :  file found, but not executable
+0770.
+0780.
+0790To execute a DOS command like DIR or COPY on Windows you have to
+0800specify "CMD.EXE /C" in front of the command.
+0810.
+0820Avoid translation of quotation marks within the command. Set the
+0830profile parameter TQ=OFF or replace all quotation marks with hex-code
+0840H'22'.
+0850.
+0860Interface USR1052N supports the internal option STDOUT.
+0870If STDOUT is set in the optional parameter CMD-OPTIONS, the command
+0880output is returned in the optional parameter CMD-OUTPUT.
+0890.
+0900Interface USR1052N supports the options SCREENIO and NOSCREENIO.
+0910If SCREENIO is set, the Natural screen output will be refreshed
+0920after command is completed. This option is available on UNIX and
+0930OpenVMS and will be ignored under Windows.
+0940If NOSCREENIO is set, the output will be redirected to the null device.
+0950SCREENIO and NOSCREENIO may not be set at the same time.
+0960.
+0970Interface USR1052N supports the options SYNCH/ASYNCH on Windows.
+0980These options will be ignored on UNIX and OpenVMS.
+0990With SYNCH Natural waits until the command has been processed.
+1000The default is SYNCH.
+1010With ASYNCH Natural continues with the next statement without waiting.
+1020SYNCH and ASYNCH may not be set at the same time.
+1030.
+1040If you use one of the keywords SCREENIO, NOSCREENIO, SYNCH or ASYNCH
+1050in the system command itself enclose it with quotation marks.
+1060.
+1070*****  End of description  *****

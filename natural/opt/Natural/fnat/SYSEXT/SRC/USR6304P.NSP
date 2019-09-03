@@ -1,0 +1,73 @@
+0010/* RPC: Set/get reliable state for RPC execution
+0020/*
+0030/* Function ... Set/get reliable state for RPC execution.
+0040/*
+0050/* This program serves as example how to design a user-defined
+0060/* program call 'USR6304N'.
+0070/*
+0080/* Parameter ..
+0090/*
+0100/*     INPUT
+0110/*              FUNCTION     (A01)  Function code
+0120/*                                  'G'  get reliable state
+0130/*                                  'P'  set reliable state
+0140/*     INOUT
+0150/*              STATE        (N01)  reliable state
+0160/*                                  0    no reliable state
+0170/*                                       standard RPC execution
+0180/*                                  1    reliable auto   commit
+0190/*                                  2    reliable client commit
+0200/*     OUTPUT
+0210/*              RC           (N04)  return code
+0220/*                                  0    ok
+0230/*                                  1    invalid function code
+0240/*                                  2    invalid reliable state
+0250/*                                  3    reliable state can't be changed
+0260/*                                       commit/rollback pending
+0270/*                                  4    invalid ACI version
+0280/*                                  9999 Broker error (see MESSAGE)
+0290/*              MESSAGE      (A80)  message text
+0300/*
+0310/***********************************************************************
+0320DEFINE DATA LOCAL
+03301 USR6304-PARMS
+0340  2 P-FUNC     (A01)
+0350  2 P-STATE    (N01)
+0360  2 P-RC       (N04)
+0370  2 P-MESSAGE  (A80)
+0380END-DEFINE
+0390*
+0400DEFINE WINDOW RPC-SET       SIZE 12*65 BASE 5/9
+0410  TITLE ' Set/get reliable state for RPC execution' CONTROL SCREEN
+0420*
+0430P-FUNC := 'G'               /* GET FUNCTION FOR CURRENT VALUE
+0440SET KEY PF3
+0450*
+0460/*****************************************
+0470/* SAMPLE FOR BATCH-MODE OR CALL VIA STACK
+0480/*****************************************
+0490IF *DATA > 0
+0500  INPUT (AD=T) P-FUNC P-STATE
+0510  CALLNAT 'USR6304N' USING USR6304-PARMS
+0520  ESCAPE ROUTINE
+0530END-IF
+0540/*****************************************
+0550/* SAMPLE FOR CALLING ONLINE
+0560/*****************************************
+0570REPEAT UNTIL *PF-KEY = 'PF3' OR P-FUNC = '.'
+0580*
+0590  CALLNAT 'USR6304N' USING USR6304-PARMS
+0600*
+0610  INPUT WINDOW='RPC-SET'     (AD=MIT'_')                             /
+0620    'Please enter'                                                   /
+0630    '   Function:' P-FUNC             '   P (set state),'-
+0640                                      '   G (get state)'              /
+0650    '      State:' P-STATE   (SG=OFF) '   0 (standard RPC)'           /
+0660    '            ' ' '                '   1 (reliable auto   commit)' /
+0670    '            ' ' '                '   2 (reliable client commit)' //
+0680                   P-MESSAGE (AD=IOT AL=79 IP=OFF)                    /
+0690    'or hit PF3 to leave.'
+0700*
+0710END-REPEAT
+0720*
+0730END

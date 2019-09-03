@@ -1,0 +1,12 @@
+0010&H View CATALOG
+0020&L
+0030&L
+0040#Zweck@    : Auflisten von Kataloginformationen.
+0050&L
+0060#System@   : z/OS, z/VSE, BS2000/OSD.
+0070&L
+0080&L
+0090#Anwendung@: Die Informationen, die dieser View liefert, beziehen sich
+0100             nur auf Dateien, die dem ENTIRE SYSTEM SERVER bekannt sind.
+0110&L
+0120#Anmerkung@:

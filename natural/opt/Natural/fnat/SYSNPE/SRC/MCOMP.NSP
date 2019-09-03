@@ -1,0 +1,30 @@
+0010* Program   MCOMP
+0020* View      FILE-MAINTENANCE
+0030*
+0040* Function  Compress a partitioned dataset
+0050*
+0060* ----------------------------------------------------------------------
+0070*
+0080DEFINE DATA
+0090   GLOBAL USING TUTO
+0100   LOCAL  USING COMPR-L
+0110END-DEFINE
+0120FORMAT PS=22
+0130*
+0140INPUT (AD=MI'_') // ##TITLE (AD=OI IP=OFF)
+0150                 // '  Data set ..:' FILE-MAINTENANCE.DSNAME
+0160                  / '  Volume ....:' FILE-MAINTENANCE.VOLSER
+0170*
+0180FIND FILE-MAINTENANCE WITH DSNAME = FILE-MAINTENANCE.DSNAME
+0190                       AND VOLSER = FILE-MAINTENANCE.VOLSER
+0200                       AND NODE   = ##NODE
+0210   IF ERROR-CODE > 0
+0220      ASSIGN ##MSG-NR = 1000
+0230      ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0240      STOP
+0250   ELSE
+0260      PRINT LINE
+0270   END-IF
+0280END-FIND
+0290*
+0300END

@@ -1,0 +1,45 @@
+0010* Text-Member fuer den Aufbau des ENTIRE SYSTEM SERVER Tutorial Menu
+0020*                        PFKEY PFKEY PFKEY PFKEY PFKEY PFKEY
+0030* PF1-PF6                            Ende        Benu  Sys
+0040* PF7-PF12                -     +          Sprac       Node
+0050*
+0060* Sie sollten Ihre eigenen Beispiele im Member TUTO0002
+0070* definieren.
+0080* Aenderungen in diesem Member sollten Sie nicht durchfuehren,
+0090* da sie mit der naechsten Auslieferungen des Tutorials
+0100* ueberschrieben wuerden.
+0110* Aufbau des Tutorials:
+0120*    View Name             (a16)
+0130*    Programm Name         (a8)
+0140*    Markierung (Flag)     (a1) E=EBCDIC-Maschine, I=PC, *nixen, VAXen
+0150*    Programm Beschreibung (a47)
+0160*
+0170ACTIVE-JOBS     DACTIVE  Anzeige der 'aktiven Taks'
+0180CATALOG         DCATLG   Anzeige der interne-Dateientabelle/VSAM-Katalo
+0190COMMON-DATA     DCOMDTA  gemeinsam benutzbarer Arbeitsspeicher
+0200CONSOLE         DCONSOL  Anzeige der Konsole
+0210CONSOLE-LOG     DCONSLG  Anzeige des Konsolprotokolls
+0220COPY-FILE       DCOPYFI  Dateien von einem Knoten zum anderen kopieren
+0230EVENTING        DEVENT   Programm zu Programm Kommunikation
+0240FILE-ALLOCATE   DALLOC   Dateien anlegen
+0250FILE-ATTRIBUTES DFATTR   Anzeige von Dateiattributen
+0260IDCAMS          DIDCAMS  IDCAMS Utility
+0270LIB-DIRECTORY   DLIBDIR  Inhaltsverzeichnis einer Bibliothek anzeigen
+0280LIB-UPDATE      DLIBUPD  Aktionen auf dem Bibliotheks-Inhaltsverzeichni
+0290MAIN-STORAGE    DMAINS  EAnzeige von Speicherbereichen
+0300NATPROC-LOGON   DNPLOG   Logon an ENTIRE SYSTEM SERVER
+0310NATPROC-USERS   DNPUSER  Anzeige der ENTIRE SYSTEM SERVER Benutzer/Task
+0320NET-OPER        DNETOPR  Neztkommandos
+0330READ-FILE       DREADSC  Lesen von Dateien
+0340READ-SPOOL      DRSPOOL  Lesen von SPOOL Dateien
+0350SEND-EMAIL      DSEML    Senden einer E-Mail ueber das Internet
+0360SEND-MESSAGE    DSMSG    Nachrichten an COM-PLETE/TSO Benutzer/Konsole
+0370SPOOL-QUEUE     DSPOOLQ  Anzeige der SPOOL Queue
+0380SPOOL-UPDATE    DSPOOLU  Statusaenderung eines SPOOL Jobs
+0390SUBMIT          DSUBMIT  Job zum INTERNAL READER abschicken
+0400SYSTEM-INFO     DSYSINF  System Informationen anzeigen
+0410UNIT-ATTRIBUTES DUNIT    DASD Einheiten und Datentraegerkennung anzeige
+0420VTOC            DVTOC    VTOC fuer eine angegebene Datentraegerkennung
+0430VTOC-UPDATE     DVTOCU   VTOC aendern
+0440WRITE-FILE      DCSPOOL  Schreiben auf seq. Dateien oder Lib Member
+0450WRITE-SPOOL     DWSPOOL  in den SPOOL schreiben

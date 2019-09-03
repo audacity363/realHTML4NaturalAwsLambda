@@ -1,0 +1,51 @@
+0010* Program ...... V62UVAR
+0020* Library ...... SYSEXV
+0030* Version ...... 6.2
+0040* Machine ...... UNIX
+0050*
+0060* Functionality  System variables *CODEPAGE *LOCALE
+0070************************************************************************
+0080*
+0090*
+0100FORMAT KD=ON
+0110SET KEY PF3  NAMED 'Exit'
+0120  PF12 NAMED 'Canc'
+0130*
+0140*
+0150INPUT  (IP=OFF)
+0160  01T *TIMX  (AD=OTD  )
+0170  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0180  70T *DATX  (AD=OTD DF=L  )
+0190  /
+0200  01T 'User'
+0210  06T *USER  (AD=OLTI  )
+0220  25T     '- Natural Unicode Support  -' (I)
+0230  64T 'Program'
+0240  72T *PROGRAM   (AD=OI  )
+0250  /
+0260  15T '   - System Variables *CODEPAGE and *LOCALE -' (I)
+0270  //
+0280  02T '*CODEPAGE' (I)
+0290  'contains the IANA name of the current code page. All'   /
+0300  02T 'alphanumeric strings are saved in the current code page.'
+0310  /
+0320  /
+0330  02T '*LOCALE' (I)
+0340  'contains the current locale (language and country) which' /
+0350  02T 'specifies the Unicode collation sequence.'
+0360  'When two Unicode strings are' /
+0370  02T 'compared, the result depends on the current locale.' /
+0380  /
+0390  02T ' *CODEPAGE:'   *CODEPAGE (AD=OI  ) /
+0400  02T ' *LOCALE:  '   *LOCALE (AD=OI  )
+0410*
+0420IF *PF-KEY = 'PF3'
+0430  ESCAPE ROUTINE
+0440END-IF
+0450IF (*PF-KEY = 'PF12' OR = 'CLR')
+0460  CALLNAT 'UTILSTOP'
+0470END-IF
+0480*
+0490*
+0500END
+0510

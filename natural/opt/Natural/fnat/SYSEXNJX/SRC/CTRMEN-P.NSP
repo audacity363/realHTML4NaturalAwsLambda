@@ -1,0 +1,51 @@
+0010* >Natural Source Header 000000
+0020* :Mode S
+0030* :CP
+0040* <Natural Source Header
+0050* Name: Single Controls/Menu /*<RO>
+0060*
+0070DEFINE DATA LOCAL
+00801 INFOPAGENAME (U) DYNAMIC INIT <'html/ctrlmenu.html'>
+00901 METHODCALLED (U) DYNAMIC
+01001 TOPDYN (1:*)
+0110  2 ID (U) DYNAMIC
+0120  2 IMAGEURL (U) DYNAMIC /* <== image that is associated with the node
+0130  2 LEVEL (I4) /* level starts with 1
+0140  2 METHOD (U) DYNAMIC /* <== event that is associated with the end node
+0150  2 OPENED (I4) /* <== 0: normal node; 2: end node
+0160  2 TEXT (U) DYNAMIC /* <== text of the node
+0170*
+0180END-DEFINE
+0190*
+0200/*( INIT
+0210EXPAND ARRAY TOPDYN TO (1:3)
+0220TOPDYN.LEVEL(1) := 1
+0230TOPDYN.TEXT(1)  := 'GenericMenu'
+0240*
+0250TOPDYN.LEVEL(2)  := 2
+0260TOPDYN.TEXT(2)   := 'New...'
+0270TOPDYN.METHOD(2) := 'onNew'
+0280TOPDYN.OPENED(2) := 2 /* 2: end node
+0290*
+0300TOPDYN.LEVEL(3)  := 2
+0310TOPDYN.TEXT(3)   := 'Open...'
+0320TOPDYN.METHOD(3) := 'onOpen'
+0330TOPDYN.OPENED(3) := 2 /* 2: end node
+0340/*)
+0350*
+0360PROCESS PAGE USING "CTRMEN-A"
+0370*
+0380/*( DEFINE EVENT HANDLER
+0390DECIDE ON FIRST *PAGE-EVENT
+0400  VALUE U'nat:page.end'
+0410    /* Page closed.
+0420    IGNORE
+0430  VALUE U'on' : U'on'-UH'FFF0' /* all events that start with 'on'
+0440    METHODCALLED := *PAGE-EVENT
+0450    PROCESS PAGE UPDATE FULL
+0460  NONE VALUE
+0470    /* Unhandled events.
+0480    PROCESS PAGE UPDATE
+0490END-DECIDE
+0500/*) END-HANDLER
+0510END

@@ -1,0 +1,17 @@
+0010&H View COMMON-DATA
+0020&L
+0030&L
+0040#Zweck@    : Verwaltung eines von beliebig vielen Anwendungen zu-
+0050             greifbaren gemeinsamen Speicherbereichs.
+0060&L
+0070&L
+0080#System@   : z/OS, z/VSE, BS2000/OSD.
+0090&L
+0100&L
+0110#Anwendung@: Dieser View dient zur gemeinsamen Nutzung eines
+0120             Speicherbereichs. Der Speicher ist ueber einen ein-
+0130             deutigen Namen zugreifbar und in Datenabschnitte
+0140             eingeteilt.
+0150&L
+0160&L
+0170#Anmerkung@:

@@ -1,0 +1,55 @@
+0010* MAP2: PROTOTYPE
+0020* INPUT USING MAP 'XXXXXXXX'
+0030*     ##TITLE #DESTINATION #MESSAGE #PREFIX #PROCESSOR-NAME
+0040*     #TERMINAL-NAME
+0050DEFINE DATA PARAMETER
+00601 ##TITLE (A078)
+00701 #DESTINATION (A008)
+00801 #MESSAGE (A079)
+00901 #PREFIX (A003)
+01001 #PROCESSOR-NAME (A008)
+01101 #TERMINAL-NAME (A008)
+0120END-DEFINE
+0130FORMAT PS=021 LS=080 ZP=OFF SG=OFF KD=ON  IP=OFF
+0140* MAP2: MAP PROFILES *****************************        410***********
+0150* .TTAAAMMOO   D I D I N D I D I        ?_)¬&:+(                       *
+0160* 023079        N0NNUCN             X        01 SYSPROF YL           1 *
+0170************************************************************************
+0180INPUT          (     IP=OFF                                           /*
+0190                                                                       )
+0200 002T ##TITLE  (AD=ODL ) /*.01D078 A078 .
+0210/
+0220/
+0230/
+0240/
+0250 002T 'Message....'
+0260 014T #MESSAGE  (AD=MILT'_' CD=NE AL=065  ) /*.99U065 A079 .
+0270/
+0280 002T 'Prefix ....'
+0290 014T #PREFIX  (AD=MILT'_' CD=NE ) /*.99U003 A003 .
+0300 023T '(yes/no)'
+0310/
+0320/
+0330 002T 'User ......'
+0340 014T #DESTINATION  (AD=MILT'_' CD=NE ) /*.99D008 A008 .
+0350/
+0360 001T 'or'
+0370/
+0380 002T 'Processor..'
+0390 014T #PROCESSOR-NAME  (AD=MILT'_' CD=NE ) /*.99D008 A008 .
+0400/
+0410 002T 'terminal...'
+0420 014T #TERMINAL-NAME  (AD=MILT'_' CD=NE ) /*.99D008 A008 .
+0430/
+0440/
+0450/
+0460/
+0470/
+0480/
+0490/
+0500/
+0510/
+0520/
+0530* MAP2: VALIDATION *****************************************************
+0540* MAP2: END OF MAP *****************************************************
+0550END

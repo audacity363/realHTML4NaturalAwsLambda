@@ -1,0 +1,35 @@
+0010**C           0   *
+0020**C           0   *Natural Web Interface -  New Demo Application
+0030**C           0   *
+0040**C           0   *DESCRIPTION  Internal Parameter
+0050**C           0   *
+0060**C           0   *AUTHOR        SAG   21.08.97
+0070**C           0   *
+0080**C           0   *VERSION       6.2.
+0090**C           0   *
+0100**C           0   *(c) Copyright  Software AG 1997-2005. All rights reserved.
+0110**C           0   *
+0120**DS          0         1#DEMO-MENU
+0130**DK          0   L     2#SINGLE                         /* single object
+0140**DS          0         1#DEMO-PARM
+0150**DF B        0   A     2#GIF
+0160**DE                     DY
+0170**DF B        0   A     2#JAVA
+0180**DE                     DY
+0190**DK          0   N   5 2#START
+0200**DK          0   N   7 2#END-MAX
+0210**DK          0   N   5 2#END
+0220**DF B        0   A     2#PERSON
+0230**DE                     DY
+0240**DF B        0   A     2#FROM
+0250**DE                     DY
+0260**DF B        0   A     2#TO
+0270**DE                     DY
+0280**DF B        0   A     2#TODO
+0290**DE                     DY
+0300**DF B        0   A     2#OT
+0310**DE                     DY
+0320**DF B        0   A     2#MSG
+0330**DE                     DY
+0340**DK          0   A   1 2#QUOTE
+0350**DK          0   A   1 2#DQUOTE

@@ -1,0 +1,32 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> UNLOAD/LOAD/SCAN Function
+0080<Header2> Parameters
+0090/* <Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110<InputValues>
+0120<InputNames>
+0130<Predecessor>OHTHFU01
+0140<Successor>OHTHFU03
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170Parameters
+0180  Parameters allow to change certain object parameters during the load or
+0190  unload function and to change the target environment during the load
+0200  function.
+0210  If they are specified during unload function, the objects get these
+0220  parameters before they are written to the work file.
+0230  If they are specified during load function, the objects get these parameters
+0240  before they are written to the target environment.
+0250
+0260  The parameters (except 'Error number difference' and 'System files for load')
+0270  consist of a 'Check value' and a 'New value'. If no 'Check value' is
+0280  specified, the 'New value' is applied to all objects, which have this
+0290  attribute (e.g. Natural system error messages have no library name,
+0300  therefore the value in the library 'New value' field is ignored).
+0310  Parameters not applicable to the processed selection criterion are ignored.
+0320<HelpTextEnd>

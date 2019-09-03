@@ -1,0 +1,65 @@
+0010Read user short error message from FNAT or FUSER
+0020.
+0030Documentation ......... USR0320T    /*  Text object
+0040Interface ............. USR0320N    /*  Cataloged subprogram
+0050Example Program ....... USR0320P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR MESSAGES
+0100.
+0110Keywords .............. *ERROR-NR, *LANGUAGE, ERROR, FNAT, FUSER,
+0120                        SYSERR
+0130.
+0140Function .............. Any user defined short error text may be read
+0150                        from Natural system file.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+021001 PARM-AREA
+0220   02 APPLICATION  (A08)  /*  Application name for user defined texts
+0230   02 ERROR-NUMBER (N04)  /*  1 thru 9999
+0240   02 LANGUAGE     (I01)  /*  similar to *LANGUAGE (1 thru 60)
+0250   02 RESPONSE     (N04)  /*  Error code
+0260   02 S-TEXT       (A65)  /*  Contains the short error message
+0270.
+0280Interface Call
+0290--------------
+0300Use the interface with the CALLNAT statement:
+0310.
+0320CALLNAT 'USR0320N' PARM-AREA
+0330.
+0340.
+0350Using the Application Programming Interface:
+0360--------------------------------------------
+0370Copy the subprogram USR0320N to the library SYSTEM or the steplib
+0380library respectively, or to the required library.
+0390.
+0400Following variables have to be filled before invoking the interface:
+0410.
+0420APPLICATION ...
+0430  APPLICATION must not be <blank>.
+0440  Fill in the name of the application to which the text belongs to.
+0450.
+0460ERROR-NUMBER ...
+0470  May be any value from 0001 up to 9999
+0480.
+0490LANGUAGE ...
+0500  Language code, similar to *LANGUAGE. If LANGUAGE is zero, current
+0510  contents of *LANGUAGE is taken.
+0520.
+0530The subprogram reads the requested information from the Natural system
+0540file FUSER or FNAT.
+0550.
+0560RESPONSE indicates the status:
+0570  0000 ...  Correct
+0580  0002 ...  APPLICATION is invalid or missing
+0590  0003 ...  ERROR-NUMBER is invalid
+0600  0004 ...  LANGUAGE not correct
+0610  0008 ...  No text for specified LANGUAGE found; try again
+0620            with same ERROR-NUMBER, but with other LANGUAGE.
+0630  0009 ...  No text for specified ERROR-NUMBER found.
+0640.
+0650***** End of Description *****

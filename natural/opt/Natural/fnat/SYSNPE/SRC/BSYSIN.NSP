@@ -1,0 +1,79 @@
+0010* Program   MSYSINF
+0020* View      SYSTEM-INFO
+0030*
+0040* Function  Display system information
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* hka 97-12-03   NPE213:   make it y2000 compliant
+0090* ======================================================================
+0100*
+0110DEFINE DATA GLOBAL USING TUTO
+0120            LOCAL  USING BSYSIN-L
+0130*
+0140            LOCAL
+0150*
+016001  NODE-NAMES VIEW OF SYSTEM-INFO
+0170    02  ERROR-CODE
+0180    02  NODE-NAME-LIST
+0190END-DEFINE
+0200PERFORM PF-KEY
+0210*
+0220* ------------------------------ MAIN LOOP ----------------------------
+0230*
+0240REPEAT
+0250FND.
+0260FIND(1) SYSTEM-INFO
+0270     WITH NODE     =  ##NODE
+0280*
+0290  IF ERROR-CODE NE 0 OR SYSTEM-CODE NE 0
+0300     INCLUDE BERR---C
+0310     ESCAPE BOTTOM (FND.)
+0320  END-IF
+0330*
+0340END-FIND
+0350PERFORM SCREEN-IO
+0360*
+0370END-REPEAT
+0380*
+0390* --------------------------------------- display-parms ----------------
+0400*
+0410DEFINE SUBROUTINE DISPLAY-PARMS
+0420FIND SYSTEM-INFO WITH NODE = ##NODE
+0430  DISPLAY NOTITLE NOHDR STARTUP-PARM (AL=78)
+0440END-FIND
+0450END-SUBROUTINE
+0460*
+0470* --------------------------------------- display-node-names -----------
+0480*
+0490DEFINE SUBROUTINE DISPLAY-NODE-NAMES
+0500FIND NODE-NAMES WITH NODE = ##NODE
+0510  DISPLAY NOTITLE NOHDR NODE-NAME-LIST
+0520END-FIND
+0530END-SUBROUTINE
+0540*
+0550* ------------------------------ SCREEN-IO ----------------------------
+0560*
+0570DEFINE SUBROUTINE SCREEN-IO
+0580SET KEY PF4 = PGM NAMED 'Parms'
+0590SET KEY PF5 = PGM NAMED 'Name'
+0600*
+0610INPUT WITH TEXT *##MSG-NR,
+0620                 ##MSG-TXT1,
+0630                 ##MSG-TXT2
+0640      USING MAP 'BSYSIN-&'
+0650RESET ##MSG
+0660*
+0670IF *PF-KEY = 'PF4'
+0680   PERFORM DISPLAY-PARMS
+0690END-IF
+0700*
+0710IF *PF-KEY = 'PF5'
+0720   PERFORM DISPLAY-NODE-NAMES
+0730END-IF
+0740END-SUBROUTINE
+0750*
+0760* ------------------------------ PF-KEY -------------------------------
+0770*
+0780INCLUDE C-PFKEY
+0790END

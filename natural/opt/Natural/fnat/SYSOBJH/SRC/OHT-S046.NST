@@ -1,0 +1,27 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Load Code Page
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180This option only applies to a work file created in UTF-8.
+0190If you mark this field, a window will prompt you for the
+0200name of the code page to be used for loading the work file.
+0210If you do not enter a name:
+0220  - on a mainframe platform, the sources are converted using
+0230    the code page specified with the system variable
+0240    *CODEPAGE
+0250  - on a non-mainframe platform, the sources are converted
+0260    with the code page used when unloading them.
+0270<HelpTextEnd>

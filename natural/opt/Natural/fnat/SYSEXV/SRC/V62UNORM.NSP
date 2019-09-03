@@ -1,0 +1,130 @@
+0010* Program ...... V62UNORM
+0020* Library ...... SYSEXV
+0030* Version ...... 6.2
+0040* Machine ...... UNIX
+0050* Encoding ..... UTF-8 (use Natural Studio Editor for editing)
+0060*
+0070* Functionality: MOVE NORMALIZED
+0080************************************************************************
+0090*
+0100*
+0110DEFINE DATA LOCAL
+01201 U1     (U2)     /* Unicode field
+01301 U2     (U2)     /* Unicode field
+01401 RESULT (A17)    /* Unicode field
+0150END-DEFINE
+0160*
+0170FORMAT KD=ON
+0180SET KEY PF3  NAMED 'Exit'
+0190        PF12 NAMED 'Canc'
+0200*
+0210*
+0220MOVE UH'00610308' TO U1  /* a, diaeresis
+0230MOVE NORMALIZED U1 TO U2
+0240*
+0250INPUT  (IP=OFF)
+0260  01T *TIMX  (AD=OTD)
+0270  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0280  70T *DATX  (AD=OTD DF=L)
+0290  /
+0300  01T 'User'
+0310  06T *USER  (AD=OLTI)
+0320  25T     '- Natural Unicode Support  -' (I)
+0330  64T 'Program'
+0340  72T *PROGRAM   (AD=OI)
+0350  /
+0360  15T '              - MOVE NORMALIZED  -' (I)
+0370  //
+0380  02T 'Some Unicode characters can be represented by one'
+0390  'or two code units, e.g.' /
+0400  02T U'''ä'''
+0410  'has the code point U+00E4 but can also be'
+0420  'represented as U+0061 (a)' /
+0430  02T 'followed by U+0308 (diaeresis). The one code unit'
+0440  'representation is named' /
+0450  02T 'the' '''Unicode Normalization Form C''' (I)
+0460  '(NFC). In the second case, the' /
+0470  02T 'two code units are denoted as'
+0480  '''combining characters''.' (I) /
+0490  /
+0500  02T '  MOVE NORMALIZED' (I) 'op1 TO op2' /
+0510  /
+0520  02T 'MOVE NORMALIZED' 'converts the value of'
+0530  'op1'
+0540  'into NFC format and writes the' /
+0550  02T 'result to' 'op2.' /
+0560  /
+0570  02T '  MOVE UH''00610308'' TO U1'
+0580  '      /* combining characters: a, diaeresis' /
+0590  02T '  MOVE NORMALIZED' (I) 'U1 TO U2' /
+0600   /
+0610  02T '  U1:  ' U1 (AD=OI)
+0620  '  Hex:' U1(EM=H(4) AD=OI) /
+0630  02T '  U2:  ' U2 (AD=OI)
+0640  '  Hex:' U2(EM=H(4) AD=OI) /
+0650*
+0660  IF *PF-KEY = 'PF3'
+0670    ESCAPE ROUTINE
+0680  END-IF
+0690  IF (*PF-KEY = 'PF12' OR= 'CLR')
+0700  CALLNAT 'UTILSTOP'
+0710  END-IF
+0720*
+0730MOVE UH'00610308' TO U1  /* a, diaeresis
+0740MOVE UH'00E4' TO U2      /* a with diaeresis
+0750IF U1 = U2
+0760  MOVE '  U1 equal U2' TO RESULT
+0770ELSE
+0780  MOVE '  U1 not equal U2' TO RESULT
+0790END-IF
+0800*
+0810INPUT  (IP=OFF)
+0820  01T *TIMX  (AD=OTD)
+0830  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0840  70T *DATX  (AD=OTD DF=L)
+0850  /
+0860  01T 'User'
+0870  06T *USER  (AD=OLTI)
+0880  25T     '- Natural Unicode Support  -' (I)
+0890  64T 'Program'
+0900  72T *PROGRAM   (AD=OI)
+0910  /
+0920  15T '              - MOVE NORMALIZED  -' (I)
+0930  //
+0940  02T 'Natural expects Unicode strings to be normalized.'
+0950  'Operations with Unicode' /
+0960  02T 'strings may not work properly if the string contains'
+0970  'combining characters.' /
+0980  02T 'When external Unicode data which is not normalized'
+0990  'is to be read into Natural,' /
+1000  02T 'it should be' 'normalized' (I)
+1010  'before any operation is done on it.' /
+1020  /
+1030  02T 'In the following example, a string containing'
+1040  'combining characters is compared' /
+1050  02T 'with a string containing the same character'
+1060  'in normalized form.' /
+1070  /
+1080  02T '  MOVE UH''00610308'' TO U1       '
+1090  '/* combining characters: a, diaeresis' /
+1100  02T '  MOVE UH''00E4'' TO U2           '
+1110  '/* normalized: a with diaeresis' /
+1120  02T '  IF U1 = U2' (I) ' WRITE ''U1:'' U1 ''U2:'' U2 ''  U1'-
+1130  ' equal U2''' /
+1140  02T '  ELSE        WRITE ''U1:'' U1 ''U2:'' U2 ''  U1 not equal U2'''
+1150  /
+1160  02T '  END-IF' /
+1170  /
+1180  04T 'U1:' U1 (AD=OI) 'U2:' U2 (AD=OI)
+1190  RESULT (AD=OI)
+1200*
+1210  IF *PF-KEY = 'PF3'
+1220    ESCAPE ROUTINE
+1230  END-IF
+1240  IF (*PF-KEY = 'PF12' OR= 'CLR')
+1250  CALLNAT 'UTILSTOP'
+1260END-IF
+1270*
+1280*
+1290END
+1300

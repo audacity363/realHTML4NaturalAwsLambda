@@ -1,0 +1,53 @@
+0010* Text member for building ENTIRE SYSTEM SERVER's tutorial menu
+0020*                        PFKEY PFKEY PFKEY PFKEY PFKEY PFKEY
+0030* PF1-PF6                            Exit        User  Sys
+0040* PF7-PF12               Up    Down        Lang        Node
+0050*
+0060* The user site may make its own entries to the tutorial
+0070* in any other member 'TUTOnnnn'.
+0080* Changes should not be made in member 'TUTO0000' because
+0090* they will be gone with subsequent releases.
+0100* The format is fixed:
+0110*    View name           (a16)
+0120*    Program name        (a8)
+0130*    Flag                (a1)                       .NPR321.
+0140*    Program description (a47)           (was a48)  .NPR321.
+0150*
+0160ACTIVE-JOBS     BACTIVE  Display Active Tasks
+0170CATALOG         BCATLG   List catalog information
+0180CATALOG-UPDATE  BCATUPD  Catalog maintenance
+0190COMMON-DATA     BCOMDTA  Shared Main Storage Data
+0200CONSOLE         BCONSOL  Operator Console
+0210COPY-FILE       BCOPYFI  Copy files and LMS members
+0220ENTER-PROCEDURE BENTPR   Submit a job using ENTER-PROCEDURE
+0230EVENTING        BEVENT   Program to Program Communication
+0240FILE-ALLOCATE   BALLOC   Data set allocation
+0250FILE-ATTRIBUTES BFATTR   Display attributes for a given file
+0260FILE-MAINTENANCEBCOMP    Release unused Space
+0270HELP-INFO       BHELP    Display BS2000 Message HELP-Information
+0280JOB-SWITCHES    BSW      BS2000 Job switches
+0290JOB-VARIABLES   BJV      BS2000 Job variables
+0300LIB-DIRECTORY   BLIB     List elements of a LMS-Lib
+0310LIB-UPDATE      BLIBU    Perform various operations on LMS-Member
+0320MAIN-STORAGE    BMAINS  EDisplay memory pools
+0330NATPROC-LOGON   BESYLG   Logon to ENTIRE SYSTEM SERVER
+0340NATPROC-USERS   BNPUSR   Display ENTIRE SYSTEM SERVER Users/Tasks
+0350PRINT-DOCUMENT  BPRDOC   Print File/Records using PRINT-DOCUMENT
+0360READ-FILE       BREADS   Read/Scan OS-File for a certain string
+0370READ-FILE       BREADL   Read/Scan LMS-Member for a certain string
+0380SEND-EMAIL      BSEML    Send e-mail via Internet
+0390SEND-MESSAGE    BSMSG    Send message to user or console
+0400SPOOL-FILES     BSPOOLF  Display spool job information
+0410SPOOL-QUEUE     BSPOOLQ  Display spool queue
+0420SUBMIT          BSUBMI   Submit batch job
+0430SYSTEM-INFO     BSYSIN   Display system information
+0440SYSTEM-COMMAND  BSYSCMD  Issue a system command
+0450TASK-INFO       BTASKI   Display job information
+0460USER-ATTRIBUTES BUSERA   Display user information
+0470VTOC            BVTOC    List VTOC of a specific volume
+0480VTOC-UPDATE     BVTOCU   RENAME/ERASE File
+0490WRITE-FILE      BWRTF    Write to OS file
+0500WRITE-FILE      BPCOSF   Write a PC-File to OS File
+0510WRITE-FILE      BWRTL    Write to LMS-Member
+0520WRITE-FILE      BPCLMS   Write a PC-File to LMS-Member
+0530WRITE-SPOOL     BWRTS    Print File/Records

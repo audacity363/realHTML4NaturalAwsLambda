@@ -1,0 +1,14 @@
+0010&H View SPOOL-UPDATE
+0020&L
+0030&L
+0040#Zweck@    : Aenderung des SPOOL-Job-Status.
+0050&L
+0060#System@   : z/OS, z/VSE.
+0070&L
+0080&L
+0090#Anwendung@: Dieser View erlaubt dem Benutzer oder der Anwendung
+0100             die Modifikation des Status eines bestimmten SPOOL-Jobs.
+0110             Moeglich sind z.B. Aenderung der Jobklasse oder der
+0120             Destination, Loeschen eines SPOOL-Job-Eintrages usw.
+0130&L
+0140#Anmerkung@:

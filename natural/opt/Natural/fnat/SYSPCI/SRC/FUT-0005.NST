@@ -1,0 +1,22 @@
+0010/**********************************************************************
+0020/* Help texts for SYSPCI.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSPCI
+0070<Header1> Show existing databases
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180If marked, a list of all databases is shown
+0190which can be found on the machine.
+0200
+0210Instead of marking this field, you can also press PF5.
+0220<HelpTextEnd>

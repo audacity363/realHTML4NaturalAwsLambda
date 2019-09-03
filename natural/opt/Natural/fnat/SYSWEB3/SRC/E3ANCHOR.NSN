@@ -1,0 +1,82 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3ANCHOR
+0050*
+0060* DESCRIPTION   Creates a hyperlink.
+0070*
+0080* SEE           ../sysweb/t3anchor
+0090*
+0100* AUTHOR        SAG   08.09.1998
+0110*
+0120* Version       8.3
+0130*
+0140* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0150*
+0160* HISTORY
+0170* USER    DATE       REASON
+0180* ------+----------+----------------------------------------------
+0190*       ! --.--.-- !
+0200* ------+----------+----------------------------------------------
+0210*
+0220* ------ PARAMETER -----------------------------------------------
+0230DEFINE DATA
+0240PARAMETER USING W3PARM
+0250LOCAL USING W3CONST
+0260LOCAL
+02701 H3STRING       (A) DYNAMIC
+0280*
+02901 II             (I4)
+0300END-DEFINE
+0310* --- ERROR HANDLING ---
+0320ON ERROR
+0330  PERFORM W3ERROR ##W3ERROR
+0340  PERFORM W3END ##RPC
+0350  ESCAPE ROUTINE
+0360END-ERROR
+0370*
+0380* --- INITIALIZE Web Interface ---
+0390PERFORM W3INIT ##RPC
+0400*
+0410* --- START HTML Generation ---
+0420PERFORM H3-OPEN-HTML 'HTML Generation - Example Anchor ' ' ' ' '
+0430* --- THE LEVEL 2 HEADER ---
+0440PERFORM H3-HEADER 2 'Example to show the use of H3-ANCHOR'
+0450*
+0460* -------------------------------------------------
+0470PERFORM H3-COMMENT 'This is the top of this page'
+0480*
+0490PERFORM H3-ANCHOR ' ' "TOP" 'This is the top'
+0500PERFORM H3-LINE-BREAK
+0510*
+0520PERFORM H3-ANCHOR "THIS" "BOTTOM" 'Go to the bottom.'
+0530PERFORM H3-LINE-BREAK
+0540*
+0550* -------------------------------------------------
+0560PERFORM H3-ANCHOR '/index.html' ' '  'Display the index '-
+0570                  'page of this server.'
+0580*
+0590PERFORM H3-RULE 80
+0600*
+0610PERFORM H3-COMMENT 'now just 100 lines...'
+0620*
+0630FOR II = 1 TO 100
+0640  COMPRESS 'This is line:' II ##HTTP_END INTO H3STRING
+0650  PERFORM H3-LINE_BREAK H3STRING
+0660END-FOR
+0670PERFORM H3-RULE 80
+0680*
+0690PERFORM H3-ANCHOR "THIS" "TOP" 'Back to top'
+0700PERFORM H3-LINE-BREAK
+0710*
+0720PERFORM H3-ANCHOR ' ' "BOTTOM" 'This is the bottom.'
+0730*
+0740* -----------------------------------------------
+0750PERFORM E3-EXAMPLE-END
+0760*
+0770* --- END HTML Generation ---
+0780PERFORM H3-CLOSE-HTML
+0790* --- END Web Interface ---
+0800PERFORM W3END ##RPC
+0810*
+0820END

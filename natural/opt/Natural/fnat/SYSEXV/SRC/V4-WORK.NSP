@@ -1,0 +1,178 @@
+0010*
+0020* Program .. V4-WORK
+0030* Library .. SYSEXV
+0040* Version .. 4.1
+0050*
+0060* Functionality: Show new work file type PORTABLE
+0070************************************************************************
+0080*
+0090DEFINE DATA
+0100LOCAL
+0110 1 #PARM1         (A)  DYNAMIC
+0120 1 #PARM2         (I2)
+0130 1 #PARM3         (A)  DYNAMIC
+0140 1 #READ-PARM1    (A)  DYNAMIC
+0150 1 #READ-PARM2    (I2)
+0160 1 #READ-PARM3    (A)  DYNAMIC
+0170 1 #WORKFILE      (A80) INIT <'$NATDIR/$NATVERS/tmp/testfile'>
+0180 1 #WORKFILE-VMS  (A80) INIT <'nattmp:testfile'>
+0190 1 #WORKFILE-PC   (A80) INIT <'c:\testfile.txt'>
+0200 1 #NUM1          (I4)
+0210 1 #NUM2          (I4)
+0220 1 #NUM3          (I4)
+0230 1 #NUM4          (I4)
+0240 1 #INPUT1        (A40)
+0250 1 #INPUT2        (A40)
+0260 1 #RESULT1       (A40)
+0270 1 #RESULT2       (A40)
+0280 1 #RECORD-LENGTH (I4)
+0290END-DEFINE
+0300*
+0310FORMAT KD=ON
+0320SET KEY PF3  NAMED 'Exit'
+0330        PF12 NAMED 'Canc'
+0340*
+0350*
+0360IF *MACHINE-CLASS = 'VMS'
+0370  MOVE #WORKFILE-VMS TO #WORKFILE
+0380END-IF
+0390IF *MACHINE-CLASS = 'PC'
+0400  MOVE #WORKFILE-PC TO #WORKFILE
+0410END-IF
+0420*
+0430*
+0440INPUT (IP=OFF)
+0450 01T *TIMX  (AD=OTD)
+0460 21T '***** NATURAL 4.1 ENHANCEMENTS *****'
+0470 70T *DATX  (AD=OTD DF=L)
+0480 /
+0490 01T 'User'
+0500 06T *USER  (AD=OILT)
+0510 28T '- New Work File Type -'(I)
+0520 64T 'Program'
+0530 72T *PROGRAM (AD=OI)
+0540 ///
+0550 02T 'Show new work file type PORTABLE for READ and WRITE WORK FILE statement'(I)
+0560 ///
+0570 02T 'Please enter work file name to be created:'
+0580 //
+0590 04T #WORKFILE (AD=MI AL=70)
+0600 ///
+0610 02T 'Attention: Work file number 11 will be used'
+0620 /
+0630 13T 'or change item in program V4-WORK.'
+0640 ///
+0650*
+0660*
+0670IF *PF-KEY = 'PF3'
+0680  ESCAPE ROUTINE
+0690END-IF
+0700IF (*PF-KEY = 'PF12' OR= 'CLR')
+0710  CALLNAT 'UTILSTOP'
+0720END-IF
+0730*
+0740*
+0750#PARM1 := 'Text of a dynamic variable #Parm1'
+0760#PARM2 := 4711
+0770#PARM3 := 'Text long of a dynamic variable #Parm3'
+0780*
+0790#NUM1 := *LENGTH(#PARM1)
+0800#NUM2 := *LENGTH(#PARM3)
+0810*
+0820*
+0830INPUT (IP=OFF)
+0840 01T *TIMX  (AD=OTD)
+0850 21T '***** NATURAL 4.1 ENHANCEMENTS *****'
+0860 70T *DATX  (AD=OTD DF=L)
+0870 /
+0880 01T 'User'
+0890 06T *USER  (AD=OILT)
+0900 28T '- New Work File Type -'(I)
+0910 64T 'Program'
+0920 72T *PROGRAM (AD=OI)
+0930 ///
+0940 02T 'DEFINE WORK FILE'(I) '11 #Workfile' 'TYPE ''PORTABLE'''(I)
+0950 //
+0960 02T '#Parm1 := ''Text of a dynamic variable #Parm1''       /* '-
+0970     'defined as' '(A) DYNAMIC'(I)
+0980 /
+0990 02T '*LENGTH(#Parm1):'  #NUM1 (AD=OI)
+1000 //
+1010 02T '#Parm2 :=  4711                                     /* '-
+1020     'defined as' '(I2)' (I)
+1030 //
+1040 02T '#Parm3 := ''Text long of a dynamic variable #Parm3''  /* '-
+1050     'defined as' '(A) DYNAMIC'(I)
+1060 /
+1070 02T '*LENGTH(#Parm3):'  #NUM2 (AD=OI)
+1080 /
+1090 //
+1100 02T 'WRITE WORK FILE'(I) '11 VARIABLE #Parm1 #Parm2 #Parm3'
+1110
+1120*
+1130*
+1140IF *PF-KEY = 'PF3'
+1150  ESCAPE ROUTINE
+1160END-IF
+1170IF (*PF-KEY = 'PF12' OR= 'CLR')
+1180  CALLNAT 'UTILSTOP'
+1190END-IF
+1200*
+1210*
+1220DEFINE WORK FILE 11 #WORKFILE TYPE 'Portable'
+1230*
+1240WRITE WORK FILE 11 VARIABLE #PARM1 #PARM2 #PARM3
+1250*
+1260*
+1270READ WORK FILE 11 ONCE #READ-PARM1 #READ-PARM2 #READ-PARM3
+1280                       GIVING LENGTH #RECORD-LENGTH
+1290*
+1300*
+1310#RESULT1 := #READ-PARM1
+1320#RESULT2 := #READ-PARM3
+1330*
+1340#NUM3 := *LENGTH(#READ-PARM1)
+1350#NUM4 := *LENGTH(#READ-PARM3)
+1360*
+1370INPUT (IP=OFF)
+1380 01T *TIMX  (AD=OTD)
+1390 21T '***** NATURAL 4.1 ENHANCEMENTS *****'
+1400 70T *DATX  (AD=OTD DF=L)
+1410 /
+1420 01T 'User'
+1430 06T *USER  (AD=OILT)
+1440 28T '- New Work File Type -'(I)
+1450 64T 'Program'
+1460 72T *PROGRAM (AD=OI)
+1470 ///
+1480 02T 'READ WORK FILE' (I)
+1490     '11 ONCE #Read-Parm1 #Read-Parm2 #Read-Parm3'
+1500 /
+1510 25T 'GIVING LENGTH #Record-Length'
+1520 //
+1530 02T '#Read-Parm1:' #RESULT1 (AD=OI)
+1540 /
+1550 02T '*LENGTH(#Read-Parm1):'  #NUM3 (AD=OI)
+1560 //
+1570 02T '#Read-Parm2:' #READ-PARM2 (AD=OI)
+1580 //
+1590 02T '#Read-Parm3:' #RESULT2 (AD=OI)
+1600 /
+1610 02T '*LENGTH(#Read-Parm3):'  #NUM4 (AD=OI)
+1620 //
+1630 02T '#Record-Length:'  #RECORD-LENGTH (AD=OI)
+1640 ///
+1650 02T 'Note: #Read-Parm1 and #Read-Parm3 are dynamic variables,'
+1660 /
+1670 02T '      #Read-Parm2 is integer (I2).'
+1680 //
+1690IF *PF-KEY = 'PF3'
+1700  ESCAPE ROUTINE
+1710END-IF
+1720IF (*PF-KEY = 'PF12' OR= 'CLR')
+1730  CALLNAT 'UTILSTOP'
+1740END-IF
+1750*
+1760*
+1770END
+1780

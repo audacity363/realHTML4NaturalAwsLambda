@@ -1,0 +1,15 @@
+0010** Example 'INDEX1S': Array definition with constants (structured mode)
+0020***********************************************************************
+0030DEFINE DATA LOCAL
+00401 EMPLOY-VIEW VIEW OF EMPLOYEES
+0050  2 NAME
+0060  2 FIRST-NAME
+0070  2 CITY
+0080  2 LANG (1:10)
+0090END-DEFINE
+0100*
+0110READ (1) EMPLOY-VIEW WITH NAME = 'WINTER' WHERE CITY = 'LONDON'
+0120  WRITE 'LANG(1:10):' LANG (1:10) //
+0130  WRITE 'LANG(1)   :' LANG (1)    /  'LANG(5:9) :' LANG (5:9)
+0140END-READ
+0150END

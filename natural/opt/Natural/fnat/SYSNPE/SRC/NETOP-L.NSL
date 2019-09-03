@@ -1,0 +1,40 @@
+0010**DV          0041     V1NET-OPER                        NET-OPER
+0020**DD          0044N 3.0 2ERROR-CODE
+0030**DD          0045A  58 2ERROR-TEXT
+0040**DD          0046N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0047A  80 2COMMAND
+0060**DD          0048N 3.0 2LINE-LENGTH
+0070**DD          0049A 126 2LINE
+0080**DD          0050A   3 2LINE-STATUS
+0090**DD          0051A   3 2PURGE-PREVIOUS
+0100**DD          0052A   8 2TIME-STAMP
+0110**DD          0053N 3.0 2NUMBER-OF-TOKENS
+0120**DD          0054A  15 2TOKEN-1
+0130**DD          0055A  15 2TOKEN-2
+0140**DD          0056A  15 2TOKEN-3
+0150**DD          0057A  15 2TOKEN-4
+0160**DD          0058A  15 2TOKEN-5
+0170**DD          0059A  15 2TOKEN-6
+0180**DD          0060A  15 2TOKEN-7
+0190**DD          0061A  15 2TOKEN-8
+0200**DD          0062A  15 2TOKEN-9
+0210**DD          0063A  15 2TOKEN-10
+0220**DD          0064A  15 2TOKEN-11
+0230**DD          0065A  15 2TOKEN-12
+0240**DD          0066A  15 2TOKEN-13
+0250**DD          0067A  15 2TOKEN-14
+0260**DD          0068A  15 2TOKEN-15
+0270**DD          0069A  15 2TOKEN-16
+0280**DD          0070A  15 2TOKEN-17
+0290**DD          0071A  15 2TOKEN-18
+0300**DD          0072A  15 2TOKEN-19
+0310**DD          0073A  15 2TOKEN-20
+0320**C               *
+0330**DF          0074A   8 1#FUNCTION
+0340**DF          0076A  65 1#COMMAND-LINE
+0350**DF          0077A  78 1#MESSAGE
+0360**DF I1       0078A  78 1#LINE                           (1:20)
+0370**DF I1       0079C     1#CV-LINE                        (1:20)
+0380**DF I1       0080T     1#TIME                           (1:20)
+0390**DF          0081I   1 1#I
+0400**DF          0082I   1 1#J

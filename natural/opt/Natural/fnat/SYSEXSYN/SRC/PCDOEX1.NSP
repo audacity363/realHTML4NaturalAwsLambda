@@ -1,0 +1,15 @@
+0010** Example 'PCDOEX1': DOWNLOAD PC FILE
+0020**
+0030** NOTE: Example requires that Natural Connection is installed.
+0040************************************************************************
+0050DEFINE DATA LOCAL
+006001 PERS VIEW OF EMPLOYEES
+0070  02 PERSONNEL-ID
+0080  02 NAME
+0090  02 CITY
+0100END-DEFINE
+0110*
+0120FIND PERS WITH CITY = 'NEW YORK'               /* Data selection
+0130  DOWNLOAD PC FILE 7 CITY NAME PERSONNEL-ID    /* Data download
+0140END-FIND
+0150END

@@ -1,0 +1,30 @@
+0010/* Configuration for STRUCT Command
+0020/* User Exit, delivered in source form, too.
+0030/***********************************************************************
+0040/* Modify the defaults according to your needs, and copy the cataloged
+0050/* object to Library SYSTEM (FNAT).
+0060/***********************************************************************
+0070DEFINE DATA
+0080PARAMETER
+009001 #FUNCTION    (A01) /* 'G', 'D', 'P', 'W', '?', '.'.
+010001 #PGM         (A08) /* Name of Object to be processed
+011001 #CURR-MEM    (A08) /* This field must not be modified; it contains
+0120                      /* the name of Object currently being in Editor.
+013001 #COMPRESSED  (A01) /* 'Y', 'N'.
+014001 #INCREMENT   (N01) /* '1' thru '9'.
+015001 #COMMENTS    (A01) /* 'Y', 'N'.
+016001 #MESSAGES    (A01) /* 'Y', 'N'.
+017001 #RETURN      (A01) /* 'Y', 'N'.
+0180END-DEFINE
+0190/**********************************************************************
+0200/*
+0210/* Modify some defaults for subsequent STRUCT MAP:
+0220/*
+0230#FUNCTION    := 'D'
+0240#INCREMENT   := 2
+0250#MESSAGES    := 'N'
+0260/*
+0270/* When issuing the STRUCT command from the programm editor, only
+0280/* #INCREMENT and #COMMENTS will have an effect.
+0290/*
+0300END

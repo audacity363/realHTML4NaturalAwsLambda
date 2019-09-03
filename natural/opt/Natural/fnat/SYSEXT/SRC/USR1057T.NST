@@ -1,0 +1,268 @@
+0010Read a Natural source code into an array
+0020.
+0030Documentation ......... USR1057T    /*  Text object
+0040Interface ............. USR1057N    /*  Cataloged subprogram
+0050Example Program ....... USR1057P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL OBJECTS
+0100.
+0110Keywords .............. +MOD-NAT-6.3.14,
+0120                        FNAT, FSEC ENABLED, FUSER, READ, SOURCE,
+0130                        SYSTEM FILE
+0140.
+0150Function .............. This interface reads a Natural source into
+0160                        an array. The source can be stored in a
+0170                        data base or in the file system of an
+0180                        operating system.
+0190                        With OS6.3.14: support for FSEC switch
+0200.
+0210.
+0220Parameters
+0230----------
+0240Define the following parameters with the DEFINE DATA statement:
+0250.
+02601 USR1057L
+0270  2 OBJECT-KEY
+0280    3 LIBRARY        (A08)
+0290    3 OBJECT-NAME    (A32)
+0300    3 OBJECT-TYPE    (A02)
+0310      /*
+0320  2 INPUTS
+0330    3 OPT-ACCESS     (A01)
+0340    3 OPT-UNUSED-1   (L)
+0350    3 OPT-UNUSED-2   (A01)
+0360    3 OPT-LINE-NUM   (A01)
+0370    3 OPT-UNUSED-3   (L)
+0380    3 OPT-REDEF-DIR  (L)
+0390    3 OPT-UNUSED-4   (A01)
+0400    3 OPT-AMOUNT     (I02)
+0410    3 OPT-LINESIZE   (I02)
+0420      /*
+0430  2 INPUT-OUTPUTS
+0440    3 INT-HANDLE     (I04)
+0450    3 NEXT-SEQ       (I04)
+0460    3 NEXT-NUM       (I02)
+0470      /*
+0480  2 OUTPUTS
+0490    3 RETURNED       (I02)
+0500    3 SRC-NUM        (I02/1:nn)
+0510    3 SRC-TEXT       (A01/1:nn,1:72)
+0520    3 REDEFINE SRC-TEXT
+0530      4 SRC-GROUP    (1:nn)
+0540        5 SRC-LINE   (A72)
+0550    3 REDEFINE SRC-TEXT
+0560      4 DIR-OBJNAME      (A32)    /* Object Name
+0570      4 DIR-LIBRARY      (A08)    /* Library ID
+0580      4 DIR-OBJTYPE      (A02)    /* Object Type
+0590      4 DIR-OBJKIND      (A01)    /* Source or Module
+0600      4 DIR-DBID         (A05)    /* DBID of System File
+0610      4 DIR-FNR          (A05)    /* FNR of System File
+0620      4 DIR-DATN         (A08)    /* Date in Format (YYYYMMDD)
+0630      4 DIR-TIMN         (A07)    /* Time in Format (HHIISST)
+0640      4 DIR-USERID       (A08)    /* User ID
+0650      4 DIR-PROGMODE     (A01)    /* Programming Mode
+0660      4 DIR-SRCSIZE      (A10)    /* Source Area Size
+0670      4 DIR-GPSIZE       (A10)    /* Size of Module
+0680      4 DIR-UNIQUE-ID    (A32)    /* Unique ID
+0690      4 DIR-DDM-DBID     (A05)    /* DBID the DDM is cataloged with
+0700      4 DIR-DDM-FNR      (A05)    /* FNR the DDM is cataloged with
+0710      4 DIR-NATVERS      (A04)    /* Natural Version
+0720      4 DIR-NATSM        (A02)    /* Natural SM Level
+0730      4 DIR-INIT-USER    (A08)    /* Init User ID
+0740      4 DIR-TID          (A08)    /* Terminal ID
+0750      4 DIR-TRANS-NAME   (A08)    /* TP Transcation Name
+0760      4 DIR-OPSYS        (A08)    /* Operating System
+0770      4 DIR-TPSYS        (A08)    /* TP System
+0780      4 DIR-USED-GDA     (A08)    /* Used GDA
+0790      4 FILLER            80X
+0800      4 DIR-SAVE-CAT-TIME (T)     /* Save date in internal format
+0810                                  /* End of directory attributes
+0820    3 SRC-SEQ        (I04/1:nn)
+0830    3 SRC-LONG       (A01/1:nn)
+0840      /*
+08501 USR1057N
+0860  2 VERSION          (I01)     INIT <3>
+0870  2 V1-NSC-CKECK     (A01)
+0880  2 V2-DBID          (N05)
+0890  2 V2-FNR           (N04)
+0900  2 V2-PASSWORD      (A08)
+0910  2 V2-CIPHERCODE    (N08)
+0920  2 V2-SYSFILE       (A01)
+0930  2 V3-EMPTY-BLANK   (A1)
+09401 REDEFINE USR1057N
+0950  2 EXTENDED-PARMS
+0960    3 EXTENDED-DATA  (A01/1:29)
+0970      /*
+0980LOCAL USING USR-MSG   /* Data for message exchange
+0990LOCAL USING USR-FLD   /* Description of the field in error
+1000.
+1010.
+1020Interface Call
+1030--------------
+1040Use the interface with the CALLNAT statement:
+1050.
+1060CALLNAT 'USR1057N' USR1057L  USR1057N.EXTENDED-PARMS
+1070                   USR-MSG   USR-FLD
+1080.
+1090.
+1100Using the Application Programming Interface:
+1110--------------------------------------------
+1120Copy the subprogram USR1057N to the library SYSTEM or the steplib
+1130library respectively, or to the required library.
+1140.
+1150.
+1160Input ...... LIBRARY (A08)
+1170                    Library where the object is located. If
+1180                    LIBRARY is blank, the current library is used.
+1190.
+1200Input ...... OBJECT-NAME (A32)
+1210                    Name of the object.
+1220.
+1230In/Output .. OBJECT-TYPE (A02)
+1240                    Internal object type.
+1250                    If OBJECT-TYPE is filled, the object must be
+1260                    of the specified type. This is checked during
+1270                    the open call.
+1280                    If OBJECT-TYPE is left blank, the subprogram
+1290                    returns the external object type during the
+1300                    open call.
+1310.
+1320Input ...... OPT-ACCESS (A01)
+1330                    Access type. An open call starts the processing
+1340                    and returns the directory data. The next calls
+1350                    read the object until its end. The close call
+1360                    is done automatically by the subprogram.
+1370                    Possible values are:
+1380                    'O' - Open processing
+1390                    'R' - Read source lines
+1400                    'C' - Close processing; only necessary in
+1410                          a file system environment to force the end
+1420                          of processing.
+1430.
+1440Input ...... OPT-LINE-NUM (A01)
+1450                    Option if line numbers are to be returned.
+1460                    Possible values are:
+1470                    'Y' - Return line numbers
+1480                    'N' - Do not return line numbers
+1490.
+1500Input ...... OPT-REDEF-DIR (L)
+1510                    Option if the directory should be redefined
+1520                    and interpreted. See USR1057P for the layout
+1530                    of the redefinition.
+1540                    Possible values are:
+1550                    FALSE - Do not interpret directory data
+1560                    TRUE  - Interpret directory data
+1570.
+1580Input ...... OPT-AMOUNT (I02)
+1590                    Amount of lines requested.
+1600                    The maximum value is 255.
+1610.
+1620Input ...... OPT-LINESIZE (I02)
+1630                    Length of each line. The value must be less
+1640                    than 251.
+1650
+1660In/Output .. INT-HANDLE (I04)
+1670                    Do not change. Passed out by the open call to
+1680                    identify the caller during subsequent calls.
+1690.
+1700In/Output .. NEXT-SEQ (I04), NEXT-NUM (I02)
+1710                    The sequence number and the line number to
+1720                    be used as starting value for the next
+1730                    subprogram call.
+1740                    Filled by the subprogram to initialize the
+1750                    next loop. Do not change.
+1760.
+1770Output ..... RETURNED (I02)
+1780                    Number of filled occurrences.
+1790.
+1800Output ..... SRC-NUM (I02/1:nn), SRC-TEXT (A01/1:nn,1:mm),
+1810             SRC-SEQ (I04/1:nn), SRC-LONG (A01/1:nn)
+1820                    Line number, text of the source line,
+1830                    sequence number where the source line has been
+1840                    found (only if the source is stored in a data
+1850                    base) and a long line indicator.
+1860                    SRC-LONG (nn) = '-' means that the next line
+1870                    has to be appended.
+1880                    nn, mm: The upper index of the arrays is
+1890                    variable.
+1900                    nn corresponds to OPT-AMOUNT; mm corresponds
+1910                    to OPT-LINESIZE.
+1920                    ATTENTION: The size of the output buffer
+1930                    SRC-TEXT must be at least 300 characters.
+1940.
+1950In/Output .. USR1057N.VERSION (I01)
+1960                    Version number of the subprogram.
+1970                    0 is the version number for the original
+1980                    parameter layout.
+1990                    1 is the version number for nsc-check (always done)
+2000                    2 is the version number for read with DBID,FNR,
+2010                    PSW,CIPHERCODE
+2020                    3 is the version number for return empty lines on
+2030                    mainframe with blank instead of H'00'
+2040.
+2050Input V1 ... V1-NSC-CKECK     (A01)
+2060                    Not used.
+2070.
+2080Input V2 ... V2-DBID (N5)
+2090                    Source DBID.
+2100
+2110Input V2 ... V2-FNR  (N4)
+2120                    Source FNR.
+2130
+2140Input V2 ... V2-PASSWORD (A08)
+2150                    Password for source file.
+2160
+2170Input V2 ... V2-CIPHERCODE (N08)
+2180                    Cipher code for source file.
+2190.
+2200Input V2 ... V2-SYSFILE (A01), if DBID and FNR are 0
+2210                    the system file to be listed.
+2220                    Possible values are:
+2230                    'U' - FUSER system file
+2240                    'N' - FNAT system file
+2250                    ' ' - FUSER system file or FNAT for SYS-libraries
+2260.
+2270Input V3 ... V3-EMPTY-BLANK   (A1)
+2280                    'Y' = return empty lines on mainframe
+2290                          with blank instead of H'00'
+2300.
+2310Input V4 ... V4-FSEC-DBID (N5)
+2320                    DBID of FSEC system file.
+2330.
+2340Input V4 ... V4-FSEC-FNR  (N4)
+2350                    FNR of FSEC system file.
+2360.
+2370Input V4 ... V4-FSEC-PASSWORD (A08)
+2380                    Password for FSEC system file.
+2390.
+2400Input V4 ... V4-FSEC-CIPHERCODE (N08)
+2410                    Cipher code for FSEC system file.
+2420.
+2430Output ..... USR-MSG
+2440                    Data used for message exchange.
+2450                    For further information see the PDA USR-MSG.
+2460                    The following message numbers are possible:
+2470                    =  0000  Ok
+2480                    =  0100  End of data reached
+2490                    =  1001  Parameter error
+2500                    =  1002  Parameter/internal error
+2510                    =  1003  Parameter value is too small.
+2520                    =  1004  Parameter value is too large.
+2530                    =  1005  Invalid range specified
+2540                    =  1006  Object does not exist
+2550                    <  0000  Natural system messages
+2560                             NSC messages
+2570                      -0806 Library :1: not found.
+2580                      -0807 Logon to library :1: is not permitted.
+2590                      -0839 The library 'SYSSEC' :1: has not been found.
+2600                      -0972 User is not authorized to use command: :1:.
+2610                      -4891 Invalid DBID/FNR specified for a library.
+2620.
+2630Output ..... USR-FLD
+2640                    Description of the field in error.
+2650                    For further information see the PDA USR-FLD.
+2660.
+2670.
+2680*****  End of Description  *****

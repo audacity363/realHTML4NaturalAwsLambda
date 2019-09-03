@@ -1,0 +1,26 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Use Predict set
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180If this field is marked, the names of the objects
+0190to be selected are read from a retained set
+0200created with the Predict XRef save set option of
+0210the LIST XREF command.
+0220If marked, the field 'Set number' must contain
+0230the number of the retained set and the field
+0240'Object name' must contain '*'.
+0250
+0260<HelpTextEnd>

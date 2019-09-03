@@ -1,0 +1,61 @@
+0010Get or set profile parameter UDB
+0020.
+0030Documentation ......... USR1040T    /*  Text object
+0040Interface ............. USR1040N    /*  Cataloged subprogram
+0050Example Program ....... USR1040P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. PROFILE PARAMETERS
+0100.
+0110Keywords .............. DBID, DDM, GET, SET, UDB
+0120.
+0130Function .............. With this interface you can retrieve or specify
+0140                        the DBID to be used for a database access (UDB
+0150                        parameter).
+0160.
+0170.
+0180Parameters
+0190----------
+0200Define the following parameters with the DEFINE DATA statement:
+0210.
+0220 1 USR1040L
+0230   2 INPUTS
+0240     3 FUNCTION         (A01)
+0250   2 INPUT-OUTPUTS
+0260     3 UDB-PARM         (N05)
+0270   2 OUTPUTS
+0280     3 RESPONSE         (I04)
+0290.
+0300Interface Call
+0310--------------
+0320Use the interface with the CALLNAT statement:
+0330.
+0340CALLNAT 'USR1040N' USR1040L
+0350.
+0360.
+0370Using the Application Programming Interface:
+0380--------------------------------------------
+0390Copy the subprogram USR1040N to the library SYSTEM or the steplib
+0400library respectively, or to the required library.
+0410.
+0420Description of the parameters:
+0430.
+04401 FUNCTION (Input)
+0450  Function code; possible values are:
+0460  'G' - Get current UDB setting
+0470  'S' - Set UDB parameter
+0480.
+04901 UDB-PARM (Input/Output)
+0500  Value of the UDB parameter
+0510.
+05201 RESPONSE (I04)
+0530  Response code; possible values are:
+0540  0000 - No error occurred.
+0550  1001 - The value of FUNCTION must be 'G' or 'S'.
+0560  1002 - The value of UDB-PARM must be 0 through 254 or 256 to 65535.
+0570  1003 - You are not allowed to set UDB as long as dynamic parameters
+0580         are not allowed (DYNPARM=OFF).
+0590.
+0600.
+0610*****  End of Description  *****

@@ -1,0 +1,28 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Write Restart Information
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180If this field is marked, the specified selection data, the
+0190option settings, the parameter settings and for each processed
+0200object restart information are written into a Natural text
+0210member in the Workplan library.
+0220If the load function terminates abnormally before the work file
+0230is processed completely, it can be restarted at the point where
+0240it terminated.
+0250The restart function is invoked by the internal command
+0260'GO RESTART'.
+0270
+0280<HelpTextEnd>

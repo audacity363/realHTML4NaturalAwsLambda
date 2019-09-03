@@ -1,0 +1,90 @@
+0010*
+0020* Write LMS-Member
+0030*
+0040DEFINE DATA GLOBAL USING TUTO
+0050            LOCAL  USING BWRTF--L
+0060            LOCAL
+0070*
+008001 #DSNAME                  (A54)
+009001 #PASSWORD                (A8)
+010001 #DISPOSITION             (A3)
+011001 #ELEMENT                 (A64)
+012001 #ELEMENT-TYPE            (A8)
+013001 #ELEMENT-VERSION         (A24)
+014001 #ELEMENT-PASSWORD        (A8)
+015001 #DATA                    (A60/1:10)
+016001 #REC-LEN                 (N5/1:10)
+017001 #FUNCTION                (A8)
+018001 #RECORD                  (A253)
+019001 #RECORD-LENGTH           (N5)
+0200*
+021001 #I                       (P2)
+022001 #J                       (P2)
+023001 #T                       (P2)
+024001 RECORD-WRITTEN           (L)
+0250END-DEFINE
+0260PERFORM PF-KEY
+0270*
+0280* ------------------------------ MAIN LOOP ----------------------------
+0290*
+0300REPEAT
+0310  PERFORM SCREEN-IO
+0320  ASSIGN #T = 11
+0330  ASSIGN RECORD-WRITTEN = FALSE
+0340FOR.
+0350  FOR #J = 1 TO #T
+0360    IF #J > 10
+0370       IF RECORD-WRITTEN
+0380          ASSIGN #FUNCTION = 'CLOSE'
+0390          RESET  #RECORD
+0400         ELSE
+0410          ESCAPE BOTTOM (FOR.)
+0420       END-IF
+0430      ELSE
+0440       IF #REC-LEN (#J) = 0 AND #DATA (#J) = ' '
+0450          ESCAPE TOP
+0460       END-IF
+0470       ASSIGN RECORD-WRITTEN = TRUE
+0480       ASSIGN #RECORD        = #DATA (#J)
+0490       ASSIGN #RECORD-LENGTH = #REC-LEN (#J)
+0500       RESET #FUNCTION
+0510    END-IF
+0520    PROCESS WRITE-FILE
+0530            USING NODE                  = ##NODE
+0540              ,   PRODUCT               = 'L'
+0550              ,   DSNAME                = #DSNAME
+0560              ,   ELEMENT               = #ELEMENT
+0570              ,   ELEMENT-TYPE          = #ELEMENT-TYPE
+0580              ,   ELEMENT-VERSION       = #ELEMENT-VERSION
+0590              ,   ELEMENT-PASSWORD      = #ELEMENT-PASSWORD
+0600              ,   RECORD                = #RECORD
+0610              ,   FUNCTION              = #FUNCTION
+0620              ,   DISP                  = #DISPOSITION
+0630              ,   PASSWORD              = #PASSWORD
+0640              ,   RECORD-LENGTH         = #RECORD-LENGTH
+0650         GIVING ERROR-CODE
+0660                ERROR-TEXT
+0670                SYSTEM-CODE
+0680    IF ERROR-CODE NE 0
+0690       INCLUDE BERR---C
+0700       ESCAPE BOTTOM (FOR.)
+0710      ELSE
+0720       ASSIGN ##MSG-NR = 1007
+0730    END-IF
+0740  END-FOR
+0750END-REPEAT
+0760*
+0770* ------------------------------ SCREEN-IO ----------------------------
+0780*
+0790DEFINE SUBROUTINE SCREEN-IO
+0800  INPUT WITH TEXT *##MSG-NR,
+0810                   ##MSG-TXT1,
+0820                   ##MSG-TXT2
+0830        USING MAP 'BWRTL--&'
+0840RESET ##MSG
+0850END-SUBROUTINE
+0860*
+0870* ------------------------------ PF-KEY -------------------------------
+0880*
+0890INCLUDE C-PFKEY
+0900END

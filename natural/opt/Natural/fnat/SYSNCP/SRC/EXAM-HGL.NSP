@@ -1,0 +1,162 @@
+0010/* EXAM-HGL - HELP Global
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (1:8)
+0070     02 NATURAL-ERROR
+0080     02 RETURN-CODE
+0090     02 RESULT-FIELD (01:15)
+0100     02 GETSET-FIELD-NAME
+0110     02 GETSET-FIELD-VALUE
+0120     /*********************
+0130  01 MX              (I01) CONST <15>
+0140  01 IY              (I01)
+0150  01 NB              (N03)
+0160  01 #NB             (N03/01:15)
+0170  01 PROC-NAME       (A08)
+0180  01 MSG             (A72)
+0190  01 #TITLE          (A72)
+0200  01 START-VALUE     (A40)
+0210  01 LEAVE           (L)
+0220END-DEFINE
+0230DEFINE WINDOW PARMS
+0240  SIZE 08 * 70
+0250  BASE 02 / 02
+0260  TITLE ' (HGL) List Global Functions'
+0270  CONTROL SCREEN
+0280  FRAMED POSITION OFF
+0290DEFINE WINDOW G-LIST
+0300  SIZE 21 * 70
+0310  BASE 02 / 02
+0320  TITLE #TITLE
+0330  CONTROL SCREEN
+0340  FRAMED POSITION OFF
+0350SET KEY ALL
+0360/**********************************************************************
+0370/* Ask for currently used name:
+0380/*
+0390PROCESS COMMAND ACTION GET USING
+0400    PROCESSOR-NAME = ' '
+0410    GETSET-FIELD-NAME = 'NAME&'
+0420IF NATURAL-ERROR NE 0
+0430  CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0440  WRITE MSG
+0450  ESCAPE ROUTINE
+0460END-IF
+0470/*
+0480MOVE GETSET-FIELD-VALUE TO PROC-NAME
+0490/**********************************************************************
+0500/* Options for HELP:
+0510/*
+0520COMPRESS /*  Create a command
+0530  'G'    /*  Global Functions
+0540  'I'    /*  Return IFN, too
+0550  '+'    /*  Start BEHIND given value
+0560  'S'    /*  Separate the keywords (use tabs)
+0570  'T'    /*  Translate abbreviated keywords to upper case
+0580  'A'    /*  Internal keywords, too.
+0590**'O'    /*  Sorted by IFN
+0600         /*
+0610TO COMMAND-LINE (1) LEAVING NO
+0620/*
+0630/**********************************************************************
+0640REP. REPEAT
+0650  RESET NB COMMAND-LINE (2)
+0660  MOVE FALSE TO LEAVE
+0670  /*************************************
+0680  INPUT WINDOW = 'PARMS' (AD=MIT' ' IP=OFF  ) WITH TEXT MSG
+0690    /  'Processor Name ...' PROC-NAME (AD=OI)
+0700    /  'Search Syntax ....' COMMAND-LINE (1) (AL=40)
+0710    /  'Start Value ......' START-VALUE
+0720  /*************************************
+0730  SET WINDOW OFF
+0740  IF *PF-KEY NE 'ENTR'
+0750    ESCAPE ROUTINE
+0760  END-IF
+0770  /*************************************
+0780  IF COMMAND-LINE (1) NE MASK ('G')
+0790    MOVE '"Syntax" has to start with "G".' TO MSG
+0800    ESCAPE TOP
+0810  END-IF
+0820  /*************************************
+0830  COMPRESS 'List Global Functions in' PROC-NAME
+0840    'with options =' COMMAND-LINE (1) TO #TITLE
+0850  RESET MSG NB
+0860  /***************************************
+0870  /* Check whether START-VALUE contains a valid function:
+0880  /*
+0890  CALLNAT 'EXAM-HGG' PROC-NAME START-VALUE MSG /* Valid Global Cmd
+0900  /*
+0910  IF MSG NE ' '
+0920    REINPUT MSG MARK *START-VALUE
+0930  END-IF
+0940  /*
+0950  MOVE START-VALUE TO COMMAND-LINE (2)
+0960  /***************************************
+0970  LIST_ALL. REPEAT
+0980    RESET RESULT-FIELD (*)
+0990    /*
+1000    PROCESS COMMAND ACTION HELP USING
+1010      PROCESSOR-NAME = PROC-NAME
+1020      COMMAND-LINE (*) = COMMAND-LINE (*)
+1030    /*
+1040    IF NATURAL-ERROR NE 0
+1050      CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+1060      WRITE MSG
+1070      ESCAPE ROUTINE
+1080    END-IF
+1090    /*  Prepare next start value:
+1100    MOVE ALL RESULT-FIELD (MX)  /*  Take the last line
+1110      TO COMMAND-LINE (2)       /*  Make it the start value
+1120      UNTIL 51                  /*  Do not take the IFN
+1130    EXAMINE COMMAND-LINE (2)    /*  New start value ...
+1140      TRANSLATE INTO UPPER      /*  ... must be given in upper case
+1150    /*
+1160    RESET #NB (*)         /*  Line numbers
+1170    FO. FOR IY 1 MX
+1180      IF RESULT-FIELD (IY) NE ' '
+1190        IF IY = MX  /*  last loop
+1200        AND COMMAND-LINE (1) NE SCAN '+'  /* Re-Start with this line
+1210          RESET #NB (MX)
+1220        ELSE
+1230          ADD 1 TO NB
+1240          MOVE NB TO #NB (IY)
+1250        END-IF
+1260      ELSE
+1270        MOVE '*** End of list ***' TO RESULT-FIELD (IY)
+1280        MOVE TRUE TO LEAVE
+1290        ESCAPE BOTTOM (FO.)
+1300      END-IF
+1310    END-FOR
+1320    /*************************************
+1330    INPUT WINDOW = 'G-LIST' (AD=ODT' ' SG=F ZP=F IP=F  )
+1340    WITH TEXT MSG
+1350      / 'No. Global Function'  56T 'IFN'
+1360      / '---' '-' (50) 56T '----------'
+1370      / #NB (01) RESULT-FIELD (01) (AL=72)
+1380      / #NB (02) RESULT-FIELD (02) (AL=72)
+1390      / #NB (03) RESULT-FIELD (03) (AL=72)
+1400      / #NB (04) RESULT-FIELD (04) (AL=72)
+1410      / #NB (05) RESULT-FIELD (05) (AL=72)
+1420      / #NB (06) RESULT-FIELD (06) (AL=72)
+1430      / #NB (07) RESULT-FIELD (07) (AL=72)
+1440      / #NB (08) RESULT-FIELD (08) (AL=72)
+1450      / #NB (09) RESULT-FIELD (09) (AL=72)
+1460      / #NB (10) RESULT-FIELD (10) (AL=72)
+1470      / #NB (11) RESULT-FIELD (11) (AL=72)
+1480      / #NB (12) RESULT-FIELD (12) (AL=72)
+1490      / #NB (13) RESULT-FIELD (13) (AL=72)
+1500      / #NB (14) RESULT-FIELD (14) (AL=72)
+1510      / #NB (15) RESULT-FIELD (15) (AL=72)
+1520    /*************************************
+1530    SET WINDOW OFF
+1540    IF *PF-KEY NE 'ENTR'
+1550    OR LEAVE
+1560      ESCAPE BOTTOM
+1570    END-IF
+1580  END-REPEAT
+1590  /********************************************
+1600END-REPEAT
+1610/**********************************************************************
+1620END

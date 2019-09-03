@@ -1,0 +1,56 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3COMMEN
+0050*
+0060* DESCRIPTION   Creates a comment line inside an HTML page.
+0070*
+0080* AUTHOR        SAG   08.09.1998
+0090*
+0100* Version       8.3
+0110*
+0120* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0130*
+0140* HISTORY
+0150* USER    DATE       REASON
+0160* ------+----------+----------------------------------------------
+0170*       ! --.--.-- !
+0180* ------+----------+----------------------------------------------
+0190*
+0200* ------ PARAMETER -----------------------------------------------
+0210DEFINE DATA
+0220PARAMETER USING W3PARM
+0230LOCAL USING W3CONST
+0240END-DEFINE
+0250* --- ERROR HANDLING ---
+0260ON ERROR
+0270  PERFORM W3ERROR ##W3ERROR
+0280  PERFORM W3END ##RPC
+0290  ESCAPE ROUTINE
+0300END-ERROR
+0310*
+0320* --- INITIALIZE Web Interface ---
+0330PERFORM W3INIT ##RPC
+0340*
+0350* --- START HTML Generation ---
+0360PERFORM H3-OPEN-HTML 'HTML Generation - Comment Line ' " " " "
+0370* --- THE LEVEL 2 HEADER ---
+0380PERFORM H3-HEADER 2 'Comment Line '
+0390*
+0400* --- Comment Line ---
+0410PERFORM H3-COMMENT 'This the 1st comment line'
+0420*
+0430PERFORM H3-PARAGRAPH " " 'Before and after this line is a '-
+0440                         'comment Line (view source of this page).'
+0450*
+0460* --- Comment Line ---
+0470PERFORM H3-COMMENT 'This the 2nd comment line'
+0480*
+0490PERFORM E3-EXAMPLE-END
+0500*
+0510* --- END HTML Generation ---
+0520PERFORM H3-CLOSE-HTML
+0530* --- END Web Interface ---
+0540PERFORM W3END ##RPC
+0550*
+0560END

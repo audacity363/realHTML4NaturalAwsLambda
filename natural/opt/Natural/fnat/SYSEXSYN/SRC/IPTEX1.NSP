@@ -1,0 +1,28 @@
+0010** Example 'IPTEX1': INPUT
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #FNC  (A1)
+0050END-DEFINE
+0060*
+0070INPUT 10X 'SELECTION MENU FOR EMPLOYEES SYSTEM' /
+0080      10X '-' (35) //
+0090      10X 'ADD      (A)' /
+0100      10X 'UPDATE   (U)' /
+0110      10X 'DELETE   (D)' /
+0120      10X 'STOP     (.)' //
+0130      10X 'PLEASE ENTER FUNCTION: ' #FNC
+0140*
+0150DECIDE ON EVERY VALUE OF #FNC
+0160  VALUE 'A'   /* invoke the object containing the add function here
+0170    WRITE 'Add function selected.'
+0180  VALUE 'U'   /* invoke the object containing the update function here
+0190    WRITE 'Update function selected.'
+0200  VALUE 'D'   /* invoke the object containing the delete function here
+0210    WRITE 'Delete function selected.'
+0220  VALUE '.'
+0230    STOP
+0240  NONE
+0250    REINPUT 'Please enter a valid function.' MARK *#FNC
+0260END-DECIDE
+0270*
+0280END

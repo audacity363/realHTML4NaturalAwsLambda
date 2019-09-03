@@ -1,0 +1,294 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3MULTIP
+0050*
+0060* DESCRIPTION   displays data uploaded as multipart data
+0070*
+0080* AUTHOR        SAG   10.03.2005
+0090*
+0100* Version       8.3
+0110*
+0120* Copyright (c) 1998-2016 Software AG, Germany.  All rights reserved.
+0130*
+0140* HISTORY
+0150* USER    DATE       REASON
+0160* ------+----------+----------------------------------------------
+0170*       ! --.--.-- !
+0180* ------+----------+----------------------------------------------
+0190*
+0200* ------ PARAMETER -----------------------------------------------
+0210DEFINE DATA
+0220PARAMETER USING W3PARM
+0230LOCAL USING W3CONST
+0240LOCAL
+02501 W3DYNAMIC       (A) DYNAMIC
+0260*
+02701 #II             (I4)
+02801 #IL             (I4)
+02901 #ILL            (I4)
+03001 #IJ             (I4)
+03101 #IP             (I4)
+0320*
+03301 A  (A1)
+03401 B (B1)
+0350*
+03601 #HTML                  (A) DYNAMIC
+0370*
+03801 #CONTENT_TYPE   (A) DYNAMIC
+03901 #BODY           (A) DYNAMIC
+04001 #BINARY         (B) DYNAMIC
+04101 #BOUNDARY_LEN   (I2)
+04201 #BOUNDARY     (A) DYNAMIC
+0430*
+04401 #PART_START     (I4)
+04501 #PART_LEN       (I4)
+04601 #PART_END       (I4)
+04701 #PART_BODY      (I4)
+0480*
+04901 #PARTS          (I4)
+05001 #PART (1:*)
+0510  2 HEADER (A) DYNAMIC
+0520  2 BINARY (B) DYNAMIC
+0530*
+05401 #B20 (B20)
+05501 #A20 (A) DYNAMIC
+05601 #A40 (A40)
+05701 REDEFINE #A40
+0580  2 #A40-2 (A2/1:20)
+0590*
+0600END-DEFINE
+0610* --- ERROR HANDLING ---
+0620ON ERROR
+0630  PERFORM W3ERROR ##W3ERROR
+0640  PERFORM W3END ##RPC
+0650  ESCAPE ROUTINE
+0660END-ERROR
+0670*
+0680* --- INITIALIZE Web Interface ---
+0690PERFORM W3INIT ##RPC TRUE TRUE
+0700*
+0710PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "CONTENT_TYPE" "S" #CONTENT_TYPE
+0720*
+0730* --- SET TYPE OF RETURN-PAGE ---
+0740PERFORM W3CONTENT-TYPE 'text/html; charset=utf-8'
+0750*
+0760* --- WRITE THE HEAD OF THE DOCUMENT ---
+0770COMPRESS
+0780  '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">' ##HTTP_NEWLINE
+0790  '<HTML><HEAD>' ##HTTP_NEWLINE
+0800  '<TITLE>Basic Routines - Input with enctype="multipart/form-data"</TITLE>' ##HTTP_NEWLINE
+0810  '<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">' ##HTTP_NEWLINE
+0820  '<STYLE><!--' ##HTTP_NEWLINE
+0830  ' pre  {background:#FFFFFF; font-family: "Courier New", monospace; font-size: 90%}' ##HTTP_NEWLINE
+0840  ' td.g {background:#CCCCCC; font-family: "Courier New", monospace; font-size: 90%}' ##HTTP_NEWLINE
+0850  ' td.w {background:#FFFFFF; font-family: "Courier New", monospace; font-size: 90%}' ##HTTP_NEWLINE
+0860  ' th   {background:#999999; font-size: 90%}' ##HTTP_NEWLINE
+0870  ' td.r {background:#CCFFCC; color:darkblue; font-family: "Courier New", monospace; font-size: 90% }' ##HTTP_NEWLINE
+0880  '--></STYLE>' ##HTTP_NEWLINE
+0890  '</HEAD><BODY>' ##HTTP_NEWLINE
+0900  '<H2>Upload Files via Input with enctype="multipart/form-data"</H2>'
+0910  INTO #HTML LEAVING NO
+0920PERFORM W3TEXTLINEDYNAMIC #HTML
+0930*
+0940IF #CONTENT_TYPE NE MASK ('multipart/form-data'*)
+0950  COMPRESS
+0960    '<FORM action="'
+0970 'nat-data?caller=' *PROGRAM
+0980    '" method="POST" enctype="multipart/form-data">'-
+0990    '<P><B>Select Upload File 1:</B> &nbsp; '-
+1000    '<INPUT type="file" size="57" name=_Process>'-
+1010    '<P><B>Select Upload File 2:</B> &nbsp; '-
+1020    '<INPUT type="file" size="57" name=_Process>'-
+1030    '<P><INPUT type="submit" value="Upload" align="right"></P>'-
+1040    '</FORM>' INTO W3DYNAMIC LEAVING NO
+1050  PERFORM W3TEXTLINE W3DYNAMIC
+1060*
+1070* --- END THE HTML PAGE ---
+1080*
+1090ELSE
+1100  PERFORM W3READ-INPUT #BODY #BINARY
+1110  EXAMINE #CONTENT_TYPE FOR 'boundary=' GIVING POSITION #II
+1120  ADD 9 TO #II
+1130  IF #II > 1
+1140    COMPRESS '--' SUBSTR(#CONTENT_TYPE,#II) INTO #BOUNDARY LEAVING NO
+1150  END-IF
+1160*
+1170  #BODY := #BINARY
+1180
+1190  EXAMINE #BINARY FOR #BOUNDARY GIVING NUMBER #PARTS
+1200  ADD -1 TO #PARTS
+1210  EXPAND ARRAY #PART TO (1:#PARTS)
+1220*
+1230  #BOUNDARY_LEN := *LENGTH(#BOUNDARY)
+1240  #PART_START := #BOUNDARY_LEN + 1
+1250*
+1260  FOR #II = 1 TO #PARTS
+1270    EXAMINE #BODY STARTING FROM #PART_START FOR #BOUNDARY GIVING POSITION #PART_END
+1280    #PART_LEN := #PART_END - #PART_START
+1290    IF #PART_LEN > 0
+1300      #PART.BINARY(#II) := SUBSTR(#BINARY, #PART_START, #PART_LEN)
+1310      EXAMINE #PART.BINARY(#II) FOR H'0D0A0D0A' GIVING POSITION #PART_BODY
+1320      IF #PART_BODY > 1
+1330        ADD -1 TO #PART_BODY
+1340        #PART.HEADER(#II) := SUBSTR( #BINARY, #PART_START, #PART_BODY)
+1350        #PART_START := #PART_START + #PART_BODY + 4
+1360        #PART_LEN := #PART_END - #PART_START - 2
+1370        IF #PART_START > 0 AND #PART_LEN > 0
+1380          #PART.BINARY(#II) := SUBSTR( #BINARY, #PART_START, #PART_LEN )
+1390        ELSE
+1400         #PART.BINARY(#II) := ##NULL-BINARY
+1410        END-IF
+1420      END-IF
+1430    END-IF
+1440    #PART_START := #PART_END +  #BOUNDARY_LEN
+1450  END-FOR
+1460*
+1470  COMPRESS '<table>'
+1480    '<tr><th colspan="2">Transfered Data</th></tr>'
+1490*    '<tr><th> Content_Type </th><td>' #CONTENT_TYPE '</td></tr>'
+1500*    '<tr><th> Boundary </th><td>' #boundary '</td></tr>'
+1510    '<tr><th> Content_Length </th><td>' *LENGTH(#BINARY) '</td></tr>'
+1520    '<tr><th> Documents </th><td>' #PARTS '</td></tr>'
+1530* * display complete transfered data
+1540*     '<tr><td>Binary:</td><td><pre>'
+1550*     INTO W3DYNAMIC LEAVING NO
+1560*   PERFORM W3TEXTDYNAMIC W3DYNAMIC
+1570* *
+1580*   PERFORM DISPLAY-BINARY
+1590* *
+1600*   COMPRESS
+1610*     '</pre></td></tr>'
+1620    INTO W3DYNAMIC LEAVING NO
+1630  PERFORM W3TEXTDYNAMIC W3DYNAMIC
+1640*
+1650  FOR #IP = 1 TO #PARTS
+1660    COMPRESS
+1670      '<tr><th colspan="2" bgcolor="#cccccc">Document' #IP'</th></tr>'-
+1680      '<tr><th valign="top"> Header </th><td><pre>'
+1690      INTO W3DYNAMIC
+1700    PERFORM W3TEXTDYNAMIC W3DYNAMIC
+1710*
+1720*     #BINARY :=#PART.HEADER(#IP)
+1730*     PERFORM DISPLAY-BINARY
+1740*
+1750    PERFORM W3HTMLDYNAMIC #PART.HEADER(#IP)
+1760*
+1770    COMPRESS
+1780      '</pre></td></tr>'
+1790      '<tr><th> Body length </th><td>' *LENGTH(#PART.BINARY(#IP)) '</td></tr>'
+1800      '<tr><th valign="top"> Body </th><td><pre>'
+1810      INTO W3DYNAMIC LEAVING NO
+1820    PERFORM W3TEXTDYNAMIC W3DYNAMIC
+1830*
+1840    #BINARY := #PART.BINARY(#IP)
+1850    PERFORM DISPLAY-BINARY
+1860*
+1870    PERFORM W3TEXTDYNAMIC '</pre></td></tr>'
+1880  END-FOR
+1890*
+1900  PERFORM W3TEXTDYNAMIC '</table>'
+1910*
+1920END-IF
+1930*
+1940COMPRESS "<TABLE BORDER=0 WIDTH=100% CELLSPACING=0 "-
+1950  "CELLPADDING=5>"
+1960  '<TR BGCOLOR="#00cc66"><TD>' *PROGRAM '&#32;-&#32;' *DATE '&#32;' *TIME
+1970  "</TD><TD ALIGN='RIGHT'>" 'Natural'
+1980  "</TD></TR></TABLE>"
+1990  '</BODY></HTML>' INTO W3DYNAMIC LEAVING NO
+2000PERFORM W3TEXTDYNAMIC W3DYNAMIC
+2010* --- END Web Interface ---
+2020PERFORM W3END ##RPC
+2030*
+2040DEFINE SUBROUTINE DISPLAY-BINARY
+2050*
+2060#ILL := 0
+2070#HTML := '<table border="0" cellpadding="0" cellspacing="0">'
+2080*
+2090FOR #II = 1 TO *LENGTH(#BINARY) STEP 20
+2100  #IL := *LENGTH(#BINARY) - #II
+2110
+2120  IF 0 < #IL AND #IL < 20
+2130    RESET #B20
+2140    ADD 1 TO #IL
+2150    MOVE SUBSTR(#BINARY,#II,#IL) TO SUBSTR(#B20,1,#IL)
+2160    MOVE EDITED #B20 (EM=H(40)) TO #A40
+2170    #A20 := #B20
+2180    #IJ := #IL * 2 +1
+2190    IF #IJ < 20
+2200      MOVE " " TO SUBSTR(#A40,#IJ)
+2210    END-IF
+2220    FOR #IJ = 1 TO #IL
+2230      A := SUBSTR(#A20,#IJ,1)
+2240*
+2250      IF A LT H'20' OR A GT H'FE'
+2260        MOVE '.' TO SUBSTR(#A20,#IJ,1)
+2270      END-IF
+2280      IF A GE H'7F' AND A LE H'9F'
+2290        MOVE '.' TO SUBSTR(#A20,#IJ,1)
+2300      END-IF
+2310    END-FOR
+2320  ELSE
+2330    IF #II LT *LENGTH(#BINARY)
+2340      #B20 := SUBSTR(#BINARY,#II,20)
+2350      MOVE EDITED #B20 (EM=H(40)) TO #A40
+2360      #A20 := #B20
+2370      FOR #IJ = 1 TO 20
+2380        A := SUBSTR(#A20,#IJ,1)
+2390*
+2400        IF A LT H'20' OR A GE H'A0'
+2410          MOVE '.' TO SUBSTR(#A20,#IJ,1)
+2420        END-IF
+2430        IF A GE H'7F' AND A LE H'9F'
+2440          MOVE '.' TO SUBSTR(#A20,#IJ,1)
+2450        END-IF
+2460      END-FOR
+2470    END-IF
+2480  END-IF
+2490  #IL := 0
+2500  COMPRESS #HTML '<tr><td align="right">' #II '&nbsp;<td>' INTO #HTML LEAVING NO
+2510  FOR #IJ = 1 TO 20
+2520    ADD 1 TO #ILL
+2530    IF #ILL <= *LENGTH(#BINARY)
+2540      IF #IL = 0
+2550        COMPRESS #HTML '<td class="g">'
+2560          #A40-2(#IJ)
+2570          '</td>' INTO #HTML LEAVING NO
+2580        ADD 1 TO #IL
+2590      ELSE
+2600        COMPRESS #HTML '<td class="w">'
+2610          #A40-2(#IJ)
+2620          '</td>' INTO #HTML LEAVING NO
+2630        RESET #IL
+2640      END-IF
+2650    ELSE
+2660      COMPRESS #HTML '<td class="w">'
+2670        '&nbsp;'
+2680        '</td>' INTO #HTML LEAVING NO
+2690      RESET #IL
+2700    END-IF
+2710  END-FOR
+2720
+2730  PERFORM W3TEXT-TO-HTML #A20
+2740  COMPRESS #HTML '<td>&nbsp;</td><td class="r">'
+2750    #A20
+2760    '</td></tr>' ##HTTP_NEWLINE INTO #HTML LEAVING NO
+2770*
+2780*  PERFORM W3TEXTDYNAMIC #HTML
+2790* #HTML := ##NULL-STRING
+2800*
+2810  IF #II > 10000
+2820    #II := *LENGTH(#BINARY) / 20
+2830    COMPRESS #HTML '<tr><td colspan="20" align="center"><br><b>Output truncated, "' #II
+2840      '" more lines.</b></td></tr>' ##HTTP_NEWLINE INTO #HTML LEAVING NO
+2850    ESCAPE BOTTOM
+2860  END-IF
+2870END-FOR
+2880*
+2890COMPRESS #HTML '</table>' ##HTTP_NEWLINE INTO #HTML LEAVING NO
+2900
+2910PERFORM W3TEXTDYNAMIC #HTML
+2920*
+2930END-SUBROUTINE
+2940END

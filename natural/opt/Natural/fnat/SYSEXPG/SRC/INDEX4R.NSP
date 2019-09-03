@@ -1,0 +1,15 @@
+0010** Example 'INDEX4R': Array definition with variables (reporting mode)
+0020***********************************************************************
+0030RESET I (I2) J (I2)
+0040*
+0050I := 2
+0060J := 3
+0070*
+0080READ (1) EMPLOYEES WITH NAME = 'WINTER' WHERE CITY = 'LONDON'
+0090  OBTAIN LANG (I:I+10)
+0100  /*
+0110  WRITE 'LANG(I.J)  :' LANG (I.J) /
+0120        'LANG(I.1:5):' LANG (I.1:5)
+0130LOOP
+0140*
+0150END

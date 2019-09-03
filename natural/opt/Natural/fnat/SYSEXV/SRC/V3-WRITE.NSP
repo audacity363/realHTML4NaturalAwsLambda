@@ -1,0 +1,60 @@
+0010*
+0020* Program .. V3-WRITE
+0030* Library .. SYSEXV
+0040* Version .. 3.1
+0050*
+0060* Functionality: Show time variables in WRITE or DISPLAY statement
+0070************************************************************************
+0080*
+0090DEFINE DATA
+0100LOCAL
+01101 #TIME   (T)
+0120END-DEFINE
+0130*
+0140FORMAT KD=ON
+0150SET KEY PF3  NAMED 'Exit'
+0160  PF12 NAMED 'Canc'
+0170*
+0180*
+0190RESET #TIME
+0200*
+0210*
+0220INPUT (IP=OFF)
+0230  01T *TIMX  (AD=OTD )
+0240  21T '***** NATURAL 3.1 ENHANCEMENTS *****'
+0250  70T *DATX  (AD=OTD DF=L )
+0260  /
+0270  01T 'User'
+0280  06T *USER  (AD=OILT )
+0290  26T '- Statement Enhancements -'(I)
+0300  64T 'Program'
+0310  72T *PROGRAM (AD=OI)
+0320  //
+0330  02T 'Detect a ''null value'' of a time variable with ZP=OFF'(I)
+0340  ///
+0350  02T 'RESET #TIME(T)'
+0360  //
+0370  /
+0380  02T 'WRITE #TIME (EM=YYYY/MM/DD/HH/II'  'ZP=ON' ')  '
+0390  //
+0400  02T 'Result with Version 3.1:'
+0410  #TIME (AD=OI  EM=YYYY/MM/DD/HH/II ZP=ON)
+0420  ///
+0430  02T 'WRITE #TIME (EM=YYYY/MM/DD/HH/II' 'ZP=OFF' ')  '
+0440  //
+0450  02T 'Result with Version 3.1:'
+0460  #TIME (AD=OI EM=YYYY/MM/DD/HH/II ZP=OFF)
+0470  '  (empty)'
+0480  /
+0490  02T 'Result with Version 2.2:' '0000/01/02/00/00'(I)
+0500  //
+0510  //
+0520IF *PF-KEY = 'PF3'
+0530  ESCAPE ROUTINE
+0540END-IF
+0550IF (*PF-KEY = 'PF12' OR= 'CLR')
+0560  CALLNAT 'UTILSTOP'
+0570END-IF
+0580*
+0590*
+0600END

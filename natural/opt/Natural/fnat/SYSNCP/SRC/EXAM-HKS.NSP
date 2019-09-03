@@ -1,0 +1,92 @@
+0010/* EXAM-HKS - HELP Keywords with Synonyms
+0020***********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 CMD VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (1:8)
+0070     02 NATURAL-ERROR
+0080     02 RETURN-CODE
+0090     02 RESULT-FIELD (1:5)
+0100     02 GETSET-FIELD-NAME
+0110     02 GETSET-FIELD-VALUE
+0120     02 REDEFINE GETSET-FIELD-VALUE
+0130        03 FILLER 6X
+0140        03 GFV-N4 (N4)
+0150     /*********************
+0160  01 PROC-NAME   (A08)
+0170  01 IKN         (N04)
+0180  01 MSG         (A72)
+0190  01 LST         (I01)
+0200  01 IKN-BEG     (N04)
+0210  01 IKN-END     (N04)
+0220  01 MORE        (A04)
+0230  01 #FIELD      (A08/1:3) CONST <'TOP-IKN1','TOP-IKN2','TOP-IKN3'>
+0240END-DEFINE
+0250/**********************************************************************
+0260/* Ask for currently used name:
+0270PROCESS CMD ACTION GET USING
+0280  CMD.PROCESSOR-NAME = ' '
+0290  CMD.GETSET-FIELD-NAME = 'NAME&'
+0300/*
+0310IF NATURAL-ERROR NE 0
+0320  CALLNAT 'EXAM-ERR' CMD.NATURAL-ERROR MSG
+0330  WRITE MSG (AD=I)
+0340  ESCAPE ROUTINE
+0350END-IF
+0360/*
+0370MOVE CMD.GETSET-FIELD-VALUE TO PROC-NAME
+0380/**********************************************************************
+0390FOR LST 1 3                            /* All Keyword types
+0400  PROCESS CMD ACTION GET USING
+0410    CMD.PROCESSOR-NAME = PROC-NAME
+0420    CMD.GETSET-FIELD-NAME = #FIELD (LST)
+0430  /*
+0440  IF NATURAL-ERROR NE 0
+0450    CALLNAT 'EXAM-ERR' CMD.NATURAL-ERROR MSG
+0460    WRITE MSG (AD=I)
+0470    ESCAPE ROUTINE
+0480  END-IF
+0490  /*
+0500  IKN-BEG := LST * 1000 + 1
+0510  IKN-END := GFV-N4
+0520  /*
+0530  /*******************************************************************
+0540  FOR IKN IKN-BEG IKN-END             /*  Keywords for a given type
+0550    MOVE 'ST ' TO CMD.COMMAND-LINE (1)
+0560    MOVE  IKN  TO CMD.COMMAND-LINE (2)
+0570    RESET MSG
+0580    /*
+0590    PROCESS CMD ACTION HELP USING
+0600      CMD.PROCESSOR-NAME = PROC-NAME
+0610      CMD.COMMAND-LINE (*) = CMD.COMMAND-LINE (*)
+0620    /*
+0630    IF CMD.NATURAL-ERROR NE 0
+0640      CALLNAT 'EXAM-ERR' CMD.NATURAL-ERROR MSG
+0650    END-IF
+0660    /*
+0670    IF MSG = ' ' AND CMD.RESULT-FIELD (1) = ' '
+0680      ESCAPE TOP
+0690    END-IF
+0700    /*
+0710    IF CMD.RESULT-FIELD (5) NE ' '
+0720      MOVE 'Yes ' TO MORE
+0730    ELSE
+0740      RESET MORE
+0750    END-IF
+0760    /*
+0770    IF CMD.RESULT-FIELD (2) NE ' '
+0780      WRITE IKN (SG=F) CMD.RESULT-FIELD (1) (AL=16)
+0790         CMD.RESULT-FIELD (2) (AL=16)
+0800         CMD.RESULT-FIELD (3) (AL=16)
+0810         CMD.RESULT-FIELD (4) (AL=16) MORE
+0820    END-IF
+0830    /*
+0840  END-FOR
+0850END-FOR
+0860ESCAPE ROUTINE
+0870/********************************************************************
+0880WRITE TITLE LEFT
+0890    'IKN  Keyword'
+0900    23T 'Synonym #1' 40T 'Synonym #2' 57T 'Synonym #3' 74T 'More'
+0910  / '----' '-' (16) '-' (16) '-' (16) '-' (16) '----'
+0920END

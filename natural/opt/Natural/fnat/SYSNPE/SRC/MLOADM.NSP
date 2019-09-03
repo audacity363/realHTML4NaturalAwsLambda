@@ -1,0 +1,115 @@
+0010* Program   MLOADM
+0020* View      LOADED-MODULES
+0030*
+0040* Function  Display executing/loaded modules for a given job
+0050*
+0060* ----------------------------------------------------------------------
+0070*
+0080DEFINE DATA GLOBAL USING TUTO
+0090            LOCAL  USING TCB-L
+0100            LOCAL  USING LOADM-L
+0110            LOCAL
+012001  #DISPLAY (15)
+0130    02 MODULE       (A8)
+0140    02 TYPE         (A6)
+0150    02 ENTRY-PNT    (A8)
+0160    02 LOAD-ADDR    (A8)
+0170    02 LEN          (A6)
+0180    02 USE-COUNT    (N3)
+0190    02 TCB-ADDR     (A8)
+0200    02 P-S-W        (A8)
+0210    02 STATE        (A7)
+0220*
+023001  #JOB-NAME       (A8)
+024001  #MODULE         (A8)   INIT <'*'>
+025001  #TYPE           (A6)   INIT <'*'>
+026001  #STATE          (A7)   INIT <'*'>
+0270*
+028001  #I              (P2)
+029001  #COUNT          (P8)
+030001  #CVAR           (C)
+0310END-DEFINE
+0320ASSIGN #CVAR = (AD=I)
+0330PERFORM PF-KEY
+0340*
+0350* ------------------------------ MAIN LOOP ----------------------------
+0360*
+0370PERFORM SCREEN-IO
+0380REPEAT
+0390FNDT.
+0400FIND TCB WITH NODE       =  ##NODE
+0410         AND  JOB-NAME   =  #JOB-NAME
+0420  IF ERROR-CODE NE 0
+0430     ASSIGN ##MSG-NR = 1000
+0440     ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0450   ELSE
+0460FNDL.
+0470     FIND LOADED-MODULES WITH NODE       =  ##NODE
+0480                          AND JOB-NAME   =  JOB-NAME (FNDT.)
+0490                          AND TCB-ADDRESS =  TCB-ADDRESS (FNDT.)
+0500                          AND MODULE     =  #MODULE
+0510                          AND TYPE       =  #TYPE
+0520                          AND STATE      =  #STATE
+0530       IF ERROR-CODE NE 0
+0540          ASSIGN ##MSG-NR = 1000
+0550          ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0560          ESCAPE BOTTOM (FNDL.)
+0570       END-IF
+0580       IF #I = 15
+0590          PERFORM SCREEN-IO
+0600          IF #CVAR MODIFIED
+0610             ESCAPE BOTTOM (FNDT.)
+0620          END-IF
+0630       END-IF
+0640       ADD 1 TO #I
+0650       ADD 1 TO #COUNT
+0660       MOVE BY NAME LOADED-MODULES TO #DISPLAY (#I)
+0670       MOVE EDITED ENTRY-POINT  (EM=H(8)) TO #DISPLAY.ENTRY-PNT (#I)
+0680       MOVE EDITED LOAD-ADDRESS (EM=H(8)) TO #DISPLAY.LOAD-ADDR (#I)
+0690       MOVE EDITED LENGTH       (EM=H(6)) TO #DISPLAY.LEN       (#I)
+0700       MOVE EDITED TCB-ADDRESS  (EM=H(8)) TO #DISPLAY.TCB-ADDR  (#I)
+0710       MOVE EDITED PSW          (EM=H(8)) TO #DISPLAY.P-S-W     (#I)
+0720     END-FIND
+0730  END-IF
+0740END-FIND
+0750DECIDE FOR FIRST CONDITION
+0760  WHEN ##MSG-NR NE 0                     /* ERROR OCCURED
+0770       IGNORE
+0780  WHEN #I > 0
+0790       ASSIGN ##MSG-NR = 1030            /* BOTTOM OF DATA
+0800  WHEN #COUNT = 0
+0810       ASSIGN ##MSG-NR = 1031            /* NOTHING FOUND
+0820  WHEN ANY
+0830       PERFORM SCREEN-IO
+0840  WHEN NONE
+0850       IGNORE
+0860END-DECIDE
+0870RESET #COUNT #I
+0880END-REPEAT
+0890*
+0900* ------------------------------ SCREEN-IO ----------------------------
+0910*
+0920DEFINE SUBROUTINE SCREEN-IO
+0930INPUT WITH TEXT *##MSG-NR,
+0940                 ##MSG-TXT1,
+0950                 ##MSG-TXT2
+0960      USING MAP 'MLOADMM&'
+0970RESET ##MSG
+0980DECIDE FOR EVERY CONDITION
+0990  WHEN #MODULE = ' '
+1000       ASSIGN #MODULE = '*'
+1010  WHEN #TYPE = ' '
+1020       ASSIGN #TYPE = '*'
+1030  WHEN #STATE = ' '
+1040       ASSIGN #STATE = '*'
+1050  WHEN NONE
+1060       IGNORE
+1070END-DECIDE
+1080RESET #DISPLAY (*)
+1090RESET #I
+1100END-SUBROUTINE
+1110*
+1120* ------------------------------ PF-KEY -------------------------------
+1130*
+1140INCLUDE C-PFKEY
+1150END

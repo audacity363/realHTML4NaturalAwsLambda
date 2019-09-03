@@ -1,0 +1,57 @@
+0010Get SYSPROF information
+0020.
+0030Documentation ......... USR2013T    /*  Text object
+0040Interface ............. USR2013N    /*  Cataloged subprogram
+0050Example Program ....... USR2013P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. SYSTEM COMMANDS
+0100.
+0110Keywords .............. +PREVIOUS-VERSION,
+0120                        DBID, ENVIRONMENT, FILE, FNAT, FNR, FUSER,
+0130                        SYSPROF
+0140.
+0150Interface Versions .... USR0010N, USR2013N, USR3013N
+0160.
+0170Function .............. Natural System File Assignments are returned
+0180                        to the calling Natural program.
+0190                        With USR2013N, enhanced value of DBID and FNR
+0200                        can be used.
+0210.
+0220                        Note:
+0230                        The DBNAME parameter is different on OS and MF.
+0240                        Use USR3013N instead of USR2013N, because the
+0250                        DBNAME parameter used by USR3013N has the format
+0260                        (A20) and is unique on both platforms.
+0270.
+0280.
+0290Parameters
+0300----------
+0310Define the following parameters with the DEFINE DATA statement:
+0320.
+0330 1 USR2013L
+0340   2 OUTPUTS
+0350     3 FILENAME       (A12/1:50)    /* System File Name
+0360     3 DBID           (P05/1:50)    /* DBID
+0370     3 FNR            (P05/1:50)    /* File Number
+0380     3 DBNAME         (A11/1:50)    /* DB Type
+0390     3 AMOUNT         (P04)         /* Number of Entries
+0400.
+0410Interface Call
+0420--------------
+0430Use the interface with the CALLNAT statement:
+0440.
+0450CALLNAT 'USR2013N'  USR2013L
+0460.
+0470.
+0480Using the Application Programming Interface:
+0490--------------------------------------------
+0500Copy the subprogram USR2013N to the library SYSTEM or the steplib
+0510library respectively, or to the required library.
+0520.
+0530.
+0540AMOUNT indicates how many occurrences of the returned
+0550arrays FILENAME through DBNAME are filled.
+0560.
+0570***** End of Description *****

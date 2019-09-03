@@ -1,0 +1,102 @@
+0010List cataloged Natural objects with type
+0020.
+0030Documentation ......... USR1032T    /*  Text object
+0040Interface ............. USR1032N    /*  Cataloged subprogram
+0050Example Program ....... USR1032P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL OBJECTS
+0100.
+0110Keywords .............. NAME, OBJECT NAME, OBJECT TYPE, TYPE
+0120.
+0130Function .............. Returns a list of all cataloged Natural
+0140                        objects in the specified library along
+0150                        with the object types. Output is contained
+0160                        in lists whose length is variable.
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+023001 PARM
+0240   02 DBID        (N05)      /* DBID
+0250   02 FNR         (N05)      /* File number
+0260   02 PASSWORD    (A08)      /* Password of file
+0270   02 CIPHERCODE  (B08)      /* Ciphercode of file
+0280   02 LIBRARY     (A08)      /* Library
+0290   02 FMNAME      (A08)      /* Start value of list
+0300   02 TYPEOP      (A01)      /* Type operator
+0310   02 TYPEVA      (A24)      /* Type values used with operator
+0320   02 LENGTH      (I01)      /* Occurrences to be returned
+0330   02 RESPONSE    (I02)      /* Error code
+0340   02 NUMINC      (I04)      /* Number of included objects by TYPEOP
+0350   02 NUMEXC      (I04)      /* Number of excluded objects by TYPEOP
+0360   02 INDEX       (I04)      /* Number of returned objects
+0370   02 LISTNAME    (A08/1:nn) /* List of object names (variable length)
+0380   02 LISTTYPE    (A01/1:nn) /* List of object types (variable length)
+0390.
+0400Interface Call
+0410--------------
+0420Use the interface with the CALLNAT statement:
+0430.
+0440CALLNAT 'USR1032N' PARM
+0450.
+0460.
+0470Using the Application Programming Interface:
+0480--------------------------------------------
+0490Copy the subprogram USR1032N to the library SYSTEM or the steplib
+0500library respectively, or to the required library.
+0510.
+0520Description of the parameters:
+0530.
+0540LIBRARY, DBID, FNR, PASSWORD, CIPHERCODE (Input)
+0550  Has to be filled before invoking the interface.
+0560  IF LIBRARY is <blank>, *LIBRARY-ID will apply and DBID
+0570  and FNR are set to zero.
+0580  If both DBID and FNR are zero the current file definition
+0590  for FNAT/FUSER will apply, dependent on the content of LIBRARY.
+0600.
+0610FMNAME (Input/Output)
+0620  Start value for name (inclusively). Contains the next object
+0630  after the call.
+0640.
+0650TYPEOP (Input)
+0660  Operator for type of object.
+0670  'I' = include all types of TYPEVA
+0680  'E' = exclude all types of TYPEVA
+0690  <blank> = include all types
+0700.
+0710TYPEVA (Input)
+0720  Contains a list of Natural object types for TYPEOP.
+0730  '*' = include/exclude all types
+0740.
+0750LENGTH (Input)
+0760  Number of objects to be returned
+0770.
+0780RESPONSE (Output)
+0790  Error code:
+0800   0001 - Invalid DBID
+0810   0002 - LFILE access not allowed
+0820   0003 - Invalid FNR
+0830   0004 - Invalid TYPEOP
+0840   0005 - TYPEVA must not be empty
+0850   0006 - LENGTH must be at least 1
+0860  -4888 - Currently no logical files available
+0870  -0082 - Object not found
+0880.
+0890NUMINC (Output)
+0900  Number of objects included by TYPEOP
+0910.
+0920NUMEXC (Output)
+0930  Number of objects excluded by TYPEOP
+0940.
+0950INDEX (Output)
+0960  Number of returned objects in LISTNAME
+0970.
+0980LISTNAME(*), LISTTYPE(*) (Output)
+0990  List of Natural object names and types.
+1000.
+1010.
+1020*****  End of Description  *****

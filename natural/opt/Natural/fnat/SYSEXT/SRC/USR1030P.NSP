@@ -1,0 +1,30 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1030N'.
+0030/***********************************************************************
+0040DEFINE DATA LOCAL
+0050 1 LANG-NUMBER    (I01)   /* Language number (similar to *LANGUAGE)
+0060 1 LANG-CODE-MAP  (A01)   /* Language code in map names
+0070 1 LANG-TEXT      (A40)   /* Name of language
+0080END-DEFINE
+0090/*
+0100SET KEY ALL
+0110LANG-NUMBER := 1
+0120/*
+0130REPEAT
+0140  /*
+0150  INPUT (AD=MITL'_' IP=OFF ZP=ON SG=OFF CD=NE)
+0160  /// 18T 'Language code conversion:' (YEI)
+0170    / 18T '-' (25) (YEI) /
+0180    / 18T 'Language code .......' (TU) LANG-NUMBER
+0190    / 18T 'Code in map names ...' (TU) LANG-CODE-MAP
+0200    / 18T 'Name of language ....' (TU) LANG-TEXT (AD=OI CD=TU)
+0210  /// 18T 'Press any PF-Key to stop.' (TU)
+0220    /*
+0230  IF *PF-KEY NE 'ENTR'
+0240    ESCAPE BOTTOM
+0250  END-IF
+0260  /*
+0270  CALLNAT 'USR1030N' LANG-NUMBER LANG-CODE-MAP LANG-TEXT
+0280  /*
+0290END-REPEAT
+0300END

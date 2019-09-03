@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SYSXTK>
+<!-- xtkdenti -->
+<error nr="19016">Entity name contains an invalid character. Line %1%.</error>
+<error nr="19017">Entity id/uri contains an invalid character. Line %1%.</error>
+<error nr="19018">Include not resolved. Line %1%.</error>
+<!-- xtkdincl -->
+<error nr="18001">Top level element not found.</error>
+<!-- xtkgsche -->
+<error nr="10001"><![CDATA[ERROR: XML Header <?xml ... ?> missing.]]></error>
+<error nr="10002"><![CDATA[ERROR: References to schema components across namespaces <xs:import> not jet supported.]]></error>
+<error nr="10003"><![CDATA[ERROR: <xs:any> not jet supported.]]></error>
+<error nr="10004"><![CDATA[ERROR: <xs:anyAttribute> not jet supported.]]></error>
+<error nr="10005"><![CDATA[ERROR: Including <xs:include> other schemas not jet supported.]]></error>
+<error nr="10006"><![CDATA[ERROR: Modification via <xs:redefine> of other schemas not jet supported.]]></error>
+<error nr="10007"><![CDATA[ERROR: Could not find any element declaration for a root element.]]></error>
+<error nr="10008"><![CDATA[ERROR(%1%): Number of Elements exceeded.]]></error>
+<error nr="10009"><![CDATA[ERROR(%1%): Element '%2%' can not be resolved.]]></error>
+<error nr="10010"><![CDATA[ERROR: Given datatype '%1' is not supported.]]></error>
+<error nr="10011"><![CDATA[ERROR(%1%): Can not generate for mixed content.]]></error>
+
+<error nr="10013"><![CDATA[ERROR: multiple <xs:any> on the same level not jet supported.]]></error>
+<error nr="10014"><![CDATA[ERROR(%1%): Number of group level (99) exceeded.]]></error>
+
+<error nr="20000">Internal version error.</error>
+<error nr="20001">ERROR: Specify NDA or dtd/xsd File, not both.</error>
+<error nr="20002">ERROR: Do not specify NDA for in and output.</error>
+<error nr="20003">ERROR: Input data check.</error>
+
+<!-- INPUT-NDA / output-nda -->
+<error nr="20004">Please select a library.</error>
+<error nr="20005">Please select a data area.</error>
+<error nr="20006">Supported object types: (L)DA, PD(A) and (G)DA.</error>
+<error nr="20007">No group defined on level 1 found.</error>
+<error nr="20008">No root groop given.</error>
+
+<!-- OUTPUT-FILE -->
+<error nr="20010">Specify DTD/XSD File types only.</error>
+<error nr="20011">Output file "%1%" cannot be created.</error>
+<error nr="20012">Please select a valid output file name.</error>
+<error nr="20013">No output file specified.</error>
+<error nr="20100">ERROR: DTDs do not support any attributes.</error>
+
+<!-- input-file -->
+<error nr="20021">Please select a valid input file name without wildcards.</error>
+<error nr="20022">Please select a valid output file name.</error>
+<error nr="20023">Only file type DTD or XSD supported.</error>
+<error nr="20024">File "%1%" not found.</error>
+<error nr="20025">No elements found.</error>
+<error nr="20026">Element "%1%" not found or empty.</error>
+<error nr="20027">No root element given.</error>
+
+<!-- output-nda -->
+<error nr="20031">Supported object types: (L)DA, (G)DA, PD(A) and (C)opycode.</error>
+
+<!-- serialize / parse -->
+<error nr="20041">Only supported object type: (C)opycode.</error>
+<error nr="20042">Only supported object type: Subprogram(N)/(C)opycode.</error>
+
+<error nr="20061">No object name for library "%1%" specified.</error>
+<error nr="20062">Natural name "%1%" wrong.</error>
+<error nr="20063">Specify group name for generation.</error>
+<error nr="20064">Read Data Area ended with errors (%1% %2%).</error>
+<error nr="20065">Read DTD/XSD ended with errors (%1% %2%).</error>
+<error nr="20066">XSD Generation not successful.</error>
+<error nr="20067">Data Area Generation not successfull.</error>
+<error nr="20068">DTD generation not successfull.</error>
+<error nr="20069">Serialize generation not successful.</error>
+<error nr="20070">Parse generation not successful.</error>
+
+<error nr="20202">Generation failed.</error>
+
+<error nr="90000">Canceled by user.</error>
+
+<errormsg nr='xtkgdrou1'>%1%&#10;&#10;Maximum Number of output elements exceeded.&#10;Input Structure too big.&#10;Generation not possible.</errormsg>
+<errormsg nr='xtkgdrou2'>%1%&#10;&#10;contains mixed content data.&#10;Generation not possible.</errormsg>
+<errormsg nr='xtkgdrou3'>%1%&#10;&#10;has incorrect brackets.&#10;Please correct input file.</errormsg>
+<errormsg nr='xtkgdrou4'>%1%&#10;&#10;has a wrong attribute value.&#10;Please correct input file.</errormsg>
+<errormsg nr='xtkgdrou5'>DTD not valid.&#10;Please correct input file.</errormsg>
+<errormsg nr='xtkgdrou6'>%1%&#10;&#10;uses wrong syntax.&#10;Please correct input file.</errormsg>
+
+<errormsg nr='xtkgdata1'>Array:&#10;"%1%"&#10;has more then 1 dimension.&#10;Generation not possible.</errormsg>
+<errormsg nr='xtkgdata2'>Counter Definition:&#10;%1%&#10;has no corresponding variable.</errormsg>
+<errormsg nr='xtkgdata3'>"ATTRIBUTES_OF_" definition:&#10;%1%&#10;has no corresponding variable.</errormsg>
+
+<errormsg nr='xtk_d2da1'>Change type of existing&#10;object "%1%"&#10;at library "%2%"&#10;&#10;from "%3%"&#10;to "%4%"&#10;&#10;not possible!</errormsg>
+<errormsg nr='xtk_d2da2'>Change type of existing&#10;object "%1%"&#10;at library "%2%"&#10;&#10;from "%3%"&#10;to "%4%"&#10;&#10;and overwrite?</errormsg>
+<errormsg nr='xtk_d2da3'>Object "%1%"&#10;of type "%2%"&#10;at library "%3%"&#10;already exist.&#10;&#10;Overwrite?</errormsg>
+<errormsg nr='xtk_d2da4'>Object "%1%"&#10;of type "%2%"&#10;at library "%3%"&#10;generated.</errormsg>
+<errormsg nr='xtk_d2da5'>Object "%1%"&#10;of type "%2%"&#10;at library "%3%"&#10;not saved.</errormsg>
+<errormsg nr='xtk_d2da6'>Object type changed from "%2%" to "%3%". %1%</errormsg>
+
+<errormsg nr='xtk_d2dat1'>Object generated and stowed. %1%</errormsg>
+<errormsg nr='xtk_d2dat2'>Stow of Object failed. %1%</errormsg>
+<errormsg nr='xtk_d2dat3'>Object saved. %1%</errormsg>
+<errormsg nr='xtk_d2dat4'>Change of object type not possible! %1%</errormsg>
+<errormsg nr='xtk_d2dat5'>Object replaced. %1%</errormsg>
+<errormsg nr='xtk_d2dat6'>Object generation failed. %1%</errormsg>
+<errormsg nr='xtk_d2dat7'>Canceled by user.</errormsg>
+<errormsg nr='xtk_d2dat8'>Object save failed (ERROR: "%1%")</errormsg>
+
+<errormsg nr='xtk_natc2'>Natural name "%1%" wrong.</errormsg>
+<errormsg nr='xtk_natc3'>No object name specified.</errormsg>
+<errormsg nr='xtk_natc4'>No file specified.</errormsg>
+<errormsg nr='xtk_natc7'>File&#10;%1%&#10;already exist.&#10;&#10;Overwrite?</errormsg>
+
+<errormsg nr='xtk_natx2'>File replaced.</errormsg>
+<errormsg nr='xtk_natx3'>File saved.</errormsg>
+
+<errormsg nr='xtk_natx4'>Parse generation successful. %1%</errormsg>
+<errormsg nr='xtk_natx5'>Generate Natural Data Area skipped.</errormsg>
+<errormsg nr='xtk_natx6'>Serialize generation successful. %1%</errormsg>
+<errormsg nr='xtk_natx7'>Generate serializer skipped.</errormsg>
+<errormsg nr='xtk_natx8'>DTD generation done. %1%</errormsg>
+<errormsg nr='xtk_natx9'>Generate parser skipped.</errormsg>
+<errormsg nr='xtk_natx10'>Data Area Generation successful. %1%</errormsg>
+<errormsg nr='xtk_natx11'>Read Natural Data Area successful.</errormsg>
+<errormsg nr='xtk_natx12'>Read DTD/XSD successful.</errormsg>
+<errormsg nr='xtk_natx13'>XSD Generation successful. %1%</errormsg>
+<errormsg nr='xtk_natx15'>Generation ended successful.</errormsg>
+
+<errormsg nr='xtk_natg1'>File "%1%" not found.</errormsg>
+
+<card-description nr="50"><![CDATA[
+This wizard generates programs to handle XML data.
+A parser and serializer will be generated regarding the used
+data definition.
+
+Select generate from:
+- Natural Data Structure or
+- XML Schema or Document Type Definiton and
+
+continue with the Next button.
+]]></card-description>
+
+<card-description nr="50-S"><![CDATA[
+This (remote) wizard generates programs to handle XML data.
+A parser and serializer will be generated regarding the used
+data definition.
+
+Select generate from:
+- Natural Data Structure or
+- XML Schema or Document Type Definiton and
+
+continue with the Next button.
+]]></card-description>
+
+<card-description nr="100"><![CDATA[
+This wizard uses a Natural Data Area to create a DTD/XSD representing
+this data definition.
+
+For parsing and serializing this datastructure a Natural implementation
+is generated.
+
+Select LDA, GDA or PDA as input Data Area and continue with the
+Next button.
+]]></card-description>
+
+<card-description nr="102-S"><![CDATA[
+Generate a data definition that represents the XML document.
+
+Specify a Natural library, file type and file name for the output
+data area or leave the file name empty to ignore this generation part.
+
+Continue with the Next button.
+]]></card-description>
+
+<card-description nr="102"><![CDATA[
+Generate a definition that represents the XML document.
+
+Specify a file name for the output data area
+or leave the file name empty to ignore this generation part.
+
+Continue with the Next button.
+]]></card-description>
+
+<card-description nr="104"><![CDATA[
+Generate a serializer implemention for the given XML document.
+
+Specify a Natural library, file type and file name for the output source
+or leave the file name empty to ignore this generation part.
+
+Continue with the Next button.
+]]></card-description>
+
+<card-description nr="106"><![CDATA[
+Generate a parser implemention for the given XML document.
+
+Specify a Natural library, file type and file name for the output source
+or leave the file name empty to ignore this generation part.
+
+Continue with the Next button.
+]]></card-description>
+
+<!-- generation from DTD/XSD -->
+<card-description nr="200"><![CDATA[
+This wizard uses a DTD/XSD data definition to create a Natural Data Area
+representing this data definition.
+
+For parsing and serializing this datastructure a Natural implementation
+is generated.
+
+Select DTD/XSD as input data definition and continue with the Next button.
+]]></card-description>
+
+<card-description nr="202"><![CDATA[
+Generate a data area with the data definition that represents the
+XML document.
+
+Specify a Natural library, file type and file name for the output
+data area or leave the file name empty to ignore this generation part.
+
+Continue with the Next button.
+]]></card-description>
+
+<card-description nr="204"><![CDATA[
+Generate a serializer implemention for the given XML document.
+
+Specify a Natural library, file type and file name for the output source
+or leave the file name empty to ignore this generation part.
+
+Continue with the Next button.
+]]></card-description>
+
+<card-description nr="206"><![CDATA[
+Generate a parser implemention for the given XML document.
+
+Specify a Natural library, file type and file name for the output source
+or leave the file name empty to ignore this generation part.
+
+Continue with the Next button.
+]]></card-description>
+
+</SYSXTK>

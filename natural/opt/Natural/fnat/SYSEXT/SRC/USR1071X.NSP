@@ -1,0 +1,300 @@
+0010/*  Please note: This is an extended version of USR1071P.
+0020/*
+0030/*  Client RPC: Maintain TOKEN data.
+0040/*
+0050/*  Function ... Get/Reset/Set RPC token save area on Client side.
+0060/*              Therefore is no NSC installation required.
+0070/*
+0080/*  Parameter
+0090/*  INPUT
+0100/*       FUNCTION  (A02)     - Function code
+0110/*                           Get data:
+0120/*                                VALUE 'G*'  Get all data
+0130/*                                value 'GC'  Get token criteria
+0140/*                                value 'GT'  Get data of token buffer
+0150/*                                            Password is not returned.
+0160/*                                value 'GU'  Get user data buffer
+0170/*                           Reset data:
+0180/*                                value 'R*'  Reset data area
+0190/*                                value 'RC'  Reset token criteria
+0200/*                                value 'RT'  Reset token buffer
+0210/*                                value 'RU'  Reset token buffer
+0220/*                           Write data:
+0230/*                                value 'S*' Set data
+0240/*                                value 'SC' Set token criteria:
+0250/*                                           - number of events
+0260/*                                           - date
+0270/*                                           - time
+0280/*                                           - allow exp.crit  overrwite
+0290/*                                value 'ST' Set token buffer
+0300/*                                value 'SU' Set user data buffer
+0310/*          PASSWORD  (A08)  - User ID's password; no validation on
+0320/*                                Client side. If this is required, use
+0330/*                                NSC---P before.
+0340/*
+0350/*    INPUT/OUTPUT
+0360/*  EXPIRATION-CRITERIA (A20)  - Criteria are defined:
+0370/*                              - Expiration counter
+0380/*                              - Expiration date (nnn days max. 100)
+0390/*                              - Expiration time (nn  hours max.24)
+0400/*                              - Allow overwrite of expiration criteria
+0410/*                              - Allow overwrite of userdata
+0420/*      USERID    (A08)        - User ID. If this is not filled,
+0430/*                               *USER will be used instead.
+0440/*      USERDATA  (A64)        - User data which has to be transferred
+0450/*
+0460/*     OUTPUT
+0470/*  PRC       (N04)             /* - return value
+0480/*                                0     ok
+0490/*                                4     internal error
+0500/*                               1x     Error in Exp. crit. handling
+0510/*                               2x     Error in write handling
+0520/*                               3x     Error in read handling
+0530/*                             9999     invalid function code
+0540/*
+0550/***********************************************************************
+0560DEFINE DATA LOCAL
+05701 PARM-USR1071N
+0580  2 FUNCTION (A02)
+0590  2 REDEFINE FUNCTION
+0600    3 ACTION  (A01)
+0610    3 CODE    (A01)
+0620  2 EXPIRATION-CRITERIA (A20)
+0630  2 REDEFINE EXPIRATION-CRITERIA
+0640    3 EXP-CRIT  (A1/1:20)
+0650  2 REDEFINE EXPIRATION-CRITERIA
+0660    3 USE-COUNT (N03)  /* max 100 times
+0670    3 EXP-DATE  (N03)  /* max 100 days
+0680    3 EXP-TIME  (A04)  /* max 2400 h using mask hh:mm
+0690    3 REDEFINE EXP-TIME
+0700      4 HOURS   (N2)
+0710      4 MINUTES (N2)
+0720    3 OVWR-DATA (A01)  /* Allow modification of expiration criteria
+0730*                      /* before expiration crteria are expired.
+0740    3 OVWR-USER (A01)  /* Allow overwrite of user data on server side
+0750    3 EXPIRARION-REST (A08) /* reserved for future use
+0760  2 USERID   (A08)
+0770  2 PASSWORD (A08)
+0780  2 USER-DATA(A32)
+0790  2 MSG-TEXT (A50)
+0800  2 PRC     (N04)
+0810LOCAL
+08201 SELECT-ACTION (A1/1:3)
+08301 #MIXED_CASE (A1) INIT<'N'>  /* accept user ID's password
+0840                              /* in upper and lower case letters
+0850END-DEFINE
+0860/*
+0870DEFINE SUBROUTINE FILL-GET-RPC-DATA
+0880ACTION := 'G'
+0890REPEAT
+0900  INPUT WINDOW='RPC-SUB-MENU' (AD=MIT'_' IP=OFF ZP=ON SG=OFF)
+0910    /    'Action ............(''G''et).'
+0920    /    'Code ...............(E/T/U/*):' CODE
+0930    /    ' - ''E'' (Expiration criteria).'
+0940    /    ' - ''T'' (RPC Token data).'
+0950    /    ' - ''U'' (Token user data).'
+0960    /    ' - ''*'' (all data).'
+0970  IF (CODE = 'E' OR ='T' OR = 'U' OR ='*') OR *PF-KEY NE 'ENTR'
+0980    ESCAPE ROUTINE
+0990  END-IF
+1000END-REPEAT
+1010END-SUBROUTINE
+1020/*
+1030DEFINE SUBROUTINE FILL-SET-RPC-DATA
+1040ACTION := 'S'
+1050REPEAT
+1060  INPUT WINDOW='RPC-SUB-MENU'  (AD=MIT IP=OFF ZP=ON SG=OFF)
+1070    /    'Action .............(''S''ET).'
+1080    /    'Code ...............(E/T/U/*):' CODE
+1090    /    ' - ''E'' (Expiration criteria).'
+1100    /    ' - ''T'' (RPC Token data).'
+1110    /    ' - ''U'' (Token user data).'
+1120    /    ' - ''*'' (all data).'
+1130  IF *PF-KEY NE 'ENTR'
+1140    RESET ACTION
+1150    ESCAPE ROUTINE
+1160  END-IF
+1170  DECIDE ON FIRST VALUE OF CODE
+1180    VALUE 'E'
+1190      IF NOT (OVWR-USER = 'Y' OR = 'N')
+1200        OVWR-USER := 'Y'
+1210      END-IF
+1220      IF NOT (OVWR-DATA = 'Y' OR = 'N')
+1230        OVWR-DATA := 'Y'
+1240      END-IF
+1250      INPUT WINDOW='RPC-E-MENU' (AD=MIT IP=OFF ZP=ON SG=OFF)
+1260        /    'Action ......................(''S''et).'
+1270        /    'Code ..... ''E'' (Expiration criteria).'
+1280        /    ' - use count ................(max.100):' USE-COUNT
+1290        /    ' - number of days ...........(max 100):' EXP-DATE
+1300        /    ' - number of hours/minutes (max 24:00):' HOURS ':' MINUTES
+1310        /    ' - Allow overwrite of exp.crit. .(Y/N):' OVWR-DATA
+1320        /    ' - Allow overwrite of user data .(Y/N):' OVWR-USER
+1330        /    '     Press ENTER to continue or PF2 to return'
+1340        /    '          or any other PF-Key to stop.'
+1350    VALUE 'T'
+1360      INPUT WINDOW='RPC-T-MENU' (AD=MI'_' IP=OFF ZP=ON SG=OFF)
+1370        'Action ......................(''S''et).'
+1380        /    'Code .............. ''T'' (Token data).'
+1390        /    ' - User ID ............(default *user):' USERID   (AD=T)
+1400        /    ' - User ID''s password ...............:' PASSWORD (AD=N)
+1410        /    '   Mixed case ....................(Y) :' #MIXED_CASE
+1420        /    '     Press ENTER to continue or PF2 to return'
+1430        /    '          or any other PF-Key to stop.'
+1440        IF NOT (#MIXED_CASE = 'Y' OR='y')
+1450          EXAMINE PASSWORD TRANSLATE INTO UPPER
+1460       END-IF
+1470    VALUE 'U'
+1480      INPUT WINDOW='RPC-U-MENU'  (AD=MI'_' IP=OFF ZP=ON SG=OFF)
+1490        /    'Action ......................(''S''et).'
+1500        /    'Code ........ ''U'' (Token user data) .'
+1510        /    'Data :' USER-DATA
+1520        /    '     Press ENTER to continue or PF2 to return'
+1530        /    '          or any other PF-Key to stop.'
+1540    VALUE '*'
+1550      IF NOT (OVWR-USER = 'Y' OR = 'N')
+1560        OVWR-USER := 'Y'
+1570      END-IF
+1580      IF NOT (OVWR-DATA = 'Y' OR = 'N')
+1590        OVWR-DATA := 'Y'
+1600      END-IF
+1610      INPUT WINDOW='RPC-TOKEN'  (AD=MI IP=OFF ZP=ON SG=OFF)
+1620        /    'Action ......................(''S''et).'
+1630        /    'Code ..............................(*).'
+1640        /    ' ''T'' (Token data):'
+1650        /    ' - User ID ............(default *user):' USERID  (AD=T)
+1660        /    ' - User ID''s password ................:' PASSWORD (AD=N)
+1670        /    '    Mixed case ....................(Y) :' #MIXED_CASE
+1680        /    ' ''E'' (Expiration criteria):'
+1690        /    ' - use count ................(max.100):' USE-COUNT
+1700        /    ' - number of days ...........(max 100):' EXP-DATE
+1710        /    ' - number of hours/minutes (max 24:00):' HOURS ':' MINUTES
+1720        /    ' - Allow overwrite of exp.crit. .(Y/N):' OVWR-DATA
+1730        /    ' - Allow overwrite of user data .(Y/N):' OVWR-USER
+1740        /    ' ''U'' (Token user data) ...............:'
+1750        /    ' ' USER-DATA (AD=MIT)
+1760        /    '     Press ENTER to continue or PF2 to return'
+1770        /    '          or any other PF-Key to stop.'
+1780        IF NOT (#MIXED_CASE = 'Y' OR='y')
+1790          EXAMINE PASSWORD TRANSLATE INTO UPPER
+1800       END-IF
+1810    NONE VALUE
+1820      IGNORE
+1830  END-DECIDE
+1840  IF (CODE = 'E' OR ='T' OR = 'U' OR ='*') OR *PF-KEY NE 'ENTR'
+1850    ESCAPE ROUTINE
+1860  END-IF
+1870END-REPEAT
+1880END-SUBROUTINE
+1890/*
+1900DEFINE SUBROUTINE FILL-RESET-RPC-DATA
+1910ACTION := 'R'
+1920CODE   := 'U'
+1930REPEAT
+1940  INPUT WINDOW='RPC-SUB-MENU' (AD=MIT'_' IP=OFF ZP=ON SG=OFF)
+1950    /    'Action ............(''R''eset).'
+1960    /    'Code ...............(E/T/U/*):' CODE
+1970    /    ' - ''T'' (RPC Token data).'
+1980    /    ' - ''E'' (Expiration criteria).'
+1990    /    ' - ''U'' (Token user data).'
+2000    /    ' - ''*'' (all data).'
+2010  IF (CODE = 'E' OR ='T' OR = 'U' OR ='*') OR *PF-KEY NE 'ENTR'
+2020    ESCAPE ROUTINE
+2030  END-IF
+2040END-REPEAT
+2050END-SUBROUTINE
+2060/*
+2070DEFINE WINDOW RPC-TOKEN SIZE 21*64 BASE 2/5
+2080  TITLE ' Maintain RPC Token data' CONTROL SCREEN
+2090DEFINE WINDOW RPC-MENU  SIZE 08*40 BASE 8/16
+2100  TITLE ' Maintain RPC Token data' CONTROL SCREEN
+2110DEFINE WINDOW RPC-SUB-MENU  SIZE 10*40 BASE 8/16
+2120  TITLE ' Maintain RPC Token data' CONTROL SCREEN
+2130DEFINE WINDOW RPC-E-MENU  SIZE 12*55 BASE 8/16
+2140  TITLE ' Maintain RPC Token data' CONTROL SCREEN
+2150DEFINE WINDOW RPC-U-MENU  SIZE 08*55 BASE 8/16
+2160  TITLE ' Maintain RPC Token data' CONTROL SCREEN
+2170DEFINE WINDOW RPC-T-MENU  SIZE 09*55 BASE 8/16
+2180  TITLE ' Maintain RPC Token data' CONTROL SCREEN
+2190/*
+2200SET KEY ALL
+2210SET CONTROL 'L'                                       /* UHE1
+2220/*
+2230SELECT-ACTION(1) := 'X'
+2240CODE := '*'
+2250RESET  HOURS   MINUTES
+2260RESET USE-COUNT EXP-DATE
+2270ASSIGN OVWR-USER = OVWR-DATA = 'Y'
+2280USERID   := *USER
+2290/*
+2300MAINMENU. REPEAT
+2310  /*
+2320  IF ACTION = ' '
+2330    INPUT WINDOW='RPC-MENU'  (AD=MIT'_' IP=OFF ZP=ON SG=OFF)
+2340      /    'Please select .... '
+2350      /    '  Get RPC data ..... :' SELECT-ACTION(1)
+2360      /    '  Set RPC data ..... :' SELECT-ACTION(2)
+2370      /    '  Reset RPC data ... :' SELECT-ACTION(3)
+2380      // 20T 'Press any PF-Key to stop.'
+2390    IF *PF-KEY NE 'ENTR'
+2400      ESCAPE BOTTOM (MAINMENU.)
+2410    END-IF
+2420  END-IF
+2430  DECIDE FOR FIRST CONDITION
+2440    WHEN SELECT-ACTION(1) NE ' ' PERFORM FILL-GET-RPC-DATA
+2450    WHEN SELECT-ACTION(2) NE ' ' PERFORM FILL-SET-RPC-DATA
+2460    WHEN SELECT-ACTION(3) NE ' ' PERFORM FILL-RESET-RPC-DATA
+2470    WHEN NONE ESCAPE TOP
+2480  END-DECIDE
+2490  /*
+2500  DECIDE ON FIRST VALUE OF *PF-KEY
+2510    VALUE 'PF2'
+2520      RESET ACTION
+2530      ESCAPE TOP
+2540    VALUE 'ENTR'
+2550      IGNORE
+2560    NONE VALUE
+2570      STOP
+2580  END-DECIDE
+2590  /*
+2600  DECIDE ON FIRST VALUE OF CODE
+2610    VALUE 'E' RESET USERID PASSWORD
+2620    VALUE 'T' RESET EXPIRATION-CRITERIA
+2630    VALUE 'U' RESET EXPIRATION-CRITERIA USERID PASSWORD
+2640    NONE VALUE IGNORE
+2650  END-DECIDE
+2660  /*
+2670  CALLNAT 'USR1071N' PARM-USR1071N
+2680  /*
+2690  INPUT WINDOW='RPC-TOKEN'  (AD=OI  IP=OFF ZP=ON SG=OFF)
+2700    /    'Action ..........(''G''et/''R''eset/''S''et):' ACTION
+2710    /    'Code ........................(E/T/U/*):' CODE
+2720    /    ' ''E'' (Expiration criteria):'
+2730    /    ' - use count ................(max.100):    ' USE-COUNT
+2740    /    ' - number of days ...........(max 100):    ' EXP-DATE
+2750    /    ' - number of hours/minutes (max 24:00):' HOURS ':' MINUTES
+2760    /    ' - Allow overwrite of exp.crit. .(Y/N):' OVWR-DATA
+2770    /    ' - Allow overwrite of user data .(Y/N):' OVWR-USER
+2780    /    ' ''T'' (Token data):'
+2790    /    ' - User ID ............(default *user):' USERID
+2800    /    ' - User ID''s password .................:' PASSWORD (AD=NT)
+2810    /    ' ''U'' (Token user data) ................:'
+2820    /    ' ' USER-DATA
+2830    /    ' Return code:' PRC (AD=O SG=OFF) ' 'MSG-TEXT (AD=OIT)
+2840    /
+2850  /*
+2860  IF PRC = 21 AND SELECT-ACTION(1) NE ' '
+2870    RESET SELECT-ACTION(1)
+2880    SELECT-ACTION (2) := 'X'
+2890    CODE := '*'
+2900    RESET  HOURS  MINUTES
+2910    RESET USE-COUNT EXP-DATE
+2920    ASSIGN OVWR-USER = OVWR-DATA = 'Y'
+2930    USERID   := *USER
+2940    USERID   := *USER
+2950  ELSE
+2960    RESET PARM-USR1071N
+2970  END-IF
+2980  /*
+2990END-REPEAT
+3000END

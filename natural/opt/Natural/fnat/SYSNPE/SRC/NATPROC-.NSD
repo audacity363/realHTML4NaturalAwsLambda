@@ -1,0 +1,65 @@
+0010DB: 148 FILE: 190  - NATPROC-LOGON                    DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:23
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:23
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A1 LOGON-ID                          A    8    D System User ID.
+0250*      System User ID.
+0260  1 A2 PASSWORD                          A    8    D Password for system
+0270*      Password for system User ID.
+0280  1 FN FUNCTION                          A    8    D LOGON / LOGOFF.
+0290*      LOGON / LOGOFF.
+0300*
+0310*      MVS and VSE fields
+0320*
+0330  1 A3 NEW-PASSWORD                      A    8    D New password for use
+0340*      New password for userid.
+0350  1 A7 CPU                               N  5.2      Amount of CPU consum
+0360*      Amount of CPU consumed
+0370*      (format SSSSS.HH).
+0380  1 A8 IO-COUNT                          N  7.0      Number of I/O operat
+0390*      Number of I/O operations
+0400*      so far.
+0410*
+0420*      MVS fields
+0430*
+0440  1 A5 SECURITY-MESSAGE                  A   80      Message returned by
+0450*      Message returned by security
+0460*      interface.
+0470  1 A4 RACF-GROUP                        A    8    D Group to which user
+0480*      Group to which user is defined
+0490*      in RACF or security interface.
+0500*
+0510*      MVS AND BS2000 FIELDS
+0520*
+0530  1 A6 ACCOUNTING                        A   20    D accounting info will
+0540*      accounting info will be
+0550*      written to smf-records
+0560*
+0570*      BS2000 FIELDS
+0580*
+0590  1 B1 TERMINAL-ID                       A    8    D for NPR SECURITY=BS2
+0600*      for NPR SECURITY=BS2X this
+0610*      field is used as a Terminal-ID
+0620*
+0630*      End of NATPROC-LOGON
+0640*
+0650******DDM OUTPUT TERMINATED******

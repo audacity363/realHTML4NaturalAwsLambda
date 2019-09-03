@@ -1,0 +1,17 @@
+0010**DV          0018     V1NATPROC-USERS                   NATPROC-USERS
+0020**DD          0021N 3.0 2ERROR-CODE                      /* Message code.
+0030**DD          0022A  50 2ERROR-TEXT                      /* Text describing message.
+0040**DD          0023N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0024A   8 2USER-ID                         /* The user-id.
+0060**DD          0025B   4 2ADABAS-ID                       /* The ADABAS user-id.
+0070**DD          0026A   4 2NATPROC-ID                      /* The internal unique ID in
+0080**DD          0027N 5.0 2LAST-ACTIVITY                   /* Elapsed time since last
+0090**DD          0028N 5.2 2CPU                             /* Amount of CPU consumed
+0100**DD          0029N 7.0 2IO-COUNT                        /* Number of I/O operations
+0110**DD          0030A   3 2FULL-SCAN                       /* YES if internal ESY tasks
+0120**DD          0031A   3 2INTERNAL-TASK                   /* YES if data of internal ESY
+0130**DD          0032A  16 2TASK-ID                         /* ID of the internal task
+0140**DD          0033A   8 2FUNCTION                        /* 'CANCEL'  Cancel user with
+0150**DD          0034N 7.0 2CORE-USED                       /* Amount of core (in K) used
+0160**DD          0035N 7.0 2CORE-FREE                       /* Amount of free core in the
+0170**DD          0036B   4 2TCB-ADDRESS                     /* The TCB address of the

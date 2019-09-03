@@ -1,0 +1,228 @@
+0010DB: 148 FILE: 036  - SPOOL-FILES                      DEFAULT SEQUENCE:
+0020                              Cataloged by STL      on 2012-08-13 14:05:15
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2012-08-13 14:00:17
+0080*      by user ESY352
+0090*
+0100*
+0110*      Global Fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A1 JOB-NAME                          A    8    D Name of job.
+0250*      Name of job.
+0260  1 A2 JOB-NUMBER                        N  7.0    D MVS:    Job number a
+0270*      MVS:    Job number assigned
+0280*      by JES.
+0290*      BS2000: TSN of print job.
+0300  1 A4 COPIES                            N  3.0    D Number of copies for
+0310       HD=Copies
+0320*      Number of copies for this data
+0330*      set.
+0340  1 A9 FORM                              A    8    D Form of the dataset
+0350       HD=Form
+0360*      Form of the dataset which
+0370*      should be printed.
+0380  1 AQ CHARS                             A   16    D Four groups of four
+0390*      Four groups of four bytes each
+0400*      taken from JCL
+0410*      '(CHARS=(AAAA,BBBB,CCCC,DDDD)'
+0420*      (3800).
+0430  1 AI DSNAME                            A   54    D Name of spool-output
+0440*      Name of spool-output dataset.
+0450*      BS2000: Name of printed file.
+0460  1 AT CLASS                             A    4    D Spool-out class.
+0470*      Spool-out class.
+0480*
+0490*      MVS fields
+0500*
+0510  1 A3 TYPE                              A    2    D Spool type:
+0520       HD=Type
+0530*      Spool type:
+0540*      SI  SYSIN data
+0550*      JL  input JCL
+0560*      SM  system messages
+0570*      SO  SYSOUT data
+0580  1 A6 DESTINATION-NODE                  N  5.0    D Node number in JES o
+0590       HD=Destination
+0600*      Node number in JES of
+0610*      destination.
+0620  1 A7 DESTINATION-REMOTE                N  5.0    D Destination ID withi
+0630       HD=Remote
+0640*      Destination ID within node.
+0650  1 A8 RECORD-COUNT                      N  9.0    D Number of records in
+0660       HD=RECORDS
+0670*      Number of records in this
+0680*      data set.
+0690  1 AA FCB                               A    4    D FCB.
+0700*      FCB.
+0710  1 AB WRITER                            A    8    D External writer prog
+0720       HD=Writer
+0730*      External writer program which
+0740*      gets control if dataset is
+0750*      printed.
+0760  1 AC FLASH                             A    4    D Flash for 3800.
+0770       HD=Flash
+0780*      Flash for 3800.
+0790  1 AD PROCNAME                          A    8    D Procedure name which
+0800       HD=Procname
+0810*      Procedure name which was
+0820*      invoked.
+0830  1 AE STEPNAME                          A    8    D Step name which was
+0840       HD=Stepname
+0850*      Step name which was invoked.
+0860  1 AF DDNAME                            A    8    D DDname for this data
+0870       HD=DDname
+0880*      DDname for this data set
+0890*      given in JCL.
+0900  1 AG DATA-SET                          N  5.0    D Data set number.
+0910       HD=Data set
+0920*      Data set number.
+0930  1 AJ HOLD                              A    3    D Is data set held (YE
+0940       HD=Hold
+0950*      Is data set held (YES/NO)?
+0960  1 AK ACTION                            A   20    D If command was DELET
+0970       HD=Action
+0980*      If command was DELETE, CHANGE,
+0990*      or RELEASE, the result of the
+1000*      command is returned in this
+1010*      field. If only one data set is
+1020*      processed, the result is also
+1030*      returned in field ERROR-TEXT.
+1040  1 AL NEW-CLASS                         A    1    D Class to change to.
+1050*      Class to change to.
+1060  1 AM GROUP-ID                          A   20    D JES defined unique i
+1070*      JES defined unique identifier
+1080*      for released output.
+1090  1 FN FUNCTION                          A    8    D Function to be perfo
+1100*      Function to be performed on
+1110*      spool file(s):
+1120*      blank    Display information.
+1130*      DELETE   Delete file(s).
+1140*      CHANGE   Change output class.
+1150*      RELEASE  Release from HOLD
+1160*      and, if NEW-CLASS is
+1170*      specified, also
+1180*      change output class.
+1190*      (Only possible for
+1200*      HELD files.)
+1210  1 AN RECFM                             A    3    D The record format of
+1220*      The record format of the
+1230*      spool file.
+1240  1 AO LRECL                             N  3.0    D The record length.
+1250*      The record length.
+1260  1 AP TRC                               A    3    D YES - Byte 2 in reco
+1270*      YES - Byte 2 in record used
+1280*      for 'CHARS' (3800)
+1290*      (DCB=OPTCD=J specified).
+1300  1 AR DATA-SET-KEY                      N 11.0    D Unique data set
+1310*      Unique data set
+1320*      identification.
+1330  1 AS NEW-DESTINATION                   A    8    D New destination for
+1340*      New destination for a sysout
+1350*      dataset. See also field
+1360*      FUNCTION (option CHANGE).
+1370  1 AY NEW-USERID                        A    8    D New userid for SYSOU
+1380*      New userid for SYSOUT data
+1390*      set.  Used in conjunction with
+1400*      NEW-DESTINATION, e.g. to route
+1410*      to DAEF.RMT2, set
+1420*      NEW-DESTINATION = 'DAEF' and
+1430*      NEW-USERID = 'RMT2'.
+1440*      Relevant with FUNCTION=CLOSE.
+1450  1 AI IDENTIFIER                        A   44    D Unique identifier fo
+1460       HD=Identifier
+1470*      Unique identifier for the
+1480*      specified data set.
+1490  1 AU BURST                             A    3    D sysout is to be burs
+1500*      sysout is to be burst into
+1510*      separate sheets
+1520  1 AV COMPACT                           A    8    D compaction table nam
+1530*      compaction table name
+1540  1 AW LINECT                            N  3.0    D jes2 only; maximum l
+1550*      jes2 only; maximum lines
+1560*      jes2 is to be print on
+1570*      each page
+1580  1 AX UCS                               A    4    D specifies universal
+1590*      specifies universal character
+1600*      set, print train, or character
+1610*      arrangement table for 3800
+1620*      printing subsystem
+1630  1 AZ PRINT-MODE                        A    4
+1640  1 NF NEW-FORM                          A    8    D New forms name for a
+1650*      New forms name for a SYSOUT
+1660*      data set. See also field
+1670*      FUNCTION (option CHANGE).
+1680  1 NW NEW-WRITER                        A    8    D New writer name for
+1690*      New writer name for a SYSOUT
+1700*      data set. See also field
+1710*      FUNCTION (option CHANGE).
+1720  1 OD OUTDISP                           A    6    D Output disposition
+1730*      Output disposition
+1740*
+1750*      BS2000 fields
+1760*
+1770  1 ES SYSTEM-CODE                       B    2      System error code.
+1780*      System error code.
+1790  1 B1 CONTROL-OPTION                    A   16      CONTROL parameter of
+1800*      CONTROL parameter of spool-out
+1810*      job.
+1820  1 B2 DESTINATION                       A    8      Name of device pool.
+1830*      Name of device pool.
+1840  1 B3 DEVICE                            A    8      Output device.
+1850*      Output device.
+1860  1 B4 FORM-OVERLAY-BUFFER               A    8      Name of form overlay
+1870*      Name of form overlay buffer.
+1880  1 B5 FORM-OVERLAY-BUFFER-SIZE          N  3.0      Size of form overlay
+1890*      Size of form overlay buffer.
+1900  1 B6 NUMBER-OF-PRINTED-LINES           N  6.0
+1910  1 B7 NUMBER-OF-PRINTED-PAGES           N  6.0
+1920  1 B8 ORIGINATOR-JOB-ID                 A    8      TSN of originator ta
+1930*      TSN of originator task.
+1940  1 B9 ORIGINATOR-TSN                    N  5.0      TSN of originator ta
+1950*      TSN of originator task.
+1960  1 BA PRINT-ELEMENT                     A   64      Name of printed elem
+1970*      Name of printed element.
+1980  1 BB PRINT-ELEMENT-TYPE                A    8      Type of printed elem
+1990*      Type of printed element.
+2000  1 BC PRINT-ELEMENT-VERSION             A   24      Version of printed e
+2010*      Version of printed element.
+2020  1 BD PRINT-ERROR-MESSAGE               A   10      Error message occurr
+2030*      Error message occurred during
+2040*      PRINT. Only relevant for task
+2050*      type 7.
+2060  1 BF PRIORITY                          N  3.0      Task scheduling prio
+2070*      Task scheduling priority.
+2080  1 BG ROTATION                          A    8      Used page rotation.
+2090*      Used page rotation.
+2100  1 BH SIZE                              A    6      Size of SPOOLOUT fil
+2110*      Size of SPOOLOUT file.
+2120  1 BJ STATUS                            A    9      Task status (categor
+2130*      Task status (category).
+2140  1 BK TYPE-NUMBER                       N  1.0      Task type.
+2150*      Task type.
+2160  1 BL USER                              A    8      User ID.
+2170*      User ID.
+2180  1 BM DIA                               A    2      Name of slide for la
+2190*      Name of slide for laser
+2200*      printer.
+2210  1 CS PAGEDEF                           A    8
+2220  1 CT FORMDEF                           A    8
+2230  1 JA JOB-ID                            A    8    D TSN of job.
+2240*      TSN of job.
+2250*
+2260*      End of SPOOL-FILES
+2270*
+2280******DDM OUTPUT TERMINATED******

@@ -1,0 +1,58 @@
+0010Retrieve system files defined in Natconf.cfg
+0020.
+0030Documentation ......... USR6308T    /*  Text object
+0040Interface ............. USR6308N    /*  Cataloged subprogram
+0050Example Program ....... USR6308P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL ENVIRONMENT
+0100.
+0110Keywords .............. +NEW-NAT-6.3.14,
+0120                        NATCONF, PATH, SYSTEM FILE
+0130.
+0140Function .............. Returns the path and the corresponding
+0150                        DBID/FNR for each system file defined
+0160                        in Natconf.cfg.
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+02301 USR6308-PARMS                 /* Out:
+0240  2 P-Number-System-Files (I2)  /* Number of system files defined
+0250                                /* in Natconf.cfg
+0260  2 P-System-File-Table (*)     /* Table with the definitions
+0270    3 P-System-File-DBID (N5)   /* Data base ID used for the system file
+0280    3 P-System-File-FNR (N5)    /* File number used for the system file
+0290    3 P-System-File-Path (A) Dynamic /* Path for the system file
+0300  2 P-Additionals (A1/1:2)      /* Parameters for future versions
+0310  2 Redefine P-Additionals
+0320    3 P-Additionals-Version (N2) /* = 0 for the initial version
+0330  2 P-Return-Msg (A250)         /* Error text if P-Return-Code <> 0
+0340  2 P-Return-Code (I4)          /* Return code. Possible values:
+0350                                /*   0 = OK
+0360                                /*  <0 = Runtime error
+0370                                /*   1 = Invalid version vv for
+0380                                /*       P-Additionals.
+0390                                /*   2 = Size of P-Additionals too
+0400                                /*       small for version vv
+0410                                /*  10 = Return code rrrr received
+0420                                /*       from CMSYSF
+0430                                /* 999 = Function not implemented for
+0440                                /*       *Machine-Class = MAINFRAME
+0450.
+0460Interface Call
+0470--------------
+0480Use the interface with the CALLNAT statement:
+0490.
+0500CALLNAT 'USR6308N' USR6308-PARMS
+0510.
+0520.
+0530Using the Application Programming Interface:
+0540--------------------------------------------
+0550Copy the subprogram USR6308N to the library SYSTEM, the
+0560appropriate steplib library, or to the required library.
+0570.
+0580***** End of description *****

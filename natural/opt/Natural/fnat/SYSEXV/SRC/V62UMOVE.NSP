@@ -1,0 +1,198 @@
+0010* Program ...... V62UMOVE
+0020* Library ...... SYSEXV
+0030* Version ...... 6.2
+0040* Machine ...... UNIX
+0050*
+0060* Functionality: Unicode MOVE
+0070************************************************************************
+0080*
+0090*
+0100DEFINE DATA LOCAL
+01101 UNICODE1    (U6)    /* Unicode field
+01201 ALPHA1      (A6)    /* alpha field
+01301 UNICODE2    (U6)    /* Unicode field
+01401 ALPHA2      (A6)    /* alpha field
+01501 UNICODE3    (U6)    /* Unicode field
+01601 ALPHA3      (A6)    /* alpha field
+01701 SUBSTITUTE  (A1)    /* substitution character
+01801 BINARY      (B12)   /* binary field
+01901 BINARY-2    (B2)    /* binary short field
+02001 UNICODE16   (U16)   /* Unicode field
+02101 ALPHA16     (A16)   /* alpha field
+02201 DATE        (D)
+02301 FLOAT       (F4)
+02401 INTEGER     (I4)
+02501 LOGICAL     (L)
+02601 NUM         (N7)
+02701 PACK        (P7)
+02801 TIME        (T)
+02901 XFORMAT     (A8)
+03001 CONVERR     (A3)
+0310END-DEFINE
+0320*
+0330FORMAT KD=ON
+0340SET KEY PF3  NAMED 'Exit'
+0350    PF12 NAMED 'Canc'
+0360*
+0370* Page 1: Move
+0380*
+0390MOVE 'Hello' TO ALPHA1 /* English
+0400MOVE ALPHA1 TO UNICODE1
+0410*
+0420MOVE U'World' TO UNICODE2 /* English
+0430MOVE UNICODE2 TO ALPHA2
+0440*
+0450INPUT  (IP=OFF)
+0460  01T *TIMX  (AD=OTD  )
+0470  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0480  70T *DATX  (AD=OTD DF=L  )
+0490  /
+0500  01T 'User'
+0510  06T *USER  (AD=OLTI  )
+0520  25T     '- Natural Unicode Support  -' (I)
+0530  64T 'Program'
+0540  72T *PROGRAM   (AD=OI)
+0550  /
+0560  15T '              - MOVE for Unicode -' (I)
+0570  //
+0580  02T 'MOVE from alphanumeric to Unicode implies'
+0590  'a conversion from the current code'   /
+0600  02T 'page to Unicode:'   /
+0610  02T '  MOVE ''Hello'' TO ALPHA1'
+0620  '  /* ALPHA1 defined as (A6)'   /
+0630  02T '  MOVE ALPHA1 TO UNICODE1 ' (I)
+0640  '/* UNICODE1 defined as (U6)'   /
+0650  02T 'ALPHA1:  '   ALPHA1 (AD=OI  )
+0660  'Hex:'   ALPHA1 (EM=H(6) AD=OI  )  /
+0670  02T 'UNICODE1:'   UNICODE1 (AD=OI  )
+0680  'Hex:'   UNICODE1 (EM=H(12) AD=OI
+0690  ) /
+0700  /
+0710  02T 'MOVE from Unicode to alphanumeric implies'
+0720  'a conversion from Unicode to'   /
+0730  02T 'the current code page:'   /
+0740  02T '  MOVE U''World'' TO UNICODE2'
+0750  '  /* UNICODE2 defined as (U6)'   /
+0760  02T '  MOVE UNICODE2 TO ALPHA2    ' (I)
+0770  '/* ALPHA2 defined as (A6)'   /
+0780  02T 'UNICODE2:'   UNICODE2 (AD=OI  )
+0790  'Hex:'   UNICODE2 (EM=H(12) AD=OI
+0800  ) /
+0810  02T 'ALPHA2:  '   ALPHA2 (AD=OI  )
+0820  'Hex:'   ALPHA2 (EM=H(6) AD=OI  )  /
+0830  /
+0840  02T 'MOVE between Unicode and other formats works like'
+0850  'the corresponding MOVE'   /
+0860  02T 'with alphanumeric.'   /
+0870*
+0880IF *PF-KEY = 'PF3'
+0890  ESCAPE ROUTINE
+0900END-IF
+0910IF (*PF-KEY = 'PF12' OR= 'CLR')
+0920  CALLNAT 'UTILSTOP'
+0930END-IF
+0940*
+0950* Page 2 Move substitution
+0960*
+0970MOVE UH'001A' TO SUBSTITUTE  /* get current substitution character
+0980CALLNAT 'V62UMOVN' CONVERR   /* get value of parameter CPCVERR
+0990*
+1000IF CONVERR = 'ON'  /* CPCVERR=ON : conversion error is returned
+1010*
+1020  INPUT  (IP=OFF)
+1030    01T *TIMX  (AD=OTD  )
+1040    21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+1050    70T *DATX  (AD=OTD DF=L  )
+1060    /
+1070    01T 'User'
+1080    06T *USER  (AD=OLTI  )
+1090    25T     '- Natural Unicode Support  -' (I)
+1100    64T 'Program'
+1110    72T *PROGRAM   (AD=OI  )
+1120    /
+1130    15T '    - MOVE Unicode TO Alpha (Substitution) -' (I)
+1140    //
+1150    02T 'If a Unicode character is not available in the'
+1160    'current code page, the'   /
+1170    02T 'substitution character of the current code page is'
+1180    'inserted and the original'   /
+1190    02T 'character information is lost. Alternatively, if the'
+1200    'new parameter CPCVERR' (I) /
+1210    02T 'is set to'   'ON,' (I)
+1220    'the code page conversion error NAT3413 is received.'   /
+1230    /
+1240    02T 'Current value of CPCVERR:'   CONVERR (AD=OI  )
+1250    /
+1260    02T 'Substitution character:  '   SUBSTITUTE (AD=OI
+1270    )
+1280    '  Hex:'   SUBSTITUTE (AD=OI   EM=H) /
+1290    /
+1300    02T 'Deactivate the CPCVERR parameter in Natparm and rerun'
+1310    'the example to see how'   /
+1320    02T 'the substitution works.'
+1330*
+1340ELSE                 /* CPCVERR=OFF : substitution is performed
+1350*
+1360  MOVE UH'004103A900C40635307E8CAA' TO UNICODE3
+1370  MOVE UNICODE3 TO ALPHA3
+1380
+1390  IF *PF-KEY = 'PF3'
+1400  ESCAPE ROUTINE
+1410END-IF
+1420  IF (*PF-KEY = 'PF12' OR= 'CLR')
+1430  CALLNAT 'UTILSTOP'
+1440END-IF
+1450
+1460
+1470  INPUT  (IP=OFF)
+1480    01T *TIMX  (AD=OTD  )
+1490    21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+1500    70T *DATX  (AD=OTD DF=L  )
+1510    /
+1520    01T 'User'
+1530    06T *USER  (AD=OLTI  )
+1540    25T     '- Natural Unicode Support  -' (I)
+1550    64T 'Program'   (AD=OI  )
+1560    /
+1570    15T '    - MOVE Unicode TO Alpha (Substitution) -' (I)
+1580    //
+1590    02T 'If a Unicode character is not available in the'
+1600    'current code page, the'   /
+1610    02T 'substitution character of the current code page is'
+1620    'inserted and the original'   /
+1630    02T 'character information is lost. Alternatively if the'
+1640    'new parameter CPCVERR' (I) /
+1650    02T 'is set to'   '''ON'',' (I)
+1660    'the code page conversion error NAT3413 is received.'   /
+1670    /
+1680    02T 'Current value of CPCVERR:'   CONVERR (AD=OI  )
+1690    /
+1700    02T 'Substitution character:  '   SUBSTITUTE (AD=OI
+1710    )
+1720    '  Hex:'   SUBSTITUTE (AD=OI   EM=H) /
+1730    /
+1740    02T 'The following Unicode string contains characters'
+1750    'of different code pages:'   /
+1760    02T 'Latin, Greek, German, Hebrew, Japanese and Chinese.'   /
+1770    02T '  MOVE UH''004103A900C40635307E8CAA'' TO UNICODE3'
+1780    '/* defined as (U6)'   /
+1790    02T '  MOVE UNICODE3 TO ALPHA3'
+1800    '    /* ALPHA3 defined as (A6)'   /
+1810    /
+1820    02T 'UNICODE3:'   UNICODE3 (AD=OI  )
+1830    'Hex:'   UNICODE3 (EM=H(12) AD=OI
+1840    ) /
+1850    02T 'ALPHA3:  '   ALPHA3 (AD=OI  )
+1860    'Hex:'   ALPHA3 (EM=H(6) AD=OI  )  /
+1870END-IF
+1880*
+1890IF *PF-KEY = 'PF3'
+1900  ESCAPE ROUTINE
+1910END-IF
+1920IF (*PF-KEY = 'PF12' OR= 'CLR')
+1930  CALLNAT 'UTILSTOP'
+1940END-IF
+1950*
+1960*
+1970END
+1980

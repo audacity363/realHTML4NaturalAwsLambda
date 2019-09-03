@@ -1,0 +1,76 @@
+0010Convert binary variable (B8) into numeric variable (P20)
+0020.
+0030Documentation ......... USR2036T    /*  Text object
+0040Interface ............. USR2036N    /*  Cataloged subprogram
+0050Copycode Interface .... USR2036Z    /*  Copycode source
+0060Example Program ....... USR2036P    /*  Source program
+0070.
+0080Product Code .......... NAT
+0090.
+0100Category .............. DATE / TIME SUPPORT
+0110.
+0120Keywords .............. +MOD-NAT-8.2.6,
+0130                        *TIMESTMP, BINARY, COPYCODE-INTERFACE,
+0140                        STORE CLOCK, TIME
+0150.
+0160Function .............. Converts variable of format (B8) into (P20).
+0170                        Can be used to convert the system variable
+0180                        *TIMESTMP into numeric variable.
+0190                        Note:
+0200                        With NAT 8.2.6 the performance is enhanced.
+0210                        Additionally, the copycode USR2036Z is
+0220                        available which provide a better performance
+0230                        than calling the subprogram.
+0240.
+0250Copycode Function ..... Converts variable of format (B8) into (P20)
+0260                        (same functionality as subprogram USR2036N).
+0270.
+0280.
+0290Parameters
+0300----------
+0310Define the following parameters with the DEFINE DATA statement:
+0320.
+03301 P_BINARY    (B08)  /*  Input: binary value (e.g. *TIMESTMP)
+03401 P_NUMERIC   (P20)  /*  Output: numeric value
+0350                     /*  The result can be processed further into
+0360                     /*  nano seconds (see program USR2036P)
+0370.
+0380Additional Data Definitions for Copycode USR2036Z
+0390-------------------------------------------------
+0400Define the following variables with the DEFINE DATA statement:
+0410.
+04201 USR2036_B8       (B8)   /* variables used in copycode USR2036Z
+04301 REDEFINE USR2036_B8
+0440  2 USR2036_B81    (B3)
+0450  2 USR2036_B82    (B3)
+0460  2 USR2036_B83    (B2)
+04701 USR2036_I41      (I4)
+04801 USR2036_I42      (I4)
+04901 USR2036_I43      (I4)
+0500.
+0510.
+0520Interface Call
+0530--------------
+0540Use the subprogram with the CALLNAT statement:
+0550  CALLNAT 'USR2036N' P_BINARY P_NUMERIC
+0560.
+0570Or use the copycode with the INCLUDE statement:
+0580  INCLUDE USR2036Z 'P_BINARY' 'P_NUMERIC'
+0590.
+0600.
+0610Using the Application Programming Interface:
+0620--------------------------------------------
+0630Copy the subprogram USR2036N to the library SYSTEM or the steplib
+0640library respectively, or to the required library.
+0650.
+0660Copy the copycode USR2036Z to the required library. Add the required
+0670data definitions for the copycode USR2036Z to the data definitions of
+0680your program.
+0690.
+0700For more information about using the subprogram USR2036N and the
+0710copycode USR2036Z see the example program USR2036P.
+0720.
+0730.
+0740***** End of Description *****
+0750
+0760

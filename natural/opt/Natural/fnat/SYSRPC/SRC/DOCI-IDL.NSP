@@ -1,0 +1,233 @@
+0010/*( Docu. of . DOCI-IDL
+0020*
+0030* Function ... Generates a stub from an IDL file
+0040*
+0050* Keywords ... STUB GENERATION
+0060*
+0070* Resp. ...... NAu
+0080*
+0090* Created .... December 2005
+0100*
+0110* Library .... SYSRPC
+0120* Version .... 6.1
+0130*
+0140**********************************************************************
+0150*
+0160* Interface Program Description:
+0170* ------------------------------
+0180*
+0190* This routine is used to generate one or more stubs from an IDL file.
+0200* You start with function code '1' giving the file name including the
+0210* path. With default flag values that is not specifying any value you
+0220* will end with function code '3' getting as output a message for each
+0230* interface definition inside the IDL file indicating success or error.
+0240*
+0250*
+0260* Parameter Description:
+0270* ----------------------
+0280*
+0290*   1 RPCI-IDL_PARAMS
+0300*     2 FUNCTION-CODE      (A1) possible values:
+0310*                                C_READ-IDL: '1'  /* In
+0320*                                C_GET-INFO: '2'  /* InOut
+0330*                                C_GEN-STUB: '3'  /* InOut
+0340*                                C_REL-MEM : 'R'  /* In
+0350*                                C_ERROR   : 'E'  /* Out
+0360*
+0370*     2 FLAGS              (A8)       /* InOut
+0380*     2 REDEFINE FLAGS
+0390*       3 FLAG_OVERWRITE   (A1) possible values:
+0400*                                'Y'
+0410*                                'N' (default)
+0420*       3 FLAG_DO-ALL      (A1) possible values:
+0430*                                'Y' (default)
+0440*                                'N'
+0450*                                '1' 1st interface only
+0460*       3 FLAG_DO-WHAT     (A1) possible values:
+0470*                                'G' Generate  (default)
+0480*                                'C' calculate without generation
+0490*       3 FLAG_SINGLE-STEP (A1) possible values:
+0500*                                'Y'
+0510*                                'N' (default)
+0520*
+0530*     2 GEN-LIBRARY   (A)     DYNAMIC /* In
+0540*                             Name of the library where generating will
+0550*                             take place.
+0560*
+0570*     2 XARRAY        (A/1:*) DYNAMIC /* InOut, possible content
+0580*         dependent on FUNCTION-CODE:
+0590*         for C_READ-IDL:             /* In
+0600*                       (1)   Complete file name.
+0610*
+0620*         for C_GET-INFO:             /* Out
+0630*                       (1:*) Names of the interfaces defined in the IDL.
+0640*
+0650*         for C_GEN-STUB:             /* In
+0660*                       (1:*) Names of the interfaces to be generated,
+0670*                             when FLAG_DO-ALL='N'. Syntax:
+0680*                             n,o-library,o-name(,(new-library),new-name)
+0690*
+0700*                                    /* Out
+0710*                       (1:*) Success message with send and receive length
+0720*                             or an information like file already exists.
+0730*
+0740*         for C_REL-MEM:              /* In
+0750*                             Not used when releasing memory.
+0760*
+0770*         for C_ERROR:                /* Out
+0780*                       (1)   The returned error message.
+0790*
+0800***********************************************************************
+0810****** Maintenance log ************************************************
+0820*
+0830* Date        User  Refer.  Description
+0840* ----------- ----- ------- -------------------------------------------
+0850* 14.Aug.2007 NAu01 intern  add 'VMS' for *Machine-class
+0860***********************************************************************
+0870/*)
+0880DEFINE DATA
+0890LOCAL /* PDA of RPCI-IDL
+0900  1 RPCI-IDL_PARAMS
+0910    2 FUNCTION-CODE (A1)            /* InOut
+0920    2 FLAGS         (A8)            /* InOut
+0930    2 REDEFINE FLAGS
+0940      3 FLAG_OVERWRITE   (A1) /* generate although object exists
+0950      3 FLAG_DO-ALL      (A1) /* all definitions in a file: Y,N,1=1st_only
+0960      3 FLAG_DO-WHAT     (A1) /* Generate or calculate: C,G
+0970      3 FLAG_SINGLE-STEP (A1)
+0980    /*
+0990    2 GEN-LIBRARY   (A)     DYNAMIC /* In
+1000    2 XARRAY        (A/1:*) DYNAMIC /* InOut
+1010
+1020LOCAL
+1030  /* Constants
+1040  /*  for FUNCTION-CODE
+1050  1 C_READ-IDL (A1) CONST <'1'>
+1060  1 C_GET-INFO (A1) CONST <'2'>
+1070  1 C_GEN-STUB (A1) CONST <'3'>
+1080  1 C_REL-MEM  (A1) CONST <'R'>
+1090  1 C_ERROR    (A1) CONST <'E'>
+1100  /*
+1110  1 C_EOL (A1) CONST <H'0D'>
+1120
+1130  /* Indices
+1140  1 #I             (I4)
+1150  /*
+1160  1 #WORK-FILENAME (A250)
+1170  1 #IDL-FILE      (A)   DYNAMIC
+1180  1 N_OUT-LINES    (I4)
+1190  1 OUT-LINES      (A76/1:12)
+1200  1 CMD            (A1 /1:12)
+1210  1 #CV            (C)
+1220END-DEFINE
+1230GEN-LIBRARY := 'GEN-TEST'
+1240/*
+1250/* Read IDL
+1260/*
+1270FUNCTION-CODE := C_READ-IDL
+1280FLAGS         := 'NYGN'
+1290CMD(1)        := 'X'
+1300/*
+1310DECIDE ON FIRST VALUE OF *MACHINE-CLASS
+1320  VALUE 'PC'
+1330    /* possible example on Windows
+1340    /* with e.g. SAG=C:\Program Files\Software AG
+1350*     OUT-LINES(1) := '%SAG%\EntireX\Examples\Broker RPC\client\example.idl'
+1360    OUT-LINES(1) := '%idl-files%basicdtu.idl'
+1370
+1380  VALUE 'UNIX'
+1390    /* possible example on UNIX
+1400    OUT-LINES(1) := '$SAG/exx/$EXXVERS/examples/broker_rpc/Client/Example.idl'
+1410
+1420  VALUE 'VMS'
+1430    /* possible example on OpenVMS
+1440    OUT-LINES(1) := 'exx$examples:<broker_rpc.client>example.idl'
+1450
+1460  NONE VALUE
+1470    OUT-LINES(1) := 'This example is designed to run on PC, UNIX or'-
+1480                    ' OpenVMS only.'
+1490END-DECIDE
+1500/*
+1510/* Display result
+1520/*
+1530REPEAT
+1540  N_OUT-LINES := *OCC(XARRAY)
+1550  IF N_OUT-LINES > 12
+1560    THEN N_OUT-LINES := 12
+1570  END-IF
+1580  FOR #I 1 N_OUT-LINES
+1590     MOVE XARRAY(#I) TO OUT-LINES(#I)
+1600  END-FOR
+1610  /*
+1620  REDUCE ARRAY XARRAY TO 0 /* clear for new input
+1630  /*
+1640  IF FUNCTION-CODE = C_GET-INFO OR = C_GEN-STUB
+1650  THEN
+1660    RESET CMD(*)
+1670    #CV := (AD=I)
+1680  ELSE
+1690    #CV := (AD=NP)
+1700  END-IF
+1710
+1720  INPUT (IP=OFF AD=MI)
+1730      / ' DOCI-IDL - Generate a Stub from an IDL file'
+1740      /
+1750      / 2T 'Function' FUNCTION-CODE (AD=M) '(1|2|3|R) (Exit=.)'
+1760      / 14T '1-Read IDL, 2-Get info, 3-Generate, R-Release memory'
+1770      /
+1780      / 2T 'Flags:   overwrite' FLAG_OVERWRITE  (AD=T) '(N|Y)'
+1790      / 2T '         treat all' FLAG_DO-ALL     (AD=T) '(Y|N|1=1st_only)'
+1800      / 2T '          do what?' FLAG_DO-WHAT    (AD=T) '(Generate|Calculate)'
+1810      / 2T '       single step' FLAG_SINGLE-STEP(AD=T) '(N|Y)'
+1820      /
+1830      / 2T CMD( 1)(CV=#CV) OUT-LINES( 1)
+1840      / 2T CMD( 2)(CV=#CV) OUT-LINES( 2)
+1850      / 2T CMD( 3)(CV=#CV) OUT-LINES( 3)
+1860      / 2T CMD( 4)(CV=#CV) OUT-LINES( 4)
+1870      / 2T CMD( 5)(CV=#CV) OUT-LINES( 5)
+1880      / 2T CMD( 6)(CV=#CV) OUT-LINES( 6)
+1890      / 2T CMD( 7)(CV=#CV) OUT-LINES( 7)
+1900      / 2T CMD( 8)(CV=#CV) OUT-LINES( 8)
+1910      / 2T CMD( 9)(CV=#CV) OUT-LINES( 9)
+1920      / 2T CMD(10)(CV=#CV) OUT-LINES(10)
+1930      / 2T CMD(11)(CV=#CV) OUT-LINES(11)
+1940      / 2T CMD(12)(CV=#CV) OUT-LINES(12)
+1950
+1960  IF FUNCTION-CODE  = '.'
+1970  THEN
+1980    /* release global memory as last call
+1990    FUNCTION-CODE := C_REL-MEM
+2000    CALLNAT 'RPCI-IDL' RPCI-IDL_PARAMS /* 2nd way to the interface
+2010    ESCAPE MODULE
+2020  END-IF
+2030
+2040  IF FUNCTION-CODE = C_GEN-STUB AND FLAG_DO-ALL = 'N'
+2050  THEN
+2060    IF #CV NOT MODIFIED THEN
+2070      REINPUT WITH TEXT 'Mark a line with X.'
+2080    END-IF
+2090  END-IF
+2100  FOR #I 1 12
+2110    IF CMD(#I) NE ' '
+2120    THEN
+2130      RESIZE ARRAY XARRAY TO (1:#I)
+2140      COMPRESS OUT-LINES(#I) INTO XARRAY(#I)
+2150    END-IF
+2160  END-FOR
+2170  RESET OUT-LINES(*)
+2180
+2190  CALLNAT 'RPCI-IDL' RPCI-IDL_PARAMS /* 1st way to the interface
+2200
+2210  DECIDE ON FIRST VALUE OF FUNCTION-CODE
+2220    VALUE C_READ-IDL
+2230      FUNCTION-CODE := C_GET-INFO
+2240    VALUE C_GET-INFO
+2250      FUNCTION-CODE := C_GEN-STUB
+2260    VALUE C_GEN-STUB
+2270      RESET FUNCTION-CODE
+2280    NONE VALUE IGNORE
+2290  END-DECIDE
+2300
+2310END-REPEAT
+2320END
+2330

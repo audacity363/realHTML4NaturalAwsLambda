@@ -1,0 +1,13 @@
+0010&H View SYSTEM-COMMAND
+0020&L
+0030&L
+0040#Purpose@: Execute System Commands
+0050&L
+0060#OpSys@  : z/OS, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : This view allows you to execute system commands from
+0100           any environment where NATURAL is available.
+0110&L
+0120&L
+0130#Notes@  :

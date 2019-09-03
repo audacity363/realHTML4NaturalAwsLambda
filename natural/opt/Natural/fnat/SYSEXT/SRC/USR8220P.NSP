@@ -1,0 +1,12 @@
+0010/* This program is a dummy program because the subprogram USR8220N is
+0020/* intended to run on Natural RPC server site only.
+0030/*
+0040/* Trigger termination of current RPC server
+0050/*
+0060/***********************************************************************
+0070*
+0080WRITE NOTITLE NOHDR
+0090   'This program is a dummy program because the subprogram USR8220N is'
+0100   'intended to run on Natural RPC server site only.'
+0110*
+0120END

@@ -1,0 +1,71 @@
+0010* Program   MWRTS
+0020* View      WRITE-SPOOL
+0030*
+0040* Function  Write OS-file directly to spool
+0050*
+0060*           The output will be written to a data set (type SO)
+0070*           of the target NATURAL PROCESS node's nucleus itself.
+0080*
+0090* ----------------------------------------------------------------------
+0100*
+0110DEFINE DATA
+0120   GLOBAL USING TUTO
+0130   LOCAL  USING WRTSPL-L
+0140   LOCAL  USING READ-L
+0150   LOCAL  1 #COPIES (I1)
+0160END-DEFINE
+0170*
+0180REPEAT
+0190*
+0200   INPUT (AD=MIL'_' SG=OFF ZP=OFF)
+0210     / ##TITLE (AD=OI IP=OFF)
+0220    // '  Data set ..:' READ-FILE.DSNAME
+0230     / '  Member ....:' READ-FILE.MEMBER
+0240    // 'Options' (I)
+0250     / '  Class .....:' WRITE-SPOOL.CLASS
+0260     / '  Form ......:' WRITE-SPOOL.FORM
+0270     / '  Formdef ...:' WRITE-SPOOL.FORMDEF
+0280     / '  Pagedef ...:' WRITE-SPOOL.PAGEDEF
+0290     / '  Hold ......:' WRITE-SPOOL.HOLD '(yes/no)'
+0300     / '  Copies ....:' #COPIES
+0310*
+0320   READ.
+0330   FIND READ-FILE WITH NODE   = ##NODE
+0340                   AND DSNAME = READ-FILE.DSNAME
+0350                   AND MEMBER = READ-FILE.MEMBER
+0360*
+0370      IF ERROR-CODE NE 0
+0380         REINPUT ERROR-TEXT
+0390      END-IF
+0400*
+0410      PROCESS WRITE-SPOOL USING NODE    = ##NODE
+0420                            ,   RECORD  = RECORD
+0430                            ,   RECORD-LENGTH = RECORD-LENGTH
+0440                            ,   CLASS   = WRITE-SPOOL.CLASS
+0450                            ,   FORM    = WRITE-SPOOL.FORM
+0460                            ,   HOLD    = WRITE-SPOOL.HOLD
+0470                            ,   FORMDEF = WRITE-SPOOL.FORMDEF
+0480                            ,   PAGEDEF = WRITE-SPOOL.PAGEDEF
+0490                            ,   COPIES  = #COPIES
+0500                        GIVING ERROR-CODE
+0510                               ERROR-TEXT
+0520*
+0530      IF ERROR-CODE NE 0
+0540         REINPUT ERROR-TEXT
+0550      END-IF
+0560*
+0570   END-FIND
+0580*
+0590   PROCESS WRITE-SPOOL USING NODE     = ##NODE
+0600                         ,   FUNCTION = 'CLOSE'
+0610                      GIVING ERROR-CODE
+0620                             ERROR-TEXT
+0630   IF ERROR-CODE NE 0
+0640      REINPUT ERROR-TEXT
+0650   END-IF
+0660*
+0670   REINPUT *1023,*COUNTER (READ.)
+0680*
+0690END-REPEAT
+0700*
+0710END

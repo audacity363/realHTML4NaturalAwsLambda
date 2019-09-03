@@ -1,0 +1,27 @@
+0010/*  Function: Get dynamic error part
+0020/************************************
+0030DEFINE DATA
+0040LOCAL
+0050 01 ERR-PARM  (A253/1:9) /* Dynamic error parts in compressed form
+0060 01 OCC       (N01)      /* Occurences
+0070 01 RESPONSE  (N04)      /* Error code
+0080*
+0090 01 #IX       (I2)
+0100END-DEFINE
+0110/*
+0120CALLNAT 'USR2030N' ERR-PARM(*) OCC RESPONSE
+0130/*
+0140WRITE 'Dynamic Error Parts:' /
+0150      '===================='
+0160FOR #IX = 1 TO OCC
+0170  WRITE
+0180    'No.' #IX '>' ERR-PARM(#IX) (AD=I AL=60) '<'
+0190END-FOR
+0200IF OCC = 0 THEN
+0210  WRITE 'No dynamic error part available'/
+0220END-IF
+0230WRITE ' '
+0240WRITE 'Response Code:' RESPONSE (AD=I) /
+0250      '=============='
+0260/*
+0270END

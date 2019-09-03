@@ -1,0 +1,75 @@
+0010* Program ...... V62UCONS
+0020* Library ...... SYSEXV
+0030* Version ...... 6.2
+0040* Machine ...... UNIX
+0050* Encoding ..... UTF-8 (use Natural Studio Editor for editing)
+0060*
+0070* Functionality: Natural Unicode Support
+0080*                Unicode Constants
+0090************************************************************************
+0100*
+0110*
+0120FORMAT KD=ON
+0130SET KEY PF3  NAMED 'Exit'
+0140  PF12 NAMED 'Canc'
+0150*
+0160*
+0170INPUT  (IP=OFF)
+0180  01T *TIMX  (AD=OTD)
+0190  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0200  70T *DATX  (AD=OTD DF=L)
+0210  /
+0220  01T 'User'
+0230  06T *USER  (AD=OLTI)
+0240  25T     '- Natural Unicode Support  -' (I)
+0250  64T 'Program'
+0260  72T *PROGRAM   (AD=OI)
+0270  /
+0280  15T '             - Unicode Constants  -' (I)
+0290  //
+0300  02T 'The' 'U constant' (I)
+0310  'defines a Unicode text constant' /
+0320  02T '  1 U-CONST  (U9)'
+0330  U' INIT<U''Äpfel''>' (I)
+0340  '                    /* German' /
+0350  02T 'The' 'UH constant' (I)
+0360  'defines a Unicode text constant in binary format (code points)'
+0370  /
+0380  02T '  1 UH-CONST (U10)'
+0390  'INIT<UH''041A041E04340020''>' (I) '        /* Russian'
+0400  /
+0410  /
+0420  02T 'Unicode constants can be used where alphanumeric constants'
+0430
+0440  'can be used, e.g.' /
+0450  02T '  MOVE'
+0460  U'U''natürlich''' (I)
+0470  'TO U-CONST'
+0480  '                       /* German' /
+0490  02T '  ASSIGN UH-CONST :='
+0500  'UH''03B103C103B903B803BC03CC0020''' (I)
+0510  '/* Greek' /
+0520  /
+0530  02T 'U constants versus A constants' (I) /
+0540  02T 'The following code is cataloged under code page'
+0550  'IBM01140 (EBCDIC US)' /
+0560  02T U'  WRITE ''!'' U''!''' (I) /
+0570  02T 'The A-constant is cataloged as X''5A'', the U-constant'
+0580  'as U+0021. When the code' /
+0590  02T 'is executed under code page IBM01141 (EBCDIC DE),'
+0600  'X''5A'' is interpreted as' /
+0610  02T U'''Ü'''
+0620  '(U with diaeresis) whereas the U-constant returns the expected'
+0630  /
+0640  02T 'exclamation mark.' /
+0650*
+0660IF *PF-KEY = 'PF3'
+0670  ESCAPE ROUTINE
+0680END-IF
+0690IF (*PF-KEY = 'PF12' OR= 'CLR')
+0700  CALLNAT 'UTILSTOP'
+0710END-IF
+0720*
+0730*
+0740END
+0750

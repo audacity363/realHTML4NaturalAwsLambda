@@ -1,0 +1,46 @@
+0010**DV          0047     V1FILE-ATTRIBUTES                 FILE-ATTRIBUTES
+0020**DD          0050N 3.0 2ERROR-CODE
+0030**DD          0051A  58 2ERROR-TEXT
+0040**DD          0052N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0053A  10 2SYSTEM-MESSAGE-CODE
+0060**DD          0054A   6 2VOLSER
+0070**DD          0055A  54 2DSNAME
+0080**DD          0056A   4 2DSORG
+0090**DD          0057A   8 2CREATION-DATE
+0100**DD          0058A   8 2EXPIRATION-DATE
+0110**DD          0059B   3 2LAST-TTR
+0120**DD          0060N 7.0 2FILE-SIZE
+0130**DD          0061A   5 2SECURITY
+0140**DD          0062A   8 2SERIES
+0150**DD          0063D     2CREATION-DATX
+0160**DD          0064D     2EXPIRATION-DATX
+0170**DD          0065A   1 2PRODUCT
+0180**DD          0066N 5.0 2LRECL
+0190**DD          0067N 5.0 2BLKSIZE
+0200**DD          0068A   5 2RECFM
+0210**DD          0069N 3.0 2NUMBER-OF-EXTENTS
+0220**DD          0070A   4 2ALLOCATION-TYPE
+0230**DD          0071N 7.0 2SECONDARY-QTY
+0240**DD          0072N 3.0 2PERCENT-USED
+0250**DD          0073A   8 2LAST-REFERENCE
+0260**DD          0074D     2LAST-REFERENCE-DATX
+0270**DD          0075B   2 2SYSTEM-CODE
+0280**DD          0076A   4 2SHARE
+0290**DD          0077N 4.0 2KEY-LENGTH
+0300**DD          0078N 5.0 2KEY-POSITION
+0310**DD          0079N 4.0 2ACCESS-NUMBER
+0320**DD          0080N 4.0 2VERSION-NUMBER
+0330**DD          0081A   1 2BACKUP-TYPE
+0340**DD          0082A   5 2ACCESS-TYPE
+0350**DD          0083A   4 2AUDIT-TYPE
+0360**DD          0084A   7 2LABEL
+0370**DD          0085A   6 2CODE
+0380**DD          0086D     2MODIFICATION-DATX
+0390**DD          0087T     2MODIFICATION-TIMX
+0400**DD I1 C     0088A   6M2VOLSER-ARRAY                    (1:5) /* MU-FIELD
+0410**DD          0089A   6 2BLOCK-CONTROL
+0420**DD          0090N 3.0 2FILE-SEQUENCE-NUMBER
+0430**DD          0091A  19 2BACKUP-INFO                     /* Additional information about
+0440**DD          0092N 5.0 2BACKUP-VERSION-NUMBER           /* Internal attribute for change
+0450**DD          0093A   9 2MIGRATE                         /* Indicates whether the file ma
+0460**DD          0094A   2 2STORAGE-LEVEL                   /* Indicates the storage level

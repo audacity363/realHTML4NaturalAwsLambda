@@ -1,0 +1,16 @@
+0010**DV          0017     V1SUBMIT                          SUBMIT
+0020**DD          0020N 3.0 2ERROR-CODE
+0030**DD          0021A  58 2ERROR-TEXT
+0040**DD          0022N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0023A   8 2FUNCTION
+0060**DD          0024A  80 2CARD
+0070**DD          0025N 7.0 2JOB-NUMBER                      /* was N5 02-02-15
+0080**DD          0026A  54 2DSNAME
+0090**DD          0027A   8 2MEMBER
+0100**DD          0028A   8 2PASSWORD
+0110**CF              *
+0120**DF          0029N   5 1#TARGET-NODE                    /* was N3 02-02-15
+0130**DF          0031A  78 1#MSG
+0140**DF          0032A   8 1#JOB-NAME
+0150**DF I1       0033A  20 1#TOKEN                          (1:20)
+0160**DF          0034I   1 1#I

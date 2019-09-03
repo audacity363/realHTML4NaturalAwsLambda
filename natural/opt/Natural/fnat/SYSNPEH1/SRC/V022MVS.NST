@@ -1,0 +1,14 @@
+0010&H View ALLOCATIONS
+0020&L
+0030&L
+0040#Purpose@: Display DD allocations.
+0050&L
+0060#OpSys@  : z/OS
+0070&L
+0080&L
+0090#Usage@  : This view displays the information relating to files
+0100           allocated to the specified job via DD statements.
+0110           Files allocated via Dynamic allocation will also
+0120           be returned.
+0130&L
+0140#Notes@  :

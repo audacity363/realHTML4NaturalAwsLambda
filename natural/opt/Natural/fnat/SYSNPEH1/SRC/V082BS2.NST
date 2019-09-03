@@ -1,0 +1,16 @@
+0010&H View JOB-VARIABLES
+0020&L
+0030&L
+0040#Purpose@: Job Variable Catalog functions.
+0050&L
+0060&L
+0070#OpSys@  : BS2000/OSD
+0080&L
+0090&L
+0100#Usage@  : This view performs various Job Variable functions,
+0110           e.g. Define and delete Job Variables, Query and Change
+0120           Job Variable characteristics, Query and Change Job Variable
+0130           values.
+0140&L
+0150&L
+0160#Notes@  :

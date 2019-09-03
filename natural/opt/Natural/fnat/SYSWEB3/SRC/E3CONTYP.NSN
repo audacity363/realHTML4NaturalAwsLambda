@@ -1,0 +1,58 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3CONTYP
+0050*
+0060* DESCRIPTION   Sets the content type of the document.
+0070*
+0080* AUTHOR        SAG   08.09.1998
+0090*
+0100* Version       8.3
+0110*
+0120* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0130*
+0140* HISTORY
+0150* USER    DATE       REASON
+0160* ------+----------+----------------------------------------------
+0170*       ! --.--.-- !
+0180* ------+----------+----------------------------------------------
+0190*
+0200* ------ PARAMETER -----------------------------------------------
+0210DEFINE DATA
+0220PARAMETER USING W3PARM
+0230LOCAL USING W3CONST
+0240LOCAL USING W3PINFO
+0250LOCAL
+02601 W3VALUE        (A) DYNAMIC
+0270END-DEFINE
+0280* --- ERROR HANDLING ---
+0290ON ERROR
+0300  PERFORM W3ERROR ##W3ERROR
+0310  PERFORM W3END ##RPC
+0320  ESCAPE ROUTINE
+0330END-ERROR
+0340*
+0350* --- INITIALIZE Web Interface ---
+0360PERFORM W3INIT ##RPC
+0370*
+0380* --- SET TYPE OF RETURN-PAGE to Word Document ---
+0390PERFORM W3CONTENT-TYPE 'application/msword'
+0400*
+0410* --- WRITE THE HEAD OF THE DOCUMENT ---
+0420PERFORM W3TEXTLINE 'Basic Routines - Set Document Content-Type'
+0430PERFORM W3TEXTLINE '---------------------------------------------'-
+0440                    '---------------'
+0450PERFORM W3TEXTLINE 'It is not only possible to write HTML,'
+0460PERFORM W3TEXTLINE 'even other output types are possible.'
+0470PERFORM W3TEXTLINE 'But, it is NOT possibe to transfer binary data.'
+0480PERFORM W3TEXTLINE '---------------------------------------------'-
+0490                    '---------------'
+0500*
+0510* --- END THE HTML PAGE ---
+0520COMPRESS *DATE *TIME 'Natural Web Interface' INTO W3VALUE
+0530PERFORM W3TEXTDYNAMIC W3VALUE
+0540*
+0550* --- END Web Interface ---
+0560PERFORM W3END ##RPC
+0570*
+0580END

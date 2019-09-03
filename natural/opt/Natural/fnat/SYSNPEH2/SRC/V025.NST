@@ -1,0 +1,15 @@
+0010&H View CONSOLE-LOG
+0020&L
+0030&L
+0040#Zweck@    : Lesen von Saetzen der CONSOLE-LOG-Datei, in der alle
+0050             Systemmeldungen protokolliert werden.
+0060&L
+0070#System@   : z/OS, z/VSE.
+0080&L
+0090&L
+0100#Anwendung@: Dieser View kann zum Lesen der aktuellen und aelteren
+0110             CONSOLE-LOG-Daten benutzt werden. Diese enthalten In-
+0120             formationen ueber Start und Ende von Jobs und Tasks
+0130             sowie wichtige Fehler- und Abbruchmeldungen.
+0140&L
+0150#Anmerkung@:

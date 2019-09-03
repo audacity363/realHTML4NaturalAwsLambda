@@ -1,0 +1,30 @@
+0010 DB: 000 FILE: 027  - SAG-TOURS-E-CH-PRICES            DEFAULT SEQUENCE:
+0020
+0030T L DB Name                              F Leng  S D Remark
+0040- - -- --------------------------------  - ----  - - ------------------------
+0050  1 DS CH-YACHT-TYPE                     A   30  N D
+0060  1 DT CH-BASE-ID                        A    8  N D
+0070P 1 DU CH-SEASON
+0080  2 DV SEASON-START                      N  8.0  N D
+0090  2 DW SEASON-END                        N  8.0  N
+0100  2 DX PRICE-1W                          P 10.3  N
+0110*      price for one week
+0120  2 DY PRICE-2W                          P 10.3  N
+0130*      price for two weeks
+0140  2 DZ PRICE-3W                          P 10.3  N
+0150*      price for three weeks
+0160  2 C9 PRICE-STATUS                      A    1  N D
+0170P 1 D0 EXTRAS
+0180  2 D1 X-DESIGNATION                     A   20  N
+0190*      e.g. 'spinnaker'
+0200  2 D2 X-FLAG                            A    1  N
+0210*      'Y' = possible extras
+0220  2 D3 X-PRICE                           P 10.3  N
+0230*      additional price per week
+0240  1 T5 CH-PRICES-TIMESTAMP               T   12  N
+0250*      used for Natural Constract
+0260  1 D4 CH-PRICES-SP                      A   38    S
+0270*      -------- SOURCE FIELD(S) -------
+0280*      CH-YACHT-TYPE(1-30)
+0290*      CH-BASE-ID(1-8)
+0300******DDM OUTPUT TERMINATED******

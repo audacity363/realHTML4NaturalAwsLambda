@@ -1,0 +1,44 @@
+0010* Copy files from node to node
+0020*
+0030DEFINE DATA
+0040   GLOBAL USING TUTO
+0050   LOCAL  USING COPYFI-L
+0060END-DEFINE
+0070*
+0080REPEAT
+0090   INPUT (AD=MI'_' ZP=OFF)
+0100                    ##TITLE (AD=OI IP = OFF)
+0110                 // '  from' (I)
+0120                 // '    Data set .....' COPY-FILE.FROM-DSNAME
+0130                  / '    Library ......' COPY-FILE.FROM-LIBRARY
+0140                  / '    Sublib .......' COPY-FILE.FROM-SUB-LIBRARY
+0150                  / '    Member type ..' COPY-FILE.FROM-MEMBER-TYPE
+0160                  / '    Member .......' COPY-FILE.FROM-MEMBER
+0170                  / '    Volser .......' COPY-FILE.FROM-VOLSER
+0180                  / '    Node .........' COPY-FILE.FROM-NODE
+0190                 // '  to' (I)
+0200                 // '    Data set .....' COPY-FILE.TO-DSNAME
+0210                  / '    Library ......' COPY-FILE.TO-LIBRARY
+0220                  / '    Sublib .......' COPY-FILE.TO-SUB-LIBRARY
+0230                  / '    Member type ..' COPY-FILE.TO-MEMBER-TYPE
+0240                  / '    Member .......' COPY-FILE.TO-MEMBER
+0250                  / '    Volser .......' COPY-FILE.TO-VOLSER
+0260                  / '    Node .........' COPY-FILE.TO-NODE
+0270   PROCESS COPY-FILE
+0280           USING FROM-DSNAME      = COPY-FILE.FROM-DSNAME
+0290             ,   FROM-SUB-LIBRARY = COPY-FILE.FROM-SUB-LIBRARY
+0300             ,   FROM-MEMBER-TYPE = COPY-FILE.FROM-MEMBER-TYPE
+0310             ,   FROM-MEMBER      = COPY-FILE.FROM-MEMBER
+0320             ,   FROM-VOLSER      = COPY-FILE.FROM-VOLSER
+0330             ,   FROM-NODE        = COPY-FILE.FROM-NODE
+0340             ,   TO-DSNAME        = COPY-FILE.TO-DSNAME
+0350             ,   TO-SUB-LIBRARY   = COPY-FILE.TO-SUB-LIBRARY
+0360             ,   TO-MEMBER-TYPE   = COPY-FILE.TO-MEMBER-TYPE
+0370             ,   TO-MEMBER        = COPY-FILE.TO-MEMBER
+0380             ,   TO-VOLSER        = COPY-FILE.TO-VOLSER
+0390             ,   TO-NODE          = COPY-FILE.TO-NODE
+0400             ,   NODE             = ##NODE
+0410   REINPUT ERROR-TEXT
+0420*
+0430END-REPEAT
+0440END

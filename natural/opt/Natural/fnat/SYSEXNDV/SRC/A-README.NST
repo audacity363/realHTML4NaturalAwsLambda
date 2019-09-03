@@ -1,0 +1,121 @@
+0010*  This library contains programs that allow to communicate with
+0020*  client programs in the Natural Studio
+0030*
+0040*  The following Natural programs are available in library SYSEXNDV:
+0050*
+0060*  Program  Description
+0070*  -------- ------------------------------------------------------------
+0080*  NDVS001N Initialization subprogram which must be called when a
+0090*           server program is started. It sets the steplibs SYSLIB and
+0100*           SYSLIBS in the user steplib table and checks if the trace
+0110*           function is active.
+0120*
+0130*  NDVS002N Cleanup subprogram which should be called at the end of a
+0140*           server program before the END or STOP instruction.
+0150*           It deletes the steplibs SYSLIB and SYSLIBS from the user
+0160*           steplib table.
+0170*
+0180*  NDVS003N Natural subprogram which allows to exchange data with the
+0190*           client program.
+0200*
+0210*  NDVS004N Natural subprogram that allows writing trace data into a
+0220*           Natural text member or into the NDV log file.
+0230*           Note: On Mainframe every time a trace message was written
+0240*           ===== into a Natural text member, an END TRANSACTION
+0250*                 is performed.
+0260*
+0270*  NDVSEMPR Example program that reads the EMPLOYEES file and sends the
+0280*           data to the client.
+0290*
+0300*  NDVSINTA Example program for Interaction handling
+0310*
+0320*  NDVSPING Example program for the PING function
+0330*
+0340*  NDVSTRCE Example program for the TRACE function
+0350*
+0360*  NDVSWRLG Example program for the Write NDV Log File function
+0370*
+0380*  To test these example programs the program NDVCMAIN is provided in
+0390*  the library SYSEXNDC of the Natural Studio (version 62 and above) .
+0400*
+0410* ----------------------------------------------------------------------
+0420*
+0430* Description of the parameters:
+0440*
+0450*    NDVS001N (Initialization)
+0460*          1 NDVS001N-Parameter
+0470*            2 NDVS001N-Return-Code (I4)  (OUTPUT)
+0480*                            0 = OK
+0490*                          999 = Error during set steplib, see
+0500*                                NDVC001N-Return-Message
+0510*            2 NDVC001N-Return-Message (A250)  (OUTPUT)
+0520*                            Filled when NDVS001N-Return-Code <> 0
+0530*
+0540*    NDVS002N (Cleanup)
+0550*          has no parameters
+0560*
+0570*    NDVS003N (Communication interface)
+0580*          1 NDVS003N-Parameter
+0590*            2 NDVS003N-Data-Buffer (A1/1:5000)  (INPUT/OUTPUT)
+0600*                            Communication buffer for the data received
+0610*                            from and sent to client program, see also
+0620*                            the parameter description in program
+0630*                            NDVC002P in library SYSEXNDC of the
+0640*                            Natural Studio (version 62 and above)
+0650*            2 NDVS003N-Function (A1)  (INPUT)
+0660*                            G = Get data buffer
+0670*                            P = Put data buffer
+0680*                            A = Put data buffer + Interaction
+0690*                            T = Interaction send buffer directly to
+0700*                                the client
+0710*            2 NDVS003N-Return-Code (I4)  (OUTPUT)
+0720*                            0 = OK
+0730*                            1 = Invalid function code
+0740*            2 NDVS003N-Error-Text-1 (A250)  (OUTPUT)
+0750*                            filled when NDVS003N-Return-Code <> 0
+0760*
+0770*    NDVS004N (Trace handling)
+0780*          1 NDVS004N-Function (A2)  (INPUT)
+0790*                            ST = Set Trace level
+0800*                            WT = Write Trace data
+0810*                            WL = Write NDV Log
+0820*          1 NDVS004N-Para (A332)
+0830*          1 Redefine NDVS004N-Para      /* For function 'WT'
+0840*            2 NDVS004N-Trace-Msg            (A230)  (INPUT)
+0850*                            Contains the trace message
+0860*          1 Redefine NDVS004N-Para      /* For function 'WN'
+0870*            2 NDVS004N-NDV-Log-Header       (A64)  (INPUT)
+0880*                            Contains header text
+0890*            2 NDVS004N-NDV-Log-Msg          (A250) (INPUT)
+0900*                            Contains message text
+0910*          1 Redefine NDVS004N-Para      /* For function 'ST'
+0920*            2 NDVS004N-Data-Buffer          (A79)  (INPUT)
+0930*            2 REDEFINE NDVS004N-Data-Buffer
+0940*              3 NDVS004N-TRACE-LEVEL        (N4)
+0950*                            Any value > 0
+0960*              3 NDVS004N-START-NEW-TRACE    (A1)
+0970*                            Y = clear an existing trace text member
+0980*              3 NDVS004N-WORKPLAN-NAME      (A32)
+0990*                            name of the trace text member
+1000*              3 NDVS004N-WORKPLAN-LIBRARY   (A8)
+1010*                            library of the trace text member
+1020*              3 NDVS004N-WORKPLAN-DBID      (N5)
+1030*                            DBID of the trace text member library
+1040*              3 NDVS004N-WORKPLAN-FNR       (N5)
+1050*                            FNR of the trace text member library
+1060*              3 NDVS004N-WORKPLAN-PASSWORD  (A8)
+1070*                            Adabas password of the trace text member
+1080*                            library
+1090*              3 NDVS004N-WORKPLAN-CIPHER    (A8)
+1100*                            Adabas cipher code of the trace text member
+1110*                            library
+1120*              3 NDVS004N-WORKPLAN-VSAM-NAME (A8)
+1130*                            VSAM name of the trace text member library
+1140*            2 NDVS004N-ERROR-TEXT-1         (A253)  (OUTPUT)
+1150*                            filled when NDVS004N-RETURN-CODE <> 0
+1160*                            (function 'ST' and 'WT' only)
+1170*          1 NDVS004N-RETURN-CODE            (I4)  (OUTPUT)
+1180*                            0 = OK
+1190*                            others see NDVS004N-ERROR-TEXT-1
+1200*
+1210* ----------------------------------------------------------------------

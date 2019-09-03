@@ -1,0 +1,32 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> View Function
+0080<Header2> Page 2 of 2
+0090/* <Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>OHTHFV01
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170  Natural command processor sources
+0180    This function is used to view Natural command processor sources which are
+0190    located in an Adabas file.
+0200    First you have to specify the DBID and FNR of the Adabas file where the
+0210    Natural command processor libraries to be viewed are located. As default
+0220    value the current setting of LFILE 190 is used (for details see the
+0230    documentation of the SYSNCP utility).
+0240    Then you have to select the library you want to view.
+0250    At last all Natural command processor sources which are assigned to the
+0260    selected library are displayed.
+0270
+0280  FDTs
+0290    This function is used to view the available FDTs in an Adabas database.
+0300    First you have to specify the DBID of the Adabas database where you want the
+0310    FDTs to be displayed. Then all FDTs of this database are displayed.
+0320<HelpTextEnd>

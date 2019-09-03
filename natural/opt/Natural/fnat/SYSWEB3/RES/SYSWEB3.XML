@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sysplweb>
+
+<error nr="20000">Internal version error (%1%).</error>
+<error nr="20003">ERROR: Input data check.</error>
+
+<!-- INPUT-NDA / output-nda -->
+<error nr="20004">Please select a library.</error>
+
+<!-- OUTPUT-FILE -->
+<error nr="20011">Output file "%1%" cannot be created.</error>
+<error nr="20012">Please select a valid output file name.</error>
+<error nr="20013">No output file specified.</error>
+
+<!-- input-file -->
+<error nr="20021">Please select a valid input file name without wildcards.</error>
+<error nr="20022">Please select a valid output file name.</error>
+<error nr="20024">File "%1%" not found.</error>
+<error nr="20025">Please select a valid subprogram.</error>
+
+<!-- output-nda -->
+<error nr="20031">Supported object types: Subprogram (N), (S)ubroutine and (C)opycode.</error>
+<error nr="20032">Supported generation types: (B)asic, (S)tand-allone, Tr(A)nsformation and (T)emplate.</error>
+
+<error nr="20061">No object name for library "%1%" specified.</error>
+<error nr="20062">Natural name "%1%" wrong.</error>
+<error nr="20202">Generation failed.</error>
+
+<error nr="20999">Remote session has been closed.&#10;Dialog will close.</error>
+<error nr="20900">No work file path known.&#10;Please call help function for further assistance.</error>
+<error nr="20901">No subprogram available in this library.&#10;Please call help function for further assistance.</error>
+<error nr="20902">This Subprogram is not a Natural Web Application,&#10;PDA W3PARM not used.&#10;Please call help function for further assistance.</error>
+<error nr="20903">Natural Object of class "%1%" can not be created.&#10;Please call help function for further assistance.</error>
+<error nr="20904">The selected subprogram does not exist in library or steplib.</error>
+<error nr="20905">The selected subprogram is not method of the selected Class.</error>
+<error nr="20906">Error: NAT%1% at line: %2% occured.</error>
+<error nr="20907">No viewer available.&#10;Please call help function for further assistance.</error>
+
+<errormsg nr='htm_d2da1'>Change type of existing&#10;object "%1%"&#10;at library "%2%"&#10;&#10;from "%3%"&#10;to "%4%"&#10;&#10;not possible!</errormsg>
+<errormsg nr='htm_d2da2'>Change type of existing&#10;object "%1%"&#10;at library "%2%"&#10;&#10;from "%3%"&#10;to "%4%"&#10;&#10;and overwrite?</errormsg>
+<errormsg nr='htm_d2da3'>Object "%1%"&#10;of type "%2%"&#10;at library "%3%"&#10;already exist.&#10;&#10;Overwrite?</errormsg>
+<errormsg nr='htm_d2da4'>Object "%1%"&#10;of type "%2%"&#10;at library "%3%"&#10;generated.</errormsg>
+<errormsg nr='htm_d2da5'>Object "%1%"&#10;of type "%2%"&#10;at library "%3%"&#10;not saved.</errormsg>
+<errormsg nr='htm_d2da6'>Object type changed from "%2%" to "%3%". %1%</errormsg>
+<errormsg nr='htm_d2da7'>Generation canceled.</errormsg>
+<errormsg nr='htm_d2da8'>Object save failed (ERROR: "%1").</errormsg>
+<errormsg nr='htm_d2da14'>Change object type not possible!</errormsg>
+<errormsg nr='htm_d2da15'>Object replaced.</errormsg>
+
+<errormsg nr='htm_nat1'>File "%1%"&#10;at library "%3%"&#10;already exist.&#10;&#10;Overwrite?</errormsg>
+<errormsg nr='htm_nat2'>Import of File "%1%"&#10;into library "%3%"&#10;failed.</errormsg>
+<errormsg nr='htm_nat3'>No resource file specified.</errormsg>
+<errormsg nr='htm_nat4'>The template file "%1%"&#10;is not part of the&#10;resource of library "%2%".&#10;&#10;A reference to the given library "%3%"&#10;will be used instead.</errormsg>
+<errormsg nr='htm_nat5'>Generation ended with errors:&#10;%1%&#10;%2%</errormsg>
+
+<errormsg nr='htm_cls1'>Local Data Area &#10;"%1%"&#10;at library "%2%"&#10;does not exists.&#10;&#10;Do you want to generate?</errormsg>
+<errormsg nr='htm_cls2'>Generation for&#10;"%1%"&#10;at library&#10;"%2%"&#10;&#10;failed!</errormsg>
+<errormsg nr='htm_cls2'>%1% name not specified.</errormsg>
+
+<errormsg nr='htm_natc2'>Natural name "%1%" wrong.</errormsg>
+<errormsg nr='htm_natc3'>No object name specified.</errormsg>
+<errormsg nr='htm_natc4'>No file specified.</errormsg>
+<errormsg nr='htm_natc7'>File&#10;%1%&#10;already exist.&#10;&#10;Overwrite?</errormsg>
+
+<errormsg nr='htm_natx2'>File replaced.</errormsg>
+<errormsg nr='htm_natx3'>File saved.</errormsg>
+
+<errormsg nr='htm_natx4'>Generation successful. %1%</errormsg>
+<errormsg nr='htm_natx15'>Generation ended successful.</errormsg>
+
+<errormsg nr='htm_natg1'>File "%1%" not found.</errormsg>
+</sysplweb>
+

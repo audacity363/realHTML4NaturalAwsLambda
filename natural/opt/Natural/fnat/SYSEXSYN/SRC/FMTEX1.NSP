@@ -1,0 +1,27 @@
+0010** Example 'FMTEX1': FORMAT
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 EMPLOY-VIEW VIEW OF EMPLOYEES
+0050  2 NAME
+0060  2 CITY
+0070  2 POST-CODE
+0080  2 COUNTRY
+0090END-DEFINE
+0100*
+0110FORMAT AL=7    /* Alpha-numeric field output length
+0120       FC=+    /* Filler character for field header
+0130       GC=*    /* Filler character for group header
+0140       HC=L    /* Header left justified
+0150       IC=<<   /* Insert characters
+0160       IS=ON   /* Identical suppress on
+0170       TC=>>   /* Trailing character
+0180       UC==    /* Underline character
+0190       ZP=OFF  /* Zero print off
+0200*
+0210LIMIT 5
+0220READ EMPLOY-VIEW BY NAME
+0230  DISPLAY NOTITLE
+0240          NAME 3X CITY 3X POST-CODE 3X COUNTRY
+0250END-READ
+0260*
+0270END

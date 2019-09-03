@@ -1,0 +1,26 @@
+0010/*
+0020/* This file controls what file extension has to be used for
+0030/* the sende Internet media types.
+0040/* Sending the correct media type to the client is important so they
+0050/* know how to handle the content of the file.
+0060/* Extra types can either be added here.
+0070/* For more information about Internet media types,
+0080/* please read RFC 2045, 2046, 2047, 2048, and 2077.
+0090/* The Internet media type registry is at
+0100/* <ftp://ftp.iana.org/assignments/media-types/>.
+0110/*
+0120application/rtf         rtf
+0130application/powerpoint  ppt
+0140application/msword      doc
+0150application/excel       xls
+0160
+0170text/html               html htm
+0180text/plain              txt
+0190text/xml                xml
+0200text/richtext           rtf
+0210
+0220image/bmp               bmp
+0230image/gif               gif
+0240image/ief               ief
+0250image/jpeg              jpg jpeg
+0260image/png               png

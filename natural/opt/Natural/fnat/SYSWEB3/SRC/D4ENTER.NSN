@@ -1,0 +1,98 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - New Demo Application
+0030*
+0040*        D4ENTER
+0050*
+0060* DESCRIPTION
+0070*               GENERATE HTML-PAGE FOR THE Entrance Page
+0080*
+0090* AUTHOR        SAG   04.09.98
+0100*
+0110* Version       8.3
+0120*
+0130* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0140*
+0150* HISTORY
+0160* USER    DATE       REASON
+0170* ------+----------+----------------------------------------------
+0180*       ! --.--.-- !
+0190* ------+----------+----------------------------------------------
+0200*
+0210* ------ PARAMETER -----------------------------------------------
+0220DEFINE DATA
+0230PARAMETER USING W3PARM
+0240LOCAL USING D4-PARM
+0250LOCAL USING W3CONST
+0260LOCAL
+0270*
+02801 W3VALUE            (A) DYNAMIC
+0290*
+03001 ATIM               (N7) INIT <*TIMN>
+03101 REDEFINE ATIM
+0320  2 FILLER 5X
+0330  2 SECOND (N2)
+0340END-DEFINE
+0350*
+0360ON ERROR
+0370  PERFORM W3ERROR ##W3ERROR
+0380  PERFORM W3END ##RPC
+0390  ESCAPE ROUTINE
+0400END-ERROR
+0410*
+0420PERFORM W3INIT ##RPC
+0430*
+0440PERFORM D4-RGLOB #DEMO-MENU #DEMO-PARM
+0450*
+0460#DEMO-PARM.#TODO    := "ENTER"
+0470#DEMO-PARM.#CAPTION := 'Entrance'
+0480*
+0490PERFORM D4-START #DEMO-MENU #DEMO-PARM
+0500PERFORM W3TEXTDYNAMIC '<TABLE BORDER="0" CELLSPACING="0" '
+0510  -'CELLPADDING="3"'
+0520  -' WIDTH="100%" HEIGHT="100%"><TR VALIGN="MIDDLE"><TD ALIGN="RIGHT"'
+0530  -' HEIGHT="100%">'
+0540*
+0550IF SECOND GT 30 THEN
+0560  COMPRESS '<SCRIPT LANGUAGE="JavaScript"><!--' ##HTTP_NEWLINE
+0570    'document.write("<P ALIGN=?Center?><A'
+0580    -' HREF=?javascript:goon(" + ?"? + "menu" + ?"? + ")?>");'
+0590    ##HTTP_NEWLINE
+0600    'document.write("<IMG SRC=?$PICTURES$/nww_snail.gif? WIDTH=?240? HEIGHT=?140? ALIGN=?MIDDLE? ALT=?Start'
+0610    -' Demo Application? BORDER=?0?></A></TD><TD VALIGN=?MIDDLE?><P>'
+0620    -'&nbsp;<P><H2 STYLE=?font-family:sans-serif?>RUN!</H2>");'
+0630    ##HTTP_NEWLINE '// --></SCRIPT>' INTO W3VALUE LEAVING NO
+0640  EXAMINE FULL W3VALUE FOR '?' REPLACE WITH #DEMO-PARM.#DQUOTE
+0650  PERFORM W3TEXTDYNAMIC W3VALUE
+0660*
+0670ELSE
+0680  COMPRESS '<SCRIPT LANGUAGE="JavaScript"><!--' ##HTTP_NEWLINE
+0690    'document.write("<H2 STYLE=?font-family:sans-serif?>ENTER!'
+0700    -'</H2></TD><TD><P ALIGN=?Center?><A HREF=?javascript:goon(" + ?"? +'
+0710    -' "menu" + ?"? + ")?>");' ##HTTP_NEWLINE
+0720    'document.write("<IMG SRC=?$PICTURES$/nww_enter.gif? WIDTH=?140? '
+0730    -'HEIGHT=?140? ALIGN=?MIDDLE? ALT=?Start'
+0740    -' Demo Application? BORDER=?0?></A>");'
+0750    ##HTTP_NEWLINE '// --></SCRIPT>' INTO W3VALUE LEAVING NO
+0760  EXAMINE FULL W3VALUE FOR '?' REPLACE WITH #DEMO-PARM.#DQUOTE
+0770  PERFORM W3TEXTLINEDYNAMIC W3VALUE
+0780*
+0790END-IF
+0800*
+0810COMPRESS '<NOSCRIPT><B>ESCAPE!</B></TD><TD><P ALIGN="Center">'
+0820  -'<IMG SRC="$PICTURES$/nww_escape.gif" WIDTH="131" HEIGHT="165" '
+0830  -'ALIGN="MIDDLE" ALT="Sorry"'
+0840  -' BORDER="0"></NOSCRIPT></TD></TR><TR><TD></TD><TD><HR NOSHADE'
+0850   ' SIZE="3" COLOR="BLACK"><B STYLE="font-family:sans-serif">'
+0860  -'ACCEPT NO LIMITS</B></TD></TR><TR><TD>'
+0870  -'<NOSCRIPT>Sorry, your browser does not support'
+0880  -' JavaScript.<BR>JavaScript is essential to run this application.'
+0890  -'</NOSCRIPT></TD><TD></TD></TR><TR><TD></TD><TD>'
+0900   '<IMG SRC="$PICTURES$/natw_slo.gif" ALIGN="RIGHT" WIDTH="239" '
+0910  -'HEIGHT="41"></TD></TR></TABLE>' INTO W3VALUE LEAVING NO
+0920PERFORM W3TEXTLINEDYNAMIC W3VALUE
+0930*
+0940PERFORM D4-END #DEMO-MENU #DEMO-PARM
+0950*
+0960PERFORM W3END ##RPC
+0970*
+0980END

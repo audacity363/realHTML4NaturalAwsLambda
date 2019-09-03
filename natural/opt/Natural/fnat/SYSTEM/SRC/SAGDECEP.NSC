@@ -1,0 +1,24 @@
+0010DEFINE PROTOTYPE SAGDECEP RETURNS (U) DYNAMIC
+0020  DEFINE DATA PARAMETER
+0030  1 P-ENC-STR-E    (A)      DYNAMIC BY VALUE
+0040  1 P-RET          (I4)     OPTIONAL  /* 0:    ok
+0050                                      /* else: Natural error returned
+0060                                      /*       by the GIVING clause of
+0070                                      /*       MOVE ENCODED.
+0080                                      /*       This is the error which
+0090                                      /*       comes up when a character
+0100                                      /*       cannot be converted into
+0110                                      /*       the target code page.
+0120    /* The last error will be returned in P-RET.
+0130  1 P-ERR-CHAR     (A12)    OPTIONAL  /* Error character
+0140  1 P-SPACE        (A1)     OPTIONAL  /* '%'  => %20
+0150                                      /* ' '  => ' '
+0160                                      /* else => '+' (default)
+0170  1 P-CP           (A64)    OPTIONAL  /* IANA name e.g. UTF-8 (default)
+0180                                      /* or ISO-8859-1
+0190    /* On mainframe only code page names defined with the macro NTCPAGE
+0200    /* in the source module NATCONFG can be used. Other code page names
+0210    /* are rejected with a corresponding runtime error.
+0220    /*
+0230  END-DEFINE
+0240END-PROTOTYPE

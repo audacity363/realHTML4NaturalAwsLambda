@@ -1,0 +1,14 @@
+0010&H View NET-OPER
+0020&L
+0030&L
+0040#Zweck@    : Absetzen von VTAM-Kommandos oder Lesen von VTAM-Meldungen.
+0050&L
+0060#System@   : z/OS.
+0070&L
+0080&L
+0090#Anwendung@: Dieser View erlaubt dem Benutzer oder der Anwendung das
+0100             Absetzen von VTAM-Kommandos oder das Lesen von VTAM-Mel-
+0110             dungen.
+0120&L
+0130#Anmerkung@: Kommandos und Meldungen werden nicht an der Systemkonsole
+0140             angezeigt.

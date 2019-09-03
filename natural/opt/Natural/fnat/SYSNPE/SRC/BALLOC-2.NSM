@@ -1,0 +1,105 @@
+0010* MAP2: PROTOTYPE
+0020* INPUT USING MAP 'XXXXXXXX'
+0030*     ##TITLE #ALLOCATION-TYPE #BLKSIZE #BLOCK-CONTROL #DSNAME #DSORG
+0040*     #ISAM-KEY-LENGTH #ISAM-KEY-POSITION #LRECL #PASSWORD
+0050*     #PRIMARY-ALLOCATION #PRODUCT #RECFM #REPLACE
+0060*     #SECONDARY-ALLOCATION #VOLSER
+0070DEFINE DATA PARAMETER
+00801 ##TITLE (A078)
+00901 #ALLOCATION-TYPE (A004)
+01001 #BLKSIZE (N05.0)
+01101 #BLOCK-CONTROL (A006)
+01201 #DSNAME (A054)
+01301 #DSORG (A004)
+01401 #ISAM-KEY-LENGTH (N05.0)
+01501 #ISAM-KEY-POSITION (N05.0)
+01601 #LRECL (N05.0)
+01701 #PASSWORD (A008)
+01801 #PRIMARY-ALLOCATION (N07.0)
+01901 #PRODUCT (A001)
+02001 #RECFM (A004)
+02101 #REPLACE (A003)
+02201 #SECONDARY-ALLOCATION (N07.0)
+02301 #VOLSER (A006)
+0240END-DEFINE
+0250FORMAT PS=021 LS=080 ZP=OFF SG=OFF KD=ON  IP=OFF
+0260* MAP2: MAP PROFILES *****************************        410***********
+0270* .TTAAAMMOO   D I D I N D I D I        ?_)¬&:+(                       *
+0280* 023079        N0NNUCN             X        01 SYSPROF YL           1 *
+0290************************************************************************
+0300INPUT          (     IP=OFF                                           /*
+0310                                                                       )
+0320 002T ##TITLE  (AD=ODL ) /*.01D078 A078 .
+0330/
+0340/
+0350 002T 'Dateiname ............'
+0360 026T #DSNAME  (AD=MILT'_' ) /*.99D054 A054 .
+0370/
+0380 002T 'Archivnummer .........'
+0390 026T #VOLSER  (AD=MILT'_' ) /*.99D006 A006 .
+0400/
+0410 002T 'Passwort .............'
+0420 026T #PASSWORD  (AD=MNLT ) /*.99U008 A008 .
+0430/
+0440/
+0450 002T 'Ueberschreiben .......'
+0460 026T #REPLACE  (AD=MILT'_' ) /*.99U003 A003 .
+0470 037T '( YES /'
+0480 045T 'NO'(I)
+0490 048T ')'
+0500/
+0510 002T 'FCB Typ ..............'
+0520 026T #DSORG  (AD=MIT'_' ) /*.99U004 A004 .
+0530 037T '( SAM / PAM /'
+0540 051T 'ISAM'(I)
+0550 056T ')'
+0560/
+0570 002T 'Satzformat ...........'
+0580 026T #RECFM  (AD=MILT'_' ) /*.99D004 A004 .
+0590 037T '('
+0600 039T 'V'(I)
+0610 041T '/ F )'
+0620/
+0630 002T 'Satzlaenge ...........'
+0640 026T #LRECL  (AD=MILT'_' ) /*.99D005 N05.0.
+0650 037T '(fuer Satzformat F)'
+0660/
+0670 002T 'Blockgroesse .........'
+0680 026T #BLKSIZE  (AD=MILT'_' ) /*.99D005 N05.0.
+0690 037T '(in PAM Seiten bei PAM / in Bytes bei NSTD)'
+0700/
+0710 002T 'Blocktyp .............'
+0720 026T #ALLOCATION-TYPE  (AD=MILT'_' ) /*.99D004 A004 .
+0730 037T '('
+0740 039T 'PAM'(I)
+0750 043T '/ NSTD )'
+0760/
+0770 002T 'Blockformat ..........'
+0780 026T #BLOCK-CONTROL  (AD=MILT'_' ) /*.99U006 A006 .
+0790 037T '(BLKCTRL)'
+0800/
+0810 002T 'Produkt ..............'
+0820 026T #PRODUCT  (AD=MILT'_' ) /*.99U001 A001 .
+0830 037T '('
+0840 039T 'M'(I)
+0850 041T 'fuer LMS)'
+0860/
+0870 002T 'Dateigroesse in PAM Seiten'
+0880/
+0890 004T 'Primaerzuweisung ...'
+0900 026T #PRIMARY-ALLOCATION  (AD=MILT'_' ) /*.99D007 N07.0.
+0910/
+0920 004T 'Sekundaerzuweisung .'
+0930 026T #SECONDARY-ALLOCATION  (AD=MILT'_' ) /*.99D007 N07.0.
+0940/
+0950/
+0960 002T 'ISAM-Dateien'
+0970/
+0980 004T 'Schluesselposition .'
+0990 026T #ISAM-KEY-POSITION  (AD=MILT'_' ) /*.99D005 N05.0.
+1000/
+1010 004T 'Schluessellaenge ...'
+1020 026T #ISAM-KEY-LENGTH  (AD=MILT'_' ) /*.99D005 N05.0.
+1030* MAP2: VALIDATION *****************************************************
+1040* MAP2: END OF MAP *****************************************************
+1050END

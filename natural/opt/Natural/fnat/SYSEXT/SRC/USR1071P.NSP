@@ -1,0 +1,94 @@
+0010/*  Client RPC: Set User Id and Password for RPC request
+0020/*
+0030/*  Function ... Set User Id and Password for RPC request if user Id
+0040/*               is not filled *USER is set.
+0050/*
+0060/*  This program serves as example how to design a user-defined
+0070/*  program to call 'USR1071N'.
+0080/**********************
+0090/*
+0100/*  Parameter
+0110/*    INPUT
+0120/*          FUNCTION  (A02)  - 'ST'
+0130/*          USERID    (A08)  - User ID. If this is not filled,
+0140/*                             *USER will be used instead.
+0150/*          PASSWORD  (A08)  - User ID's password; no validation on
+0160/*                                Client side. If this is required, use
+0170/*                                NSC---P before.
+0180/*
+0190/*
+0200/*    OUTPUT
+0210/*          PRC       (N04)   - return value
+0220/*                                0     ok
+0230/*                                4     internal error
+0240/*                               1x     Error in Exp. crit. handling
+0250/*                               2x     Error in write handling
+0260/*                               3x     Error in read handling
+0270/*                             9999     invalid function code
+0280/*
+0290/* Maintenance log *****************************************************
+0300/*
+0310/* Date     User  SAGSIS   Description
+0320/* -------- ----- -------  ---------------------------------------------
+0330/* 11.12.04 UHE1  Pxxxxxx  Add mixed case option
+0340/***********************************************************************
+0350DEFINE DATA LOCAL
+03601 PARM-USR1071N
+0370  2 FUNCTION  (A02)
+0380  2 EXPIRATION-CRITERIA (A20)
+0390  2 USERID    (A08)
+0400  2 PASSWORD  (A08)
+0410  2 USER-DATA (A32)
+0420  2 MSG-TEXT  (A50)
+0430  2 REDEFINE MSG-TEXT
+0440    3 MSG-TEXT-A25 (A25/2)
+0450  2 PRC       (N04)
+04601 #A8       (A08)
+04701 #SW_ESCAPE (L)
+04801 #SW_MIXED_CASE (A1) INIT<'N'>
+0490END-DEFINE
+0500/*
+0510/*
+0520DEFINE WINDOW RPC-CLIENT SIZE 12*55 BASE 5/15
+0530  TITLE ' RPC Client Set user Id and password' CONTROL SCREEN
+0540/*
+0550SET KEY ALL
+0560SET CONTROL 'L'
+0570/*
+0580REPEAT
+0590/*
+0600  IF *DATA > 0 #SW_ESCAPE := TRUE END-IF
+0610/*
+0620  INPUT WINDOW='RPC-CLIENT'  (AD=MI'_' IP=OFF ZP=ON SG=OFF)
+0630    /    'User ID .......... :' PARM-USR1071N.USERID
+0640    /    'Password ......... :' PARM-USR1071N.PASSWORD  (AD=N)
+0650    /    'Mixed case ....(Y) :' #SW_MIXED_CASE (AD=T)
+0660    /    'Return Code ...... :' PARM-USR1071N.PRC (AD=OIL ZP=ON) /* GWA
+0670    /    PARM-USR1071N.MSG-TEXT (AD=OI)                          /* GWA
+0680    // 15T 'Press any PF-Key to stop.'
+0690  IF *PF-KEY NE 'ENTR'
+0700    ESCAPE BOTTOM
+0710  END-IF
+0720/*
+0730  IF PARM-USR1071N.USERID = #A8
+0740    PARM-USR1071N.USERID := *USER
+0750  END-IF
+0760/*
+0770  EXAMINE PARM-USR1071N.USERID   TRANSLATE INTO UPPER
+0780  IF NOT (#SW_MIXED_CASE = 'Y' OR = 'y')
+0790    EXAMINE PARM-USR1071N.PASSWORD TRANSLATE INTO UPPER
+0800  END-IF
+0810/*
+0820  PARM-USR1071N.FUNCTION := 'ST'
+0830/*
+0840  CALLNAT 'USR1071N' PARM-USR1071N
+0850/*
+0860  IF #SW_ESCAPE
+0870    IF PRC NE 0
+0880      STACK TOP DATA PRC MSG-TEXT
+0890    END-IF
+0900    ESCAPE BOTTOM
+0910  END-IF
+0920/*
+0930END-REPEAT
+0940END

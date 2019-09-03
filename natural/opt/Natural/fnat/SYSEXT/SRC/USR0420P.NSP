@@ -1,0 +1,68 @@
+0010/*  Read user long error message from FUSER
+0020/*  ATTENTION:   Natural Security check intentionally bypassed
+0030/**********************
+0040DEFINE DATA LOCAL
+0050  01 PARM-AREA                  /*  Parameters for CALLNAT
+0060     02 LIBRARY      (A08)      /*  Must not be blank
+0070     02 ERROR-NUMBER (N04)      /*  1 thru 9999
+0080     02 LANG-NUMB    (I01)      /*  *LANGUAGE (1 thru 60)
+0090     02 RESPONSE     (N04)      /*  Error during execution of USR0420N
+0100     02 LONG-TEXT    (A78/1:20)
+0110  01 INFO            (A78)
+0120  01 #MSG            (A72)
+0130  01 #MARK           (N4)
+0140END-DEFINE
+0150/***********************
+0160/*
+0170/* Set up some defaults:
+0180/*
+0190MOVE *APPLIC-ID TO LIBRARY         /* Current application
+0200MOVE *ERROR-NR  TO ERROR-NUMBER    /* Recent error code
+0210MOVE *LANGUAGE  TO LANG-NUMB       /* Current language number
+0220SET KEY ALL
+0230/*
+0240REPEAT
+0250  /*
+0260  RESET RESPONSE
+0270  RESET INITIAL LONG-TEXT (*)
+0280  /*
+0290  INPUT (AD=MITL'_' IP=OFF SG=OFF) WITH TEXT #MSG MARK #MARK ///
+0300    15T  'Read Long Texts from System File FUSER:' /
+0310    15T  '-' (39) //
+0320    18T  'Library ............' LIBRARY        /
+0330    18T  'Error number .......' ERROR-NUMBER   /
+0340    18T  'Language number ....' LANG-NUMB      ///
+0350    15T  'Press ENTER to receive the texts.' /
+0360    15T  'Press any PF-Key to stop.'
+0370    /*
+0380  IF *PF-KEY NE 'ENTR'
+0390    ESCAPE BOTTOM
+0400  END-IF
+0410  RESET #MARK #MSG
+0420  /*
+0430  CALLNAT 'USR0420N' PARM-AREA
+0440  /*
+0450  IF RESPONSE > 0
+0460    DECIDE ON FIRST VALUE OF RESPONSE
+0470      VALUE 2    #MSG := 'Please enter Library.'
+0480                 #MARK := 1
+0490      VALUE 3    #MSG := 'Invalid Error Number.'
+0500                 #MARK := 2
+0510      VALUE 4    #MSG := 'Invalid Language Number.'
+0520                 #MARK := 3
+0530      VALUE 5    #MSG := 'Text not found.'
+0540      VALUE 6    #MSG := 'Text is empty.'
+0550      VALUE 12   #MSG := 'Invalid Libary.'
+0560                 #MARK := 1
+0570      NONE VALUE
+0580        INPUT 'Response code from USR0420N:' (I) RESPONSE (AD=OIL)
+0590    END-DECIDE
+0600  ELSE
+0610    COMPRESS '&Long Text ...'
+0620      '&  Lib:%' LIBRARY
+0630      '&  No.:%' ERROR-NUMBER
+0640      '&  Lang:%' LANG-NUMB INTO INFO
+0650    WRITE NOTITLE INFO (DY=&I%) //  LONG-TEXT (*)
+0660  END-IF
+0670END-REPEAT
+0680END

@@ -1,0 +1,62 @@
+0010* MAP2: PROTOTYPE
+0020* INPUT USING MAP 'XXXXXXXX'
+0030*     ##TITLE #EVENT-NAME #FUNCTION #MAXIMUM-WAIT-TIME #MESSAGE-TEXT(*)
+0040DEFINE DATA PARAMETER
+00501 ##TITLE (A078)
+00601 #EVENT-NAME (A008)
+00701 #FUNCTION (A008)
+00801 #MAXIMUM-WAIT-TIME (N05.0)
+00901 #MESSAGE-TEXT (A050/00001:00010)
+0100END-DEFINE
+0110FORMAT PS=021 LS=080 ZP=OFF SG=OFF KD=ON  IP=OFF
+0120* MAP2: MAP PROFILES *****************************        410***********
+0130* .TTAAAMMOO   D I D I N D I D I        ?_)¬&:+(                       *
+0140* 023079        N0NNUCN             X        01 SYSPROF YL           1 *
+0150************************************************************************
+0160INPUT          (     IP=OFF                                           /*
+0170                                                                       )
+0180 002T ##TITLE  (AD=ODL ) /*.01D078 A078 .
+0190/
+0200/
+0210 002T 'Funktion .......'
+0220 019T #FUNCTION  (AD=MILT'_' CD=NE ) /*.99U008 A008 .
+0230 028T '(define/delete/wait/post/send/receive/sendpost/list)'
+0240/
+0250 002T 'Event Name .....'
+0260 019T #EVENT-NAME  (AD=MILT'_' CD=NE ) /*.99U008 A008 .
+0270/
+0280/
+0290 002T 'Max. Wartezeit .'
+0300 019T #MAXIMUM-WAIT-TIME  (AD=MILT'_' CD=NE ) /*.99U005 N05.0.
+0310/
+0320/
+0330 002T 'Text ...........'
+0340 019T #MESSAGE-TEXT (001)  (AD=MILT'_' CD=NE ) /*.99U050 A050 .
+0350   /* A1000100000100001000010000100001100010001000001H
+0360/
+0370 019T #MESSAGE-TEXT (002)  (AD=MILT'_' CD=NE ) /*.99U050 A050 .
+0380/
+0390 019T #MESSAGE-TEXT (003)  (AD=MILT'_' CD=NE ) /*.99U050 A050 .
+0400/
+0410 019T #MESSAGE-TEXT (004)  (AD=MILT'_' CD=NE ) /*.99U050 A050 .
+0420/
+0430 019T #MESSAGE-TEXT (005)  (AD=MILT'_' CD=NE ) /*.99U050 A050 .
+0440/
+0450 019T #MESSAGE-TEXT (006)  (AD=MILT'_' CD=NE ) /*.99U050 A050 .
+0460/
+0470 019T #MESSAGE-TEXT (007)  (AD=MILT'_' CD=NE ) /*.99U050 A050 .
+0480/
+0490 019T #MESSAGE-TEXT (008)  (AD=MILT'_' CD=NE ) /*.99U050 A050 .
+0500/
+0510 019T #MESSAGE-TEXT (009)  (AD=MILT'_' CD=NE ) /*.99U050 A050 .
+0520/
+0530 019T #MESSAGE-TEXT (010)  (AD=MILT'_' CD=NE ) /*.99U050 A050 .
+0540/
+0550/
+0560/
+0570/
+0580* MAP2: VALIDATION *****************************************************
+0590RULEVAR D01#FUNCTION
+0600INCDIR EVENTING                         FUNCTION                        ;
+0610* MAP2: END OF MAP *****************************************************
+0620END

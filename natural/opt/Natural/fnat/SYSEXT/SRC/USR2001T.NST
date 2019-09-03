@@ -1,0 +1,57 @@
+0010Get information on last error
+0020.
+0030Documentation ......... USR2001T    /*  Text object
+0040Interface ............. USR2001N    /*  Cataloged subprogram
+0050Example Program ....... USR2001P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR HANDLING
+0100.
+0110Keywords .............. ERROR
+0120.
+0130Function............... Now there will be additional information
+0140                        about the last occurred error, e.g. which
+0150                        program/library produced the error and
+0160                        which type of error it was.
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+023001 P_PARMS
+0240  02 P_ERROR_NUM           (I4)   /* Error number of last ocurred error
+0250  02 P_ERROR_LINE          (I4)   /* Error line
+0260  02 P_ERROR_PROGRAM       (A32)  /* Program where error occurred
+0270  02 P_ERROR_LIB           (A32)  /* Library of P_ERROR_PROGRAM
+0280  02 P_ERROR_DBID          (I4)   /* DBID of P_ERROR_LIB
+0290  02 P_ERROR_FNR           (I4)   /* FNR of P_ERROR_LIB
+0300  02 P_ERROR_TIME          (T)    /* Timestamp when error occurred
+0310  02 P_ERROR_PGM_TYPE      (A1)   /* Program type of P_ERROR_PROGRAM
+0320  02 P_ERROR_PGM_TYPE_LONG (A11)  /* Long description of program type
+0330  02 P_ERROR_LANG          (I4)   /* Language code when error occurred
+0340  02 P_ERROR_LEVEL         (I4)   /* Program level of P_ERROR_PROGRAM
+0350  02 P_ERROR_CLASS         (I1)   /* '0'  System error
+0360                                  /* '1'  User error
+0370  02 P_ERROR_TYPE          (I1)   /* '0'  Runtime error
+0380                                  /* '1'  Syntax error
+0390                                  /* '2'  Command execution error
+0400                                  /* '3'  Session termination error
+0410                                  /* '4'  Program termination error
+0420                                  /* '5'  Remote procedure call error
+0430.
+0440.
+0450Interface Call
+0460--------------
+0470Use the interface with the CALLNAT statement:
+0480.
+0490CALLNAT 'USR2001N' P_PARMS
+0500.
+0510.
+0520Using the Application Programming Interface:
+0530--------------------------------------------
+0540Copy the subprogram USR2001N to the library SYSTEM or the steplib
+0550library respectively, or to the required library.
+0560.
+0570***** End of Description *****

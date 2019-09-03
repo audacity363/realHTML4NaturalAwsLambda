@@ -1,0 +1,77 @@
+0010DB: 148 FILE: 032  - RESOURCE-CONTROL                 DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:24
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:24
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   50      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      MVS fields
+0230*
+0240  1 FN FUNCTION                          A    8    D Possible values:
+0250*      Possible values:
+0260*      ENQ-TEST  Test whether
+0270*      resource is
+0280*      available
+0290*      ENQ-USE   Get control of
+0300*      resource if it is
+0310*      available.
+0320*      (Any resources held
+0330*      by a user will be
+0340*      released at logoff)
+0350*      DEQ       Release resource
+0360*      LIST      List all ENQ's
+0370  1 A8 SCOPE                             A    8    D Possible values:
+0380*      Possible values:
+0390*      SYSTEMS
+0400*      SYSTEM
+0410*      STEP
+0420*      RESERVE
+0430*      RESPEND Reserve pending
+0440  1 A1 QNAME                             A    8    D The major name of th
+0450*      The major name of the
+0460*      resource (e.g. 'SPFEDIT').
+0470*      (It must NOT begin with SYS.)
+0480  1 A2 RNAME                             A  250    D The minor name of th
+0490*      The minor name of the
+0500*      resource (e.g. data set name
+0510*      member name, if major name =
+0520*      'SPFEDIT').
+0530  1 A4 CONTROL                           A    1    D Type of control:
+0540*      Type of control:
+0550*      S shared control
+0560*      E exclusive control (default)
+0570  1 A3 RNAME-LENGTH                      N  3.0    D The length of the mi
+0580*      The length of the minor name
+0590*      of the resource. (1-250)
+0600  1 A5 TCB-ADDRESS                       B    4      The TCB address of t
+0610*      The TCB address of the task
+0620*      that enqueued.
+0630  1 A6 ASID                              N  4.0      The address space ID
+0640*      The address space ID that
+0650*      enqueued.
+0660  1 A7 JOB-NAME                          A    8      The job that enqueue
+0670*      The job that enqueued.
+0680  1 A9 STATUS                            A    4      OWNS  owner of resou
+0690*      OWNS  owner of resource.
+0700*      WAIT  waiting for resource.
+0710  1 AA RESERVE-UNIT                      A    3    D The UCB address of t
+0720*      The UCB address of the
+0730*      'RESERVE'.
+0740*
+0750*      End of RESOURCE-CONTROL
+0760*
+0770******DDM OUTPUT TERMINATED******

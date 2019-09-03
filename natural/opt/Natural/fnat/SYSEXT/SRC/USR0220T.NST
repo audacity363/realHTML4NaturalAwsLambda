@@ -1,0 +1,51 @@
+0010Read Natural long error message
+0020.
+0030Documentation ......... USR0220T    /*  Text object
+0040Interface ............. USR0220N    /*  Cataloged subprogram
+0050Example Program ....... USR0220P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR MESSAGES
+0100.
+0110Keywords .............. +PREVIOUS-VERSION,
+0120                        *ERROR-NR, ERROR, FNAT, SYSERR
+0130.
+0140Interface Versions .... USR0220N, USR0221N
+0150.
+0160Function .............. Read Natural long error message from FNAT.
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+023001 PARM-AREA
+0240   02 ERROR-NUMBER (N04)  /*  May be 0001 to 9999
+0250   02 RESPONSE     (N04)  /*  Error code
+0260   02 L-TEXT  (A78/1:20)  /*  Contains the long text
+0270.
+0280Interface Call
+0290--------------
+0300Use the interface with the CALLNAT statement:
+0310.
+0320CALLNAT 'USR0220N' PARM-AREA
+0330.
+0340.
+0350Using the Application Programming Interface:
+0360--------------------------------------------
+0370Copy the subprogram USR0220N to the library SYSTEM or the steplib
+0380library respectively, or to the required library.
+0390.
+0400.
+0410The interface reads the requested information from
+0420Natural system file 'FNAT'.
+0430.
+0440RESPONSE indicates whether field L-TEXT (*) is filled correctly:
+0450  0000 ...  L-TEXT (*) is available
+0460  0003 ...  Invalid ERROR-NUMBER
+0470  0008 ...  L-TEXT (*) is empty
+0480  0009 ...  Long text not found
+0490  other ... internal error (please report to Software AG)
+0500.
+0510***** End of Description *****

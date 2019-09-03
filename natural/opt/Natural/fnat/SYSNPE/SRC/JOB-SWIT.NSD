@@ -1,0 +1,81 @@
+0010DB: 148 FILE: 081  - JOB-SWITCHES                     DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:22
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:22
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      BS2000 fields
+0230*
+0240  1 ES SYSTEM-CODE                       B    2      System error code.
+0250*      System error code.
+0260  1 B1 OPTION                            A    6    D Option for function
+0270*      Option for function WRITE:
+0280*      INVERT  Invert the value of
+0290*      the switches given in
+0300*      SWITCH-NUMBERS.
+0310*      ON      Set switches given in
+0320*      SWITCH-NUMBERS to ON.
+0330*      OFF     Set switches given in
+0340*      SWITCH-NUMBERS to OFF.
+0350  1 B2 SWITCH-NUMBERS                    A   64    D List of numbers of s
+0360*      List of numbers of switches to
+0370*      handle. Each switch must be
+0380*      specified as a 2 digit number
+0390*      between '00' and '31'.
+0400*      There is no delimiter between
+0410*      the switch numbers.
+0420*      Example: '031229' means
+0430*      switches 3, 12, 29.
+0440*      Only for function WRITE.
+0450  1 B3 SWITCH-TYPE                       A    7    D Defines whether the
+0460*      Defines whether the switches
+0470*      are USER switches or PROCESS
+0480*      switches.
+0490*      Handling of PROCESS switches
+0500*      is only possible in single
+0510*      user mode of ENTIRE SYSTEM
+0520*      SERVER. The same is valid for
+0530*      WRITE of USER switches.
+0540*      (In multi user mode the
+0550*      function would be executed by
+0560*      the ESY server task and the
+0570*      switches would be set there
+0580*      for it's user id.)
+0590  1 B4 SWITCH-VALUES                     A   32      Returns status of al
+0600*      Returns status of all switches
+0610*      Possible values:
+0620*      Y = switch is on.
+0630*      N = switch is off.
+0640*
+0650*      Switches 00 -> 31.
+0660  1 B5 USERID                            A    8    D Only valid for FUNCT
+0670*      Only valid for FUNCTION=READ
+0680*      and SWITCH-TYPE=USER:
+0690*      User id for which switches
+0700*      are to be read.
+0710  1 FN FUNCTION                          A    8    D READ    get switch v
+0720*      READ    get switch values
+0730*      WRITE   set switches given in
+0740*      field SWITCH-NUMBERS
+0750*      according to OPTION
+0760*      (Restrictions see field
+0770*      SWITCH-TYPE.)
+0780*
+0790*      End of JOB-SWITCHES
+0800*
+0810******DDM OUTPUT TERMINATED******

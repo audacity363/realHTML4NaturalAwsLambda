@@ -1,0 +1,28 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Work File Format
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170 I  Internal format
+0180    The internal format is an internal record layout for work files
+0190    that are used to transfer objects from one environment to another.
+0200
+0210 T  Transfer Format
+0220    The Transfer format is a general record layout for work files that
+0230    is platform-independent and can be used to transfer objects from
+0240    one hardware platform to another .
+0250
+0260During the unload function the setting of this field can not be
+0270changed after the first unload call has been executed.
+0280<HelpTextEnd>

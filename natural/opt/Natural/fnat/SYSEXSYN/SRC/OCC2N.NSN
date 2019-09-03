@@ -1,0 +1,14 @@
+0010** Example 'OCC2N': *OCCURRENCE (called by OCC2P)
+0020**********************************************************************
+0030DEFINE DATA
+0040PARAMETER
+00501 #ARR (N7/1:V)
+0060LOCAL
+00701 I    (N7)
+0080END-DEFINE
+0090*
+0100FOR I=1 TO *OCC(#ARR)
+0110  DISPLAY #ARR(I)
+0120END-FOR
+0130*
+0140END

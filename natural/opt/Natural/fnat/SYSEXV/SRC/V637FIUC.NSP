@@ -1,0 +1,121 @@
+0010*
+0020* Program .. V637FIUC (character version)
+0030* Library .. SYSEXV
+0040* Version .. 6.3.7
+0050*
+0060* Functionality: Use hexadecimal constant for Unicode field in Adabas
+0070*                records (EMPLOYEES-V2009)
+0080************************************************************************
+0090*
+0100DEFINE DATA LOCAL
+01101 EMPLOYEES-VIEW VIEW OF EMPLOYEES-V2009
+0120  2 NAME
+0130  2 FIRST-NAME
+0140  2 PRIVATE-COUNTRY (1)
+0150  2 PRIVATE-CITY(1)
+0160  2 PRIVATE-ADDRESS-LINE(1,1)
+0170  2 JOB-TITLE
+0180*
+01901 J            (I2)
+02001 #FULL-NAME   (U20/1:10)
+02101 #TITLE       (U33/1:10)
+02201 #COUNTRY     (A3/1:10)
+02301 #CITY        (U20/1:10)
+02401 #ADDRESS     (U30/1:10)
+0250END-DEFINE
+0260*
+0270*
+0280FORMAT KD=ON
+0290SET KEY PF3  NAMED 'Exit'
+0300        PF12 NAMED 'Canc'
+0310*
+0320* For correct and complete output use Natural WebIO
+0330*
+0340INPUT (IP=OFF)
+0350  01T *TIMX  (AD=OTD   )
+0360  21T '***** NATURAL 6.3.7 ENHANCEMENTS *****'
+0370  70T *DATX  (DF=L AD=OTD   )
+0380  /
+0390  01T 'User'
+0400  06T *USER  (AD=OILT   )
+0410  27T '- New Adabas Data Types -'(I)
+0420  64T 'Program'
+0430  72T *PROGRAM (AD=OI)
+0440  ///
+0450  02T 'Find Unicode fields using a hexadecimal Unicode constant '-
+0460      'for PRIVATE-CITY.' (I)
+0470  //
+0480  05T 'FIND statement with PRIVATE-CITY (1) = UH"0052012B00670061"'
+0490  /
+0500  05T 'for Riga in Latvian.'
+0510  ////
+0520  02T 'For a correct and complete output of the results, use '-
+0530      'the'  'Natural WebIO.'(I)
+0540  ///
+0550  05T 'Please press ENTER.'
+0560*
+0570IF *PF-KEY = 'PF3'
+0580  ESCAPE ROUTINE
+0590END-IF
+0600IF (*PF-KEY = 'PF12' OR= 'CLR')
+0610  CALLNAT 'UTILSTOP'
+0620END-IF
+0630*
+0640* Find records with an hexadecimal Unicode constant for Unicode field
+0650* PRIVATE-CITY and
+0660* show the Unicode fields NAME, FIRST-NAME, JOB-TITLE, PRIVATE-CITY
+0670* and PRIVATE-ADDRESS-LINE.
+0680*
+0690FIND EMPLOYEES-VIEW WITH PRIVATE-CITY (1) = UH'0052012B00670061'
+0700  /* 'Riga' in Latvian as hexadecimal constant
+0710  ADD 1 TO J
+0720  COMPRESS FIRST-NAME NAME INTO #FULL-NAME(J)
+0730  MOVE JOB-TITLE                    TO #TITLE (J)
+0740  MOVE PRIVATE-COUNTRY (1)          TO #COUNTRY (J)
+0750  MOVE PRIVATE-CITY (1)             TO #CITY (J)
+0760  MOVE PRIVATE-ADDRESS-LINE (1,1)   TO #ADDRESS (J)
+0770*
+0780END-FIND
+0790*
+0800INPUT (IP=OFF AD=OI CD=YE)
+0810  01T *TIMX  (AD=OTD   )
+0820  21T '***** NATURAL 6.3.7 ENHANCEMENTS *****'
+0830  70T *DATX  (DF=L AD=OTD   )
+0840  /
+0850  01T 'User'
+0860  06T *USER  (AD=OILT   )
+0870  27T '- New Adabas Data Types -'(I)
+0880  64T 'Program'
+0890  72T *PROGRAM (AD=OI)
+0900  ///
+0910  02T 'Find Unicode fields using a hexadecimal Unicode constant '-
+0920      'for PRIVATE-CITY.' (I)
+0930  //
+0940  05T 'Name /'  45T 'Country / City /'
+0950  /
+0960  05T 'Job Title'   45T 'Address'
+0970  //
+0980  05T #FULL-NAME(1) 45T #COUNTRY(1) #CITY(1)(AL=10)
+0990  /
+1000  05T #TITLE(1)(AL=20) 45T #ADDRESS(1)(AL=20)
+1010  //
+1020  05T #FULL-NAME(2) 45T #COUNTRY(2) #CITY(2)(AL=10)
+1030  /
+1040  05T #TITLE(2)(AL=20) 45T #ADDRESS(2)(AL=20)
+1050  //
+1060  05T #FULL-NAME(3) 45T #COUNTRY(3) #CITY(3)(AL=10)
+1070  /
+1080  05T #TITLE(3)(AL=20) 45T #ADDRESS(3)(AL=20)
+1090  //
+1100  05T #FULL-NAME(4) 45T #COUNTRY(4) #CITY(4)(AL=10)
+1110  /
+1120  05T #TITLE(4)(AL=20) 45T #ADDRESS(4)(AL=20)
+1130*
+1140IF *PF-KEY = 'PF3'
+1150  ESCAPE ROUTINE
+1160END-IF
+1170IF (*PF-KEY = 'PF12' OR= 'CLR')
+1180  CALLNAT 'UTILSTOP'
+1190END-IF
+1200
+1210END

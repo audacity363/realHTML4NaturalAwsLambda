@@ -1,0 +1,17 @@
+0010&H View IEBCOPY
+0020&L
+0030&L
+0040#Purpose@: Run IEBCOPY utility.
+0050&L
+0060&L
+0070#OpSys@  : z/OS
+0080&L
+0090&L
+0100#Usage@  : This view may be used exactly as the IEBCOPY utility in
+0110           batch. The syntax of IEBCOPY is transparent to the
+0120           user of this view.
+0130&L
+0140#Notes@  :
+0150
+0160
+0170

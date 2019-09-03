@@ -1,0 +1,128 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR3025N'.
+0030/***********************************************************************
+0040DEFINE DATA LOCAL
+0050  /*
+0060  01 USR3025L
+0070     02 INPUTS
+0080        03 ACTION        (A01)     /* 'D', 'A', 'I', 'P'
+0090     02 INPUT-OUTPUTS
+0100        03 STEPLIB-ID    (A08/1:8) /* ID of steplib
+0110        03 DBID          (I04/1:8) /* DBID of steplib
+0120        03 FNR           (I04/1:8) /* FNR of steplib
+0130        03 PASSWORD      (A08)     /* Input for ACTION 'A'
+0140        03 CIPHERCODE    (N08)     /* Input for ACTION 'A'
+0150        03 POSITION      (N01)     /* Pos. of lib to be added/deleted
+0160        03 AST-STEPLIB   (A08)     /* Value of *STEPLIB
+0170        03 AST-DBID      (I04)     /* DBID of *STEPLIB
+0180        03 AST-FNR       (I04)     /* FNR of *STEPLIB
+0190        03 NUMBER-ACTIVE (N01)     /* Number of active steplibs
+0200     02 OUTPUTS
+0210        03 RESPONSE      (I04)     /* Error code
+0220        03 INFOTEXT      (A65)     /* Text for RESPONSE field
+0230  /*
+0240  01 USR3025N
+0250     02 VERSION          (I01)     INIT <1>
+0260     02 NUMBER-STEPLIBS  (I1)      /* Version = 1
+0270     02 STEPLIB-NAMES    (A8/1:30) /* Version = 1
+0280     02 STEPLIB-DBIDS    (N5/1:30) /* Version = 1
+0290     02 STEPLIB-FNRS     (N5/1:30) /* Version = 1
+0300  01 REDEFINE USR3025N
+0310     02 EXTENDED-PARMS
+0320        03 EXTENDED-DATA (A01/1:542)
+0330  /*
+0340END-DEFINE
+0350/*
+0360/* Set up some defaults:
+0370/*
+0380SET KEY ALL
+0390ACTION := 'D'                /* Display active steplibs
+0400/*
+0410REPEAT
+0420  IF VERSION > 0
+0430    INPUT (AD=OIL IP=OFF ZP=OFF SG=OFF NL=5)
+0440          WITH TEXT INFOTEXT
+0450        'Maintain steplib table:' (I)
+0460      / '-' (23) (I)
+0470      / 'Action ..........'    ACTION  (AD=MIT'_') '(D,A,P,I)'
+0480     4X 'No. of steplibs ...'  NUMBER-STEPLIBS  (AD=OI ZP=ON)
+0490      / 'Add/Delete No. ..'    POSITION  (AD=MIT'_' ZP=ON NL=1)
+0500    34T 'Response ..........'  RESPONSE  (AD=OI ZP=ON SG=ON)
+0510      / 'Add-Library .....'    STEPLIB-ID (1)  (AD=MIT'_')
+0520    34T 'Add-DBID ...'         DBID (1)  (AD=MIT'_' ZP=ON)
+0530    55T 'Add-FNR ...'          FNR (1)  (AD=MIT'_' ZP=ON)
+0540      / 'Add-Password ....'    PASSWORD  (AD=MIT'_')
+0550    34T 'Add-Cipher code ....' CIPHERCODE  (AD=MIT'_' ZP=ON)
+0560      / '   ------------- Steplibs ----------------'
+0570      / '    Library  DBID  FNR     '-
+0580        '    Library  DBID  FNR     '-
+0590        '    Library  DBID  FNR'
+0600      / ' 1.' STEPLIB-NAMES  (1) STEPLIB-DBIDS  (1) STEPLIB-FNRS  (1)
+0610    28T '11.' STEPLIB-NAMES (11) STEPLIB-DBIDS (11) STEPLIB-FNRS (11)
+0620    55T '21.' STEPLIB-NAMES (21) STEPLIB-DBIDS (21) STEPLIB-FNRS (21)
+0630      / ' 2.' STEPLIB-NAMES (2)  STEPLIB-DBIDS (2)  STEPLIB-FNRS (2)
+0640    28T '12.' STEPLIB-NAMES (12) STEPLIB-DBIDS (12) STEPLIB-FNRS (12)
+0650    55T '22.' STEPLIB-NAMES (22) STEPLIB-DBIDS (22) STEPLIB-FNRS (22)
+0660      / ' 3.' STEPLIB-NAMES (3)  STEPLIB-DBIDS (3)  STEPLIB-FNRS (3)
+0670    28T '13.' STEPLIB-NAMES (13) STEPLIB-DBIDS (13) STEPLIB-FNRS (13)
+0680    55T '23.' STEPLIB-NAMES (23) STEPLIB-DBIDS (23) STEPLIB-FNRS (23)
+0690      / ' 4.' STEPLIB-NAMES (4)  STEPLIB-DBIDS (4)  STEPLIB-FNRS (4)
+0700    28T '14.' STEPLIB-NAMES (14) STEPLIB-DBIDS (14) STEPLIB-FNRS (14)
+0710    55T '24.' STEPLIB-NAMES (24) STEPLIB-DBIDS (24) STEPLIB-FNRS (24)
+0720      / ' 5.' STEPLIB-NAMES (5)  STEPLIB-DBIDS (5)  STEPLIB-FNRS (5)
+0730    28T '15.' STEPLIB-NAMES (15) STEPLIB-DBIDS (15) STEPLIB-FNRS (15)
+0740    55T '25.' STEPLIB-NAMES (25) STEPLIB-DBIDS (25) STEPLIB-FNRS (25)
+0750      / ' 6.' STEPLIB-NAMES (6)  STEPLIB-DBIDS (6)  STEPLIB-FNRS (6)
+0760    28T '16.' STEPLIB-NAMES (16) STEPLIB-DBIDS (16) STEPLIB-FNRS (16)
+0770    55T '26.' STEPLIB-NAMES (26) STEPLIB-DBIDS (26) STEPLIB-FNRS (26)
+0780      / ' 7.' STEPLIB-NAMES (7)  STEPLIB-DBIDS (7)  STEPLIB-FNRS (7)
+0790    28T '17.' STEPLIB-NAMES (17) STEPLIB-DBIDS (17) STEPLIB-FNRS (17)
+0800    55T '27.' STEPLIB-NAMES (27) STEPLIB-DBIDS (27) STEPLIB-FNRS (27)
+0810      / ' 8.' STEPLIB-NAMES (8)  STEPLIB-DBIDS (8)  STEPLIB-FNRS (8)
+0820    28T '18.' STEPLIB-NAMES (18) STEPLIB-DBIDS (18) STEPLIB-FNRS (18)
+0830    55T '28.' STEPLIB-NAMES (28) STEPLIB-DBIDS (28) STEPLIB-FNRS (28)
+0840      / ' 9.' STEPLIB-NAMES (9)  STEPLIB-DBIDS (9)  STEPLIB-FNRS (9)
+0850    28T '19.' STEPLIB-NAMES (19) STEPLIB-DBIDS (19) STEPLIB-FNRS (19)
+0860    55T '29.' STEPLIB-NAMES (29) STEPLIB-DBIDS (29) STEPLIB-FNRS (29)
+0870      / '10.' STEPLIB-NAMES (10) STEPLIB-DBIDS (10) STEPLIB-FNRS (10)
+0880    28T '20.' STEPLIB-NAMES (20) STEPLIB-DBIDS (20) STEPLIB-FNRS (20)
+0890    55T '30.' STEPLIB-NAMES (30) STEPLIB-DBIDS (30) STEPLIB-FNRS (30)
+0900      / '*STEPLIB ........' AST-STEPLIB
+0910    34T 'DBID .......'      AST-DBID
+0920    55T 'FNR .......'       AST-FNR
+0930  ELSE
+0940    INPUT (AD=OIL IP=OFF ZP=OFF SG=OFF) WITH TEXT INFOTEXT
+0950        'Maintain steplib table:' (I)
+0960      / '-' (23) (I) /
+0970      / 'Action ..........' ACTION (AD=MIT'_') '(D,A,P,I)'
+0980        4X 'No. of steplibs ...' NUMBER-ACTIVE (AD=OI ZP=ON)
+0990      / 'Add/Delete No. ..' POSITION (AD=MIT'_' ZP=ON)
+1000        14X 'Response ..........' RESPONSE   (AD=OI ZP=ON)
+1010     // '   ------------- Steplibs ----------------'
+1020      / '   Library  DBID       FNR        Password Ciphercode'
+1030      / '1.' STEPLIB-ID(1) (AD=MIT'_')
+1040             DBID(1)       (AD=MIT'_' ZP=ON)
+1050             FNR(1)        (AD=MIT'_' ZP=ON)
+1060             PASSWORD      (AD=MIT'_')
+1070             CIPHERCODE    (AD=MIT'_' ZP=ON)
+1080      / '2.' STEPLIB-ID(2) DBID(2) FNR(2)
+1090      / '3.' STEPLIB-ID(3) DBID(3) FNR(3)
+1100      / '4.' STEPLIB-ID(4) DBID(4) FNR(4)
+1110      / '5.' STEPLIB-ID(5) DBID(5) FNR(5)
+1120      / '6.' STEPLIB-ID(6) DBID(6) FNR(6)
+1130      / '7.' STEPLIB-ID(7) DBID(7) FNR(7)
+1140      / '8.' STEPLIB-ID(8) DBID(8) FNR(8)
+1150      / '  ' AST-STEPLIB (AD=O) AST-DBID (AD=O)
+1160             AST-FNR (AD=O) 35T '( *STEPLIB )'
+1170      /// 'Press any PF-Key to stop.'
+1180      /*
+1190  END-IF
+1200  /*
+1210  IF *PF-KEY NE 'ENTR'
+1220    ESCAPE ROUTINE
+1230  END-IF
+1240  /*
+1250  CALLNAT 'USR3025N' USR3025L USR3025N.EXTENDED-PARMS
+1260  /*
+1270END-REPEAT
+1280END

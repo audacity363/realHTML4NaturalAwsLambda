@@ -1,0 +1,194 @@
+0010DB: 148 FILE: 035  - CONSOLE                          DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:20
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:20
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A2 TEXT-LENGTH                       N  3.0    D Length of the text l
+0250*      Length of the text line is
+0260*      returned for functions
+0270*      'DISPLAY' and 'DIS-WTOR'.
+0280  1 A3 TEXT                              A  253    D The text line.
+0290*      The text line.
+0300  1 A5 REPLY-ID                          A    8    D The identifier which
+0310*      The identifier which must be
+0320*      used to reply to a 'write to
+0330*      operator with reply'.
+0340*      (only relevant for 'DIS-WTOR')
+0350  1 A7 CONSOLE-ID                        B    1    D The identifier of th
+0360*      The identifier of the console
+0370*      to display. If omitted, the
+0380*      master console is displayed.
+0390*      (only relevant for 'DISPLAY').
+0400  1 A8 RECORD-NUMBER                     N  9.0    D Only relevant for 'D
+0410*      Only relevant for 'DISPLAY'.
+0420*      Number of console message is
+0430*      returned in this field.
+0440*      If used as input (descriptor),
+0450*      a start position can be given.
+0460*      Possible values:
+0470*      0:  start with latest record
+0480*      n:  start with record n
+0490*      -n: start with latest record
+0500*      -n
+0510*      latest record number + 1 and
+0520*      WAIT-TIME > 0 :
+0530*      wait for next message
+0540*      If start position would be
+0550*      before oldest record avail.:
+0560*      start with oldest record.
+0570  1 A9 READ-DIRECTION                    A    1    D Only relevant for 'D
+0580*      Only relevant for 'DISPLAY'.
+0590*      Direction for reading console
+0600*      messages:
+0610*      B  backward (default)
+0620*      F  forward
+0630  1 AA REPLY-FLAG                        A    1      Only relevant for 'D
+0640*      Only relevant for 'DISPLAY',
+0650*      'DIS-WTOR'.
+0660*      Y:  message requires reply
+0670*      N:  no reply required
+0680  1 AB JOB-TYPE                          A    6    D Only relevant for 'D
+0690*      Only relevant for 'DISPLAY',
+0700*      'DIS-WTOR'.
+0710*      Type of job for which message
+0720*      was created, if job is still
+0730*      active.
+0740  1 AC NETTO-TEXT                        A  253    D Only relevant for 'D
+0750*      Only relevant for 'DISPLAY',
+0760*      'DIS-WTOR'.
+0770*      Message text without the
+0780*      additional information added
+0790*      by the operating system at
+0800*      creation of console message.
+0810  1 AD WAIT-TIME                         B    4    D Only relevant for 'D
+0820*      Only relevant for 'DISPLAY'.
+0830*      Time in seconds to wait for
+0840*      next message. (See also field
+0850*      RECORD-NUMBER.) If no message
+0860*      arrives within wait time
+0870*      ERROR-CODE 537 is returned.
+0880  1 AE JOB-ID                            A    8    D Only relevant for 'D
+0890*      Only relevant for 'DISPLAY',
+0900*      'DIS-WTOR'.
+0910*      Job number (TSN) of job for
+0920*      which message was created.
+0930  1 FN FUNCTION                          A    8    D The function to perf
+0940*      The function to perform:
+0950*      DISPLAY   Display console
+0960*      screen image.
+0970*      DIS-WTOR  Display pending
+0980*      operator replies.
+0990*      WTOR      Write to operator
+1000*      and wait for reply.
+1010*      WTO       Write to operator.
+1020*      OP-CMD    Issue operator
+1030*      command.
+1040*      Note: For BS2000 functions
+1050*      DISPLAY, DIS-WTOR and
+1060*      OP-CMD require that the
+1070*      UCON interface task of
+1080*      ENTIRE SYSTEM SERVER is
+1090*      active.
+1100  1 TN TIMX                              T   12    D Time stamp in NATURA
+1110*      Time stamp in NATURAL format.
+1120*
+1130*      Fields common to MVS and VSE
+1140*
+1150  1 AG TEXT-FLAG                         A    1      Describes type of me
+1160*      Describes type of message text
+1170*      C = Control Text (MultiLine)
+1180*      D = Data Text    (MultiLine)
+1190*      E = End Text     (MultiLine)
+1200*      L = Label Text   (MultiLine)
+1210*      M = First Line   (MultiLine)
+1220*      N = Normal Text  (Single)
+1230  1 AI RESPONSE-FLAG                     A    1      Indicate if message
+1240*      Indicate if message text is
+1250*      the response to a command.
+1260*      Y = YES
+1270*      N = NO
+1280  1 AK HOLD-FLAG                         A    1      Indicates if message
+1290*      Indicates if message is held
+1300*      by the system (has descriptor
+1310*      codes 1, 2, 3 or 11).
+1320*      Y = YES
+1330*      N = NO
+1340  1 AJ SEQUENCE-NUMBER                   A    8      Sequence number of t
+1350*      Sequence number of the message
+1360*      since the CPU was IPL'ed.
+1370  1 DC DESCR-CODE-STRING                 A   16    D Descriptor codes for
+1380*      Descriptor codes for the
+1390*      console message. Each byte of
+1400*      the string corresponds to one
+1410*      of the descriptor codes 1-16.
+1420*      A byte contains '1' if the
+1430*      corresponding descriptor code
+1440*      is assigned, or '0' if it is
+1450*      not assigned.
+1460  1 RC ROUTE-CODE-STRING                 A   28    D Routing codes for th
+1470*      Routing codes for the console
+1480*      message. Each byte of the
+1490*      string corresponds to one of
+1500*      the routing codes 1 - 28.
+1510*      A byte contains '1' if the
+1520*      corresponding routing code is
+1530*      assigned, or '0' if it is not
+1540*      assigned.
+1550*
+1560*      Fields common to MVS and BS2000
+1570*
+1580  1 A1 JOB-NAME                          A    8    D MVS    : The job tha
+1590*      MVS    : The job that issued
+1600*      the WTOR (only relev.
+1610*      for 'DIS-WTOR').
+1620*      BS2000:  The job for which the
+1630*      console-message was
+1640*      created, if job is
+1650*      still active (functn.
+1660*      'DISPLAY'/'DIS-WTOR')
+1670  1 A4 TIME-STAMP                        A    8    D Time stamp (HH:MM:SS
+1680*      Time stamp (HH:MM:SS) of
+1690*      the console message.
+1700*      MVS: Only available for
+1710*      'DIS-WTOR'.
+1720  1 A4 TIME-STAMP-LONG                   A   11    D Time stamp (HH:MM:SS
+1730*      Time stamp (HH:MM:SS.th)
+1740*      of the console message.
+1750*      MVS: Only available for
+1760*      'DIS-WTOR'.
+1770  1 A6 REPLY                             A   80      The operator reply r
+1780*      The operator reply received
+1790*      for 'WTOR'.
+1800*
+1810*      BS2000 fields
+1820*
+1830  1 ES SYSTEM-CODE                       B    2      System error code.
+1840*      System error code.
+1850  1 B1 TEXT-PART2                        A    3      Bytes 254-256 of
+1860*      Bytes 254-256 of
+1870*      field TEXT.
+1880  1 B2 NETTO-TEXT-PART2                  A    3      Bytes 254-256 of
+1890*      Bytes 254-256 of
+1900*      field NETTO-TEXT.
+1910*
+1920*      End of CONSOLE
+1930*
+1940******DDM OUTPUT TERMINATED******

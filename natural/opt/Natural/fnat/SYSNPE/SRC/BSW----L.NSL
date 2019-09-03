@@ -1,0 +1,14 @@
+0010**DV          0015     V1JOB-SWITCHES                    JOB-SWITCHES
+0020**DD          0018N 3.0 2ERROR-CODE
+0030**DD          0019A  58 2ERROR-TEXT
+0040**DD          0020N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0021A  10 2SYSTEM-MESSAGE-CODE
+0060**DD          0022B   2 2SYSTEM-CODE
+0070**DD          0023A   6 2OPTION
+0080**DD          0024A  64 2SWITCH-NUMBERS
+0090**DD          0025A   7 2SWITCH-TYPE
+0100**DD          0026A  32 2SWITCH-VALUES
+0110**DRR         0027     R2SWITCH-VALUES                   /* REDEF. BEGIN : SWITCH-VALUES
+0120**DFRI1       0028A   1 3SW-VALUES                       (1:32)
+0130**DD          0029A   8 2USERID                          /* USERID OF THE SWITCH
+0140**DD          0030A   8 2FUNCTION

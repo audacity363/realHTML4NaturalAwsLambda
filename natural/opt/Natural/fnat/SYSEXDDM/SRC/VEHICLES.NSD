@@ -1,0 +1,50 @@
+0010DB: 000 FILE: 012  - VEHICLES                         DEFAULT SEQUENCE:
+0020
+0030T L DB Name                              F Leng  S D Remark
+0040- - -- --------------------------------  - ----  - - ------------------------
+0050  1 AA REG-NUM                           A   15  N D  LOCAL FORMAT
+0060*   LOCAL FORMAT
+0070*   CAR'S REGISTRATION NUMBER
+0080  1 AB CHASSIS-NUM                       B    4  F    NUMERIC
+0090*   NUMERIC
+0100*   UNIQUE MANIFACTURER NO FOR C
+0110  1 AC PERSONNEL-ID                      A    8    D  INTERN.
+0120*   INTERN.
+0130*   IDENTIFIER OF CAR USER/OWNER
+0140G 1 CD CAR-DETAILS                         0          LOCAL/GENERIC
+0150       HD=CAR DETAILS
+0160*   LOCAL/GENERIC
+0170*   DESCRIPTION OF THE CAR
+0180  2 AD MAKE                              A   20  N D  LOCAL/GENERIC
+0190*   LOCAL/GENERIC
+0200*   NAME OF CAR MAKE/MANUFACTURE
+0210  2 AE MODEL                             A   20  N    LOCAL/GENERIC
+0220*   LOCAL/GENERIC
+0230*   NAME OF CAR MODEL
+0240  2 AF COLOR                             A   10  N D  LOCAL/GENERIC
+0250*   LOCAL/GENERIC
+0260*   CAR MODEL'S COLOR NAME
+0270  2 AF COLOUR                            A   10  N D  LOCAL/GENERIC
+0280*   LOCAL/GENERIC
+0290*   CAR MODEL'S COLOR NAME
+0300  1 AG YEAR                              N  4.0  N    INTERN.
+0310*   INTERN.
+0320*   YEAR OF THE CAR'S MANUFACTUR
+0330  1 AH CLASS                             A    1  F D  INTERN.
+0340*   INTERN.
+0350*   CODE FOR OWNERSHIP (P/C)
+0360  1 AI LEASE-PUR                         A    1  F    INTERN.
+0370*   INTERN.
+0380*   CODE HOW CAR WAS AQUIRED
+0390  1 AJ DATE-ACQ                          N  8.0  N    INTERN.
+0400*   INTERN.
+0410*   DATE WHEN CAR WAS ACQUIRED
+0420  1 AL CURR-CODE                         A    3  N    INTERN.
+0430*   INTERN.
+0440*   CURRENCY OF MAINTENANCE COST
+0450M 1 AM MAINT-COST                        P  7.0  N    INTERN.
+0460*   INTERN.
+0470*   MAINTENANCE COST IN CURR.UNI
+0480  1 AO MODEL-YEAR-MAKE                   A   24    S  LOCAL/GENERIC
+0490*   LOCAL/GENERIC
+0500*   CAR MAKE + MODEL YEAR

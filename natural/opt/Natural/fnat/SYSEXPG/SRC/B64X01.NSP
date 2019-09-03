@@ -1,0 +1,191 @@
+0010** Example 'B64X01': BASE64-A-STR := SAG64BA(<BASE64-B-STR>)
+0020************************************************************************
+0030* Function ......... Convert binary data into printable,
+0040*                    network-compatible data or vice versa using
+0050*                    Base64 encoding.
+0060*
+0070*                    Base64 encoding means (B) -> (A) -> (B),
+0080*                    where 6 (binary) bits will be encoded into 8
+0090*                    (alpha) bits, e.g a (B3) value will be encoded
+0100*                    into a (A4) value.
+0110*
+0120*                    Note: Every binary value will be encoded into
+0130*                    a non-ambiguous alpha value. Re-encoding this
+0140*                    alpha value again will result in the original
+0150*                    binary value. However, this is not the case with
+0160*                    most of the (A) -> (B) -> (A) encodings.
+0170*
+0180*                    The encoding may be used to transfer a .bmp
+0190*                    file via TCP/IP, or to transfer Natural binary or
+0200*                    integer values via the utility protocol.
+0210*
+0220*                    There are 2 modes available: NATRPC and RFC3548
+0230*                    (default).
+0240*                    NATRPC means that the conversion is done
+0250*                    according to the NATRPC logic. This works on
+0260*                    mainframe and on open systems.
+0270*                    RFC3548 is like NATRPC, but alphanumeric bytes
+0280*                    that are not needed are filled with '='.
+0290*                    Furthermore on open systems there is the mode
+0300*                    RFC2045 available.
+0310*
+0320DEFINE DATA
+0330LOCAL
+03401 FUNCTION        (A2)
+0350                  /* 'AB' Alpha to binary encoding
+0360                  /* 'BA' Binary to alpha encoding
+03701 PARM-RC         (I4)
+0380                  /* 0:    ok
+0390                  /* Mainframe
+0400                  /* 1  Source is not numeric
+0410                  /* 2  Source is not packed
+0420                  /* 3  Source is not floating point
+0430                  /* 4  Overflow, source doesn't fit into target
+0440                  /* 5  Integer overflow
+0450                  /* 6  Source is not a valid date or time
+0460                  /* 7  Length error (hex input not even)
+0470                  /* 8  Target precision is less than source precision
+0480                  /* 9  Float underflow (result->0)
+0490                  /* 10 Alpha source contains non-hex characters
+0500                  /* 20 Invalid function code
+0510                  /* 21 Invalid value for RFC parameter
+0520                  /* Open Systems
+0530                  /* 1  Invalid value for RFC parameter
+0540                  /* 2  Invalid function code
+0550                  /* 3  CMBASE64: Overflow, source doesn't fit into
+0560                  /*              target
+0570                  /* 4  CMBASE64: Non-base64 character found in encoded
+0580                  /*              data
+0590                  /* 5  CMBASE64: Out of memory
+0600                  /* 6  CMBASE64: Inalid number of parameters
+0610                  /* 7  CMBASE64: Invalid parameter type
+0620                  /* 8  CMBASE64: Invalid parameter length
+0630                  /* 9  CMBASE64: Invalid function code
+0640                  /* 10 CMBASE64: Unkown return code
+06501 PARM-ERRTXT     (A72)
+0660                  /* blank, if ok no error
+0670                  /* else error text
+06801 PARM-A          (A)   DYNAMIC
+0690                  /* Alpha source input/target output
+07001 PARM-B          (B)   DYNAMIC
+0710*                 /* Binary source input/target output
+07201 PARM-RFC        (B1)
+0730                  /* 0 - RFC3548; 3 - RFC2045 (OS only); 4 - NATRPC;
+0740/*
+07501 #BACKUP-A       (A) DYNAMIC
+07601 #BACKUP-B       (B) DYNAMIC
+0770END-DEFINE
+0780/*
+0790/*
+0800SET KEY ALL
+0810/*
+0820/* Copycode SAG64BAP and SAG64ABP containing the prototype definition
+0830/* is used at compilation time only in order to determine the type of
+0840/* the return variable for function call reference and to check the
+0850/* parameters, if this is desired. SAG64BAP and SAG64ABP are optional.
+0860INCLUDE SAG64BAP
+0870INCLUDE SAG64ABP
+0880/*
+0890REPEAT
+0900  RESET PARM-A PARM-B
+0910  REDUCE DYNAMIC PARM-A TO 0
+0920  REDUCE DYNAMIC PARM-B TO 0
+0930  FUNCTION := 'BA'
+0940  PARM-B := H'0123456789ABCDEF'
+0950  INPUT (AD=MIL IP=OFF CD=NE) WITH TEXT PARM-ERRTXT
+0960   // 10T 'Base64 Encoding:' (YEI)
+0970    / 10T '-' (19) (YEI) /
+0980    / 10T 'Function (BA,AB) ..' (TU) FUNCTION (AD=T)
+0990    / 10T 'Alpha In/Output ...' (TU) PARM-A (AL=30)
+1000    / 10T 'Binary In/Output ..' (TU) PARM-B (EM=HHHHHHHH)
+1010    / 10T 'Response ..........' (TU) PARM-RC (AD=OD CD=TU)
+1020    / PARM-ERRTXT (AD=OD CD=TU)
+1030  RESET PARM-ERRTXT
+1040  IF *PF-KEY NE 'ENTR'
+1050    ESCAPE BOTTOM
+1060  END-IF
+1070  /*
+1080  RESET #BACKUP-A #BACKUP-B
+1090  REDUCE DYNAMIC #BACKUP-A TO 0
+1100  REDUCE DYNAMIC #BACKUP-B TO 0
+1110  #BACKUP-A := PARM-A
+1120  #BACKUP-B := PARM-B
+1130  /*
+1140  IF FUNCTION = 'BA'
+1150    /* Parameter PARM-RC, PARM-ERRTXT and PARM-RFC are optional
+1160    /* Parameter PARM-RFC does not apply to mainframe
+1170    /* PARM-A := SAG64BA(<PARM-B,PARM-RC,PARM-ERRTXT,PARM-RFC>)
+1180    PARM-A := SAG64BA(<PARM-B,PARM-RC,PARM-ERRTXT>)
+1190    /* PARM-A := SAG64BA(<PARM-B,PARM-RC>)
+1200    /* PARM-A := SAG64BA(<PARM-B>)
+1210  ELSE
+1220    /* Parameter PARM-RC, PARM-ERRTXT and PARM-RFC are optional
+1230    /* Parameter PARM-RFC does not apply to mainframe
+1240    /* PARM-B := SAG64AB(<PARM-A,PARM-RC,PARM-ERRTXT,PARM-RFC>)
+1250    PARM-B := SAG64AB(<PARM-A,PARM-RC,PARM-ERRTXT>)
+1260    /* PARM-B := SAG64AB(<PARM-A,PARM-RC>)
+1270    /* PARM-B := SAG64AB(<PARM-A>)
+1280  END-IF
+1290  /*
+1300  IF PARM-RC NE 0 THEN
+1310    WRITE 'Encoding' FUNCTION
+1320    WRITE NOTITLE PARM-ERRTXT
+1330  ELSE
+1340    IF FUNCTION = 'BA' THEN
+1350      WRITE 'Binary -> Alpha'
+1360      WRITE '=' PARM-B (EM=HHHHHHHHHHHHHHHHHHHHHHHHH)
+1370        / '=' PARM-A (AL=50)
+1380      RESET PARM-B
+1390      REDUCE DYNAMIC PARM-B TO 0
+1400      FUNCTION := 'AB'
+1410    ELSE
+1420      WRITE 'Alpha -> Binary'
+1430      WRITE '=' PARM-A (AL=50) /
+1440        '=' PARM-B (EM=HHHHHHHHHHHHHHHHHHHHHHHHH)
+1450      RESET PARM-A
+1460      REDUCE DYNAMIC PARM-A TO 0
+1470      FUNCTION := 'BA'
+1480    END-IF
+1490    /*
+1500    IF FUNCTION = 'BA'
+1510      /* Parameter PARM-RC, PARM-ERRTXT and PARM-RFC are optional
+1520      /* Parameter PARM-RFC does not apply to mainframe
+1530      /* PARM-A := SAG64BA(<PARM-B,PARM-RC,PARM-ERRTXT,PARM-RFC>)
+1540      PARM-A := SAG64BA(<PARM-B,PARM-RC,PARM-ERRTXT>)
+1550      /* PARM-A := SAG64BA(<PARM-B,PARM-RC>)
+1560      /* PARM-A := SAG64BA(<PARM-B>)
+1570    ELSE
+1580      /* Parameter PARM-RC, PARM-ERRTXT and PARM-RFC are optional
+1590      /* Parameter PARM-RFC does not apply to mainframe
+1600      /* PARM-B := SAG64AB(<PARM-A,PARM-RC,PARM-ERRTXT,PARM-RFC>)
+1610      PARM-B := SAG64AB(<PARM-A,PARM-RC,PARM-ERRTXT>)
+1620      /* PARM-B := SAG64AB(<PARM-A,PARM-RC>)
+1630      /* PARM-B := SAG64AB(<PARM-A>)
+1640    END-IF
+1650    IF PARM-RC NE 0 THEN
+1660      WRITE 'Encoding' FUNCTION
+1670      WRITE NOTITLE PARM-ERRTXT
+1680    ELSE
+1690      IF FUNCTION = 'BA' THEN
+1700        WRITE 'Binary -> Alpha'
+1710        WRITE '=' PARM-B (EM=HHHHHHHHHHHHHHHHHHHHHHHHH)
+1720          / '=' PARM-A (AL=50)
+1730        IF PARM-A = #BACKUP-A THEN
+1740          WRITE '******** Encoding successful ********'
+1750        ELSE
+1760          WRITE '******** Value changed by encoding ********'
+1770        END-IF
+1780      ELSE
+1790        WRITE 'Alpha -> Binary'
+1800        WRITE '=' PARM-A (AL=50) /
+1810          '=' PARM-B (EM=HHHHHHHHHHHHHHHHHHHHHHHHH)
+1820        IF PARM-B = #BACKUP-B THEN
+1830          WRITE '******** Encoding successful ********'
+1840        ELSE
+1850          WRITE '******** Value changed by encoding ********'
+1860        END-IF
+1870      END-IF
+1880    END-IF
+1890  END-IF
+1900END-REPEAT
+1910END

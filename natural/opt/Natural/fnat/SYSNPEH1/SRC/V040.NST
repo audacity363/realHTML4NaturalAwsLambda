@@ -1,0 +1,13 @@
+0010&H View EVENTING
+0020&L
+0030&L
+0040#Purpose@: Program to Program communication.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : This view allows programs or applications to communicate
+0100           with each other. Events can be waited on or posted and
+0110           messages sent from application to application.
+0120&L
+0130#Notes@  :

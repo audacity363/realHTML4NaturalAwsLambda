@@ -1,0 +1,150 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1055N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+00601 V                  (I01)  CONST <20>
+0070LOCAL
+00801 USR1055L
+0090  2 OBJECT-KEY
+0100    3 LIBRARY        (A08)
+0110    3 OBJECT-FROM    (A33)
+0120    3 OBJECT-TO      (A33)
+0130    3 OBJECT-KIND    (A01)
+0140      /*
+0150  2 INPUTS
+0160    3 OPT-ACCESS     (A01)
+0170    3 OPT-TYPE-OP    (A01)
+0180    3 OPT-TYPE       (A24)
+0190    3 OPT-SCROLL     (A01)
+0200    3 OPT-WILDCARD   (A01)
+0210    3 OPT-ASTERISK   (A01)
+0220    3 OPT-AMOUNT     (I02)
+0230      /*
+0240  2 INPUT-OUTPUTS
+0250    3 INT-HANDLE     (I04)
+0260    3 NEXT-OBJ       (A32)
+0270  2 OUTPUTS
+0280    3 RETURNED       (I02)
+0290    3 LIST-OBJ       (A32/1:V)
+0300    3 LIST-TYPE-SRC  (A01/1:V)
+0310    3 LIST-TYPE-MOD  (A01/1:V)
+0320      /*
+03301 USR1055N
+0340  2 VERSION          (I01)     INIT <3>
+0350  2 V1-NSC-CKECK     (A01)
+0360  2 V2-DBID          (N05)
+0370  2 V2-FNR           (N04)
+0380  2 V2-PSW           (A08)
+0390  2 V2-CIP           (N08)
+0400  2 V2-SYSFILE       (A01)
+0410  2 V3-FSEC-DBID     (N05)
+0420  2 V3-FSEC-FNR      (N05)
+0430  2 V3-FSEC-PSW      (A08)
+0440  2 V3-FSEC-CIP      (N08)
+04501 REDEFINE USR1055N
+0460  2 EXTENDED-PARMS
+0470    3 EXTENDED-DATA  (A01/1:54)
+0480/*
+0490LOCAL USING USR-MSG   /* Data for message exchange
+0500LOCAL USING USR-FLD   /* Description of the field in error
+0510/*
+0520LOCAL
+05301 LOCAL-MSG          (A79)
+05401 IX                 (I02)
+05501 INPUT-OK           (L)
+0560END-DEFINE
+0570/*
+0580SET KEY ALL
+0590/*
+0600LIBRARY     := *LIBRARY-ID
+0610OBJECT-FROM := 'USR>     '
+0620OBJECT-TO   := '         '
+0630OBJECT-KIND := 'A'
+0640OPT-TYPE-OP := ' '
+0650OPT-TYPE    := 'PT      '
+0660OPT-SCROLL  := 'D'
+0670OPT-AMOUNT  := 20
+0680/*
+0690OPT-ACCESS := 'O'     /* Open
+0700NAD-FLD.FIELD-POSITION := 2
+0710/*
+0720REPEAT
+0730  INPUT (AD=MITL'_' IP=OFF)
+0740    TEXT NAD-MSG.MSG, MSG-DATA (1), MSG-DATA (2), MSG-DATA (3)
+0750    MARK NAD-FLD.FIELD-POSITION
+0760    / 18T 'List objects in a library:' (I)
+0770    / 18T '-' (26) (I) /
+0780    / 18T 'System file (U/N) .....' V2-SYSFILE
+0790    / 18T 'Library ...............' LIBRARY
+0800    / 18T 'DBID of library .......' V2-DBID
+0810    / 18T 'FNR of library ........' V2-FNR
+0820    / 18T 'PSW of library ........' V2-PSW (AD=N)
+0830    / 18T 'Cipherkey of library ..' V2-CIP
+0840    / 18T 'Object from ...........' OBJECT-FROM  (AL=9)
+0850    / 18T 'Object to .............' OBJECT-TO    (AL=9)
+0860    / 18T 'Type operator .........' OPT-TYPE-OP
+0870    / 18T 'Object types ..........' OPT-TYPE
+0880    / 18T 'Kind ..................' OBJECT-KIND
+0890    / 18T 'Amount of objects .....' OPT-AMOUNT
+0900    / 18T 'Wildcard ..............' OPT-WILDCARD
+0910    / 18T 'Asterisk ..............' OPT-ASTERISK
+0920    / 18T 'DBID of FSEC ..........' V3-FSEC-DBID
+0930    / 18T 'FNR of FSEC ...........' V3-FSEC-FNR
+0940    / 18T 'PSW of FSEC ...........' V3-FSEC-PSW
+0950    / 18T 'Cipherkey of FSEC .....' V3-FSEC-CIP
+0960    / 18T 'Press any PF-key to stop.'
+0970/*
+0980  IF *PF-KEY NE 'ENTR'
+0990    ESCAPE ROUTINE
+1000  END-IF
+1010/*
+1020  IF OPT-AMOUNT > V
+1030    COMPRESS 'The maximum for the amount is' V
+1040      'in this example program.' INTO LOCAL-MSG
+1050    NAD-MSG.MSG := LOCAL-MSG
+1060    NAD-FLD.FIELD-POSITION := 7
+1070    ESCAPE TOP
+1080  END-IF
+1090/*
+1100  CALLNAT 'USR1055N' USR1055L  USR1055N.EXTENDED-PARMS
+1110    NAD-MSG   NAD-FLD
+1120  /*
+1130  OPT-ACCESS := 'R'   /* Read
+1140  /*
+1150  FOR IX = 1 TO RETURNED
+1160    DISPLAY IX LIST-OBJ (IX) (AL=8)
+1170      LIST-TYPE-SRC (IX)    LIST-TYPE-MOD (IX)
+1180  END-FOR
+1190  /*
+1200  IF *PF-KEY NE 'ENTR'
+1210    OPT-ACCESS := 'C'     /* Close
+1220    CALLNAT 'USR1055N' USR1055L  USR1055N.EXTENDED-PARMS
+1230      NAD-MSG   NAD-FLD
+1240    ESCAPE BOTTOM
+1250  END-IF
+1260  /*
+1270  IF MSG-NR NE 0
+1280    IF NOT INPUT-OK AND RETURNED = 0
+1290* NAD-MSG.MSG, MSG-DATA (1), MSG-DATA (2), MSG-DATA (3) and
+1300* NAD-FLD.FIELD-POSITION  is set
+1310      ESCAPE TOP
+1320    ELSE
+1330      WRITE (AD=LI)
+1340        / 'Message number ....' NAD-MSG.MSG-NR
+1350        / 'Message ...........' NAD-MSG.MSG (AL=59)
+1360        / 'Message type ......' NAD-MSG.MSG-TYPE
+1370        / 'Message data ......' NAD-MSG.MSG-DATA (1:3)
+1380        // 'Field structure ...' NAD-FLD.FIELD-STRUCTURE
+1390        / 'Field name ........' NAD-FLD.FIELD-NAME
+1400        / 'Field position ....' NAD-FLD.FIELD-POSITION
+1410        / 'Field index .......' NAD-FLD.FIELD-INDEX1
+1420        NAD-FLD.FIELD-INDEX2
+1430        NAD-FLD.FIELD-INDEX3
+1440      ESCAPE BOTTOM
+1450    END-IF
+1460  END-IF
+1470  /*
+1480  INPUT-OK := TRUE    /* All parameter checks are done
+1490END-REPEAT
+1500END

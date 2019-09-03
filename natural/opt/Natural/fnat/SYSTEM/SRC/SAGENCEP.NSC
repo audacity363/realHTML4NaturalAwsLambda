@@ -1,0 +1,53 @@
+0010DEFINE PROTOTYPE SAGENCEP RETURNS (A) DYNAMIC
+0020  DEFINE DATA PARAMETER
+0030  1 P-DEC-STR-E    (U)      DYNAMIC BY VALUE
+0040  1 P-RET          (I4)     OPTIONAL  /* 0:    ok
+0050                                      /* else: Natural error returned
+0060                                      /*       by the GIVING clause of
+0070                                      /*       MOVE ENCODED.
+0080                                      /*       This is the error which
+0090                                      /*       comes up when a character
+0100                                      /*       cannot be converted into
+0110                                      /*       the target code page.
+0120    /* Error strategy:
+0130    /* Step 1: If a character shall be %-encoded and is not available
+0140    /* in the code page for %-encoding, the character will not be
+0150    /* %-encoded. It will be copied.
+0160    /* Step 2: If a character will not be %-encoded but copied from the
+0170    /* input format U-variable to a format A-variable (in *CODEPAGE)
+0180    /* and the character is not available in *CODEPAGE, a substitution
+0190    /* character will be used instead. The substitution character will
+0200    /* be %-encoded.
+0210    /* The last error will be returned in P-RET.
+0220  1 P-ERR-CHAR     (U1)     OPTIONAL  /* Character causing the error
+0230  1 P-SPACE        (A1)     OPTIONAL  /* '%'  => %20
+0240                                      /* ' '  => ' '
+0250                                      /* else => '+' (default)
+0260  1 P-UNRES        (A1)     OPTIONAL  /* 'E'  => encode
+0270                                      /* else => don't encode (default)
+0280  1 P-RES          (A1)     OPTIONAL  /* 'E'  => encode (default)
+0290                                      /* else => don't encode
+0300  1 P-OTHER        (A1)     OPTIONAL  /* 'E'  => encode (default)
+0310                                      /* else => don't encode
+0320  1 P-CP           (A64)    OPTIONAL  /* IANA name e.g. UTF-8 (default)
+0330                                      /* or ISO-8859-1
+0340    /* On mainframe only code page names defined with the macro NTCPAGE
+0350    /* in the source module NATCONFG can be used. Other code page names
+0360    /* are rejected with a corresponding runtime error.
+0370    /*
+0380  1 P-CP-TABLE-CHAR(U1/1:*)  OPTIONAL /* user selected char to be
+0390                                      /* %-encoded, e.g. umlaut o
+0400  1 P-CP-TABLE-ENC (A12/1:*) OPTIONAL /* user %-encoding
+0410                                      /* e.g. character umlaut o
+0420                                      /*      '%F6'    -> ISO-8859-1
+0430                                      /*      '%C3%B6' -> UTF-8
+0440                                      /* e.g. character '/'
+0450                                      /*      '/'    -> '/' not encoded
+0460                                      /*       although P-RES = 'E'
+0470    /* Characters in this table will be encoded according to the
+0480    /* specifed %-encoding. If the U12 encoding part is blank (space
+0490    /* according to *CODEPAGE) or the P-CP-TABLE-ENC value is equal to
+0500    /* the character, then the character will not be encoded at all.
+0510    /*
+0520  END-DEFINE
+0530END-PROTOTYPE

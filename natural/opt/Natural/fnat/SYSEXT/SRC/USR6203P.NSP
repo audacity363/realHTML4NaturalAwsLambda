@@ -1,0 +1,45 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR6203N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR6203L
+0070   2 INPUTS
+0080     3 P-FUNCTION      (A1)
+0090     3 P-RESOURCE-NAME (A253)
+0100     3 P-LIBRARY-NAME  (A8)
+0110   2 OUTPUTS
+0120     3 P-PATH-NAME     (A253)
+0130     3 P-RESPONSE      (I4)
+0140END-DEFINE
+0150/*
+0160SET KEY ALL
+0170/*
+0180P-FUNCTION      := 'L'
+0190P-RESOURCE-NAME := 'HUGO.TXT'
+0200P-LIBRARY-NAME  := ' '          /* search in current library
+0210/*
+0220REPEAT
+0230  INPUT (AD=OIL IP=OFF)
+0240   // 'Maintain resource:' (I)
+0250    / '-' (19) (I) /
+0260    / 'Function ..........' P-FUNCTION  (AD=MIT)
+0270          ' L (get path on library only)'
+0280    / 22X ' S (get path on library or steplibs)'
+0290    / 22X ' C (get path on library only and create resource)'
+0300    / 22X ' A (get path on library or steplibs and create resource)'
+0310    / 22X ' D (delete resource on library only)'
+0320    / 22X ' X (delete resource on library or steplibs)'
+0330   // 'Resource name .....' P-RESOURCE-NAME (AD=MIW'_' AL=40)
+0340    / 'Library name ......' P-LIBRARY-NAME  (AD=MIT'_')
+0350   // 'Path of resource ..'
+0360    /                       P-PATH-NAME     (AD=OI AL=79)
+0370    / 'Response ..........' P-RESPONSE
+0380  /*
+0390  IF *PF-KEY NE 'ENTR'
+0400    ESCAPE ROUTINE
+0410  END-IF
+0420  /*
+0430  CALLNAT 'USR6203N'  USR6203L
+0440END-REPEAT
+0450END

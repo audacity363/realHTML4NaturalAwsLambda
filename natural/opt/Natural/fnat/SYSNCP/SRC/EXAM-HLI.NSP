@@ -1,0 +1,110 @@
+0010/* EXAM-HLI - HELP Local Individually
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (01:08)
+0070     02 NATURAL-ERROR
+0080     02 RETURN-CODE
+0090     02 RESULT-FIELD (01:12)
+0100     02 GETSET-FIELD-NAME
+0110     02 GETSET-FIELD-VALUE
+0120     /*********************
+0130  01 MAX-OCC         (I01) CONST <12>
+0140  01 IY              (I01)
+0150  01 NUMB            (P02)
+0160  01 PROC-NAME       (A08)
+0170  01 MSG             (A72)
+0180  01 CURR-LOC-NAME   (A50)
+0190  01 CURR-LOC-NB     (A10)
+0200END-DEFINE
+0210SET KEY ALL
+0220/**********************************************************************
+0230/* Ask for currently used name:
+0240/*
+0250PROCESS COMMAND ACTION GET USING
+0260    PROCESSOR-NAME = ' '
+0270    GETSET-FIELD-NAME = 'NAME&'
+0280IF NATURAL-ERROR NE 0
+0290  CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0300  WRITE MSG
+0310  ESCAPE ROUTINE
+0320END-IF
+0330/*
+0340MOVE GETSET-FIELD-VALUE TO PROC-NAME
+0350/**********************************************************************
+0360CALLNAT 'EXAM-GLN' CURR-LOC-NAME CURR-LOC-NB
+0370/**********************************************************************
+0380/* Options for HELP:
+0390/*
+0400COMPRESS /*  Create a command
+0410  'L'    /*  Local Functions
+0420  'C'    /*  based on current location
+0430  'I'    /*  Return IFN, too
+0440  '+'    /*  Start BEHIND given start value
+0450  'S'    /*  Separate the keywords
+0460  'T'    /*  Translate abbreviated keywords to upper case
+0470  'A'    /*  Internal keywords, too.
+0480         /*
+0490TO COMMAND-LINE (1) LEAVING NO
+0500/*
+0510/**********************************************************************
+0520REP. REPEAT
+0530  INPUT (AD=MIT' ' IP=OFF  )
+0540  WITH TEXT MSG
+0550    /  'List Local Functions individually.' (I)
+0560    /  '-' (78) (I)
+0570    // 'Processor Name ........' PROC-NAME (AD=OI)
+0580    /  'Search Syntax .........' COMMAND-LINE (1) (AL=40)
+0590    /  'Start Value ...........' COMMAND-LINE (2) (AL=40)
+0600    /  'Location definition ...' COMMAND-LINE (3) (AL=40)
+0610    /  'Keyword Restriction ...' COMMAND-LINE (4) (AL=40)
+0620  /*************************************
+0630  IF *PF-KEY NE 'ENTR'
+0640    ESCAPE ROUTINE
+0650  END-IF
+0660  /*
+0670  RESET MSG RESULT-FIELD (*)
+0680  /*
+0690  IF COMMAND-LINE (1) NE MASK ('L')
+0700    MOVE '"Search Syntax" has to start with "L".' TO MSG
+0710    ESCAPE TOP
+0720  END-IF
+0730  /*
+0740  PROCESS COMMAND ACTION HELP USING
+0750    PROCESSOR-NAME = PROC-NAME
+0760    COMMAND-LINE (*) = COMMAND-LINE (*)
+0770  /*
+0780  IF NATURAL-ERROR NE 0
+0790    CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0800    WRITE MSG
+0810    ESCAPE ROUTINE
+0820  END-IF
+0830  /*
+0840  MOVE ALL RESULT-FIELD (12)  /*  Take the last line
+0850    TO COMMAND-LINE (2)       /*  Make it the start value
+0860    UNTIL 51                  /*  Do not take the IFN
+0870  EXAMINE COMMAND-LINE (2)    /*  New start value ...
+0880    TRANSLATE INTO UPPER      /*  ... must be given in upper case
+0890  /*
+0900  FO. FOR IY 1 MAX-OCC
+0910    IF RESULT-FIELD (IY) = ' '
+0920      RESET NUMB
+0930      WRITE '*** End of list ***' (I)
+0940      ESCAPE BOTTOM (FO.)
+0950    END-IF
+0960    ADD 1 TO NUMB
+0970    WRITE NUMB RESULT-FIELD (IY) (AL=72)
+0980  END-FOR
+0990  /*
+1000END-REPEAT
+1010/**********************************************************************
+1020WRITE TITLE LEFT
+1030    'List Local Functions in Processor' PROCESSOR-NAME (AD=I)
+1040    'with options =' COMMAND-LINE (1) (AD=I AL=8)
+1050  / 'Current Location:' CURR-LOC-NB (AD=I) CURR-LOC-NAME
+1060  / ' '
+1070  / 'No. Function'  56T 'IFN'
+1080  / '---' '-' (50) 56T '----------'
+1090/**********************************************************************
+1100END

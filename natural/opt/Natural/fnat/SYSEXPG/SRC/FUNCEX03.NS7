@@ -1,0 +1,11 @@
+0010** Example 'FUNCEX03': Function call  (Function)
+0020************************************************************************
+0030DEFINE FUNCTION F#CHAR
+0040  RETURNS (A1/1:2)
+0050  /*
+0060  F#CHAR(1) := 'A'
+0070  F#CHAR(2) := 'B'
+0080  /*
+0090END-FUNCTION
+0100*
+0110END

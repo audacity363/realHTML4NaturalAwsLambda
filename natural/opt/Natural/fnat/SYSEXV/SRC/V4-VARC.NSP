@@ -1,0 +1,85 @@
+0010*
+0020* Program .. V4-VARC
+0030* Library .. SYSEXV
+0040* Version .. 4.1
+0050*
+0060* Functionality: Show new system variables for NATURAL 4.1
+0070************************************************************************
+0080*
+0090DEFINE DATA LOCAL
+0100 1 #SCREEN-IO  (A10)
+0110END-DEFINE
+0120*
+0130FORMAT KD=ON
+0140SET KEY PF3  NAMED 'Exit'
+0150        PF12 NAMED 'Canc'
+0160*
+0170MOVE EDITED *SCREEN-IO (EM=FALSE/TRUE) TO #SCREEN-IO
+0180*
+0190INPUT (IP=OFF)
+0200 01T *TIMX  (AD=OTD )
+0210 21T '***** NATURAL 4.1 ENHANCEMENTS *****'
+0220 70T *DATX  (AD=OTD DF=L )
+0230 /
+0240 01T 'User'
+0250 06T *USER  (AD=OILT )
+0260 27T '- New System Variables -'(I)
+0270 64T 'Program'
+0280 72T *PROGRAM (AD=OI)
+0290 //
+0300 02T '*DATV'(I)
+0310     'contains date in format dd-mmm-yyyy ..................'
+0320 63T *DATV (AD=OI)
+0330 /
+0340 02T '*DATVS'(I)
+0350     'contains date in format ddmmmyyyy ...................'
+0360 63T *DATVS (AD=OI)
+0370 //
+0380 02T '*NATVERS'(I)
+0390     'contains Natural version string ...................'
+0400 63T *NATVERS (AD=OI)
+0410 /
+0420 02T '*PATCH-LEVEL'(I)
+0430     'contains Natural patch level number ...........'
+0440 63T *PATCH-LEVEL (AD=OI)
+0450 /
+0460 02T '*SCREEN-IO'(I)
+0470     'contains whether screen in-/output is possible ..'
+0480 63T #SCREEN-IO (AD=OI)
+0490 //
+0500 02T '*CPU-TIME'(I)
+0510     'contains CPU time used by Natural process ........'
+0520 63T *CPU-TIME (AD=OIL)
+0530 /
+0540 02T '*PID'(I)
+0550      'contains current process ID as string value ...........'
+0560 63T *PID (AD=OI  AL=17)
+0570 /
+0580 02T '*SERVER-TYPE'(I)
+0590     'contains server start-up type of Natural ......'
+0600 /
+0610 12T *SERVER-TYPE (AD=OI)
+0620 /
+0630 02T '*HOSTNAME'(I)
+0640     'contains machine name for the running Natural ....'
+0650 /
+0660 12T *HOSTNAME (AD=OI)
+0670 /
+0680 02T '*NET-USER'(I)
+0690     'contains user ID including domain name ...........'
+0700 /
+0710 12T *NET-USER (AD=OI  AL=60)
+0720 /
+0730 02T '*PARM-USER'(I)
+0740     'contains name of the current parameter file .....'
+0750 /
+0760 12T *PARM-USER (AD=OI  AL=60)
+0770 IF *PF-KEY = 'PF3'
+0780  ESCAPE ROUTINE
+0790END-IF
+0800IF (*PF-KEY = 'PF12' OR= 'CLR')
+0810  CALLNAT 'UTILSTOP'
+0820END-IF
+0830
+0840*
+0850END

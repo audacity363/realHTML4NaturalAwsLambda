@@ -1,0 +1,90 @@
+0010/* EXAM-HGV - List local functions for a given location for EXAM-HGU
+0020/**********************************************************************
+0030DEFINE DATA
+0040PARAMETER
+0050  01 #PROC-NAME (A08)
+0060  01 #LOCATION  (A72)
+0070  01 NB         (N03)
+0080  01 MK         (A01)
+0090  01 LVL        (N03)
+0100LOCAL
+0110  01 COMMAND VIEW OF COMMAND
+0120     02 PROCESSOR-NAME
+0130     02 COMMAND-LINE (01:08)
+0140     02 NATURAL-ERROR
+0150     02 RETURN-CODE
+0160     02 RESULT-FIELD (01:12)
+0170     02 GETSET-FIELD-NAME
+0180     02 GETSET-FIELD-VALUE
+0190     /*********************
+0200  01 MAX-OCC         (I01) CONST <12>
+0210  01 IY              (I01)
+0220  01 MSG             (A72)
+0230  01 TYPE            (A03)
+0240* 01 LVL             (N03)
+0250  01 SUB-LOCATION    (A72)
+0260  01 LVL-OLD         (N03)
+0270END-DEFINE
+0280SET KEY ALL
+0290/**********************************************************************
+0300/* Options for HELP:
+0310/*
+0320MOVE 'LISTA' TO COMMAND-LINE (1)
+0330MOVE ALL #LOCATION TO COMMAND-LINE (3) UNTIL 51
+0340MOVE COMMAND-LINE (3) TO #LOCATION
+0350EXAMINE COMMAND-LINE (3) TRANSLATE INTO UPPER
+0360/*
+0370/**********************************************************************
+0380REP. REPEAT
+0390  /*
+0400  RESET MSG RESULT-FIELD (*)
+0410  /*
+0420  PROCESS COMMAND ACTION HELP USING
+0430    PROCESSOR-NAME = #PROC-NAME
+0440    COMMAND-LINE (*) = COMMAND-LINE (*)
+0450  /*
+0460  IF NATURAL-ERROR NE 0
+0470    CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0480    WRITE MSG
+0490    ESCAPE ROUTINE
+0500  END-IF
+0510  /*
+0520  MOVE ALL RESULT-FIELD (12)  /*  Take the last line
+0530    TO COMMAND-LINE (2)       /*  Make it the start value
+0540    UNTIL 51                  /*  Do not take the IFN
+0550  EXAMINE COMMAND-LINE (2)    /*  New start value ...
+0560    TRANSLATE INTO UPPER      /*  ... must be given in upper case
+0570  /*
+0580  IF RESULT-FIELD (1) = ' '   /*  Nothing found for this location
+0590    ESCAPE ROUTINE
+0600  END-IF
+0610*
+0620  IF MK NE ' '
+0630    ADD 1 TO LVL              /*  next level deeper
+0640  ELSE
+0650    LVL := 1
+0660  END-IF
+0670  FO. FOR IY 1 MAX-OCC
+0680    IF RESULT-FIELD (IY) = ' '
+0690      ESCAPE BOTTOM (REP.)
+0700    END-IF
+0710    ADD 1 TO NB
+0720*
+0730    COMPRESS 'L:' LVL   TO TYPE LEAVING NO
+0740    WRITE NB (SG=F) TYPE RESULT-FIELD (IY) (AL=62)
+0750    /*
+0760    MOVE ALL RESULT-FIELD (IY) TO SUB-LOCATION UNTIL 51
+0770    /*
+0780    IF #LOCATION NE SUB-LOCATION
+0790      MOVE 'X' TO MK
+0800      MOVE LVL TO LVL-OLD    /* remain current level
+0810      CALLNAT 'EXAM-HGV' #PROC-NAME SUB-LOCATION NB MK LVL
+0820      IF LVL GT LVL-OLD
+0830        SUBTRACT 1 FROM LVL  /* go back to previous level
+0840      END-IF
+0850    END-IF
+0860    /*
+0870  END-FOR
+0880  /*
+0890END-REPEAT
+0900END

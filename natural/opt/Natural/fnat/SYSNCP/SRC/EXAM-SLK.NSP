@@ -1,0 +1,199 @@
+0010/*  EXAM-SLK - SET Location using Keywords
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (1:8)
+0070     02 RESULT-FIELD (1:8)
+0080     02 GETSET-FIELD-NAME
+0090     02 GETSET-FIELD-VALUE
+0100     02 RETURN-CODE
+0110     02 NATURAL-ERROR
+0120  01 IX                    (I01)
+0130  01 CURR-LOC              (A10)
+0140  01 REDEFINE CURR-LOC
+0150     02 CURR-LOC-N10       (N10)
+0160  01 MK                    (I01)
+0170  01 MSG                   (A72)
+0180  01 PROC-NAME             (A08)
+0190  01 C-KEYW                (A16/1:3)
+0200  01 W-KEYW                (A16/1:3)
+0210  01 MOD                   (C)
+0220  01 KEYW-IKN   (A04/1:3)
+0230  01 REDEFINE KEYW-IKN
+0240     02 KEYW-IKN-N4 (N04/1:3)
+0250   1 X-IKN      (N04/1:3)
+0260   1 KILO       (I04)  CONST <1024>
+0270   1 MEGA       (I04)  CONST <1048576>
+0280   1 W          (N01)
+0290   1 Y          (I04)
+0300END-DEFINE
+0310DEFINE WINDOW GETSET
+0320  SIZE 16 * 48
+0330  BASE IX / IX
+0340  TITLE ' (SLK) Set Location using Keywords'
+0350  CONTROL SCREEN
+0360  FRAMED POSITION OFF
+0370SET KEY ALL
+0380IX := *LEVEL * 2
+0390/**********************************************************************
+0400PROCESS COMMAND ACTION GET USING
+0410  PROCESSOR-NAME = ' '                     /*  Current processor
+0420  GETSET-FIELD-NAME = 'NAME&'
+0430/*
+0440IF NATURAL-ERROR NE 0
+0450  WRITE '*** NCPWORK currently not accessible ***' (I)
+0460  ESCAPE ROUTINE
+0470END-IF
+0480/*
+0490MOVE GETSET-FIELD-VALUE TO PROC-NAME
+0500/**********************************************************************
+0510REPEAT
+0520  /********************************************************************
+0530  PROCESS COMMAND ACTION GET USING
+0540    PROCESSOR-NAME = PROC-NAME
+0550    GETSET-FIELD-NAME = 'CURR-LOCATION'
+0560  /*
+0570  MOVE GETSET-FIELD-VALUE TO CURR-LOC
+0580  /*
+0590  IF CURR-LOC NE MASK (NNNNNNNNNN)
+0600    MOVE ALL '0' TO CURR-LOC
+0610  END-IF
+0620  /********************************************************************
+0630  /* Compute the IKNs using CURR-LOCATION:
+0640  Y := CURR-LOC-N10
+0650  DIVIDE MEGA INTO Y GIVING X-IKN (1) REMAINDER Y
+0660  DIVIDE KILO INTO Y GIVING X-IKN (2) REMAINDER X-IKN (3)
+0670  /*
+0680  IF X-IKN (1) = 1 THRU 999
+0690    ADD 1000 TO X-IKN (1)
+0700  ELSE
+0710    RESET X-IKN (1:3)
+0720  END-IF
+0730  IF X-IKN (2) = 1 THRU 999
+0740    ADD 2000 TO X-IKN (2)
+0750  ELSE
+0760    RESET X-IKN (2:3)
+0770  END-IF
+0780  IF X-IKN (3) = 1 THRU 999
+0790    ADD 3000 TO X-IKN (3)
+0800  ELSE
+0810    RESET X-IKN (3)
+0820  END-IF
+0830  /********************************************************************
+0840  /* Translate IKNs to Keywords:
+0850  IF X-IKN (1) = 1000 THRU 1999
+0860    MOVE X-IKN (1) TO COMMAND-LINE (2)
+0870    PERFORM IKN-TO-KEYWORD
+0880    MOVE RESULT-FIELD (1) TO C-KEYW (1)
+0890  ELSE
+0900    RESET C-KEYW (1:3)
+0910  END-IF
+0920  IF X-IKN (2) = 2000 THRU 2999
+0930    MOVE  X-IKN (2) TO COMMAND-LINE (2)
+0940    PERFORM IKN-TO-KEYWORD
+0950    MOVE RESULT-FIELD (1) TO C-KEYW (2)
+0960  ELSE
+0970    RESET C-KEYW (2:3)
+0980  END-IF
+0990  IF X-IKN (3) = 3000 THRU 3999
+1000    MOVE X-IKN (3) TO COMMAND-LINE (2)
+1010    PERFORM IKN-TO-KEYWORD
+1020    MOVE RESULT-FIELD (1) TO C-KEYW (3)
+1030  ELSE
+1040    RESET C-KEYW (3)
+1050  END-IF
+1060  /********************************************************************
+1070  INPUT WINDOW = 'GETSET'
+1080  (AD=OIL CD=NE IP=F SG=ON ZP=ON CV=MOD )
+1090  WITH TEXT MSG MARK MK
+1100    / 'Current Processor Name ...' PROC-NAME
+1110    / 'Current Location (IFN) ...' CURR-LOC
+1120    / 'Current IKN          #1 ..' X-IKN (1) (ZP=F)
+1130    / '                     #2 ..' X-IKN (2) (ZP=F)
+1140    / '                     #3 ..' X-IKN (3) (ZP=F)
+1150    / 'Current Loc. Keyword #1 ..' C-KEYW (1)
+1160    / '                     #2 ..' C-KEYW (2)
+1170    / '                     #3 ..' C-KEYW (3)
+1180    / '-' (43)
+1190    / 'Wanted  Loc. Keyword #1 ..' W-KEYW (1) (AD=MIT)
+1200    / '                     #2 ..' W-KEYW (2) (AD=MIT)
+1210    / '                     #3 ..' W-KEYW (3) (AD=MIT)
+1220  SET WINDOW OFF
+1230  RESET MSG
+1240  /********************************************************************
+1250  IF *PF-KEY NE 'ENTR'
+1260  OR MOD NOT MODIFIED
+1270    ESCAPE ROUTINE
+1280  END-IF
+1290  /********************************************************************
+1300  /* Check for non-defined constellation of Keywords:
+1310  IF W-KEYW (3) NE ' '
+1320  AND ( W-KEYW (2) = ' ' OR W-KEYW (1) = ' ' )
+1330    REINPUT FULL 'No Keyword allowed here.' MARK 3
+1340  END-IF
+1350  IF W-KEYW (2) NE ' ' AND W-KEYW (1) = ' '
+1360    REINPUT FULL 'No Keyword allowed here.' MARK 2
+1370  END-IF
+1380  /********************************************************************
+1390  /* Check whether there is an IKN for the given Keyword:
+1400  RESET KEYW-IKN (*)
+1410  FOR W 1 3   /*  Up to three Keywords
+1420    IF W-KEYW (W) NE ' '
+1430      RESET COMMAND-LINE (*)
+1440      MOVE W-KEYW (W) TO COMMAND-LINE (1)  /*  The Keyword ...
+1450      MOVE W          TO COMMAND-LINE (2)  /*  ... and its type
+1460      PROCESS COMMAND ACTION TEXT USING
+1470        PROCESSOR-NAME = PROCESSOR-NAME
+1480        COMMAND-LINE (*) = COMMAND-LINE (*)
+1490      /*
+1500      IF NATURAL-ERROR > 0
+1510        CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+1520        REINPUT FULL MSG MARK W
+1530      END-IF
+1540      /*
+1550      MOVE RESULT-FIELD (5) TO KEYW-IKN (W)
+1560    END-IF
+1570  END-FOR
+1580  /********************************************************************
+1590  RESET CURR-LOC-N10
+1600  IF KEYW-IKN-N4 (1) = 1000 THRU 1999
+1610    CURR-LOC-N10 := ( KEYW-IKN-N4 (1) - 1000 ) * MEGA
+1620  END-IF
+1630  IF KEYW-IKN-N4 (2) = 2000 THRU 2999
+1640    CURR-LOC-N10 := ( ( KEYW-IKN-N4 (2) - 2000 ) * KILO ) + CURR-LOC-N10
+1650  END-IF
+1660  IF KEYW-IKN-N4 (3) = 3000 THRU 3999
+1670    CURR-LOC-N10 := KEYW-IKN-N4 (3) - 3000 + CURR-LOC-N10
+1680  END-IF
+1690  /*
+1700  PROCESS COMMAND ACTION SET USING
+1710    PROCESSOR-NAME = PROC-NAME
+1720    GETSET-FIELD-NAME = 'CURR-LOCATION'
+1730    GETSET-FIELD-VALUE = CURR-LOC
+1740  /*
+1750  IF NATURAL-ERROR NE 0
+1760    CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+1770    REINPUT FULL MSG
+1780  END-IF
+1790  /*
+1800END-REPEAT
+1810/*****************************************************
+1820DEFINE IKN-TO-KEYWORD
+1830  MOVE 'IKN' TO COMMAND-LINE (1)
+1840  RESET MSG
+1850  /*
+1860  PROCESS COMMAND ACTION HELP USING
+1870    PROCESSOR-NAME = PROC-NAME
+1880    COMMAND-LINE (*) = COMMAND-LINE (*)
+1890  /*
+1900  IF NATURAL-ERROR NE 0
+1910    CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+1920  END-IF
+1930  /*
+1940  IF RESULT-FIELD (1) = ' '
+1950    COMPRESS '<' COMMAND-LINE (2) '>' TO RESULT-FIELD (1)
+1960  END-IF
+1970END-SUBROUTINE
+1980/*****************************************************
+1990END

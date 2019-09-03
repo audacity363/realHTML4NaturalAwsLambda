@@ -1,0 +1,132 @@
+0010/* EXAM-HGU - HELP for all available Functions for current processor
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 CMD VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (1:2)
+0070     02 NATURAL-ERROR
+0080     02 RETURN-CODE
+0090     02 RESULT-FIELD (01)
+0100     02 GETSET-FIELD-NAME
+0110     02 GETSET-FIELD-VALUE
+0120     /*********************
+0130  01 NB              (N03)           /*  Line number counter
+0140  01 BLANK           (A01)           /*  EXAM-HGV
+0150  01 LVL             (N03)           /*  EXAM-HGV
+0160  01 TYPE            (A03)           /*  Type of command, e.g. "Global"
+0170  01 PROC-NAME       (A08)           /*  Current processor
+0180  01 MSG             (A72)           /*  Error message
+0190  01 #TITLE          (A32)           /*
+0200  01 START-VALUE     (A40)           /*  Optional global function
+0210  01 #START          (L)             /*
+0220  01 LEAVE           (L)             /*
+0230  01 #LINE           (A72)           /*
+0240  01 REDEFINE #LINE
+0250  02 #LOCATION       (A51)
+0260  02 #IFN            (A10)
+0270END-DEFINE
+0280DEFINE WINDOW PARMS
+0290  SIZE 08 * 70
+0300  BASE 02 / 02
+0310  TITLE ' (HGU) List all Functions'
+0320  CONTROL SCREEN
+0330  FRAMED POSITION OFF
+0340SET KEY ALL
+0350/**********************************************************************
+0360WRITE TITLE LEFT
+0370  'No. Lvl' #TITLE   60T 'IFN' /
+0380  '--- ---' '-' (50) 60T '----------'
+0390/**********************************************************************
+0400/* Read the currently used processor name:
+0410/*
+0420PROCESS CMD ACTION GET USING
+0430    CMD.PROCESSOR-NAME = ' '
+0440    CMD.GETSET-FIELD-NAME = 'NAME&'
+0450IF CMD.NATURAL-ERROR NE 0
+0460  CALLNAT 'EXAM-ERR' CMD.NATURAL-ERROR MSG
+0470  WRITE MSG
+0480  ESCAPE ROUTINE
+0490END-IF
+0500MOVE CMD.GETSET-FIELD-VALUE TO PROC-NAME
+0510/**********************************************************************
+0520/*
+0530/* Endless loop:
+0540/*
+0550REP. REPEAT
+0560  RESET NB CMD.COMMAND-LINE (2)
+0570  MOVE FALSE TO LEAVE
+0580  /*************************************
+0590  INPUT WINDOW = 'PARMS' (AD=MIT' ' IP=OFF) WITH TEXT MSG
+0600    /  'Processor Name ...' PROC-NAME   (AD=OI)
+0610    /  'Start Value ......' START-VALUE (AD=MIT)
+0620  /*************************************
+0630  SET WINDOW OFF
+0640  IF *PF-KEY NE 'ENTR'
+0650    ESCAPE ROUTINE
+0660  END-IF
+0670  /*************************************
+0680  COMPRESS 'Functions in' PROC-NAME TO #TITLE
+0690  RESET MSG NB
+0700  /***************************************
+0710  /* Check whether START-VALUE contains a valid function:
+0720  /*
+0730  CALLNAT 'EXAM-HGG' PROC-NAME START-VALUE MSG /* Valid Global Cmd
+0740  IF MSG NE ' '
+0750    REINPUT MSG MARK *START-VALUE
+0760  END-IF
+0770  /*
+0780  IF START-VALUE NE ' '
+0790    MOVE LEFT START-VALUE TO CMD.COMMAND-LINE (2)
+0800    MOVE TRUE TO #START
+0810  ELSE
+0820    MOVE FALSE TO #START
+0830  END-IF
+0840  /***************************************
+0850  GLOBAL. REPEAT /*  Read all Global Functions
+0860    RESET CMD.RESULT-FIELD (*)
+0870    IF #START
+0880      MOVE 'GISTA' TO CMD.COMMAND-LINE (1)
+0890      MOVE FALSE TO #START
+0900    ELSE
+0910      MOVE 'GISTA+' TO CMD.COMMAND-LINE (1)
+0920    END-IF
+0930    /*
+0940    PROCESS CMD ACTION HELP USING
+0950      CMD.PROCESSOR-NAME = PROC-NAME
+0960      CMD.COMMAND-LINE (*) = CMD.COMMAND-LINE (*)
+0970    /*
+0980    IF CMD.NATURAL-ERROR NE 0
+0990      CALLNAT 'EXAM-ERR' CMD.NATURAL-ERROR MSG
+1000      WRITE MSG
+1010      ESCAPE ROUTINE
+1020    END-IF
+1030    /*  Prepare next start value:
+1040    MOVE ALL CMD.RESULT-FIELD (01)  /*  Take the last line
+1050      TO CMD.COMMAND-LINE (2)       /*  Make it the start value
+1060      UNTIL 51                      /*  Do not take the IFN
+1070    EXAMINE CMD.COMMAND-LINE (2)    /*  New start value ...
+1080      TRANSLATE INTO UPPER          /*  ... must be given in upper case
+1090    /*
+1100    MOVE 'G' TO TYPE
+1110    IF CMD.RESULT-FIELD (1) NE ' '
+1120      ADD 1 TO NB
+1130    ELSE
+1140      RESET NB  TYPE
+1150      MOVE '*** End of list ***' TO CMD.RESULT-FIELD (1)
+1160      MOVE TRUE TO LEAVE
+1170    END-IF
+1180    /***************************************************
+1190    WRITE NB (SG=F ZP=F) TYPE CMD.RESULT-FIELD (01) (AL=62 AD=I)
+1200    /***************************************************
+1210    IF *PF-KEY NE 'ENTR'
+1220    OR LEAVE
+1230      ESCAPE BOTTOM
+1240    END-IF
+1250    MOVE CMD.RESULT-FIELD (01) TO #LINE
+1260    RESET BLANK
+1270    CALLNAT 'EXAM-HGV' PROC-NAME  #LINE NB BLANK LVL
+1280  END-REPEAT
+1290  /********************************************
+1300END-REPEAT
+1310/**********************************************************************
+1320END

@@ -1,0 +1,32 @@
+0010* Program   MVTOCU
+0020* View      VTOC-UPDATE
+0030*
+0040* Function  VTOC Maintenance
+0050*
+0060* ----------------------------------------------------------------------
+0070*
+0080DEFINE DATA
+0090   GLOBAL USING TUTO
+0100   LOCAL USING VTOC-U-L
+0110END-DEFINE
+0120*
+0130INPUT (AD=MI'_')
+0140   / ##TITLE (AD=OI IP=OFF)
+0150  // '  Function ..:' VTOC-UPDATE.FUNCTION '(rename/scratch/purge)'
+0160  // '  Volume ....:' VTOC-UPDATE.VOLSER
+0170   / '  Dsname ....:' VTOC-UPDATE.DSNAME
+0180  // '  New Name ..:' VTOC-UPDATE.NEWNAME
+0190*
+0200PROCESS VTOC-UPDATE USING NODE     = ##NODE
+0210                      ,   DSNAME   = VTOC-UPDATE.DSNAME
+0220                      ,   VOLSER   = VTOC-UPDATE.VOLSER
+0230                      ,   FUNCTION = VTOC-UPDATE.FUNCTION
+0240                      ,   NEWNAME  = VTOC-UPDATE.NEWNAME
+0250                   GIVING ERROR-CODE
+0260                          ERROR-TEXT
+0270IF ERROR-CODE > 0
+0280   REINPUT ERROR-TEXT
+0290ELSE
+0300   REINPUT *1019
+0310END-IF
+0320END

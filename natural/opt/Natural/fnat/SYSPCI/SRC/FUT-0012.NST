@@ -1,0 +1,21 @@
+0010/**********************************************************************
+0020/* Help texts for SYSPCI.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSPCI
+0070<Header1> Validate FDT
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170Enter
+0180  'R' to retry validation,
+0190  'S' to skip validation' or
+0200  'C' to cancel the function.
+0210<HelpTextEnd>

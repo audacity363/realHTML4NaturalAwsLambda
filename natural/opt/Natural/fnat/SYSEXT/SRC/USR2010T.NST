@@ -1,0 +1,48 @@
+0010Get error information on last database call
+0020.
+0030Documentation ......... USR2010T    /*  Text object
+0040Interface ............. USR2010N    /*  Cataloged subprogram
+0050Example Program ....... USR2010P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR HANDLING
+0100.
+0110Keywords .............. +CURRENT-VERSION,
+0120                        *ERROR, DATABASE, ERROR
+0130.
+0140Interface Versions .... USR0610N, USR2010N
+0150.
+0160Function .............. Information about last DB call error.
+0170                        Same as USR0610N, but dbid and fnr are
+0180                        expanded to 2 byte values.
+0190.
+0200Parameters
+0210----------
+0220Define the following parameters with the DEFINE DATA statement:
+0230.
+024001 DB_ERR_STR       (A16)
+025001 REDEFINE DB_ERR_STR
+0260  02 DB_STATUS      (A1)   /* Status code
+0270  02 DB_TYPE        (A1)   /* DB type
+0280  02 DB_DBID        (B2)   /* Databas ID
+0290  02 DB_FNR         (B2)   /* File number
+0300  02 DB_COMMAND     (A2)   /* Database Command
+0310  02 DB_RESP        (B2)   /* Response Code
+0320  02 DB_SUBCODE     (B2)   /* Response subcode
+0330  02 DB_ADD1F2B     (B2)   /* first 2 bytes off additions1 field
+0340.
+0350Interface Call
+0360--------------
+0370Use the interface with the CALLNAT statement:
+0380.
+0390CALLNAT 'USR2010N' DB_ERR_STR
+0400.
+0410.
+0420Using the Application Programming Interface:
+0430--------------------------------------------
+0440Copy the subprogram USR2010N to the library SYSTEM or the steplib
+0450library respectively, or to the required library.
+0460.
+0470.
+0480*****  End of Description  *****

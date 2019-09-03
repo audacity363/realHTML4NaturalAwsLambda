@@ -1,0 +1,25 @@
+0010/*  MENU - Startup for Application SYSNCP - NATURAL Command Processor
+0020/*  This program is released in source form, too.
+0030/*  Please refer to the manual for further information.
+0040/***********************************************************************
+0050/*
+0060/*  User Exits may be included here.
+0070/*
+0080/*  Example:
+0090/*
+0100/*  CALLNAT      'USER-AB'   /*  Subprogram, defined by user
+0110/*  FETCH RETURN 'USER-MN'   /*  Program, defined by user
+0120/*  PERFORM      'USER-XY'   /*  Ext. Subroutine, defined by user
+0130/*  SET CONTROL  'N'         /*  Hello-MAP non-conversational
+0140/*
+0150/***********************************************************************
+0160/*
+0170SET CONTROL 'L'              /*  Lower case suggested
+0180/*
+0190/***********************************************************************
+0200/*
+0210/*  Please don't change the utility call here
+0220/*
+0230FETCH 'NCP-MENU'             /*  Main Program in Application SYSNCP.
+0240/*
+0250END

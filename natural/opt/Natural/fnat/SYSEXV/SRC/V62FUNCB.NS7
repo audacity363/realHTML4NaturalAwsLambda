@@ -1,0 +1,19 @@
+0010*
+0020* Function .. V62FUNCB
+0030* Library ... SYSEXV
+0040* Version ... 6.2
+0050*
+0060* Functionality: External function not used with prototype definition
+0070************************************************************************
+0080*
+0090Define Function NewFct
+0100  Returns #Return (A10)
+0110  Define Data Parameter
+0120    1 #Value (A10)
+0130  End-define
+0140  /*
+0150  Move #Value (PM=I) to #Return
+0160  /*
+0170End-Function
+0180*
+0190End

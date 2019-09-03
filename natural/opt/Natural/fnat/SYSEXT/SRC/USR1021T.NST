@@ -1,0 +1,52 @@
+0010Check name for wildcard or asterisk notation
+0020.
+0030Documentation ......... USR1021T    /*  Text object
+0040Interface ............. USR1021N    /*  Cataloged subprogram
+0050Example Program ....... USR1021P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATA HANDLING
+0100.
+0110Keywords .............. +CURRENT-VERSION,
+0120                        ASTERISK, MASK, NAME, WILDCARD
+0130.
+0140Interface Versions .... USR1011N, USR1021N
+0150.
+0160Function .............. Checks a name (A80) against a mask containing
+0170                        wildcards in a given length.
+0180                        With USR1021N, longer names can be checked.
+0190.
+0200.
+0210Parameters
+0220----------
+0230Define the following parameters with the DEFINE DATA statement:
+0240.
+0250Input ...... 1 FIELD (A80)    - Field to be checked
+0260             1 MASK (A80)     - Mask against to be used for check
+0270             1 WILDCARD (A1)  - wildcard character, default is '?'
+0280             1 ASTERISK (A1)  - asterisk character, default is '*'
+0290             1 LENGTH (P2)    - Length in which the field is to be
+0300                                checked against the mask
+0310Output ..... 1 MATCHED (A1)   - Return value = 'Y' or 'N'
+0320.
+0330Interface Call
+0340--------------
+0350Use the interface with the CALLNAT statement:
+0360.
+0370CALLNAT 'USR1021N' FIELD MASK WILDCARD ASTERISK LENGTH MATCHED
+0380.
+0390.
+0400Using the Application Programming Interface:
+0410--------------------------------------------
+0420Copy the subprogram USR1021N to the library SYSTEM or the steplib
+0430library respectively, or to the required library.
+0440.
+0450If FIELD matches the MASK considering the asterisk/wildcard syntax
+0460in the passed LENGTH, MATCHED = 'Y' is returned.
+0470The asterisk/wildcard characters to be used may be specified.
+0480If LENGTH is 0, the length of FIELD (until first blank) is used.
+0490Blanks are no valid characters for FIELD and MASK.
+0500.
+0510.
+0520***** End of Description *****

@@ -1,0 +1,79 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3TEXT
+0050*
+0060* DESCRIPTION   Writes a character string to the document.
+0070*
+0080* SEE           .../sysweb/t3text
+0090*
+0100* AUTHOR        SAG   08.09.1998
+0110*
+0120* Version       8.3
+0130*
+0140* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0150*
+0160* HISTORY
+0170* USER    DATE       REASON
+0180* ------+----------+----------------------------------------------
+0190*       ! --.--.-- !
+0200* ------+----------+----------------------------------------------
+0210*
+0220* ------ PARAMETER -----------------------------------------------
+0230DEFINE DATA
+0240PARAMETER USING W3PARM
+0250LOCAL USING W3CONST
+0260LOCAL
+02701 W3VALUE        (A) DYNAMIC
+02801 W3VALUE2       (A) DYNAMIC
+0290END-DEFINE
+0300* --- ERROR HANDLING ---
+0310ON ERROR
+0320  PERFORM W3ERROR ##W3ERROR
+0330  PERFORM W3END ##RPC
+0340  ESCAPE ROUTINE
+0350END-ERROR
+0360*
+0370* --- INITIALIZE Web Interface ---
+0380PERFORM W3INIT ##RPC
+0390*
+0400* --- SET TYPE OF RETURN-PAGE ---
+0410PERFORM W3CONTENT-TYPE 'text/html'
+0420* --- WRITE THE HEAD OF THE DOCUMENT ---
+0430PERFORM W3TEXTLINE "<!DOCTYPE 'HTML PUBLIC -//W3C//DTD HTML 3.2//EN'>"
+0440PERFORM W3TEXTLINE '<HTML><HEAD><META HTTP-EQUIV="Content-Type" '-
+0450  'CONTENT="text/html; charset=iso-8859-1"><TITLE>'
+0460* --- THE TITLE OF THE PAGE ---
+0470PERFORM W3TEXTLINE 'Basic Routines - Writes to Document '-
+0480                   'and Converts to Valid HTML'
+0490PERFORM W3TEXTLINE '</TITLE></HEAD><BODY>'
+0500PERFORM W3TEXTLINE '<H2>Writes to Document '-
+0510                   'and Converts to Valid HTML</H2>'
+0520*
+0530PERFORM W3TEXTLINE '<HR><BR><BR>Output with W3HTML:<BR>'
+0540*
+0550W3VALUE2 := '<P> This is a <P> tag. '-
+0560           'If you want a &lt;p&gt; to be displayed, you have to do'-
+0570           ' your own translation.'
+0580PERFORM W3HTMLLINE W3VALUE2
+0590*
+0600PERFORM W3TEXTLINE '<BR>Output with W3HTMLARRAY:<BR>'
+0610W3VALUE :='<FONT SIZE="-2">small font</FONT>'
+0620PERFORM W3HTMLLINEDYNAMIC W3VALUE
+0630*
+0640PERFORM W3TEXTLINE '<P>Output with W3TEXT:<BR>'
+0650PERFORM W3TEXT W3VALUE2
+0660*
+0670* --- END THE HTML PAGE ---
+0680COMPRESS "<TABLE BORDER='0' WIDTH='100%' CELLSPACING='0' "-
+0690  "CELLPADDING='5'>"
+0700  '<TR BGCOLOR="#00cc66"><TD>' *PROGRAM '&#32;-&#32;' *DATE '&#32;' *TIME
+0710  "</TD><TD ALIGN='RIGHT'>" 'Natural'
+0720  "</TD></TR></TABLE>"
+0730  '</BODY></HTML>' INTO W3VALUE LEAVING NO
+0740PERFORM W3TEXTDYNAMIC W3VALUE
+0750*
+0760* --- END Web Interface ---
+0770PERFORM W3END ##RPC
+0780*
+0790END

@@ -1,0 +1,15 @@
+0010&H View SEND-MESSAGE
+0020&L
+0030&L
+0040#Purpose@: Send message to TP user or system console.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : The only possible destinations (beside system console) in
+0100           BS2000 are TIAM tasks.
+0110           If a BS2000 User ID is specified as destination, the message
+0120           is sent to all TIAM tasks of this User ID. A message can
+0130           also be sent to a terminal connected to '$DIALOG'.
+0140&L
+0150#Notes@  :

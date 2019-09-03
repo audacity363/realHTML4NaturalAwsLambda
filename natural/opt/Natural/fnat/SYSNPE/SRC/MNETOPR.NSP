@@ -1,0 +1,37 @@
+0010* Program   MNETOPR
+0020* View      NET-OPER
+0030*
+0040* Function  Execute NET operator commands and display response
+0050*
+0060* ----------------------------------------------------------------------
+0070*
+0080DEFINE DATA
+0090   GLOBAL USING TUTO
+0100   LOCAL  USING NETOP-L
+0110END-DEFINE
+0120*
+0130REPEAT
+0140   INPUT (AD=MI'_')
+0150     // ##TITLE (AD=OI IP=OFF)
+0160     // 'Command:' / ' ' NET-OPER.COMMAND (AL=70)
+0170     // 'Purge previous messages ?' NET-OPER.PURGE-PREVIOUS '(y/n)'
+0180*
+0190   FIND NET-OPER WITH COMMAND        = NET-OPER.COMMAND
+0200                  AND NODE           = ##NODE
+0210                  AND PURGE-PREVIOUS = NET-OPER.PURGE-PREVIOUS
+0220*
+0230      IF ERROR-CODE > 0
+0240         ASSIGN ##MSG-NR = 1000
+0250         ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0260         STOP
+0270      END-IF
+0280*
+0290      IF LINE-STATUS NE 'YES'
+0300         NEWPAGE
+0310      END-IF
+0320*
+0330      WRITE NOTITLE TIME-STAMP LINE (AL=70)
+0340*
+0350   END-FIND
+0360END-REPEAT
+0370END

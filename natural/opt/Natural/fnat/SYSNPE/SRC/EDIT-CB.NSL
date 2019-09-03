@@ -1,0 +1,244 @@
+0010**DF          0243B   4 1EDIT-CB                         /* EDITOR CONTROL BLOCK
+0020**DRR         0245     R1EDIT-CB                         /* REDEF. BEGIN : EDIT-CB
+0030**DFR         0246B   4 2ED-CTADR                        /* CONTROL AREA ADDRESS
+0040**DF          0247B   4 1ED-DTADR                        /* DATA AREA ADDRESS
+0050**DRR         0248     R1ED-DTADR                        /* REDEF. BEGIN : ED-DTADR
+0060**DFR         0249B   4 2ED-NEW-RECTOP                   /* NEW TOP RECORD
+0070**DF          0250B   4 1ED-ADABAS                       /* ADDRESS OF ADABAS
+0080**DRR         0251     R1ED-ADABAS                       /* REDEF. BEGIN : ED-ADABAS
+0090**DFR         0252B   4 2ED-NEW-RECNUM                   /* NEW # OF RECORDS
+0100**DF          0253A   1 1ED-NEWNUM                       /* Y - USE ED-NEW FIELDS
+0110**DF          0254B   1 1ED-NATVER                       /* NATURAL VERSION
+0120**DF          0255B   1 1ED-CTPLACE                      /* CONTROL DATA PLACE (BP OR SA)
+0130**DF          0256B   1 1ED-DTPLACE                      /* DATA PLACE (BP OR SA)
+0140**DF          0257B   2 1ED-CTLEN                        /* CONTROL AREA LENGTH (IN K)
+0150**DF          0258B   2 1ED-BPLEN                        /* BUFFER POOL LENGTH (IN K)
+0160**DF          0259B   2 1ED-SESNUM                       /* SESSION NUMBER
+0170**DF          0260A   4 1ED-REQUEST                      /* REQUEST FROM THE EDITOR
+0180**DF          0261A   3 1ED-DSTYPE                       /* DATA SET TYPE
+0190**DF          0262A   1 1ED-SYSID                        /* SYSTEM ID
+0200**DF          0263B   1 1ED-BPUSE                        /* USE / DO NOT USE BUFFER POOL
+0210**DF          0264B   1 1ED-SYSNUM                       /* DATA SET NUMBER (FOR SYSOUT)
+0220**DF          0265A   2 1ED-SYSNAME                      /* DATA SET NAME (FOR SYSOUT)
+0230**DF          0266B   1 1ED-DBID                         /* DBID - FOR NATURAL PROCESS
+0240**DF          0267A   1 1ED-UCMND                        /* Y - USER COMMANDS CHECK
+0250**DF          0268B   1 1ED-OLD-NODE                     /* NODE - FOR NATURAL PROCESS
+0260**DF          0269B   1 1ED-RENUM                        /* RENUM AMOUNT
+0270**DF          0270A  44 1ED-DSNAME                       /* DATA SET NAME
+0280**DF          0271A   8 1ED-MEMBER                       /* MEMBER NAME
+0290**DF          0272A   6 1ED-VOLSER                       /* VOLSER FOR PDS OR SEQ
+0300**DF          0273A   8 1ED-PASSWD                       /* PASSWORD FOR THE FILE
+0310**DF          0274A  50 1ED-MCMND                        /* MAIN COMMAND
+0320**DF          0275A   8 1ED-SCMND                        /* SECONDARY COMMAND
+0330**DF          0276A   4 1ED-SCROLL                       /* SCROLL
+0340**DF          0277B   2 1ED-CAREA                        /* CURSOR AREA
+0350**DF          0278B   2 1ED-CROW                         /* CURSOR ROW
+0360**DF          0279B   2 1ED-CCLM                         /* CURSOR COLUMN
+0370**DF          0280B   2 1ED-RECLEN                       /* RECORD LENGTH
+0380**DF          0281B   2 1ED-RECNUM                       /* # OF RECORDS IN THE FILE
+0390**DF          0282B   2 1ED-RECMAX                       /* MAXIMUM RECORDS FOR FILE
+0400**DF          0283B   2 1ED-RECTOP                       /* TOP RECORD
+0410**DF          0284B   2 1ED-PRFLEN                       /* WANTED PREFIX LENGTH
+0420**DF          0285B   2 1ED-PRFENT                       /* LENGTH OF EACH PREFIX ENTRY
+0430**DF          0286B   2 1ED-SCRLEN                       /* LENGTH OF SCREEN LINE
+0440**DF          0287B   2 1ED-SCRNUM                       /* # OF LINES IN EACH SCREEN
+0450**DF          0288B   2 1ED-SCRMAX                       /* MAXIMUM LINES FOR A SCREEN
+0460**DF          0289B   2 1ED-LINENTL                      /* LENGTH OF EACH LINE ENTRY
+0470**DF          0290B   1 1ED-LINETYPE                     /* WANTED TYPE OF LINE
+0480**DF          0291B   1 1ED-UPDTFILE                     /* ALLOW OR DISALLOW UPDATE
+0490**DF          0292B   1 1ED-UPDTSES                      /* # of updated session
+0500**DF          0293B   2 1ED-OMSGNUM                      /* OLD MESSAGE NUMBER
+0510**DF          0294B   2 1ED-OERRNUM                      /* OLD ERROR NUMBER
+0520**DF   F      2   A   1 1ED-NEWCB                        /* NEW CONTROL BLOCK
+0530**HF1
+0540**I                      INIT<'Y'>
+0550**DF          0296A   1 1ED-SYSBR                        /* Y - PARTIAL SYSOUT BROWSE
+0560**DF          0297A  80 1ED-FLINE                        /* FIRST LINE
+0570**DF          0298A  20 1ED-PROF1                        /* USER PROFILE
+0580**DRR         0299     R1ED-PROF1                        /* REDEF. BEGIN : ED-PROF1
+0590**DFR         0300A   1 2PROF-CAPS                       /* TRANSLATE TO UPPER CASE
+0600**DFR         0301A   1 2PROF-HEX                        /* DISPLAY HEXADECIMAL MODE
+0610**DFR         0302A   1 2PROF-NULLS                      /* PUT NULLS AT END OF LINE
+0620**DFR         0303A   1 2PROF-JUSTIFY                    /* JUSTIFICATION : L,R,B
+0630**DFR         0304A   1 2PROF-LOGCHR                     /* CHARACTER FOR LOGICAL TAB
+0640**DFR         0305A   1 2PROF-RECOVERY                   /* PERFORM RECOVERY
+0650**DFR         0306A   1 2PROF-AUTOSAVE                   /* DO AUTOMATIC SAVE AT END
+0660**DFR         0307A   1 2PROF-AUTOREN                    /* DO AUTOMATIC RENUMBERING
+0670**DFR         0308A   1 2PROF-LOG                        /* LOG  ON / OFF
+0680**DFR         0309A   1 2PROF-PHSTAB                     /* PHYSICAL TABULATION
+0690**DFR         0310B   1 2PROF-PHSCHR                     /* CHARACTER FOR PHYSICAL TAB
+0700**DFR         0311B   1 2PROF-LANGUAGE                   /* LANGUAGE
+0710**DFR         0312A   1 2PROF-DIRECTION                  /* DIRECTION OF NUMBERS L/R
+0720**DFR         0313A   1 2PROF-MSO                        /* MULTI SESSION OPRERATION
+0730**DFR         0314A   1 2PROF-MASK                       /* MASK ON/OFF
+0740**DFR         0315B   1 2PROF-RENUM                      /* RENUMBERING AMOUNT
+0750**DFR         0316A   1 2PROF-FIX                        /* FIX ON / OFF
+0760**DFR         0317B   1 2PROF-FIXLEN                     /* FIX LENGTH IF 0 - FIX IS OFF
+0770**DFR         0318A   1 2PROF-ADVANCE                    /* ADVANCE YES / NO
+0780**DFR         0319A   1 2PROF-PROTECT                    /* PROTECT YES / NO / INSERT
+0790**DF          0320A   8 1ED-USER                         /* USER
+0800**DF          0321A   8 1ED-DATE                         /* DATE
+0810**DF          0322A   8 1ED-TIME                         /* TIME
+0820**DF          0323B   2 1ED-OJOBNUM                      /* OLD JOB NUMBER (FOR SYSOUT)
+0830**DF          0324B   1 1ED-ALARM                        /* NEED OF ALARM
+0840**DF          0325B   2 1ED-BLKNUM                       /* # OF BLOCKS OF BP FILE
+0850**DF          0326B   2 1ED-BLKLEN                       /* LENGTH OF BP BLOCK
+0860**DF          0327B   4 1ED-SRAFREE                      /* FREE AREA IN SOURCE AREA
+0870**DF          0328B   1 1ED-FILECHG                      /* 1 - FILE HAS BEEN CHANGED
+0880**DF          0329B   4 1ED-ORCVNUM                      /* OLD # OF RECOVERY FILE
+0890**DF          0330A  32 1ED-UDATA                        /* USER DATA
+0900**DF          0331A  12 1ED-PROF2                        /* PROFILE - SECOND PART
+0910**DRR         0332     R1ED-PROF2                        /* REDEF. BEGIN : ED-PROF2
+0920**DFR         0333A   1 2PROF-ESCAPE                     /* ESCAPE ON / OFF / ZUL
+0930**DFR         0334A   1 2PROF-ESCHAR                     /* ESCAPE CHARACTER
+0940**DFR         0335A   1 2PROF-ESCDIR                     /* ESCAPE DIRECTION + OR -
+0950**DFR         0336A   1 2PROF-ESCDISP                    /* ESCAPE DISP
+0960**DFR         0337A   1 2PROF-EMPTY                      /* EMPTY ON/OFF
+0970**DFR         0338A   1 2PROF-INSERT                     /* INSERT ON/OFF
+0980**DFR         0339A   1 2PROF-HYPHENATION                /* HYPHENATION ON/OFF
+0990**DFR         0340A   1 2PROF-HSYMBOL                    /* HYPHENATION SYMBOL
+1000**DFR         0341B   1 2PROF-HCHAR                      /* HYPHENATION CHARACTER
+1010**DFR         0342B   1 2PROF-TWOLANG                    /* SECOND LANGUAGE ID
+1020**DFR         0343A   1 2PROF-DECIMAL                    /* DECIMAL CHARACTER
+1030**DFR         0344A   1 2PROF-AORDER                     /* AUTO ORDER YES/NO
+1040**DF          0345A   1 1ED-LOGFLAG                      /* Y - LOGICAL NAME IN USE
+1050**DF          0346A   1 1ED-A-CURSOR                     /* Y - ABSOLUTE CURSOR
+1060**DF          0347B   1 1ED-FFU1                         /* FOR FUTURE USE
+1070**DF          0348B   4 1ED-RCVNUM                       /* RECOVERY FILE #
+1080**DF          0349B   2 1ED-MSGNUM                       /* MESSAGE NUMBER
+1090**DF          0350B   2 1ED-ERRNUM                       /* ERROR NUMBER
+1100**DF          0351B   2 1ED-JOBNUM                       /* JOB NUMBER (FOR SYSOUT)
+1110**DF          0352A  20 1ED-PROF3                        /* THIRD PROFILE
+1120**DRR         0353     R1ED-PROF3                        /* REDEFINE PROF3
+1130**DFR         0354A   1 2PROF-ATTRDATA                   /* PUT ATTRIBUTE IN DATA YES/NO
+1140**DFR         0355B   1 2PROF-ATTRDEF                    /* DEFUALT ATTRIBUTE CHARACTER
+1150**DFR         0356B   1 2PROF-ATTRH                      /* HIGH LIGHT ATTRIBUTE CHAR
+1160**DFR         0357B   1 2PROF-ATTRP                      /* PROTECTED ATTRIBUTE CHAR
+1170**DFR         0358A   1 2PROF-LIMIT                      /* SCAN LIMIT ON/OFF
+1180**DFR         0359A   1 2PROF-WINDOW                     /* WINDOW ON/OFF
+1190**DFR         0360A   1 2PROF-CONTROL                    /* CONTROL LINE ON/OFF
+1200**DFR         0361A   1 2PROF-CONTROL-CHAR               /* CONTROL CHARACTER
+1210**DFR         0362A   1 2PROF-COLS                       /* COLUMN LINE ON TOP Y/N
+1220**DFR         0363A   1 2PROF-PREFIX                     /* USER PREFIX Y / N / A
+1230**DFR         0364A   1 2PROF-PREFIX-CHAR                /* USER PREFIX CHARACTER
+1240**DFR         0365A   1 2PROF-NEWLINE                    /* HARD NEW LINE Y / N
+1250**DFR         0366A   1 2PROF-NEWLINE-CHAR               /* HARD NEW LINE CHARACTER
+1260**DFR         0367A   1 2PROF-STATS                      /* STATISTICS Y/N
+1270**DFR         0368A   1 2PROF-HEADER                     /* HEADER Y/N
+1280**DFR         0369A   1 2PROF-PROTL                      /* PROTECT LEVEL H/L
+1290**DFR         0370A   1 2PROF-DBCS                       /* DOUBLE BYTE SUPPORT Y/N
+1300**DF          0371A 132 1ED-FILE                         /* FILE ID
+1310**DRR         0372     R1ED-FILE                         /* PDS - MVS
+1320**DFR         0373A   3 2ED-PM-TYPE                      /* TYPE
+1330**DFR         0374A   1 2ED-PM-SYSTEM                    /* SYSTEM ID
+1340**DFR         0375A  54 2ED-PM-DSNAME                    /* DSNAME
+1350**DFR         0376A  10 2ED-PM-MEMBER                    /* MEMBER
+1360**DFR         0377A   6 2ED-PM-VOLSER                    /* VOLSER
+1370**DFR         0378A   8 2ED-PM-PASSWD                    /* PASSWORD
+1380**DFR         0379B   1 2ED-PM-FFU1                      /* FOR FUTUTE USE
+1390**DFR         0380B   1 2ED-PM-NODE                      /* NODE OF NATURAL PROCESS
+1400**DFR         0381B   1 2ED-PM-LEVEL                     /* LEVEL - IN USE BY PANVALLET
+1410**DFR         0382B   1 2ED-PM-COMMENT                   /* 1 - FIRST LINE IS COMMENT
+1420**DFR         0383B   1 2ED-PM-SEQ1                      /* FROM SEQ
+1430**DFR         0384B   1 2ED-PM-SEQ2                      /* TO SEQ
+1440**DFR         0385B   1 2ED-PM-FFU2                      /* FOR FUTURE USE
+1450**DFR         0386A   1 2ED-PM-EXPAND                    /* Y, N - EXPAND ++INCLUDE
+1460**DFR         0387A   1 2ED-PM-CONTROL                   /* Y, N - ADD CONTROL LINES
+1470**DFR         0388A   1 2ED-PM-UPDATE                    /* Y, N, A - CREATE UPDATE DECS
+1480**DFR         0389A   1 2ED-PM-EXPAND-PARM               /* 0 1 2 3 - FOR LIBRARIAN
+1490**DFR         0390A   1 2ED-PM-SEQUENCE                  /* Y, N - CHECK THE SEQUENCE
+1500**DFR         0391B   1 2ED-PM-EXPAND-COL                /* ++INCLUDE COLUMN (USULY 8)
+1510**DFR         0392A   8 2ED-PM-OPTIONS                   /* OPTIONS (FOR LIBRIRIAN)
+1520**DRR         0393     R1ED-FILE                         /* PDS - DOS/VSE
+1530**DFR         0394A   3 2ED-PD-TYPE                      /* TYPE
+1540**DFR         0395A   1 2ED-PD-SYSTEM                    /* SYSTEM ID
+1550**DFR         0396A  54 2ED-PD-DSNAME                    /* DSNAME
+1560**DFR         0397A  10 2ED-PD-MEMBER                    /* MEMBER
+1570**DFR         0398A   6 2ED-PD-VOLSER                    /* VOLSER
+1580**DFR         0399A   8 2ED-PD-PASSWD                    /* PASSWORD
+1590**DFR         0400B   1 2ED-PD-FFU                       /* FOR FUTURE USE
+1600**DFR         0401B   1 2ED-PD-NODE                      /* NODE OF NATURAL PROCESS
+1610**DFR         0402A   8 2ED-PD-LIB                       /* LIBRARY NAME
+1620**DFR         0403A   8 2ED-PD-SLIB                      /* SUB LIBRARY NAME
+1630**DFR         0404A   8 2ED-PD-CATALOG                   /* VSAM CATALOG
+1640**DFR         0405A   8 2ED-PD-MTYPE                     /* MEMBER TYPE
+1650**DFR         0406A   2 2ED-PD-RECFM                     /* RECORD FORMAT
+1660**DFR         0407B   2 2ED-PD-LRECL                     /* RECORD LENGTH
+1670**DFR         0408B   2 2ED-PD-BLKSIZE                   /* BLOCK SIZE
+1680**DRR         0409     R1ED-FILE                         /* PDS - BS2000
+1690**DFR         0410A   3 2ED-PB-TYPE                      /* TYPE
+1700**DFR         0411A   1 2ED-PB-SYSTEM                    /* SYSTEM ID
+1710**DFR         0412A  54 2ED-PB-DSNAME                    /* DSNAME
+1720**DFR         0413A  10 2ED-PB-MEMBER                    /* MEMBER
+1730**DFR         0414A   6 2ED-PB-VOLSER                    /* VOLSER
+1740**DFR         0415A   8 2ED-PB-PASSWD                    /* PASSWORD
+1750**DFR         0416B   1 2ED-PB-FFU                       /* FOR FUTURE USE
+1760**DFR         0417B   1 2ED-PB-NODE                      /* NODE OF NATURAL PROCESS
+1770**DFR         0418A   4 2ED-PB-SHARE                     /* IF ACCESSABLE BY OTHER USER
+1780**DFR         0419A   5 2ED-PB-KEYLEN                    /* KEY LENGTH
+1790**DFR         0420A   5 2ED-PB-KEYPOS                    /* KEY POSITION
+1800**DFR         0421A   4 2ED-PB-ACCNUM                    /* ACCESS NUMBER
+1810**DFR         0422A   4 2ED-PB-VERNUM                    /* VERSION NUMBER
+1820**DFR         0423A   1 2ED-PB-BKTYPE                    /* BACKUP TYPE
+1830**DFR         0424A   5 2ED-PB-ACCTYPE                   /* ACCESS TYPE
+1840**DFR         0425A   4 2ED-PB-BKNUM                     /* BACKUP NUMBER
+1850**DFR         0426A   4 2ED-PB-AUNUM                     /* TYPE ACCESS TO THE FILE
+1860**DFR         0427A   7 2ED-PB-OTYPE                     /* OPEN TYPE
+1870**DRR         0428     R1ED-FILE                         /* PDS - CMS
+1880**DFR         0429A   3 2ED-PC-TYPE                      /* TYPE
+1890**DFR         0430A   1 2ED-PC-SYSTEM                    /* SYSTEM ID
+1900**DFR         0431A  54 2ED-PC-DSNAME                    /* DSNAME
+1910**DFR         0432A  10 2ED-PC-MEMBER                    /* MEMBER
+1920**DFR         0433A   6 2ED-PC-VOLSER                    /* VOLSER
+1930**DFR         0434A   8 2ED-PC-PASSWD                    /* PASSWORD
+1940**DFR         0435B   1 2ED-PC-FFU                       /* FOR FUTURE USE
+1950**DFR         0436B   1 2ED-PC-NODE                      /* NODE OF NATURAL PROCESS
+1960**DFR         0437A   8 2ED-PC-MTYPE                     /* MEMBER TYPE
+1970**DRR         0438     R1ED-FILE                         /* SYS - MVS
+1980**DFR         0439A   3 2ED-SM-TYPE                      /* TYPE
+1990**DFR         0440A   1 2ED-SM-SYSTEM                    /* SYSTEM ID
+2000**DFR         0441A  54 2ED-SM-JOB-NAME                  /* JOB NAME
+2010**DFR         0442A  10 2ED-SM-SYS-NAME                  /* SYSOUT FILE
+2020**DFR         0443B   4 2ED-SM-JOB-NUM                   /* JOB NUMBER
+2030**DFR         0444B   4 2ED-SM-SYS-NUM                   /* DATA SET NUMBER
+2040**DFR         0445B   1 2ED-SM-FFU1                      /* FOR FUTURE USE
+2050**DFR         0446B   1 2ED-SM-NODE                      /* NODE OF NATURAL PROCESS
+2060**DFR         0447A   2 2ED-SM-ALL                       /* AL - ALL DATA SET WANTED
+2070**DFR         0448B   4 2ED-SM-KEY                       /* DATA SET KEY
+2080**DRR         0449     R1ED-FILE                         /* SYS - MVS
+2090**DFR         0450A   3 2ED-LM-TYPE                      /* TYPE
+2100**DFR         0451A   1 2ED-LM-SYSTEM                    /* SYSTEM ID
+2110**DFR         0452B  79 2ED-LM-FFU                       /* FOR FUTURE USE
+2120**DFR         0453B   1 2ED-LM-NODE                      /* NODE OF NATURAL PROCESS
+2130**DRR         0454     R1ED-FILE                         /* NAT - MVS/DOS/BS2/CMS
+2140**DFR         0455A   3 2ED-NM-TYPE                      /* TYPE
+2150**DFR         0456A   1 2ED-NM-SYSTEM                    /* SYSTEM ID
+2160**DFR         0457A  54 2ED-NM-LIBRARY                   /* LIBRARY NAME
+2170**DFR         0458A  10 2ED-NM-PROGRAM                   /* PROGRAM NAME
+2180**DFR         0459B   1 2ED-NM-FFU                       /* FOR FUTURE USE
+2190**DFR         0460B   1 2ED-NM-NODE                      /* NODE OF NATURAL PROCESS
+2200**DFR         0461A  32 2ED-NM-UDATA                     /* USER DATA
+2210**DRR         0462     R1ED-FILE                         /* SYSLOG - DOS
+2220**DFR         0463N   2 2ED-LD-DATA-SET                  /* DATA SET
+2230**DFR         0464B   1 2ED-LD-POSITION                  /* POSITION
+2240**DFR         0465A   6 2ED-LD-DATE                      /* DATE
+2250**DFR         0466A   2 2ED-LD-PARTITION                 /* PARTITION
+2260**DFR         0467A   8 2ED-LD-MESSAGE-TYPE              /* MESSAGE TYPE
+2270**DFR         0468A   8 2ED-LD-CONSOLE-TYPE              /* CONSOLE TYPE
+2280**DF          0469A   8 1ED-E-PROGRAM                    /* PROGRAM NAME (FOR EDIT)
+2290**DF          0470A   8 1ED-B-PROGRAM                    /* PROGRAM NAME (FOR BROWSE)
+2300**DF          0471A   8 1ED-LOGNAME                      /* LOGICAL SESSION NAME
+2310**DF          0472B   1 1ED-ABS-ROW                      /* ABSOLUTE ROW
+2320**DF          0473B   1 1ED-ABS-CLM                      /* ABSOLUTE COLUMN
+2330**DF          0474B   1 1ED-A1-ROW                       /* AREA 1 - ROW
+2340**DF          0475B   1 1ED-A1-CLM                       /* AREA 1 - COLUMN
+2350**DF          0476B   1 1ED-A2-ROW                       /* AREA 2 - ROW
+2360**DF          0477B   1 1ED-A2-CLM                       /* AREA 2 - COLUMN
+2370**DF          0478B   1 1ED-A3-ROW                       /* AREA 3 - ROW
+2380**DF          0479B   1 1ED-A3-CLM                       /* AREA 3 - COLUMN
+2390**DF          0480B   1 1ED-A4-ROW                       /* AREA 4 - ROW
+2400**DF          0481B   1 1ED-A4-CLM                       /* AREA 4 - COLUMN
+2410**DF          0482B   1 1ED-A5-ROW                       /* AREA 5 - ROW
+2420**DF          0483B   1 1ED-A5-CLM                       /* AREA 5 - COLUMN
+2430**DF          0484B   4 1ED-SRAUSED                      /* USED SOURCE AREA
+2440**DF          0485A   8 1ED-FFU2                         /* FOR FUTURE USE

@@ -1,0 +1,17 @@
+0010** Example 'METH02': Method INIT (used by METH01)
+0020************************************************************************
+0030DEFINE DATA
+0040PARAMETER
+0050  USING METHA
+0060OBJECT
+0070  USING METHO
+0080END-DEFINE
+0090*
+0100* Method INIT of class STUDENTS
+0110*
+0120#VAR1 := 1
+0130#VAR2 := 2
+0140#VAR3 := 3
+0150#VAR4 := 4
+0160*
+0170END

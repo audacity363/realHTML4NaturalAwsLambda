@@ -1,0 +1,88 @@
+0010DB: 148 FILE: 213  - PRINT-DOCUMENT                   DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:24
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:24
+0080*      by user ESY351
+0090*
+0100  1 DB NODE                              N  5.0    D Node ID (DBID).
+0110*      Node ID (DBID).
+0120  1 EC ERROR-CODE                        N  3.0      Message code.
+0130*      Message code.
+0140  1 ES SYSTEM-CODE                       B    2      System error code.
+0150*      System error code.
+0160  1 ET ERROR-TEXT                        A   58      Text describing mess
+0170*      Text describing message.
+0180  1 ND NODE-NAME                         A   16    D
+0190  1 SM SYSTEM-MESSAGE-CODE               A   10      System message code.
+0200*      System message code.
+0210  1 ID IDENTIFIER                        A    8    D Needed if multiple u
+0220*      Needed if multiple update
+0230*      views are executing in
+0240*      parallel, all requests for the
+0250*      same process must have the
+0260*      same identifier.
+0270  1 FN FUNCTION                          A    8    D Function to be perfo
+0280*      Function to be performed:
+0290*      blank   Write a record
+0300*      CLOSE   All records have
+0310*      been written
+0320  1 A6 RECORD                            A  253    D Record to be printed
+0330*      Record to be printed.
+0340  1 A7 RECORD-LENGTH                     N  3.0    D Length of record.
+0350*      Length of record.
+0360  1 AA DSNAME                            A   54    D Name of file to prin
+0370*      Name of file to print out.
+0380  1 AB ELEMENT                           A   64    D Name of LMS element
+0390*      Name of LMS element to be
+0400*      printed.
+0410  1 AC PASSWORD                          A    8    D Password of protecte
+0420*      Password of protected file.
+0430  1 AD ELEMENT-PASSWORD                  A    8    D Password for protect
+0440*      Password for protected LMS
+0450*      element.
+0460  1 AE ELEMENT-TYPE                      A    8    D LMS element type.
+0470*      LMS element type.
+0480  1 AF ELEMENT-VERSION                   A   24    D LMS element version.
+0490*      LMS element version.
+0500  1 B1 ADDITIONAL-COPIES                 A    3    D Number of additional
+0510*      Number of additional copies.
+0520  1 B2 CHARACTER-SETS                    A    8    D Name of fonts or fon
+0530*      Name of fonts or font pools.
+0540  1 B3 DELETE-AFTER-PRINT                A    3    D Delete file after pr
+0550*      Delete file after print:
+0560*      YES or NO.
+0570  1 B4 FACE-SIDE                         A    8    D Face side ident.
+0580*      Face side ident.
+0590  1 B5 FORM-NAME                         A    8    D Name of form.
+0600*      Name of form.
+0610  1 B6 HEADER-PAGE-TEXT                  A   32    D Used for system exit
+0620*      Used for system exits.
+0630  1 B7 JOB-NAME                          A    8    D Name of job under wh
+0640*      Name of job under which
+0650*      output is to be printed.
+0660  1 B8 LEFT-MARGIN                       A    4    D Left margin of text.
+0670*      Left margin of text.
+0680  1 B9 LINE-SPACING                      A   64    D File contains ASA pr
+0690*      File contains ASA print
+0700*      control characters.
+0710  1 BA PAGE-DEFINITION                   A    8    D Page definition to b
+0720*      Page definition to be used
+0730*      for print.
+0740  1 BB USER-RESOURCES-FILE               A   54    D Fully qualified name
+0750*      Fully qualified name of a
+0760*      user file containing all
+0770*      resources.
+0780  1 BV PARAMETER-SET-1                   A  253    D Extra operands for c
+0790*      Extra operands for command
+0800*      PRINT-DOCUMENT.
+0810  1 BW PARAMETER-SET-2                   A  253    D Extra operands for c
+0820*      Extra operands for command
+0830*      PRINT-DOCUMENT.
+0840  1 CR COMMAND-RESPONSE                  A  253      Unformatted command
+0850*      Unformatted command response.
+0860  1 JA JOB-ID                            A    5      TSN of print job.
+0870*      TSN of print job.
+0880******DDM OUTPUT TERMINATED******

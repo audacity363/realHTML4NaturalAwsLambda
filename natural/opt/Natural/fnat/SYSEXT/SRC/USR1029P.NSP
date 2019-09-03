@@ -1,0 +1,45 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1029N'.
+0030/***********************************************************************
+0040DEFINE DATA LOCAL
+00501 USR1029L
+0060  2 LIBRARY         (A08)      /* Library of object to be checked
+0070  2 OBJ-NAME        (A08)      /* Name of object
+0080  2 DBID            (N05)      /* DBID
+0090  2 FNR             (N05)      /* File number
+0100  2 PASSWORD        (A08)      /* Password of file
+0110  2 CIPHERCODE      (B08)      /* Ciphercode of file
+0120  2 OBJ-TYPE        (A01)      /* Type of object will be returned
+0130  2 RESPONSE        (N04)      /* Error code
+0140  /*
+0150END-DEFINE
+0160/*
+0170/* Set up some defaults:
+0180/*
+0190SET KEY ALL
+0200LIBRARY := *LIBRARY-ID
+0210OBJ-NAME:= *PROGRAM
+0220/*
+0230REPEAT
+0240  /*
+0250  INPUT (AD=MITL'_' IP=OFF ZP=OFF SG=OFF)
+0260   // 20T 'Get type of NATURAL object:' (I)
+0270    / 20T '-' (27) (I) /
+0280    / 20T 'Library .........' LIBRARY
+0290    / 20T 'Object name .....' OBJ-NAME
+0300    / 20T 'DBID ............' DBID
+0310    / 20T 'FNR .............' FNR
+0320    / 20T 'Password ........' PASSWORD
+0330    / 20T 'Ciphercode ......' CIPHERCODE
+0340    / 20T 'Response ........' RESPONSE (AD=OI ZP=ON SG=ON)
+0350   // 20T 'Object type .....' OBJ-TYPE (AD=OI)
+0360  /// 20T 'Press any PF-Key to stop.'
+0370    /*
+0380  IF *PF-KEY NE 'ENTR'
+0390    ESCAPE ROUTINE
+0400  END-IF
+0410  /*
+0420  CALLNAT 'USR1029N'  USR1029L
+0430  /*
+0440END-REPEAT
+0450END

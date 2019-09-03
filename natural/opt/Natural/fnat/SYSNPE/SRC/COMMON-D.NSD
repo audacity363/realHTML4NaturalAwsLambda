@@ -1,0 +1,109 @@
+0010DB: 148 FILE: 033  - COMMON-DATA                      DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:20
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:20
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A1 DATA-ID                           A   12    D The identifier assoc
+0250*      The identifier associated with
+0260*      the area. If '&TEMP.xxxxxx',
+0270*      it will be changed to
+0280*      '&Tnnnnxxxxxx' where nnnn is
+0290*      the unique task-id. Temporary
+0300*      areas will be freed when the
+0310*      user logs off.
+0320*      Must be specified in all
+0330*      functions except 'LIST'.
+0340  1 A2 NUMBER-OF-ENTRIES                 N  5.0    D The maximum number o
+0350*      The maximum number of entries
+0360*      in the area
+0370*      (relevant for functions
+0380*      'CREATE' and 'LIST').
+0390  1 A3 ENTRY-LENGTH                      N  3.0    D The length of each e
+0400*      The length of each entry in
+0410*      the area
+0420*      (relevant for functions
+0430*      'CREATE' and 'LIST').
+0440  1 A4 ENTRY-NUMBER                      N  5.0    D The relative number
+0450*      The relative number of the
+0460*      entry being modified. If
+0470*      omitted, a new entry is added.
+0480*      (relevant for functions
+0490*      'MODIFY' and 'GET').
+0500  1 A5 DATA                              A  250    D The contents of the
+0510*      The contents of the entry.
+0520*      (relevant for functions
+0530*      'MODIFY' and 'GET').
+0540  1 A6 CURRENT-ENTRIES                   N  5.0    D The number of entrie
+0550*      The number of entries
+0560*      currently in use.
+0570*      (relevant for functions
+0580*      'MODIFY', 'GET', 'LIST'
+0590*      and 'CLOSE').
+0600  1 A7 DELETE-ENTRY                      A    3    D If 'YES', the entry
+0610*      If 'YES', the entry whose
+0620*      number is 'ENTRY-NUMBER'
+0630*      is deleted.
+0640*      (relevant for function
+0650*      'MODIFY').
+0660  1 A9 PROTECT                           A    8    D Common-Data protecti
+0670*      Common-Data protection field.
+0680*      This field may be set when the
+0690*      area is created. The user who
+0700*      creates an area may limit
+0710*      access to the area for other
+0720*      users :
+0730*      READ
+0740*      MODIFY
+0750*      DELETE
+0760  1 FN FUNCTION                          A    8    D Function to be perfo
+0770*      Function to be performed:
+0780*      CREATE  Create a new area
+0790*      identified by DATA-ID
+0800*      whose size is
+0810*      (NUMBER-OF-ENTRIES
+0820*      * LENGTH-OF-ENTRY)
+0830*      DELETE  Delete area 'DATA-ID'
+0840*      LIST    Give a list of active
+0850*      areas.
+0860*      MODIFY  Add/modify/delete a
+0870*      a record in a given
+0880*      area.
+0890*      CLOSE   Free unused space in
+0900*      a given area (Only
+0910*      relevant if buffer
+0920*      pool not used).
+0930*
+0940*      Fields common to MVS and VSE
+0950*
+0960  1 A8 EDITOR-BUFFER-POOL                A    1    D If 'Y', the data are
+0970*      If 'Y', the data area will be
+0980*      in the buffer pool. Will be
+0990*      ignored, if no buffer pool is
+1000*      active.
+1010*
+1020*      BS2000 fields
+1030*
+1040  1 ES SYSTEM-CODE                       B    2      System error code.
+1050*      System error code.
+1060*
+1070*      End of COMMON-DATA
+1080*
+1090******DDM OUTPUT TERMINATED******

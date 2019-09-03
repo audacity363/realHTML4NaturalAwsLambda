@@ -1,0 +1,45 @@
+0010* Program:  TEST5
+0020* Library:  SYSRPC
+0030* Purpose:  Example program for stub generation with different formats.
+0040*           When executing this program:
+0050*           Enter a person's name (Identifier A to E) to obtain the calendar for
+0060*           this person, the number of times he/she has been scheduled and the
+0070*           relative frequency.
+0080*
+0090DEFINE DATA LOCAL
+01001 P-TEST5
+0110  2 #IDENTIFIER  (A10)
+0120  2 #N-OF-ID     (I4)
+0130  2 #FREQ        (P5.2)
+0140  2 #A100        (A100/5,4)
+0150END-DEFINE
+0160*
+0170FORMAT KD=ON
+0180*
+0190SET KEY ALL
+0200SET KEY CLR
+0210        PF3         NAMED 'Exit'
+0220        PF12        NAMED 'Canc'
+0230*
+0240REPEAT
+0250  INPUT (IP=OFF)
+0260       02T 'Enter one of the characters ''A'' to ''E''. '
+0270    // 02T 'Identifier:' #IDENTIFIER (AD=M'_'IT CD=NE)
+0280  /*
+0290  CALLNAT 'TESTS5' P-TEST5
+0300  /*
+0310  INPUT NO ERASE (IP=OFF AD=O) ////
+0320    / 006T 'Mo' 017T 'Tu' 028T 'We' 039T 'Th' 050T 'Fr'
+0330    / '1 ' #A100(1,1) (AL=10)  #A100(2,1) (AL=10)  #A100(3,1) (AL=10)  #A100(4,1) (AL=10)  #A100(5,1) (AL=10)
+0340    / '2 ' #A100(1,2) (AL=10)  #A100(2,2) (AL=10)  #A100(3,2) (AL=10)  #A100(4,2) (AL=10)  #A100(5,2) (AL=10)
+0350    / '3 ' #A100(1,3) (AL=10)  #A100(2,3) (AL=10)  #A100(3,3) (AL=10)  #A100(4,3) (AL=10)  #A100(5,3) (AL=10)
+0360    / '4 ' #A100(1,4) (AL=10)  #A100(2,4) (AL=10)  #A100(3,4) (AL=10)  #A100(4,4) (AL=10)  #A100(5,4) (AL=10)
+0370    // 'No. data: ' #N-OF-ID (NL=5)
+0380    /  'Frequency:' #FREQ
+0390  /*
+0400  IF *PF-KEY = 'PF3' OR = 'PF12' OR = 'CLR'
+0410  THEN
+0420    ESCAPE ROUTINE
+0430  END-IF
+0440END-REPEAT
+0450END

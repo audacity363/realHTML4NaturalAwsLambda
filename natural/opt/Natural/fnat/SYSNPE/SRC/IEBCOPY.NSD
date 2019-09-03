@@ -1,0 +1,68 @@
+0010DB: 148 FILE: 017  - IEBCOPY                          DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:22
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:22
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      MVS fields
+0230*
+0240  1 A1 FROM-DSNAME                       A   54    D Fully qualified inpu
+0250*      Fully qualified input data set
+0260*      name.
+0270  1 A5 FROM-MEMBER                       A   10    D Name of member to be
+0280*      Name of member to be copied.
+0290*      Enter an asterisk (*) to copy
+0300*      all members.
+0310  1 A2 FROM-VOLSER                       A    6    D Volume serial of the
+0320*      Volume serial of the input
+0330*      dataset name. Required only
+0340*      if the dataset is not
+0350*      cataloged.
+0360  1 A9 FROM-PASSWORD                     A    8    D Password for input d
+0370*      Password for input data set.
+0380*      Required only if the dataset
+0390*      is password-protected.
+0400  1 A3 TO-DSNAME                         A   54    D Fully qualified outp
+0410*      Fully qualified output data
+0420*      set name.
+0430  1 A6 TO-MEMBER                         A   10    D Name to be assigned
+0440*      Name to be assigned to member
+0450*      in the output data set
+0460*      (if omitted, input member name
+0470*      is used).
+0480  1 A4 TO-VOLSER                         A    6    D Volume serial of the
+0490*      Volume serial of the output
+0500*      dataset. Required only if the
+0510*      dataset is not cataloged.
+0520  1 AA TO-PASSWORD                       A    8    D Password for output
+0530*      Password for output data set.
+0540  1 A7 REPLACE                           A    3    D YES  if member alrea
+0550*      YES  if member already exists,
+0560*      it will be replaced.
+0570*      NO   if member already exists,
+0580*      it will not be replaced.
+0590  1 A8 LINE                              A  121      IEBCOPY output line.
+0600*      IEBCOPY output line.
+0610*      (See IEBCOPY manual for a
+0620*      description of line layout.)
+0630  1 AB COMPLETION-CODE                   B    2      IEBCOPY completion c
+0640*      IEBCOPY completion code.
+0650*
+0660*      End of IEBCOPY
+0670*
+0680******DDM OUTPUT TERMINATED******

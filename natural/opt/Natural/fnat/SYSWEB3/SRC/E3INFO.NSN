@@ -1,0 +1,78 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3INFO
+0050*
+0060* DESCRIPTION   This program allows you to set and read some internal
+0070*               values of the Web Interface.
+0080*
+0090* AUTHOR        SAG   08.09.1998
+0100*
+0110* Version       8.3
+0120*
+0130* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0140*
+0150* HISTORY
+0160* USER    DATE       REASON
+0170* ------+----------+----------------------------------------------
+0180*       ! --.--.-- !
+0190* ------+----------+----------------------------------------------
+0200*
+0210* ------ PARAMETER -----------------------------------------------
+0220DEFINE DATA
+0230PARAMETER USING W3PARM
+0240LOCAL USING W3CONST
+0250LOCAL USING W3PINFO
+0260LOCAL
+02701 W3VALUE        (A) DYNAMIC
+0280END-DEFINE
+0290* --- ERROR HANDLING ---
+0300ON ERROR
+0310  PERFORM W3ERROR ##W3ERROR
+0320  PERFORM W3END ##RPC
+0330  ESCAPE ROUTINE
+0340END-ERROR
+0350*
+0360* --- INITIALIZE Web Interface ---
+0370PERFORM W3INIT ##RPC
+0380*
+0390* --- SET TYPE OF RETURN-PAGE ---
+0400PERFORM W3CONTENT-TYPE 'text/html'
+0410* --- WRITE THE HEAD OF THE DOCUMENT ---
+0420PERFORM W3TEXTLINE "<!DOCTYPE 'HTML PUBLIC -//W3C//DTD HTML 3.2//EN'>"
+0430PERFORM W3TEXTLINE '<HTML><HEAD><META HTTP-EQUIV="Content-Type" '-
+0440  'content="text/html; charset=iso-8859-1"><TITLE>'
+0450* --- THE TITLE OF THE PAGE ---
+0460PERFORM W3TEXTLINE 'Basic Routines - Info about Internal Values'
+0470PERFORM W3TEXTLINE '</TITLE></HEAD><BODY>'
+0480PERFORM W3TEXTLINE '<H2>Info about Internal Values</H2>'
+0490*
+0500PERFORM W3INFO ##W3INFO
+0510*
+0520COMPRESS "<HR><TABLE BORDER='1' CELLSPACING='1' CELLPADDING='5' "
+0530-"FRAME='BELOW' RULES='ROWS'>"
+0540'<TR><TD><B>Log-Time</B></TD><TD>' ##W3INFO.LOG-TIME "</TD></TR>"
+0550##HTTP_NEWLINE
+0560'<TR><TD><B>HTTPs Extension</B></TD><TD>' ##W3INFO.VERSION "</TD></TR>"
+0570##HTTP_NEWLINE
+0580'<TR><TD><B>Web Interface</B></TD><TD>' ##W3INFO.WEBAPI "</TD></TR>"
+0590##HTTP_NEWLINE
+0600'<TR><TD><B>Error-Nr</B></TD><TD>' ##W3INFO.ERROR-NR "</TD></TR>"
+0610##HTTP_NEWLINE
+0620"</TABLE><BR>" INTO W3VALUE LEAVING NO
+0630*
+0640PERFORM W3TEXTLINE W3VALUE
+0650*
+0660* --- END THE HTML PAGE ---
+0670COMPRESS "<TABLE BORDER='0' WIDTH='100%' CELLSPACING='0' "-
+0680  "CELLPADDING=5>"
+0690  '<TR BGCOLOR="#00cc66"><TD>' *PROGRAM '&#32;-&#32;' ##W3INFO.LOG-TIME
+0700  "</TD><TD ALIGN='RIGHT'>" 'Natural'
+0710  "</TD></TR></TABLE>"
+0720  '</BODY></HTML>' INTO W3VALUE
+0730PERFORM W3TEXT W3VALUE
+0740*
+0750* --- END Web Interface ---
+0760PERFORM W3END ##RPC
+0770*
+0780END

@@ -1,0 +1,79 @@
+0010**********************************************************************
+0020*
+0030* FILE   : ARR3GL-P.NSP
+0040* PURPOSE: SAMPLE PROGRAM CALLING USER EXIT CALLING NATURAL SUBPROGRAM
+0050*          VIA INTERFACE4 (INCLUDING ARRAYS)
+0060*
+0070*          MAKE SURE THAT THE SUBPROGRAM ARR3GL-N HAS BEEN CATALOGUED
+0080*
+0090*          Experiment with different sizes of dummy, to see if it works
+0100*
+0110* (c) Copyright 1991-2004 by Software AG
+0120*
+0130**********************************************************************
+0140*
+0150DEFINE DATA LOCAL
+01601 strt(N1) init <3>
+01701 increm(N1) init <2>
+0180*
+0190****************************
+0200*
+02101 indx (I4/2)      /* passed to the 3GL
+0220*
+02301 arr1 (9,15)      /* dummy makes it non-contiguous
+02402 dummy(a14)
+02502 arr(N4)          /* passed to the 3GL
+0260*
+02701 dummy2(i2)
+02801 dyn (a) dynamic  /* passed to the 3GL
+0290*
+0300****************************
+0310*
+03201 #RES (I4) /* RESULT VARIABLE
+03301 i(i4)
+03401 k(i4)
+03501 d(a20)
+0360END-DEFINE
+0370*
+0380format ls=79 sg=off
+0390*
+0400for i 1 9
+0410    for k 1 15
+0420        compute arr(i,k) = 1000 * i + k
+0430    end-for
+0440end-for
+0450move 'aaa' to dyn
+0460*
+0470input (ad=m ip=off) // 'The main array to be worked on:' //
+0480               arr(*,*) (ad=o) //
+0490               'Select columns:' //
+0500               '      start index (1-9)' strt   (ad=m) //
+0510               '      increment (1-3)  ' increm (ad=m)
+0520if strt < 1 OR strt > 9
+0530    reinput 'Please correct the start index: 1 ... 9' mark 1
+0540end-if
+0550if increm < 1 OR increm > 3
+0560    reinput 'Please correct the increment: 1 ... 3' mark   2
+0570end-if
+0580*
+0590* just to show another array acces pack strt and increm into indx
+0600move strt   to indx(1)
+0610move increm to indx(2)
+0620*
+0630* prepare call the 3GL routine, to be able to call ARR3GL-N
+0640CALL 'CMSUBZ' 'CLNOTHRE' '8749' 'S' /* needed only on Windows
+0650* call the 3GL routine, which in turn calls ARR3GL-N
+0660CALL INTERFACE4 'ARR3GL' indx(*) arr(*,*) dyn
+0670compute #RES =  ret('ARR3GL')
+0680if #res ne 0
+0690   write 'error in ARR3GL' #res
+0700   stop
+0710end-if
+0720*
+0730move dyn to d
+0740input (ad=o ip=off) // 'Check the result' //
+0750                    'start index: ' strt /
+0760                    'increment:   ' increm //
+0770                    arr(*,*) (ad=o) // 'dyn' d 'length:' *length(dyn)
+0780*
+0790END

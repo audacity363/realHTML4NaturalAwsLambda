@@ -1,0 +1,12 @@
+0010** Example 'CALEX4': CALL PROGRAM 'ADD'
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #OP1  (I4)
+00501 #OP2  (I4)
+00601 #SUM  (I4)
+0070END-DEFINE
+0080*
+0090CALL 'ADD' #OP1 #OP2 #SUM
+0100DISPLAY #SUM
+0110*
+0120END

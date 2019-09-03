@@ -1,0 +1,39 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1039N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR1039L
+0070   2 INPUTS
+0080     3 FUNCTION       (A01)
+0090   2 INPUT-OUTPUTS
+0100     3 TEXT-LENGTH    (I04)
+0110     3 TEXT           (A253)
+0120   2 OUTPUTS
+0130     3 RESPONSE       (I04)
+0140END-DEFINE
+0150/*
+0160SET KEY ALL
+0170ASSIGN FUNCTION = 'C'
+0180ASSIGN TEXT-LENGTH = 28
+0190ASSIGN TEXT = 'Copy text into the clipboard'
+0200/*
+0210REPEAT
+0220  /*
+0230  INPUT (AD=MITL'_' IP=OFF)
+0240    /  'Modify the clipboard:' (I)
+0250    /  '-' (21) (I) /
+0260    /  'Function ............' FUNCTION
+0270    /  'Length of text ......' TEXT-LENGTH
+0280    /  'Text ................' TEXT (AL=50 AD=W)
+0290   //  'Response ............' RESPONSE  (AD=OIL ZP=ON)
+0300  ///  'Press any PF-key to stop.'
+0310  /*
+0320  IF *PF-KEY NE 'ENTR'
+0330    ESCAPE BOTTOM
+0340  END-IF
+0350  /*
+0360  CALLNAT 'USR1039N' USR1039L
+0370  /*
+0380END-REPEAT
+0390END

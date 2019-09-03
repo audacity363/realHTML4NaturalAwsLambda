@@ -1,0 +1,17 @@
+0010&H View ACTIVE-JOBS
+0020&L
+0030&L
+0040#Purpose@: Retrieve system activity information.
+0050&L
+0060&L
+0070#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0080&L
+0090&L
+0100#Usage@  : The information retrieved by this view is the same as
+0110           returned by BS2000 system command '/STA P' or
+0120           '/SHOW-USER-STATUS JOB-TYPE=JOBS'.
+0130&L
+0140#Notes@  :
+0150
+0160
+0170

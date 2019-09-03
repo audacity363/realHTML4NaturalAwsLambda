@@ -1,0 +1,153 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3RESOUR
+0050*
+0060* DESCRIPTION   Use a resource to save the output page
+0070*               and cash the page for 10 Minutes
+0080*
+0090* AUTHOR        SAG   03.06.2002
+0100*
+0110* Version       8.3
+0120*
+0130* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0140*
+0150* HISTORY
+0160* USER    DATE       REASON
+0170* ------+----------+----------------------------------------------
+0180*       ! --.--.-- !
+0190* ------+----------+----------------------------------------------
+0200*
+0210* ------ PARAMETER -----------------------------------------------
+0220DEFINE DATA
+0230PARAMETER USING W3PARM
+0240LOCAL USING W3CONST
+0250LOCAL USING W3PINFO
+0260LOCAL
+0270*
+02801 W3VALUE              (A) DYNAMIC
+02901 W3RESOURCE-FILE      (A20) INIT <'e3save.html'>
+03001 W3RESOURCE-FILE-PATH (A) DYNAMIC
+03101 W3RESPONSE           (I4)
+0320*
+03301 W3BODY-OLD           (A) DYNAMIC
+03401 W3BODY               (A) DYNAMIC
+03501 W3HEADER             (A) DYNAMIC
+0360*
+03701 #CURRENT_TIME        (A10) INIT <*TIME>
+03801 #CURRENT_TIMX        (A14)
+03901 #CACH_TIMX           (A14)
+0400*
+04101 #RELOAD-FLAG         (A) DYNAMIC
+0420*
+0430END-DEFINE
+0440* --- ERROR HANDLING ---
+0450ON ERROR
+0460  PERFORM W3ERROR ##W3ERROR
+0470  PERFORM W3END ##RPC
+0480  ESCAPE ROUTINE
+0490END-ERROR
+0500*
+0510* --- INITIALIZE W3 API PROCESSING ---
+0520PERFORM W3INIT ##RPC
+0530*
+0540PERFORM W3CONTENT-TYPE 'text/html'
+0550*
+0560* Check if a cach file exists, if not create one.
+0570PERFORM W3CHECK-RESOURCE " " W3RESOURCE-FILE TRUE W3RESOURCE-FILE-PATH
+0580* load the content of the cach file
+0590PERFORM W3READ-RESOURCE  " " W3RESOURCE-FILE W3BODY-OLD W3RESPONSE
+0600*
+0610#RELOAD-FLAG := "TIMER"
+0620* --- check timestamp of old cached file
+0630IF *LENGTH(W3BODY-OLD) > 14 THEN
+0640  #CACH_TIMX := SUBSTR(W3BODY-OLD,1,14)
+0650  IF #CACH_TIMX NE " "
+0660    MOVE EDITED *TIMX (EM=YYYYMMDDHHIISS) TO #CURRENT_TIMX
+0670    /*
+0680    IF SUBSTR(#CACH_TIMX,1,11) = SUBSTR(#CURRENT_TIMX,1,11)
+0690      #RELOAD-FLAG := " "
+0700    END-IF
+0710  END-IF
+0720END-IF
+0730*
+0740* --- check reload flag
+0750PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "RELOAD" "P" #RELOAD-FLAG
+0760*
+0770* --- if reload is forced or the cached page is too old
+0780IF #RELOAD-FLAG = " " AND *LENGTH(W3BODY-OLD) > 0 THEN
+0790  W3BODY-OLD := SUBSTR(W3BODY-OLD,15)
+0800  /* use cached text
+0810  PERFORM W3TEXTLINE W3BODY-OLD
+0820ELSE
+0830  /* generate new html page
+0840  PERFORM GEN-HTML
+0850  /*
+0860  /* if a delete is forced
+0870  IF #RELOAD-FLAG = "DELETE"
+0880    PERFORM W3DELETE-RESOURCE " " W3RESOURCE-FILE
+0890  ELSE
+0900    /* cach generated page
+0910    PERFORM  W3READ-OUTPUT W3HEADER W3BODY
+0920    IF W3BODY NE " " THEN
+0930      MOVE EDITED *TIMX (EM=YYYYMMDDHHIISS) TO #CACH_TIMX
+0940      COMPRESS #CACH_TIMX W3BODY INTO W3BODY
+0950      PERFORM W3WRITE-RESOURCE " " W3RESOURCE-FILE W3BODY
+0960    END-IF
+0970  END-IF
+0980END-IF
+0990*
+1000* replace the timestamp of the page
+1010PERFORM W3REPLACE " " '$TIME$' #CURRENT_TIME
+1020*
+1030* --- END W3 API PROCESSING ---
+1040PERFORM W3END ##RPC
+1050*
+1060*
+1070* ===================================================================
+1080DEFINE SUBROUTINE GEN-HTML
+1090*
+1100* --- WRITE THE HEAD OF THE DOCUMENT ---
+1110PERFORM W3TEXTDYNAMIC '<HTML><HEAD><META HTTP-EQUIV="Content-Type" '
+1120  -'CONTENT="text/html; charset=iso-8859-1">'
+1130  -'<TITLE>Basic Routines - Resource Handling</TITLE>'
+1140  -"<BODY>"
+1150  -'<H2>Resource File Handling</H2>'
+1160  -'<HR>'
+1170* --- WRITE THE CONTENT OF THE DOCUMENT ---
+1180IF #RELOAD-FLAG = "DELETE"
+1190  COMPRESS '<P>The resource with name: <TT>' W3RESOURCE-FILE
+1200    '</TT> at the resource directory of library: <TT>' *LIBRARY-ID
+1210    '</TT> and complete path: <TT>' W3RESOURCE-FILE-PATH
+1220    '</TT> has been deleted.'
+1230    '<P>A reload can be forced by clicking the <a href="' *PROGRAM
+1240    '">load</a> link.'
+1250    INTO W3VALUE LEAVING NO
+1260ELSE
+1270  COMPRESS '<P>A new resource with name: <TT>' W3RESOURCE-FILE
+1280    '</TT> at the resource directory of library: <TT>' *LIBRARY-ID
+1290    '</TT> and the complete path: <TT>' W3RESOURCE-FILE-PATH
+1300    '</TT> has been saved at <TT>' #CURRENT_TIME '</TT>.'
+1310    '<P>This file will be loaded from the resource for the next 10 minutes '
+1320    -' instead of generating a new page.'
+1330    '<P>Have a look at the timestamps '
+1340    -'after you have clicked at <a href="' *PROGRAM
+1350    '">load</a> link.'
+1360    '<P>A reload can be forced by clicking the <a href="' *PROGRAM
+1370    '?RELOAD=NEW">reload</a> link.'
+1380    '<P>To end the caching, click the <a href="' *PROGRAM
+1390    '?RELOAD=DELETE">delete</a> link.' INTO W3VALUE LEAVING NO
+1400END-IF
+1410PERFORM W3TEXTDYNAMIC W3VALUE
+1420*
+1430* --- END THE HTML PAGE ---
+1440COMPRESS "<BR><BR><TABLE BORDER='0' WIDTH='100%' CELLSPACING='0' "-
+1450  "CELLPADDING='5'>"
+1460  '<TR BGCOLOR="#00cc66"><TD>' *PROGRAM '&#32;-&#32;' *DATE
+1470  "&#32;$TIME$</TD></TR></TABLE>"
+1480  '</BODY></HTML>' INTO W3VALUE LEAVING NO
+1490PERFORM W3TEXTDYNAMIC W3VALUE
+1500*
+1510END-SUBROUTINE
+1520*
+1530END

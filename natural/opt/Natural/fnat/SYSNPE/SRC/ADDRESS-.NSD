@@ -1,0 +1,70 @@
+0010DB: 148 FILE: 021  - ADDRESS-SPACE                    DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:19
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:19
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      MVS fields
+0230*
+0240  1 A1 ADDRESS                           B    4      Address Space Contro
+0250*      Address Space Control Block
+0260*      address.
+0270  1 A2 JOB-NAME                          A    8    D Name of job, taken f
+0280*      Name of job, taken from job
+0290*      card or procedure name.
+0300  1 A3 TCB                               B    4    D TCB address of first
+0310*      TCB address of first ready
+0320*      task for this address space.
+0330  1 A4 ASID                              N  4.0    D Address space identi
+0340*      Address space identifier.
+0350  1 A5 STATUS                            A    8    D Status of address sp
+0360*      Status of address space:
+0370*      V=R       running in
+0380*      real memory
+0390*      TERM      address space is
+0400*      terminating
+0410*      SWAP-OUT  address space
+0420*      swapped out
+0430*      NON-SWAP  address space is
+0440*      non-swappable
+0450*      blank     address space is
+0460*      swapped in
+0470  1 A6 DISP                              A    3    D Dispatchability of a
+0480*      Dispatchability of address
+0490*      space:
+0500*      YES  address space is
+0510*      dispatchable
+0520*      NO   address space is
+0530*      non-dispatchable
+0540  1 A7 TYPE                              A    3    D Type of job:
+0550*      Type of job:
+0560*      JOB  batch job
+0570*      STC  started task
+0580*      TSU  TSO user
+0590  1 A8 CPU                               N  7.2    D Amount of CPU consum
+0600*      Amount of CPU consumed by
+0610*      address space
+0620*      (format SSSSSSS.HH).
+0630  1 A9 REGION                            N  5.0    D Amount of real stora
+0640*      Amount of real storage used in
+0650*      the address space
+0660*      (in K bytes).
+0670*
+0680*      End of ADDRESS-SPACE
+0690*
+0700******DDM OUTPUT TERMINATED******

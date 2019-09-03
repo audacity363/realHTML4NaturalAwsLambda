@@ -1,0 +1,92 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3CSS
+0050*
+0060* DESCRIPTION   Writes a character string to the document.
+0070*
+0080* AUTHOR        SAG   17.07.2000
+0090*
+0100* Version       8.3
+0110*
+0120* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0130*
+0140* HISTORY
+0150* USER    DATE       REASON
+0160* ------+----------+----------------------------------------------
+0170*       ! --.--.-- !
+0180* ------+----------+----------------------------------------------
+0190*
+0200* ------ PARAMETER -----------------------------------------------
+0210DEFINE DATA
+0220PARAMETER USING W3PARM
+0230LOCAL USING W3CONST
+0240LOCAL
+02501 W3VALUE        (A) DYNAMIC
+0260END-DEFINE
+0270* --- ERROR HANDLING ---
+0280ON ERROR
+0290  PERFORM W3ERROR ##W3ERROR
+0300  PERFORM W3END ##RPC
+0310  ESCAPE ROUTINE
+0320END-ERROR
+0330*
+0340* --- INITIALIZE Web Interface ---
+0350PERFORM W3INIT ##RPC
+0360*
+0370* --- SET TYPE OF RETURN-PAGE ---
+0380PERFORM W3CONTENT-TYPE 'text/html'
+0390* --- WRITE THE HEAD OF THE DOCUMENT ---
+0400PERFORM W3TEXTLINE "<!DOCTYPE 'HTML PUBLIC -//W3C//DTD HTML 3.2//EN'>"
+0410PERFORM W3TEXTLINE '<HTML><HEAD><META HTTP-EQUIV="Content-Type" '-
+0420  'CONTENT="text/html; charset=iso-8859-1"><TITLE>'
+0430* --- THE TITLE OF THE PAGE ---
+0440PERFORM W3TEXTLINE  'Basic Routines - Convert Special Character'
+0450PERFORM W3TEXTLINE '</TITLE></HEAD><BODY>'
+0460PERFORM W3TEXTLINE '<H2>Test NWW_OUT_CSS Feature</H2><HR>'
+0470*
+0480PERFORM W3TEXTLINE '<!-- test comment '
+0490PERFORM W3TEXTLINE ' If you can see this at your browser, your '
+0500PERFORM W3TEXTLINE ' codepage is not correct translated. -->'
+0510*
+0520PERFORM W3TEXTLINE '<TABLE BORDER="1" CELLSPACING="1" CELLPADDING="5"'
+0530                  -' width="90%" frame="below" rules="rows">'
+0540                  -'<TR><TD><B>Special Character</B></TD>'
+0550                  -'<TD><B>ASCII</B></TD>'
+0560                  -'<TD><B>Translated</B></TD></TR>'
+0570                  -'<TR><TD>horizontal tab</TD><TD>H"09"</TD>'
+0580                  -'<TD>"&#09;"</TD></TR>'
+0590*
+0600PERFORM W3TEXTLINE '<TR><TD>comercial at</TD><TD>H"40"</TD>'
+0610                  -'<TD>"&#64;"</TD></TR>'
+0620                  -'<TR><TD>left square bracket</TD><TD>H"5B"</TD>'
+0630                  -'<TD>"&#91;"</TD></TR>'
+0640                  -'<TR><TD>backslash</TD><TD>H"5C"</TD>'
+0650                  -'<TD>"&#92;"</TD></TR>'
+0660                  -'<TR><TD>right square bracket</TD><TD>H"5D"</TD>'
+0670                  -'<TD>"&#93;"</TD></TR>'
+0680*
+0690PERFORM W3TEXTLINE '<TR><TD>left curly brace</TD><TD>H"7B"</TD>'
+0700                  -'<TD>"&#123;"</TD></TR>'
+0710                  -'<TR><TD>vertical bar</TD><TD>H"7C"</TD>'
+0720                  -'<TD>"&#124;"</TD></TR>'
+0730                  -'<TR><TD>right curly brace</TD><TD>H"7D"</TD>'
+0740                  -'<TD>"&#125;"</TD></TR>'
+0750                  -'</TABLE><BR>'
+0760*
+0770PERFORM W3TEXTLINE '<BR>See the HTML souce to check if the translation'
+0780                  -' has been done.<BR>No <TT>"&amp;#..;"</TT>'
+0790                  -' strings are left.<BR><BR>'
+0800* --- END THE HTML PAGE ---
+0810COMPRESS "<TABLE BORDER='0' WIDTH='100%' CELLSPACING='0' "-
+0820  "CELLPADDING='5'>"
+0830  '<TR BGCOLOR="#00cc66"><TD>' *PROGRAM '&#32;-&#32;' *DATE '&#32;' *TIME
+0840  "</TD><TD ALIGN='RIGHT'>" 'Natural'
+0850  "</TD></TR></TABLE>"
+0860  '</BODY></HTML>' INTO W3VALUE LEAVING NO
+0870PERFORM W3TEXTDYNAMIC W3VALUE
+0880*
+0890* --- END Web Interface ---
+0900PERFORM W3END ##RPC
+0910*
+0920END

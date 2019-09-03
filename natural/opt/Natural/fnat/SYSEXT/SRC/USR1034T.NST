@@ -1,0 +1,82 @@
+0010Get NTTF file table with translated DBID and FNR
+0020.
+0030Documentation ......... USR1034T    /*  Text object
+0040Interface ............. USR1034N    /*  Cataloged subprogram
+0050Example Program ....... USR1034P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. SYSTEM FILES
+0100.
+0110Keyword ............... DBID, FNR, NTTF, TF, TRANSLATE
+0120.
+0130Function .............. You can translate a DBID/FNR of a production
+0140                        database into a DBID/FNR of a test database
+0150                        via the NTTF macro or the dynamic parameter TF.
+0160                        USR1034N returns a list of all translated
+0170                        DBIDs/FNRs.
+0180.
+0190.
+0200Parameters
+0210----------
+0220Define the following parameters with the DEFINE DATA statement:
+0230.
+0240 1 PARM-USR1034N
+0250   2 MAX-INDEX         (P03)       /* Number of entries to be returned
+0260   2 OLD-DBID          (N05/1:nn)  /* Original DBID (variable length)
+0270   2 OLD-FNR           (N05/1:nn)  /* Original FNR (variable length)
+0280   2 NEW-DBID          (N05/1:nn)  /* Translated DBID (variable length)
+0290   2 NEW-FNR           (N05/1:nn)  /* Translated FNR (variable length)
+0300   2 NUMBER-ACTIVE     (P03)       /* Number of entries in NTTF table
+0310   2 RESPONSE          (N04)       /* Error code
+0320.
+0330Interface Call
+0340--------------
+0350Use the interface with the CALLNAT statement:
+0360.
+0370CALLNAT 'USR1034N' PARM-USR1034N
+0380.
+0390.
+0400Using the Application Programming Interface:
+0410--------------------------------------------
+0420Copy the subprogram USR1034N to the library SYSTEM or the steplib
+0430library respectively, or to the required library.
+0440.
+0450Description of the parameters:
+0460.
+0470MAX-INDEX (Input)
+0480  Has to be filled before invoking the interface.
+0490  MAX-INDEX contains the number of entries in the NTTF
+0500  file table to be returned.
+0510.
+0520OLD-DBID, OLD-FNR, NEW-DBID, NEW-FNR (Output)
+0530  List of original and translated database IDs and file numbers.
+0540  The output value 65535 for one of the 4 parameter means,
+0550    that a '*' has been specified in the parameter definition.
+0560    Examples for the TF parameter:
+0570      To translate all FNRs in the specified production-DBID to all
+0580      FNRs in the specified test-DBID, you specify an asterisk for
+0590      both production-FNR and test-FNR:
+0600        TF=(production-DBID,*,test-DBID,*)
+0610      To translate all production DBIDs and FNRs to the specified
+0620      test-DBID and test-FNR, you specify asterisks for the
+0630      production-DBID and production-FNR:
+0640        TF=(*,*,test-DBID,test-FNR )
+0650.
+0660NUMBER-ACTIVE (Output)
+0670  NUMBER-ACTIVE contains the number of entries in the NTTF
+0680  file table.
+0690.
+0700RESPONSE (Output)
+0710  Error code:
+0720   0000 - Ok
+0730   0004 - Entry does not exist
+0740    > 0 - Natural error number
+0750    < 0 - Internal error
+0760   4097 - Duplicate entry
+0770   4098 - Value of TF number invalid, < 1
+0780   4099 - Wrong number of parameters
+0790   4100 - Invalud function code
+0800.
+0810.
+0820*****  End of Description  *****

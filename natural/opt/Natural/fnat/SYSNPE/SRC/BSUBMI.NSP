@@ -1,0 +1,214 @@
+0010* Program   BSUBMI
+0020* View      SUBMIT
+0030*
+0040* Function  Submit Job
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* hka 97-12-03   NPE213:   make it y2000 compliant
+0090* ======================================================================
+0100*
+0110DEFINE DATA GLOBAL USING TUTO
+0120            LOCAL  USING BSUBMI-L
+0130            LOCAL
+0140*
+015001 #CARDS                   (A80/1:5) INIT
+0160(01) <'/LOGON'>
+0170(02) <'/SYSFILE SYSOUT=SUBMIT.SYSOUT'>
+0180(03) <'/STA'>
+0190(04) <'/SYSFILE SYSOUT=(PRIMARY)'>
+0200(05) <'/LOGOFF NOSPOOL'>
+0210*
+022001 #OBJECT                  (A6)
+023001 #DSNAME                  (A54)
+024001 #PASSWORD                (A8)
+025001 #FUNCTION                (A8)
+026001 #PRODUCT                 (A1)
+027001 #ELEMENT                 (A64)
+028001 #USERID                  (A8)
+029001 #JOB-NAME                (A8)
+030001 #ACCOUNT-NUMBER          (A8)
+031001 #PRIORITY                (A3)
+032001 #EXPRESS                 (A3)
+033001 #TIME                    (A5)
+034001 #ERASE-AFTER-RUN         (A3)
+035001 #SYSTEM-JOB-VARIABLE     (A54)
+036001 #JOB-VARIABLE-PASSWORD   (A4)
+037001 #USER-PASSWORD           (A8)
+038001 #JOB-CLASS               (A8)
+039001 #RUN-PRIORITY            (A3)
+040001 #START-OPTION            (A17)
+041001 #START-DATX              (D)
+042001 #START-TIMX              (T)
+043001 #REPEAT-OPTION           (A17)
+044001 #REPEAT-TIME             (A5)
+045001 #I                       (P1)
+0460END-DEFINE
+0470PERFORM PF-KEY
+0480*
+0490* ------------------------------ MAIN LOOP ----------------------------
+0500*
+0510REPEAT
+0520  PERFORM SCREEN-IO
+0530  DECIDE ON FIRST #OBJECT
+0540    VALUE 'FILE'   PERFORM SUBMIT-BS2000-FILE
+0550    VALUE 'MEMBER' PERFORM SUBMIT-LMS-MEMBER
+0560    VALUE 'CARDS'  PERFORM SUBMIT-CARDS
+0570    NONE         IGNORE
+0580  END-DECIDE
+0590END-REPEAT
+0600*
+0610* ------------------------------ submit-bs2000-file -------------------
+0620*
+0630DEFINE SUBROUTINE SUBMIT-BS2000-FILE
+0640PROCESS SUBMIT
+0650         USING NODE                  = ##NODE
+0660           ,   DSNAME                = #DSNAME
+0670           ,   PASSWORD              = #PASSWORD
+0680           ,   USERID                = #USERID
+0690           ,   JOB-NAME              = #JOB-NAME
+0700           ,   ACCOUNT-NUMBER        = #ACCOUNT-NUMBER
+0710           ,   JOB-PRIORITY          = #PRIORITY
+0720           ,   TIME                  = #TIME
+0730           ,   ERASE-AFTER-RUN       = #ERASE-AFTER-RUN
+0740           ,   MONITOR-JOB-VARIABLE  = #SYSTEM-JOB-VARIABLE
+0750           ,   JOB-VARIABLE-PASSWORD = #JOB-VARIABLE-PASSWORD
+0760           ,   USER-PASSWORD         = #USER-PASSWORD
+0770           ,   JOB-CLASS             = #JOB-CLASS
+0780           ,   START-OPTION          = #START-OPTION
+0790           ,   START-DATX            = #START-DATX
+0800           ,   START-TIMX            = #START-TIMX
+0810           ,   REPEAT-OPTION         = #REPEAT-OPTION
+0820           ,   REPEAT-TIME           = #REPEAT-TIME
+0830        GIVING ERROR-CODE
+0840               ERROR-TEXT
+0850               SYSTEM-CODE
+0860IF ERROR-CODE NE 0
+0870   INCLUDE BERR---C
+0880   ESCAPE ROUTINE
+0890END-IF
+0900*
+0910PROCESS SUBMIT
+0920        USING NODE                  = ##NODE
+0930          ,   DSNAME                = #DSNAME
+0940          ,   FUNCTION              = 'CLOSE'
+0950       GIVING ERROR-CODE
+0960              ERROR-TEXT
+0970              SYSTEM-CODE
+0980              JOB-ID
+0990IF ERROR-CODE NE 0
+1000   INCLUDE BERR---C
+1010  ELSE
+1020   ASSIGN ##MSG-NR   = 1035
+1030   ASSIGN ##MSG-TXT1 = JOB-ID
+1040END-IF
+1050END-SUBROUTINE
+1060*
+1070* ------------------------------ submit-lms-member --------------------
+1080*
+1090DEFINE SUBROUTINE SUBMIT-LMS-MEMBER
+1100PROCESS SUBMIT
+1110         USING NODE                  = ##NODE
+1120           ,   PRODUCT               = 'L'
+1130           ,   DSNAME                = #DSNAME
+1140           ,   ELEMENT               = #ELEMENT
+1150           ,   PASSWORD              = #PASSWORD
+1160           ,   USERID                = #USERID
+1170           ,   JOB-NAME              = #JOB-NAME
+1180           ,   ACCOUNT-NUMBER        = #ACCOUNT-NUMBER
+1190           ,   JOB-PRIORITY          = #PRIORITY
+1200           ,   TIME                  = #TIME
+1210           ,   ERASE-AFTER-RUN       = #ERASE-AFTER-RUN
+1220           ,   MONITOR-JOB-VARIABLE  = #SYSTEM-JOB-VARIABLE
+1230           ,   JOB-VARIABLE-PASSWORD = #JOB-VARIABLE-PASSWORD
+1240           ,   USER-PASSWORD         = #USER-PASSWORD
+1250           ,   JOB-CLASS             = #JOB-CLASS
+1260           ,   START-OPTION          = #START-OPTION
+1270           ,   START-DATX            = #START-DATX
+1280           ,   START-TIMX            = #START-TIMX
+1290           ,   REPEAT-OPTION         = #REPEAT-OPTION
+1300           ,   REPEAT-TIME           = #REPEAT-TIME
+1310        GIVING ERROR-CODE
+1320               ERROR-TEXT
+1330               SYSTEM-CODE
+1340               JOB-ID
+1350IF ERROR-CODE NE 0
+1360   INCLUDE BERR---C
+1370   ESCAPE ROUTINE
+1380END-IF
+1390PROCESS SUBMIT
+1400        USING NODE                  = ##NODE
+1410          ,   DSNAME                = #DSNAME
+1420          ,   FUNCTION              = 'CLOSE'
+1430       GIVING ERROR-CODE
+1440              ERROR-TEXT
+1450              SYSTEM-CODE
+1460              JOB-ID
+1470IF ERROR-CODE NE 0
+1480   INCLUDE BERR---C
+1490  ELSE
+1500   ASSIGN ##MSG-NR   = 1035
+1510   ASSIGN ##MSG-TXT1 = JOB-ID
+1520END-IF
+1530END-SUBROUTINE
+1540*
+1550* ------------------------------ submit-cards -------------------------
+1560*
+1570DEFINE SUBROUTINE SUBMIT-CARDS
+1580FOR #I = 1 TO 5
+1590  PROCESS SUBMIT
+1600           USING NODE                  = ##NODE
+1610             ,   CARD                  = #CARDS (#I)
+1620             ,   USERID                = #USERID
+1630             ,   JOB-NAME              = #JOB-NAME
+1640             ,   ACCOUNT-NUMBER        = #ACCOUNT-NUMBER
+1650             ,   JOB-PRIORITY          = #PRIORITY
+1660             ,   TIME                  = #TIME
+1670             ,   ERASE-AFTER-RUN       = #ERASE-AFTER-RUN
+1680             ,   MONITOR-JOB-VARIABLE  = #SYSTEM-JOB-VARIABLE
+1690             ,   JOB-VARIABLE-PASSWORD = #JOB-VARIABLE-PASSWORD
+1700             ,   USER-PASSWORD         = #USER-PASSWORD
+1710             ,   JOB-CLASS             = #JOB-CLASS
+1720             ,   START-OPTION          = #START-OPTION
+1730             ,   START-DATX            = #START-DATX
+1740             ,   START-TIMX            = #START-TIMX
+1750             ,   REPEAT-OPTION         = #REPEAT-OPTION
+1760             ,   REPEAT-TIME           = #REPEAT-TIME
+1770          GIVING ERROR-CODE
+1780                 ERROR-TEXT
+1790                 SYSTEM-CODE
+1800  IF ERROR-CODE NE 0
+1810     INCLUDE BERR---C
+1820     ESCAPE ROUTINE
+1830  END-IF
+1840END-FOR
+1850PROCESS SUBMIT
+1860        USING NODE                  = ##NODE
+1870          ,   FUNCTION              = 'CLOSE'
+1880       GIVING ERROR-CODE
+1890              ERROR-TEXT
+1900              SYSTEM-CODE
+1910              JOB-ID
+1920IF ERROR-CODE NE 0
+1930   INCLUDE BERR---C
+1940   ESCAPE BOTTOM
+1950  ELSE
+1960   ASSIGN ##MSG-NR   = 1035
+1970   ASSIGN ##MSG-TXT1 = JOB-ID
+1980END-IF
+1990END-SUBROUTINE
+2000*
+2010* ------------------------------ SCREEN-IO ----------------------------
+2020*
+2030DEFINE SUBROUTINE SCREEN-IO
+2040INPUT WITH TEXT *##MSG-NR,
+2050                 ##MSG-TXT1,
+2060                 ##MSG-TXT2
+2070      USING MAP 'BSUBMI-&'
+2080RESET ##MSG
+2090END-SUBROUTINE
+2100*
+2110* ------------------------------ PF-KEY -------------------------------
+2120*
+2130INCLUDE C-PFKEY
+2140END

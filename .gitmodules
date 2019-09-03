@@ -1,0 +1,3 @@
+[submodule "libs/realHTML4NaturalCore"]
+	path = libs/realHTML4NaturalCore
+	url = git@github.com:audacity363/realHTML4NaturalCore.git

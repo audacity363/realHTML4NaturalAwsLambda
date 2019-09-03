@@ -1,0 +1,45 @@
+0010Set application error on RPC server
+0020.
+0030Documentation ......... USR4012T    /*  Text object
+0040Interface ............. USR4012N    /*  Cataloged subprogram
+0050Example Program ....... USR4012P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC
+0100.
+0110Keywords .............. ENTIREX, RPC, SERVER
+0120.
+0130Function .............. Raise Natural error NAT1999 and insert the
+0140                        provided error text in the variable part.
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+0210    INPUT
+0220         ERRORTEXT (A120) - Error text for NATT1999
+0230.
+0240.
+0250Interface Call
+0260--------------
+0270Use the interface with the CALLNAT statement:
+0280.
+0290CALLNAT 'USR4012N' ERRORTEXT
+0300.
+0310.
+0320Using the Application Programming Interface:
+0330--------------------------------------------
+0340Copy the subprogram USR4012N to the library SYSTEM or the steplib
+0350library respectively, or to the required library.
+0360.
+0370.
+0380Functionality:
+0390--------------
+0400Natural error NAT1999 is raised and the provided error text is inserted
+0410as variable message part.
+0420USR4012N may be used to enforce Natural error NAT1999 on the Natural
+0430RPC server and to pass back the provided error text to the RPC client.
+0440.
+0450***** End of Description *****

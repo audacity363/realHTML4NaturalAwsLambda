@@ -1,0 +1,31 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Object Date
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170Specify the kind of check for the object date to be performed
+0180during selection:
+0190  Select all objects (no date check)
+0200     If this field is marked, no check for the object date is performed
+0210     during selection.
+0220  Select objects modified between .. and
+0230     If this field is marked, a start date and/or time
+0240     and/or an end date and/or time can be specified.
+0250     Only the objects whose save or catalog date is in the specified
+0260     range are selected for processing.
+0270  Select objects modified on
+0280     If this field is marked, a date and/or time can be specified.
+0290     Only the objects whose save or catalog date fits to the specified
+0300     date are selected for processing.
+0310<HelpTextEnd>

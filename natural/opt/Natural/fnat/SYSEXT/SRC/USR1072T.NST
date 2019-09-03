@@ -1,0 +1,43 @@
+0010Get command ID of a retain set
+0020.
+0030Documentation ......... USR1072T    /*  Text object
+0040Interface ............. USR1072N    /*  Cataloged subprogram
+0050Example Program ....... USR1072P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATABASE
+0100.
+0110Keywords .............. CID, COMMAND ID, RETAIN SET
+0120.
+0130Function .............. Get the Command ID that belongs to a
+0140                        given retain set name.
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+021001 PARMBLOCK
+0220   02 RSET-NAME         (A32)   /* IN : NAME OF RETAIN SET
+0230   02 RSET-CID          (B4)    /* OUT: COMMAND ID
+0240   02 RC                (I4)    /* RESPONSE CODE:
+0250                                /*  0  SUCCESS:
+0260                                /*     RSET-CID CONTAINS THE COMMAND ID
+0270                                /* -1  FAILURE
+0280.
+0290.
+0300Interface Call
+0310--------------
+0320Use the interface with the CALLNAT statement:
+0330.
+0340CALLNAT 'USR1072N' PARMBLOCK
+0350.
+0360.
+0370Using the Application Programming Interface:
+0380--------------------------------------------
+0390Copy the subprogram USR1072N to the library SYSTEM or the steplib
+0400library respectively, or to the required library.
+0410.
+0420.
+0430***** End of Description *****

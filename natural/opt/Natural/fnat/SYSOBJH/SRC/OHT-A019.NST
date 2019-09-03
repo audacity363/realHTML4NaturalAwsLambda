@@ -1,0 +1,32 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Administration
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180The administration function of the Object Handler provides the
+0190following functions:
+0200
+0210List the available Workplans in the Workplan library
+0220     All existing Workplans in the Workplan library are listed.
+0230
+0240Create a new Workplan
+0250     Create a new Object Handler Workplan.
+0260
+0270Change the Workplan library
+0280     This function is used to change the Workplan library,
+0290     i.e. the library where the Workplans are searched in the
+0300     different functions.
+0310
+0320<HelpTextEnd>

@@ -1,0 +1,180 @@
+0010Maintain the RPC service directory
+0020.
+0030Documentation ......... USR8216T    /*  Text object
+0040Interface ............. USR8216N    /*  Cataloged subprogram
+0050Example Program ....... USR8216P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC
+0100.
+0110Keywords .............. +NEW-NAT-8.3.7, MAINTENANCE, NATCLTGS, RPC,
+0120                        SERVICE DIRECTORY
+0130.
+0140Function .............. Define, change or retrieve service directory
+0150                        entries.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+0210 1 USR8216-P
+0220.
+0230/* Input parameters
+0240.
+0250    2 P-COMMAND
+0260      3 FUNC-KEY            (A) DYNAMIC       /* IN
+0270      3 FUNC-OPT            (A) DYNAMIC       /* IN
+0280      3 FUNC-PARM           (A) DYNAMIC       /* IN
+0290    2 LIBRARY               (A8)              /* IN
+0300.
+0310/* Output parameters
+0320.
+0330    2 LIBRARY-INFO          (A) DYNAMIC       /* OUT
+0340    2 NUMBER-OF-ITEMS       (I4)              /* OUT
+0350    2 RES                   (*)               /* OUT
+0360      3 R-LINENO            (I4)              /* OUT
+0370      3 R-VALUE             (A) DYNAMIC       /* OUT
+0380      3 R-PARENT            (A) DYNAMIC       /* OUT
+0390      3 R-ATTRIBUTE         (A3)              /* OUT
+0400    2 MESSAGE               (A/*) DYNAMIC     /* OUT
+0410    2 RESPONSECODE          (I4)              /* OUT
+0420.
+0430.
+0440Interface Call
+0450--------------
+0460Use the interface with the CALLNAT statement:
+0470.
+0480CALLNAT 'USR8216N' USR8216-P
+0490.
+0500.
+0510Using the Application Programming Interface:
+0520--------------------------------------------
+0530Copy the subprogram USR8216N to the library SYSTEM or to the appropriate
+0540steplib library, or to the required library.
+0550.
+0560.
+0570.
+0580FUNC-KEY
+0590  Function keyword, one of 'DEFINE', 'DELETE', 'REPLACE', RETRIEVE'.
+0600.
+0610FUNC-OPT
+0620  Function option depends on FUNC-Key keyword, see below.
+0630.
+0640FUNC-PARM
+0650  Function parameters depend on FUNC-Key keyword and FUNC-Key option,
+0660  see below.
+0670.
+0680LIBRARY
+0690  A library name from where the service directory is to be read and to
+0700  which it is to be written. The default value is the current library.
+0710.
+0720LIBRARY-INFO
+0730  Database ID, file number, and system file type.
+0740.
+0750NUMBER-OF-ITEMS
+0760  On UNIX and Windows: Number of items deleted or returned.
+0770  On mainframes: The number of items returned.
+0780  The number of items returned is equal to the number of
+0790  occurrences of RES.
+0800.
+0810R-LINENO
+0820  Line number or index of an entry in the service directory.
+0830.
+0840For the function RETRIEVE TREE:
+0850R-VALUE    Type of an entry (N=Node, S=Server, L= Library, P=Program)
+0860.
+0870R-PARENT   Name of an entry
+0880.
+0890For the other functions:
+0900R-VALUE
+0910  Combines the Type and the Name of an entry in the form Type=Name
+0920.
+0930R-PARENT
+0940  The parent of the entry returned in R-Value in the form
+0950  type=name(,type=name)...
+0960.
+0970R-ATTRIBUTE
+0980  Attributes of the entry types Node and Server which mean
+0990    - for Node  : Logon=Y/N and Transport=B/' '
+1000    - for Server: Logon=Y/N
+1010.
+1020MESSAGE
+1030  On mainframes, after any changes of the service directory,
+1040  an appropriate message is placed on the stack (see remark below).
+1050.
+1060RESPONSECODE
+1070     0 -  no error
+1080     1 -  missing parameter
+1090     2 -  parameter error
+1100     3 -  other error
+1110.
+1120Remark:
+1130-------
+1140There is a different behavior between using the API on mainframes or
+1150UNIX and Windows.
+1160On UNIX and Windows, the control returns to the calling program
+1170after the API ends.
+1180On mainframes, the API is stopped if changes have to be saved, because
+1190the subprogram NATCLTGS has to be stowed using the stack. Therefore the
+1200calling program is also stacked again together with a possible message.
+1210You see the respective statements that catch the message in USR8216P:
+1220  If (*Machine-Class = 'MAINFRAME' and *Data > 0)
+1230    Input Message(1) (AL=78)
+1240  End-if
+1250.
+1260Detailed description of parameter values:
+1270-----------------------------------------
+1280.
+1290Define new service directory entries:
+1300 - DEFINE an entry
+1310   --with line number, it is inserted before the number,
+1320   --with reference to Node, Server, or Library, it is inserted after
+1330     the reference,
+1340   --otherwise, it is appended.
+1350   FUNC-Key  := 'DEFINE'
+1360   FUNC-Opt  (optional, default value is 'APPEND')
+1370             := 'APPEND'        (appended at the end of all entries)
+1380          or := 'OVERWRITE'     (overwrite existing service directory)
+1390          or := 'LINE <number>' (inserted before the number)
+1400          or := 'AFTER N=<node> [S=<server> [L=<library>]]'
+1410                (inserted after the respective element(s))
+1420   FUNC-Parm := '<tree>' whereas a tree is formed as follows:
+1430            N=<node>[(B)],(S=<server>)...
+1440            N=<node> -> N=<node>[(B)] (B) is optional for the
+1450                                 transport method 'EntireX Broker ACI'
+1460              S=<server> -> S=<server>[(Y)][,(L=<libray>)...]
+1470                                       (Y) optional Logon-flag
+1480                L=<libray> -> L=<libray>,(P=<program>)...
+1490.
+1500Change existing service directory entries:
+1510 - DELETE entries by specifying Node, Server, Library, or Program;
+1520   if the FROM clause is omitted, the first occurrence found is deleted.
+1530   FUNC-Key  := 'DELETE'
+1540   FUNC-Opt  := '[FROM N=<node> [S=<server> [L=<library>]]]'
+1550   FUNC-Parm := 'N=<node>|S=<server>|L=<library>|P=<program>'
+1560                depending on FUNC-Opt
+1570.
+1580 - REPLACE - find information about one item and replace it; optionally,
+1590   replace all occurrences of that item:
+1600   FUNC-Key  := 'REPLACE'
+1610   FUNC-Opt  := '[ALL|FIRST] [WHOLE]'
+1620   FUNC-Parm := '[N=|S=|L=|P=]<search-string> WITH <replace-string>'
+1630.
+1640Retrieve service directory entries:
+1650 - RETRIEVE
+1660   --get the whole service directory:
+1670   FUNC-Key  := 'RETRIEVE'
+1680   FUNC-Opt  := 'TREE'
+1690   FUNC-Parm := ' '
+1700.
+1710   --find information about one item:
+1720   FUNC-Key  := 'RETRIEVE'
+1730   FUNC-Opt  := '[ALL|FIRST] [WHOLE]'
+1740   FUNC-Parm := '<search-string>'
+1750.
+1760For details of the FIND or REPLACE command, see the appropriate
+1770SYSRPC Utility documentation on Software AG's Empower web site.
+1780.
+1790***** End of Description *****
+1800

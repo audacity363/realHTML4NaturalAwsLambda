@@ -1,0 +1,19 @@
+0010** Example 'INCEX3': INCLUDE  (using nested copycodes)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #A (I4)
+0050END-DEFINE
+0060*
+0070MOVE 123 TO #A
+0080WRITE 'Program  INCEX3  ' '=' #A
+0090*
+0100INCLUDE INCEX31C '#A' '5'            /* source line is #A := 5
+0110*
+0120*
+0130MOVE 300 TO #A
+0140WRITE 'Program  INCEX3  ' '=' #A
+0150*
+0160INCLUDE INCEX32C '''#A'''  '''20'''  /* source line is #A := 20
+0170*
+0180WRITE 'Program  INCEX3  ' '=' #A
+0190END

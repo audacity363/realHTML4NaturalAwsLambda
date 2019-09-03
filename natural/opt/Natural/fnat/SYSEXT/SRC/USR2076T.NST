@@ -1,0 +1,61 @@
+0010Get or set RPC TIMEOUT value
+0020.
+0030Documentation ......... USR2076T    /*  Text object
+0040Interface ............. USR2076N    /*  Cataloged subprogram
+0050Example Program ....... USR2076P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC
+0100.
+0110Keywords .............. GET, RPC, SET, TIMEOUT
+0120.
+0130Function .............. The Natural profile and session parameter
+0140                        TIMEOUT specifies the number of seconds the
+0150                        client is to wait for an RPC server response.
+0160                        If this time is exceeded, the remote
+0170                        procedure call will be terminated with a
+0180                        corresponding error message.
+0190                        Possible settings:  0 - 32767 seconds
+0200                        Default setting:   55 seconds
+0210.
+0220Parameters
+0230----------
+0240Define the following parameters with the DEFINE DATA statement:
+0250.
+026001 PARM-AREA
+0270   2 FUNCTION (A1)         /* G=Get, S=Set
+0280   2 TIMEOUT  (N8)         /* Timeout value in seconds: 0-32767
+0290   2 RESPONSE (I4)         /* Response code. Possible values are:
+0300                           /* 0 - Ok
+0310                           /* 2 - Function disallowed by Natural
+0320                           /*     Security
+0330                           /* 4 - Invalid value for FUNCTION entered
+0340                           /* 8 - Invalid value for TIMEOUT entered
+0350   2 MSG      (A) DYNAMIC  /* Explains an error situation.
+0360.
+0370Interface Call
+0380--------------
+0390Use the interface with the CALLNAT statement:
+0400.
+0410CALLNAT 'USR2076N'  PARM-AREA
+0420.
+0430.
+0440Using the Application Programming Interface:
+0450--------------------------------------------
+0460Copy the subprogram USR2076N to the library SYSTEM or the steplib
+0470library respectively, or to the required library.
+0480.
+0490When using the function SET under Natural Security the flag for
+0500parameter maintenance in the SYSRPC utility profile has to be set to
+0510allowed.
+0520.
+0530Following variables have to be filled before invoking the interface:
+0540.
+0550FUNCTION
+0560  'G' or 'S'
+0570.
+0580TIMEOUT
+0590  In case of FUNCTION='S' a value between 0 and 32767.
+0600.
+0610***** End of Description *****

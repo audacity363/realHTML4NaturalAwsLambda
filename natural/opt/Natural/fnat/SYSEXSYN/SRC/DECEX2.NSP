@@ -1,0 +1,24 @@
+0010** Example 'DECEX2': DECIDE FOR (with EVERY option)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #FIELD1 (N5.4)
+0050END-DEFINE
+0060*
+0070INPUT #FIELD1
+0080*
+0090DECIDE FOR EVERY CONDITION
+0100  WHEN #FIELD1 >= 0
+0110    WRITE '#FIELD1 is positive or zero.'
+0120  WHEN #FIELD1 <= 0
+0130    WRITE '#FIELD1 is negative or zero.'
+0140  WHEN FRAC(#FIELD1) = 0
+0150    WRITE '#FIELD1 has no decimal digits.'
+0160  WHEN ANY
+0170    WRITE 'Any of the above conditions is true.'
+0180  WHEN ALL
+0190    WRITE '#FIELD1 is zero.'
+0200  WHEN NONE
+0210    IGNORE
+0220END-DECIDE
+0230*
+0240END

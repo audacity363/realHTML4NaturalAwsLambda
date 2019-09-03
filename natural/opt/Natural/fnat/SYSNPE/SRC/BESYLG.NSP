@@ -1,0 +1,35 @@
+0010*
+0020* Logon to ESY
+0030*
+0040DEFINE DATA GLOBAL USING TUTO
+0050            LOCAL  USING BESYLG-L
+0060END-DEFINE
+0070* ----------------------------- main -----------------------------------
+0080PERFORM PF-KEY
+0090*
+0100REPEAT
+0110  INPUT WITH TEXT *##MSG-NR,
+0120                   ##MSG-TXT1,
+0130                   ##MSG-TXT2
+0140        USING MAP 'BESYLG-&'
+0150*
+0160  RESET ##MSG
+0170*
+0180  PROCESS NATPROC-LOGON
+0190          USING NODE       = ##NODE
+0200            ,   FUNCTION   = NATPROC-LOGON.FUNCTION
+0210            ,   LOGON-ID   = NATPROC-LOGON.LOGON-ID
+0220            ,   ACCOUNTING = NATPROC-LOGON.ACCOUNTING
+0230            ,   PASSWORD   = NATPROC-LOGON.PASSWORD
+0240         GIVING ERROR-CODE
+0250                ERROR-TEXT
+0260*
+0270  IF ERROR-CODE NE 0
+0280     INCLUDE BERR---C
+0290   ELSE
+0300     ASSIGN ##MSG-NR = 1007
+0310  END-IF
+0320END-REPEAT
+0330* ----------------------------- pf key ---------------------------------
+0340INCLUDE C-PFKEY
+0350END

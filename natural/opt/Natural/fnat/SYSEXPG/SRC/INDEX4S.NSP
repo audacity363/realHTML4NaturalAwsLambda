@@ -1,0 +1,18 @@
+0010** Example 'INDEX4S': Array definition with variables (structured mode)
+0020***********************************************************************
+0030DEFINE DATA LOCAL
+00401 I (I2)
+00501 J (I2)
+00601 EMPLOY-VIEW VIEW OF EMPLOYEES
+0070  2 NAME
+0080  2 CITY
+0090  2 LANG (I:I+10)
+0100END-DEFINE
+0110*
+0120I := 2
+0130J := 3
+0140READ (1) EMPLOY-VIEW WITH NAME = 'WINTER' WHERE CITY = 'LONDON'
+0150  WRITE 'LANG(I.J)  :' LANG (I.J) /
+0160        'LANG(I.1:5):' LANG (I.1:5)
+0170END-READ
+0180END

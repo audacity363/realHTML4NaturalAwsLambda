@@ -1,0 +1,33 @@
+0010/* USR2004P - Information about one specific logical file
+0020/*            copied from USR0011P
+0030/*
+0040/**********************************************************************
+0050DEFINE DATA LOCAL
+0060  01 LFILE    (P05)  /*  Logical file number
+0070  01 FILENAME (A12)  /*  Logical file name
+0080  01 DBID     (P05)  /*  Physical DBID
+0090  01 FNR      (P05)  /*  Physical file number
+0100  01 DBTYPE   (A07)  /*  Physical type of DB
+0110  01 ERR-MSG  (A48)  /*  Error message
+0120  01 RC       (P03)  /*  Response code
+0130END-DEFINE
+0140/*
+0150WRITE TITLE LEFT /
+0160  '  NATURAL Logical File Assignments' (I)     //
+0170  '  LFILE  FILE-NAME       DBID    FNR  DB-TYPE'  /
+0180  '  -----  ------------   -----  -----  -------'
+0190/*
+0200FOR LFILE 0 255
+0210  CALLNAT 'USR2004N' LFILE FILENAME DBID FNR DBTYPE ERR-MSG RC
+0220  IF RC > 0
+0230    IGNORE
+0240    /* WRITE 1X LFILE 2X ERR-MSG /* Show error reason
+0250  ELSE
+0260    WRITE (AD=I) 1X LFILE 2X FILENAME 2X DBID 1X FNR 2X DBTYPE
+0270  END-IF
+0280  /*
+0290  IF LFILE = 5
+0300    MOVE 160 TO LFILE  /*  Reduce amount of CALLNATs
+0310  END-IF
+0320END-FOR
+0330END

@@ -1,0 +1,44 @@
+0010Process documentation objects                     PRD
+0020.
+0030Name of User Exit .......  USR3005N    /*  Cataloged interface
+0040Name of Source ..........  USR3005P    /*  Example for the programmer
+0050.
+0060Function ................  PREDICT Process documentation objects
+0070.
+0080Keywords ................  FDIC, PRD, SELECT, UPDATE
+0090.
+0100Parameter layout:
+0110-----------------
+012001 PARAMETERS              /* only for alignment purposes
+0130   02 REQUEST-RESULT (A) DYNAMIC
+0140.
+0150How to use the User Exit:
+0160-------------------------
+0170The subprogram 'USR3005N' should be copied to library 'SYSTEM' or
+0180to any application.
+0190.
+0200The parameter above listed must be defined via DEFINE DATA in
+0210structured mode or via RESET statement in reporting mode.
+0220.
+0230Before you call 'USR3005N', the above mentioned parameter
+0240has to be filled with the request formulated as an XML document.
+0250.
+0260The result( an XML document) is returned in the same parameter.
+0270To analyze the result you migth use the copy code PARSER_X, which
+0280is delivered in library SYSEXXT. The appropriate local data area
+0290PARSER-X also exists in library SYSEXXT.
+0300.
+0310The calling program has to use the following statement:
+0320.
+0330CALLNAT 'USR3005N' PARAMETERS
+0340.
+0350Information about the structure of the exchanged XML documents and
+0360restrictions of the API can be found in the chapter
+0370'Application Programming Interface' of the Predict Administration
+0380manual.
+0390.
+0400USR3005P offers several examples that show how to create request
+0410and how to analyze the results. These example program named USR3005*
+0420are also delivered in source format.
+0430.
+0440***** End of description *****

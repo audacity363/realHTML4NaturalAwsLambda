@@ -1,0 +1,55 @@
+0010DB: 148 FILE: 018  - FILE-MAINTENANCE                 DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:22
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:22
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to MVS and BS2000
+0230*
+0240  1 A1 DSNAME                            A   54    D Fully qualified data
+0250*      Fully qualified data set name.
+0260  1 A4 PASSWORD                          A    8    D Password for data se
+0270*      Password for data set.
+0280  1 FN FUNCTION                          A    8    D Function to be perfo
+0290*      Function to be performed:
+0300*      COMPRESS   (default)
+0310*
+0320*      MVS fields
+0330*
+0340  1 A2 VOLSER                            A    6    D Volume serial of the
+0350*      Volume serial of the data set.
+0360  1 A3 LINE                              A  121    D IEBCOPY output line.
+0370*      IEBCOPY output line.
+0380*      (See IEBCOPY manual for a
+0390*      description of line layout.)
+0400  1 A5 COMPLETION-CODE                   B    2      IEBCOPY completion c
+0410*      IEBCOPY completion code.
+0420  1 A6 DISP                              A    3    D Disposition to be us
+0430*      Disposition to be used when
+0440*      COMPRESSING the file :
+0450*      OLD
+0460*      SHR
+0470*
+0480*      BS2000 fields
+0490*
+0500  1 ES SYSTEM-CODE                       B    2      System error code.
+0510*      System error code.
+0520*
+0530*      End of FILE-MAINTENANCE
+0540*
+0550******DDM OUTPUT TERMINATED******

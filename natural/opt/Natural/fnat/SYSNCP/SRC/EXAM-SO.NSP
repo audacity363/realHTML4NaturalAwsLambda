@@ -1,0 +1,57 @@
+0010/*  EXAM-SO - Set one field
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 GETSET-FIELD-NAME
+0070     02 GETSET-FIELD-VALUE
+0080     02 NATURAL-ERROR
+0090  01 IX (P7)
+0100  01 #FIELD (A16) INIT <'NAME'>
+0110  01 #VALUE (A16)
+0120  01 MSG (A72)
+0130  01 MOD (C)
+0140END-DEFINE
+0150DEFINE WINDOW EXAM
+0160  SIZE 04 * 42
+0170  BASE IX /IX
+0180  TITLE ' (SO) Set one field '
+0190  CONTROL SCREEN
+0200  FRAMED POSITION OFF
+0210SET KEY ALL
+0220IX := *LEVEL * 2
+0230/**********************************************************************
+0240REPEAT
+0250  PROCESS COMMAND ACTION GET USING
+0260    PROCESSOR-NAME = ' '                     /*  Current processor
+0270    GETSET-FIELD-NAME = #FIELD
+0280  /*
+0290  IF NATURAL-ERROR NE 0
+0300    CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0310  END-IF
+0320  /*
+0330  MOVE GETSET-FIELD-VALUE TO #VALUE
+0340  /********************************************************************
+0350  INPUT WINDOW = 'EXAM' (AD=MI CD=NE IP=OFF SG=OFF CV=MOD )
+0360  WITH TEXT MSG
+0370     'Field name .......' #FIELD
+0380   / 'Field contents ...' #VALUE
+0390  SET WINDOW OFF
+0400  RESET MSG
+0410  /********************************************************************
+0420  IF *PF-KEY NE 'ENTR'
+0430  OR MOD NOT MODIFIED
+0440    ESCAPE ROUTINE
+0450  END-IF
+0460  /********************************************************************
+0470  PROCESS COMMAND ACTION SET USING
+0480    PROCESSOR-NAME = ' '                     /*  Current processor
+0490    GETSET-FIELD-NAME = #FIELD
+0500    GETSET-FIELD-VALUE = #VALUE
+0510  /*
+0520  IF NATURAL-ERROR NE 0
+0530    CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0540  END-IF
+0550  /*
+0560END-REPEAT
+0570END

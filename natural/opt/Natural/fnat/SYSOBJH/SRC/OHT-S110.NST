@@ -1,0 +1,31 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Object Size
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170Specify the kind of check for the object size to be performed
+0180during selection:
+0190  Select all objects (no size check)
+0200     If this field is marked, no check for the object size is
+0210     performed during selection.
+0220  Select objects with size between .. and
+0230     If this field is marked, a start size value and/or an
+0240     end size value can be specified.
+0250     Only the saves or cataloged objects whose size is in the
+0260     specified range are selected for processing.
+0270  Select objects with size
+0280     If this field is marked, a size value can be specified.
+0290     Only the saves or cataloged objects whose size fits to
+0300     the specified size value are selected for processing.
+0310<HelpTextEnd>

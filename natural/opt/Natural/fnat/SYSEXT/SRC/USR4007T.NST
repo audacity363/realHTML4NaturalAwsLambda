@@ -1,0 +1,53 @@
+0010Get or set profile parameter SYNERR
+0020.
+0030Documentation ......... USR4007T    /*  Text object
+0040Interface ............. USR4007N    /*  Cataloged subprogram
+0050Example Program ....... USR4007P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. PROFILE PARAMETERS
+0100.
+0110Keywords .............. GET, SET, SYNERR
+0120.
+0130Function .............. Get and set the current value of the profile
+0140                        parameter SYNERR at runtime.
+0150                        (It could be enhanced for further parameters
+0160                         in the future.)
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+02301 FUNCTION       (A01) /* 'S' Set, 'G' Get parameter
+02401 ERROR-CODE     (N04) /* Error during execution of USR4007N
+02501 ERROR-TEXT     (A79) /* Short error text
+02601 SYNERR-CUR     (A03) /* SYNERR: Determines whether compilation
+0270                       /* errors are sent to the error transaction
+0280                       /* program.
+0290                       /* Possible values: 'ON', 'OFF'
+0300                       /* Defined as OPTIONAL parameter
+0310.
+0320.
+0330Interface Call
+0340--------------
+0350Use the interface with the CALLNAT statement:
+0360.
+0370CALLNAT 'USR4007N'
+0380        FUNCTION ERROR-CODE ERROR-TEXT
+0390        SYNERR-CUR   /* Optional parameter
+0400.
+0410.
+0420Using the Application Programming Interface:
+0430--------------------------------------------
+0440Copy the subprogram USR4007N to the library SYSTEM or the steplib
+0450library respectively, or to the required library.
+0460.
+0470The parameter SYNERR-CUR is defined as OPTIONAL parameter in
+0480USR4007N. The interface could be enhanced in the future.
+0490.
+0500For the future you may skip optionally the parameters by using the
+0510nX notation.
+0520.
+0530*****  End of Description  *****

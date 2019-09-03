@@ -1,0 +1,20 @@
+0010*  AAREADME - Description of the Library SYSEXSYN
+0020*
+0030*  All examples in the library SYSEXSYN are used in the Natural
+0040*  documentation STATEMENTS, SYSTEM VARIABLES, SYSTEM FUNCTIONS and
+0050*  SESSION PARAMETERS.
+0060*
+0070*  The output screens shown there are based on the default state of
+0080*  the database files EMPLOYEES and VEHICLES.
+0090*
+0100*
+0110*  Please note that some of the examples could modify the database
+0120*  records. These examples are marked as follows:
+0130*
+0140*  CAUTION: Executing this example will modify the database records!
+0150*
+0160*
+0170*  Note: RUNEXFND cannot be stowed.
+0180*
+0190************************************************************************
+0200

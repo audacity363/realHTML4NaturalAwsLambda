@@ -1,0 +1,158 @@
+0010** Example 'CODEPXC1': Convert a string from any character set
+0020**                     into its hexadecimal representaion and vice versa
+0030************************************************************************
+0040*
+0050DEFINE DATA
+0060LOCAL USING CODEPL01
+0070LOCAL
+00801 #UNICODE       (U75)
+00901 #CODEPOINT     (B150)
+01001 REDEFINE #CODEPOINT
+0110  2 B2           (B2/75)
+01201 REDEFINE #CODEPOINT
+0130  2 BIN          (B30/1:5)
+01401 RSP            (I4)
+01501 MSG            (A70) INIT <' '>
+01601 U-OLD          (U75)
+01701 B-OLD          (B150)
+01801 #CODEPAGE      (A64)    /* code page name/alias
+01901 #IANANAME      (A64)    /* code page name
+02001 #IANANUM       (I4)
+02101 #MIBENUM       (A6)
+02201 #SUP           (L)
+02301 #ENC           (A1)
+02401 #ENCODE        (A8)
+02501 #RSP           (I4)
+02601 #HEAD          (A70)   /* header
+02701 #I             (I4)
+02801 #SUBSTITUTE    (B8)    /* substitution character
+02901 #U-SUBSTITUTE  (U1)    /* substitution character
+0300END-DEFINE
+0310*
+0320INPUT (IP=OFF)
+0330  2T 'Character Set:' /
+0340  2T #CODEPAGE
+0350
+0360CALLNAT 'CODEPN02' #CODEPAGE #IANANUM #SUP #ENC #RSP /* get the info
+0370MOVE #IANA-ALIAS   (#IANANUM) TO #CODEPAGE
+0380MOVE #IANA-NAME    (#IANANUM) TO #IANANAME
+0390MOVE #IANA-MIBENUM (#IANANUM) TO #MIBENUM
+0400
+0410IF NOT #SUP
+0420  INPUT (IP=OFF) WITH TEXT MSG (AD=I CD=RE)
+0430    21T '  - Code Point to Hex Conversion -' //
+0440    02T 'Character Set ...' #CODEPAGE (AD=O AL=50) /
+0450    02T 'IANA name .......' #IANANAME (AD=O AL=50) /
+0460    02T 'MIBenum .........' #MIBENUM (AD=O AL=50) /
+0470    02T 'Available .......' #SUP (EM='No'/'Yes' AD=O)
+0480  ESCAPE ROUTINE
+0490END-IF
+0500
+0510RESET #HEAD
+0520DECIDE ON FIRST VALUE OF #ENC
+0530  VALUE '1'
+0540    MOVE '1 byte' TO #ENCODE
+0550  VALUE '2'
+0560    MOVE '2 byte' TO #ENCODE
+0570  VALUE '4'
+0580    MOVE '4 byte' TO #ENCODE
+0590  VALUE '8'
+0600    MOVE '1-4 byte' TO #ENCODE
+0610  VALUE 'X'
+0620    MOVE 'special' TO #ENCODE
+0630  NONE
+0640    MOVE ' ' TO #ENCODE
+0650END-DECIDE
+0660
+0670MOVE UH'001A' TO #U-SUBSTITUTE  /* get current substitution character
+0680MOVE ENCODED #U-SUBSTITUTE
+0690  TO #SUBSTITUTE IN CODEPAGE #CODEPAGE GIVING RSP
+0700MOVE ENCODED #SUBSTITUTE IN CODEPAGE #CODEPAGE
+0710  TO #U-SUBSTITUTE GIVING RSP
+0720
+0730FORMAT KD=ON
+0740SET KEY PF3 NAMED 'Exit'
+0750SET CONTROL 'L'                /* lower case
+0760*
+0770* Initialize all with Unicode blanks
+0780MOVE U' ' TO #UNICODE
+0790*
+0800MOVE ENCODED #UNICODE TO #CODEPOINT IN CODEPAGE #CODEPAGE GIVING RSP
+0810*
+0820REPEAT
+0830
+0840  IF RSP NE 0
+0850    DECIDE ON FIRST VALUE OF RSP
+0860      VALUE 3411
+0870        COMPRESS 'Code page' #CODEPAGE 'not available in Natural.'
+0880          INTO MSG
+0890        ESCAPE BOTTOM
+0900      VALUE 3415
+0910        MOVE 'Result truncated.' TO MSG
+0920      NONE
+0930        COMPRESS 'Error at MOVE ENCODED:' RSP INTO MSG
+0940    END-DECIDE
+0950  END-IF
+0960
+0970  INPUT (IP=OFF) WITH TEXT MSG (AD=I CD=RE)
+0980    21T '  - Character to Hex Conversion -' //
+0990    02T 'Character Set ...' #CODEPAGE (AD=O AL=50) /
+1000    02T 'IANA name .......' #IANANAME (AD=O AL=50) /
+1010    02T 'MIBenum .........' #MIBENUM (AD=O AL=50) /
+1020    02T 'Available .......' #SUP (EM='No'/'Yes' AD=O) /
+1030    02T 'Encoding ........' #ENCODE (AD=O) /
+1040    02T 'Substitution char' #U-SUBSTITUTE (AD=O) /
+1050    02T 'Sub char (hex) ..' #SUBSTITUTE (AD=O) //
+1060    02T 'String (max length 75)' /
+1070    02T #UNICODE  (AD=M)
+1080    //
+1090    02T 'Hex' /
+1100    02T BIN(1) (AD=M) /
+1110    02T BIN(2) (AD=M) /
+1120    02T BIN(3) (AD=M) /
+1130    02T BIN(4) (AD=M) /
+1140    02T BIN(5) (AD=M) /
+1150    /
+1160*     02T 'Hex (formatted)'
+1170*     /
+1180*     02T B2(1:15)  (AD=O) /
+1190*     02T B2(16:30) (AD=O) /
+1200*     02T B2(31:45) (AD=O) /
+1210*     02T B2(46:60) (AD=O) /
+1220*     02T B2(61:75) (AD=O) /
+1230    /
+1240    02T 'Press Enter to perform the conversion.' /
+1250*
+1260  RESET MSG RSP
+1270
+1280  IF *PF-KEY = 'PF3'
+1290    ESCAPE BOTTOM
+1300  END-IF
+1310*
+1320  DECIDE FOR FIRST CONDITION
+1330    WHEN #UNICODE NE U-OLD   /* Unicode to code point
+1340      MOVE ENCODED #UNICODE TO #CODEPOINT IN CODEPAGE #CODEPAGE
+1350      GIVING RSP
+1360      IF RSP NE 0 AND RSP NE 3415
+1370        MOVE B-OLD TO #CODEPOINT
+1380        ESCAPE TOP
+1390      END-IF
+1400      MOVE #UNICODE   TO U-OLD
+1410      MOVE #CODEPOINT TO B-OLD
+1420/*
+1430    WHEN #CODEPOINT NE B-OLD  /* code point to Unicode
+1440      MOVE ENCODED #CODEPOINT IN CODEPAGE #CODEPAGE TO #UNICODE
+1450      GIVING RSP
+1460      IF RSP NE 0 AND RSP NE 3415
+1470        MOVE U-OLD TO #UNICODE
+1480        ESCAPE TOP
+1490      END-IF
+1500      MOVE #UNICODE   TO U-OLD
+1510      MOVE #CODEPOINT TO B-OLD
+1520/*
+1530    WHEN NONE
+1540      IGNORE
+1550  END-DECIDE
+1560END-REPEAT
+1570*
+1580END

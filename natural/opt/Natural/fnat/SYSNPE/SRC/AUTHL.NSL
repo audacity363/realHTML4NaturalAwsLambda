@@ -1,0 +1,21 @@
+0010**D
+0020**DV          0022     V1AUTHORIZED-LIBRARIES            AUTHORIZED-LIBRARIES
+0030**C               **Global fields
+0040**C               **
+0050**DD          0025N 3.0 2ERROR-CODE                      /* Message code.
+0060**C               * Message code.
+0070**DD          0026A  58 2ERROR-TEXT                      /* Text describing message.
+0080**C               * Text describing message.
+0090**DD          0027N 5.0 2NODE                            /* Node ID (DBID).
+0100**C               * Node ID (DBID).
+0110**DD          0028A  16 2NODE-NAME
+0120**DD          0029A  10 2SYSTEM-MESSAGE-CODE
+0130**C               **
+0140**C               **MVS fields
+0150**C               **
+0160**DD          0030A  44 2DSNAME                          /* Dataset Name.
+0170**C               * Dataset Name.
+0180**DD          0031A   6 2VOLSER                          /* Volume of Dataset.
+0190**C               * Volume of Dataset.
+0200**C               **
+0210**C               **End of AUTHORIZED-LIBRARIES

@@ -1,0 +1,13 @@
+0010&H View SYSTEM-INFO
+0020&L
+0030&L
+0040#Zweck@    : Anzeige von Informationen ueber das Betriebssystem,
+0050             in dem dieser ENTIRE-SYSTEM-SERVER laeuft.
+0060&L
+0070#System@   : z/OS, z/VSE, BS2000/OSD.
+0080&L
+0090&L
+0100#Anwendung@: Dieser View kann in einer NET-WORK-Umgebung zur Ermitt-
+0110             lung der unterstuetzten Betriebssysteme benutzt werden.
+0120&L
+0130#Anmerkung@:

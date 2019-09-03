@@ -1,0 +1,118 @@
+0010*
+0020* Program .. V3-RISN
+0030* Library .. SYSEXV
+0040* Version .. 3.1
+0050*
+0060* Functionality: Show new option STARTING WITH ISN in READ statement
+0070*
+0080* If the first and the last name of the list are identical, the next
+0090* record will be found with the given ISN in the STARTING ISN option.
+0100************************************************************************
+0110*
+0120*
+0130DEFINE DATA
+0140LOCAL
+0150 01 EMPLOYEES-VIEW VIEW OF EMPLOYEES
+0160   02 FIRST-NAME
+0170   02 NAME
+0180 01 J           (I2)
+0190 01 #FIRST      (A15/1:6)
+0200 01 #NAME       (A15/1:6)
+0210 01 #ISN        (I2/1:6)
+0220 01 #START-NAME (A15)
+0230 01 #DIR        (A1)
+0240 01 #START-ISN  (I2)
+0250 01 #DIR-TEXT   (A30)
+0260END-DEFINE
+0270*
+0280*
+0290FORMAT KD=ON
+0300SET KEY PF3  NAMED 'Exit'
+0310        PF7  NAMED 'DESC'        /* DESCENDING direction
+0320        PF8  NAMED 'ASC'         /* ASCENDING direction
+0330        PF12 NAMED 'Canc'
+0340*
+0350*
+0360RESET #ISN(*) #START-ISN J #NAME(*) #FIRST(*)
+0370#START-NAME := 'K'            /* Start with names beginning with 'K'
+0380#DIR        := 'D'            /* Read direction DESCENDING
+0390*
+0400REPEAT
+0410*
+0420  READ (6) EMPLOYEES-VIEW IN VARIABLE #DIR SEQUENCE
+0430           WITH NAME = #START-NAME
+0440           STARTING WITH ISN = #START-ISN
+0450    ADD 1 TO J
+0460    MOVE *ISN                      TO #ISN (J)
+0470    MOVE EMPLOYEES-VIEW.NAME       TO #NAME (J)
+0480    MOVE EMPLOYEES-VIEW.FIRST-NAME TO #FIRST (J)
+0490  END-READ
+0500*
+0510  IF #DIR = 'A'
+0520    #DIR-TEXT:= 'Forward Reading'
+0530  ELSE
+0540    #DIR-TEXT:= 'Backward Reading'
+0550  END-IF
+0560*
+0570*
+0580  INPUT (IP=OFF)
+0590   01T *TIMX  (AD=OTD )
+0600   21T '***** NATURAL 3.1 ENHANCEMENTS *****'
+0610   70T *DATX  (AD=OTD DF=L )
+0620   /
+0630   01T 'User'
+0640   06T *USER  (AD=OILT )
+0650   27T '- New ADABAS Features -'(I)
+0660   64T 'Program'
+0670   72T *PROGRAM (AD=OI)
+0680   / / /
+0690   02T 'READ BY NAME with new option STARTING WITH ISN' (I)
+0700   ///
+0710   05T #DIR-TEXT (AD=OD)
+0720   //
+0730   05T 'Name            First Name         ISN'
+0740   /
+0750   05T #NAME (1) #FIRST (1)  #ISN(1)
+0760   /
+0770   05T #NAME (2) #FIRST (2)  #ISN(2)
+0780   /
+0790   05T #NAME (3) #FIRST (3)  #ISN(3)
+0800   /
+0810   05T #NAME (4) #FIRST (4)  #ISN(4)
+0820   /
+0830   05T #NAME (5) #FIRST (5)  #ISN(5)
+0840   /
+0850   05T #NAME (6) #FIRST (6)  #ISN(6)
+0860   / / /
+0870   05T 'Press ENTER, or change direction with PF7 or PF8.'
+0880   / / /
+0890*
+0900*
+0910  DECIDE ON FIRST *PF-KEY
+0920    VALUE 'PF3'
+0930         ESCAPE BOTTOM
+0940    VALUE 'PF12'
+0950         CALLNAT 'UTILSTOP'
+0960    VALUE 'PF7'        /* Page backward
+0970         IF #DIR = 'D'
+0980           MOVE #ISN (6) TO #START-ISN
+0990           MOVE #NAME(6) TO #START-NAME
+1000         ELSE
+1010           MOVE 'D' TO #DIR         /* new direction DESCENDING
+1020           MOVE #ISN (1) TO #START-ISN
+1030           MOVE #NAME(1) TO #START-NAME
+1040         END-IF
+1050    VALUE 'PF8'        /* Page forward
+1060         MOVE 'A' TO #DIR           /* new direction ASCENDING
+1070         MOVE #ISN (6) TO #START-ISN
+1080         MOVE #NAME(6) TO #START-NAME
+1090    NONE               /* stay on current direction
+1100         MOVE #ISN (6) TO #START-ISN
+1110         MOVE #NAME(6) TO #START-NAME
+1120  END-DECIDE
+1130  /*
+1140  RESET J #NAME(*) #FIRST(*) #ISN(*)
+1150  /*
+1160END-REPEAT
+1170*
+1180END

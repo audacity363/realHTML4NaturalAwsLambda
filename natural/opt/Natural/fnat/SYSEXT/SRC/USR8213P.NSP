@@ -1,0 +1,314 @@
+0010/* Function ... Shut down a single Natural RPC server on EntireX Broker.
+0020/*              First get information about the server from the EntireX
+0030/*              Broker, then use the corresponding sequence number to
+0040/*              shut down the Natural RPC server.
+0050/*              Selection criteria are server name as well as
+0060/*              host name or, if not applied, application name.
+0070/*
+0080/*              If LOGON/LOGOFF from/to EntireX Broker is not used, it
+0090/*              will be done internally for command SHUTDOWN-SERVER.
+0100/*
+0110/*              Versions of Broker and Broker stub may be displayed.
+0120/*
+0130/* This program serves as an example of how to design a user-defined
+0140/* program to call USR8213N.
+0150/***********************************************************************
+0160/*
+0170OPTIONS LOWSRCE=ON
+0180*
+0190DEFINE DATA
+0200 LOCAL
+0210 1 USR8213-P
+0220   2 P-FUNCTION               (A32)  /* In : INFO-SERVER,
+0230                                     /*      SHUTDOWN-SERVER
+0240   2 P-BROKER-ID              (A32)  /* In
+0250   2 P-USER-ID                (A32)  /* In
+0260   2 P-PASSWORD               (A32)  /* In
+0270   2 P-SERVER-CLASS           (A32)  /* In (INFO-SERVER)
+0280   2 P-SERVER-NAME            (A32)  /* In (INFO-SERVER)
+0290   2 P-SERVICE                (A32)  /* In (INFO-SERVER)
+0300   2 P-HOSTNAME               (A256) /* In (INFO-SERVER)
+0310   2 P-APPLICATIONNAME        (A64)  /* In (INFO-SERVER)
+0320   2 P-SEQUENCE-NUMBER        (I4)   /* In (SHUTDOWN-SERVER)
+0330   2 P-IMMEDIATE              (A1)   /* In (SHUTDOWN-SERVER)
+0340   2 P-INFO-CS                (1:*)  /* Out (Parts of INFO_CS)
+0350     3 UID                    (A32)
+0360     3 PUID                   (B28) /*not for shut down particpant or
+0370     3 TOKEN                  (A32)
+0380     3 SERVERCLASS            (A32)
+0390     3 SERVERNAME             (A32)
+0400     3 SERVICENAME            (A32)
+0410     3 HOSTNAME               (A256)
+0420     3 IPADDRESS              (A16)
+0430     3 IPV6ADDRESS            (A46)
+0440     3 APPLICATIONNAME        (A64)
+0450     3 NSEQUENCENUMBER        (I4)
+0460     3 CHARSET                (I2)
+0470     3 FHIGHORDERFIRST        (I2)
+0480     3 CREATE-TIME            (T)
+0490   2 P-MESSAGE                (A) DYNAMIC /* OUT
+0500   2 P-RC                     (I4)        /* OUT 0=O.K., 1=Error Broker
+0510*
+0520LOCAL
+0530 1 BROKER-INFO
+0540   2 P-CIS-VERSION            (I2)            /* OUT
+0550   2 P-CB-KERNELSECURITY      (A1)            /* OUT
+0560   2 P-LOGON-DONE             (A1)            /* OUT
+0570   2 P-LOGON-REQUIRED         (A1)            /* OUT
+0580   2 P-ETB-API-VERSION        (I2)            /* OUT
+0590   2 BROKER-VERSIONSTRING     (A)     DYNAMIC /* OUT
+0600   2 BRKSTUB-VERSIONSTRING    (A)     DYNAMIC /* OUT
+0610   2 ADD-BRK-INFO             (A/1:*) DYNAMIC /* OUT
+0620*
+0630* Possible commands
+0640*
+0650 1 C_INFO-BROKER              (A14) CONST <'Info-Broker'> /* by PF2
+0660 1 C_INFO-SERVER              (A14) CONST <'INFO-SERVER'>
+0670 1 C_LOGON                    (A17) CONST <'LOGON'>
+0680 1 C_LOGOFF                   (A17) CONST <'LOGOFF'>
+0690 1 C_SHUT-SERVER              (A17) CONST <'SHUTDOWN-SERVER'> /* by PF5
+0700*
+0710 1 F_ESCAPE-TOP               (L)
+0720 1 A2_MESSAGE                 (A64/1:2)
+0730 1 L_APPLICATIONNAME          (A32)
+0740 1 L_HOSTNAME                 (A50)
+0750 1 L-KERNEL-SEC-STATUS        (A)  DYNAMIC
+0760 1 L_OCC                      (I4)
+0770 1 I_PL                       (I4)
+0780 1 L_PUID                     (B28)
+0790 1 L_SERVER-SPEC              (A50)
+0800 1 L_TOKEN                    (B28)
+0810 1 OLD-BROKER-ID              (A32)
+0820 1 YN_MIXED                   (A1) INIT <'N'>
+0830
+0840 1 #ESCAPE  (L)               /* Stop
+0850END-DEFINE
+0860*
+0870DEFINE WINDOW INFO
+0880  SIZE AUTO
+0890  BASE 7/5
+0900*
+0910* Initialize some parameters
+0920*
+0930P-FUNCTION      := C_INFO-SERVER
+0940P-BROKER-ID     := 'BKR03'
+0950P-SERVER-CLASS  := 'RPC'
+0960P-SERVICE       := 'CALLNAT'
+0970P-USER-ID       := *USER
+0980P-IMMEDIATE     := 'N'
+0990/* Display all servers with the following pattern:
+1000COMPRESS *USER 'SRV*' INTO P-SERVER-NAME LEAVING NO SPACE
+1010*
+1020SET KEY ALL
+1030/*
+1040REPEAT
+1050  /*
+1060  INPUT (AD=MI'_' IP=OFF CD=NE)
+1070      5T 'Shut down a single Natural RPC server on an EntireX Broker node.' (YEI)
+1080   // 5T 'Get the sequence number of a Natural RPC server from an EntireX Broker.' (TU)
+1090    / 5T 'On the next screen use this number to shut down the server.' (TU)
+1100   // 5T 'Command ..................' (TU) P-FUNCTION (AD=T)
+1110   // 5T 'EntireX Broker name ......' (TU) P-BROKER-ID
+1120    /*5T 'Server class .............' (TU) P-SERVER-CLASS
+1130    / 5T 'Server name ..............' (TU) P-SERVER-NAME
+1140    /*5T 'Service type .............' (TU) P-SERVICE
+1150    / 5T 'Host name (LPAR) .........' (TU) P-HOSTNAME (AL=40)
+1160    / 5T 'Application name .........' (TU) P-APPLICATIONNAME (AL=40)
+1170    / 5T 'User ID ..................' (TU) P-USER-ID
+1180    / 5T 'Password .................' (TU) P-PASSWORD(AD=N)
+1190    / 5T 'Mixed case for password ..' (TU) YN_MIXED  (AD=T) '(Y/N)' (TU)
+1200   // 5T 'EntireX Broker response: '  (TU) P-RC      (AD=OL ZP=ON CD=TU)
+1210    / 5T 'Message:' (TU)
+1220    / 14T A2_MESSAGE(1) (AD=OL CD=TU)
+1230    / 14T A2_MESSAGE(2) (AD=OL CD=TU)
+1240   // 5T 'Press PF2 for Broker-Info or any other PFkey to stop the program.' (TU)
+1250  /*
+1260  MOVE LEFT JUSTIFIED P-BROKER-ID   TO P-BROKER-ID
+1270  MOVE LEFT JUSTIFIED P-SERVER-NAME TO P-SERVER-NAME
+1280  /*
+1290  IF P-BROKER-ID NE OLD-BROKER-ID
+1300    RESET BROKER-INFO
+1310    OLD-BROKER-ID := P-BROKER-ID
+1320  END-IF
+1330  /*
+1340  DECIDE ON FIRST VALUE OF *PF-KEY
+1350    VALUE 'ENTR'  IGNORE
+1360    VALUE 'PF2'   PERFORM IS_DISPLAY-BROKER-INFO
+1370                  ESCAPE TOP
+1380    NONE VALUE    PERFORM IS_EXIT-PROGRAM
+1390                  IF #ESCAPE ESCAPE ROUTINE END-IF
+1400  END-DECIDE
+1410  /*
+1420  RESET P-RC A2_MESSAGE(*)
+1430  REDUCE DYNAMIC P-MESSAGE TO 0
+1440  /*
+1450  PERFORM IS_GET-INFO
+1460  PERFORM IS_WRAP-MESSAGE
+1470  PERFORM IS_DISPLAY-INFO
+1480  IF F_ESCAPE-TOP OR P-RC <> 0 THEN ESCAPE TOP
+1490  END-IF
+1500  /*
+1510  PERFORM IS_SHUTDOWN-SERVER
+1520  IF #ESCAPE ESCAPE ROUTINE END-IF
+1530  PERFORM IS_WRAP-MESSAGE
+1540  /*
+1550  P-FUNCTION  := C_INFO-SERVER
+1560END-REPEAT
+1570*
+1580DEFINE SUBROUTINE IS_GET-INFO
+1590  /*
+1600  /* Ask for data
+1610  /*
+1620  IF YN_MIXED NE 'Y'
+1630  THEN
+1640    EXAMINE P-PASSWORD AND TRANSLATE INTO UPPER
+1650  END-IF
+1660  /*
+1670  RESET P-MESSAGE A2_MESSAGE(*) P-RC
+1680  RESIZE AND RESET  ARRAY USR8213-P.P-INFO-CS TO (1:1)
+1690  /*
+1700  CALLNAT 'USR8213N' USR8213-P BROKER-INFO
+1710END-SUBROUTINE /* IS_GET-INFO
+1720*
+1730DEFINE SUBROUTINE IS_WRAP-MESSAGE
+1740  /*
+1750  /* Wrap a longer message at a blank
+1760  /*
+1770  IF *LENGTH(USR8213-P.P-MESSAGE) > 64
+1780  THEN
+1790    EXAMINE DIRECTION BACKWARD
+1800            SUBSTRING(USR8213-P.P-MESSAGE,1,64)   ' '
+1810            GIVING POSITION IN I_PL
+1820    A2_MESSAGE(1) := SUBSTRING(USR8213-P.P-MESSAGE,1,I_PL)
+1830    ADD 1 TO I_PL
+1840    A2_MESSAGE(2) := SUBSTRING(USR8213-P.P-MESSAGE,I_PL)
+1850  ELSE
+1860    A2_MESSAGE(1) := USR8213-P.P-MESSAGE
+1870    A2_MESSAGE(2) := ' '
+1880  END-IF
+1890END-SUBROUTINE /* IS_WRAP-MESSAGE
+1900*
+1910DEFINE SUBROUTINE IS_DISPLAY-INFO
+1920  /*
+1930  /* Are we got data returned?
+1940  /*
+1950  L_OCC := *OCC(USR8213-P.UID)
+1960  DECIDE ON FIRST VALUE OF L_OCC
+1970    VALUE 0
+1980      F_ESCAPE-TOP := TRUE /* back to beginning
+1990      A2_MESSAGE(1):= 'Nothing found for this selection criteria.'
+2000      /*
+2010    VALUE 1
+2020      F_ESCAPE-TOP := FALSE /* continue processing
+2030      P-SEQUENCE-NUMBER := USR8213-P.NSEQUENCENUMBER(1)
+2040      L_HOSTNAME        := USR8213-P.HOSTNAME(1)
+2050      L_APPLICATIONNAME := USR8213-P.APPLICATIONNAME(1)
+2060      L_PUID            := USR8213-P.PUID(1)
+2070      L_TOKEN           := USR8213-P.TOKEN(1)
+2080      /*
+2090      COMPRESS USR8213-P.SERVERCLASS(1)
+2100               USR8213-P.SERVERNAME (1)
+2110               USR8213-P.SERVICENAME(1)
+2120          INTO L_SERVER-SPEC
+2130          WITH '/'
+2140      /*
+2150    NONE VALUE
+2160      RESET P-SEQUENCE-NUMBER L_HOSTNAME L_APPLICATIONNAME
+2170            L_PUID L_SERVER-SPEC L_TOKEN
+2180      FOR I_PL 1 L_OCC
+2190        DISPLAY  '/Seq. No.'     USR8213-P.NSEQUENCENUMBER (I_PL)(AD=L)
+2200                 '/Server Name'  USR8213-P.SERVERNAME      (I_PL)(AL=20)
+2210                 '/Host Name'    USR8213-P.HOSTNAME        (I_PL)(AL=20)
+2220                 'Date & Time/of Creation (GMT)'
+2230                  USR8213-P.CREATE-TIME (I_PL)(EM=DD.MM.YYYY' 'HH:II:SS)
+2240        IF USR8213-P.APPLICATIONNAME(I_PL) <> ' '
+2250          WRITE T*SERVERNAME 'Application name:'
+2260                T*HOSTNAME    USR8213-P.APPLICATIONNAME(I_PL)(AL=32)
+2270        END-IF
+2280        IF USR8213-P.IPADDRESS(I_PL) <> ' '
+2290          WRITE T*HOSTNAME 'IPv4:' USR8213-P.IPADDRESS  (I_PL)
+2300        END-IF
+2310        IF USR8213-P.IPV6ADDRESS(I_PL) <> ' '
+2320          WRITE T*HOSTNAME 'IPv6:' USR8213-P.IPV6ADDRESS(I_PL)
+2330        END-IF
+2340        SKIP 1
+2350      END-FOR
+2360  END-DECIDE
+2370END-SUBROUTINE /* IS_DISPLAY-INFO
+2380*
+2390DEFINE SUBROUTINE IS_SHUTDOWN-SERVER
+2400  /*
+2410  /* Ask for the sequence number for shutting down server
+2420  /*
+2430  P-FUNCTION := C_SHUT-SERVER
+2440  INPUT (AD=MI'_' IP=OFF CD=NE)
+2450      5T 'Shut down a single Natural RPC server on an EntireX Broker node.' (YEI)
+2460   // 5T 'Command ..................' (TU) P-FUNCTION (AD=O CD=TU)
+2470   // 5T 'EntireX Broker name ......' (TU) P-BROKER-ID(AD=O CD=TU)
+2480    / 5T 'Sequence number ..........' (TU) P-SEQUENCE-NUMBER(AD=L)
+2490   // 5T 'Terminate immediately ....' (TU) P-IMMEDIATE(AD=T) '(Y/N)'(TU)
+2500    / 5T 'User ID ..................' (TU) P-USER-ID
+2510    / 5T 'Password .................' (TU) P-PASSWORD (AD=N)
+2520    / 5T 'Mixed case for password ..' (TU) YN_MIXED   (AD=T) '(Y/N)'(TU)
+2530   // 5T 'Class/Name/Type :' (TU) L_SERVER-SPEC        (AD=O CD=TU)
+2540    / 5T 'Hostname .......:' (TU) L_HOSTNAME           (AD=O CD=TU)
+2550    / 5T 'Application name:' (TU) L_APPLICATIONNAME    (AD=O CD=TU)
+2560    / 5T 'Token ..........:' (TU) L_TOKEN              (AD=O CD=TU)
+2570    / 5T 'Internal ID ....:' (TU) L_PUID               (AD=O CD=TU)
+2580   // 5T 'Press PF2 for Broker-Info, PF5 to shut down, Enter to continue,' (TU)
+2590    / 5T 'or press any other PFkey to stop the program.' (TU)
+2600  /*
+2610  DECIDE ON FIRST VALUE OF *PF-KEY
+2620    VALUE 'ENTR'  IGNORE
+2630    VALUE 'PF2'   PERFORM IS_DISPLAY-BROKER-INFO
+2640    VALUE 'PF5'   CALLNAT 'USR8213N' USR8213-P BROKER-INFO
+2650    NONE VALUE    PERFORM IS_EXIT-PROGRAM
+2660                  IF #ESCAPE ESCAPE ROUTINE END-IF
+2670  END-DECIDE
+2680  /*
+2690END-SUBROUTINE /* IS_SHUTDOWN-SERVER
+2700*
+2710DEFINE SUBROUTINE IS_DISPLAY-BROKER-INFO
+2720  /*
+2730  /* If a CIS-Version is returned display details.
+2740  /*
+2750  IF P-CIS-VERSION <= 0
+2760    IF P-LOGON-DONE <> 'Y'
+2770      /* This is the first call.
+2780      USR8213-P.P-FUNCTION := C_INFO-BROKER
+2790      CALLNAT 'USR8213N' USR8213-P BROKER-INFO
+2800      PERFORM IS_WRAP-MESSAGE
+2810      IF P-RC <> 0
+2820        ESCAPE ROUTINE
+2830      END-IF
+2840    END-IF
+2850  END-IF
+2860  DECIDE ON FIRST VALUE OF P-CB-KERNELSECURITY
+2870    VALUE 'Y'  L-KERNEL-SEC-STATUS := 'with'
+2880    VALUE 'N'  L-KERNEL-SEC-STATUS := 'without'
+2890    ANY VALUE  COMPRESS 'Broker runs' L-KERNEL-SEC-STATUS
+2900                        'kernel security.'
+2910                   INTO L-KERNEL-SEC-STATUS
+2920    NONE VALUE COMPRESS 'Broker has unknown status for kernel security.'
+2930                   INTO L-KERNEL-SEC-STATUS
+2940  END-DECIDE
+2950  /*
+2960  INPUT WINDOW='INFO'  (AD=O IP=OFF)
+2970        'EntireX Broker Information:' (TU)
+2980     // L-KERNEL-SEC-STATUS  (AL=50 CD=TU)
+2990      / 'Broker version string ....:' (TU)  BROKER-VERSIONSTRING(AL=40)
+3000      / 'Broker stub version string:' (TU)
+3010      / BRKSTUB-VERSIONSTRING(AL=70)
+3020      / 'CIS version number ...... :' (TU)  P-CIS-VERSION
+3030      / 'Logon to Broker required. :' (TU)  P-LOGON-REQUIRED
+3040END-SUBROUTINE /* IS_DISPLAY-BROKER-INFO
+3050*
+3060DEFINE SUBROUTINE IS_EXIT-PROGRAM
+3070  IF P-LOGON-DONE = 'Y'
+3080    USR8213-P.P-FUNCTION := C_LOGOFF
+3090    CALLNAT 'USR8213N' USR8213-P BROKER-INFO
+3100  END-IF
+3110  #ESCAPE := TRUE
+3120END-SUBROUTINE /* IS_Exit-Program
+3130END
+3140

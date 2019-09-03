@@ -1,0 +1,15 @@
+0010&H View VTOC
+0020&L
+0030&L
+0040#Zweck@    : Listet die VTOC einer bestimmten Platte.
+0050&L
+0060#System@   : z/OS, z/VSE, BS2000/OSD.
+0070&L
+0080&L
+0090#Anwendung@: Dieser View erlaubt dem Benutzer oder der Anwendung das
+0100             Auflisten der VTOC einer bestimmten Platte. Verfuegbare
+0110             Informationen sind u.a. Archivnummer, Dateiname, Datei-
+0120             groesse, Anzahl der Extents, Verfallsdatum, Datum der
+0130             letzten Referenz usw.
+0140&L
+0150#Anmerkung@:

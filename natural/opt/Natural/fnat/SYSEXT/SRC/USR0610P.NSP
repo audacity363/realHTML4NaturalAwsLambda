@@ -1,0 +1,30 @@
+0010/* This is an example to call interface USR0160N.
+0020/* It returns additional information about the most recent
+0030/* database error that had occurred in the current session.
+0040/**********************************************************************
+0050DEFINE DATA LOCAL
+006001 DB_ERR_STR       (A16)
+007001 REDEFINE DB_ERR_STR
+0080  02 DB_STATUS      (A1)
+0090  02 DB_TYPE        (A1)
+0100  02 DB_DBID        (B1)
+0110  02 DB_FNR         (B1)
+0120  02 DB_COMMAND     (A2)
+0130  02 DB_RESP        (B2)
+0140  02 DB_SUBCODE     (B2)
+0150  02 DB_ADD1F2B     (B2)
+0160END-DEFINE
+0170/*
+0180CALLNAT 'USR0610N' DB_ERR_STR
+0190/*
+0200DISPLAY
+0210  'Status (A1)' DB_STATUS
+0220  'Type (A1)'   DB_TYPE
+0230  'DBID (B1)'   DB_DBID
+0240  'FNR (B1)'    DB_FNR
+0250  'Cmd (A2)'    DB_COMMAND
+0260  'Resp (B2)'   DB_RESP
+0270  'Subcd (B2)'  DB_SUBCODE
+0280  'Add (B2)'    DB_ADD1F2B
+0290/*
+0300END

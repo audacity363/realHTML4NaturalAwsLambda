@@ -1,0 +1,70 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3WHTML
+0050*
+0060* DESCRIPTION
+0070*               Not used
+0080*
+0090*
+0100* AUTHOR        SAG   08.09.1998
+0110*
+0120* Version       8.3
+0130*
+0140* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0150*
+0160* HISTORY
+0170* USER    DATE       REASON
+0180* ------+----------+----------------------------------------------
+0190*       ! --.--.-- !
+0200* ------+----------+----------------------------------------------
+0210*
+0220* ------ PARAMETER -----------------------------------------------
+0230DEFINE DATA
+0240PARAMETER USING W3PARM
+0250LOCAL USING W3CONST
+0260LOCAL
+02701 W3VALUE        (A) DYNAMIC
+0280END-DEFINE
+0290* --- ERROR HANDLING ---
+0300ON ERROR
+0310  PERFORM W3ERROR ##W3ERROR
+0320  PERFORM W3END ##RPC
+0330  ESCAPE ROUTINE
+0340END-ERROR
+0350*
+0360* --- INITIALIZE Web Interface ---
+0370PERFORM W3INIT ##RPC
+0380*
+0390* --- SET TYPE OF RETURN-PAGE ---
+0400PERFORM W3CONTENT-TYPE 'text/html'
+0410* --- WRITE THE HEAD OF THE DOCUMENT ---
+0420PERFORM W3TEXTLINE "<!DOCTYPE 'HTML PUBLIC -//W3C//DTD HTML 3.2//EN'>"
+0430PERFORM W3TEXTLINE '<HTML><HEAD><META HTTP-EQUIV="Content-Type" '-
+0440  'CONTENT="text/html; CHARSET=iso-8859-1"><TITLE>'
+0450* --- THE TITLE OF THE PAGE ---
+0460PERFORM W3TEXTLINE 'Basic Routines - WRITES AND CONVERTS TO HTML'
+0470PERFORM W3TEXTLINE '</TITLE></HEAD><BODY>'
+0480PERFORM W3TEXTLINE '<H2>WRITES AND CONVERTS HTML</H2>'
+0490PERFORM W3TEXTLINE '<HR><BR><BR>Output with W3HTML:<BR>'
+0500W3VALUE := '<P> This is not a <p> tag, this is normal output. '-
+0510           'If you want a <P> tag, the output have to be written '-
+0520           'with W3TEXT and not with W3HTML...'
+0530PERFORM W3HTML W3VALUE
+0540  PERFORM W3TEXTDYNAMIC ##HTTP_NEWLINE
+0550PERFORM W3TEXTLINE '<P>Output with W3TEXT:<BR>'
+0560PERFORM W3TEXT W3VALUE
+0570*
+0580* --- END THE HTML PAGE ---
+0590COMPRESS "<TABLE BORDER=0 WIDTH=100% CELLSPACING=0 "-
+0600  "CELLPADDING=5>"
+0610  '<TR BGCOLOR="#00cc66"><TD>' *PROGRAM '&#32;-&#32;' *DATE '&#32;' *TIME
+0620  "</TD><TD ALIGN='RIGHT'>" 'Natural'
+0630  "</TD></TR></TABLE>"
+0640  '</BODY></HTML>' INTO W3VALUE LEAVING NO
+0650PERFORM W3TEXTDYNAMIC W3VALUE
+0660*
+0670* --- END Web Interface ---
+0680PERFORM W3END ##RPC
+0690*
+0700END

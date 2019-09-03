@@ -1,0 +1,48 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1050N'. (see USR2011N).
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR1050L
+0070   2 INPUTS
+0080     3 FUNCTION        (A01)
+0090     3 WORK-NUM        (I01)
+0100   2 INPUT-OUTPUTS
+0110     3 WORK-FILE       (A52)
+0120     3 WORK-TYPE       (A01)
+0130   2 OUTPUTS
+0140     3 MAX-NUM         (I01)
+0150     3 RESPONSE        (I04)
+0160 /*
+0170 1 USR1050N
+0180   2 VERSION           (I01)     INIT <0>
+0190 1 REDEFINE USR1050N
+0200   2 EXTENDED-PARMS
+0210     3 EXTENDED-DATA   (A01/1:1)
+0220END-DEFINE
+0230/*
+0240SET KEY ALL
+0250SET CONTROL 'L'        /* Accept lower case
+0260/*
+0270FUNCTION  := 'G'
+0280WORK-NUM  := 1
+0290WORK-TYPE := 'D'
+0300/*
+0310REPEAT
+0320  INPUT (AD=MILT'_' IP=OFF)
+0330      'Get or set a work file name:' (I)
+0340    / '-' (28) (I) /
+0350    / 'Function ...........' FUNCTION
+0360    / 'Work file number ...' WORK-NUM (NL=2)
+0370    / 'Work file name .....' WORK-FILE (AD=MILW'_')
+0380    / 'Work file type .....' WORK-TYPE
+0390    / 'Maximum number .....' MAX-NUM (AD=O)
+0400   // 'Response ...........' RESPONSE (AD=O)
+0410  /*
+0420  IF *PF-KEY NE 'ENTR'
+0430    ESCAPE ROUTINE
+0440  END-IF
+0450  /*
+0460  CALLNAT 'USR1050N'  USR1050L  USR1050N.EXTENDED-PARMS
+0470END-REPEAT
+0480END

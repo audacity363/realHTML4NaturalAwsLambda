@@ -1,0 +1,15 @@
+0010&H View CATALOG
+0020&L
+0030&L
+0040#Purpose@: List catalog information.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : The information retrieved by this view concerns only
+0100           files already know to the Entire System Server i.e.
+0110           Files contained in the STD, PARSTD and TEMP label areas
+0120           at Entire System Server initialization time or files
+0130           since accessed via ESY.
+0140&L
+0150#Notes@  :

@@ -1,0 +1,44 @@
+0010*
+0020* Release unused Space
+0030*
+0040DEFINE DATA GLOBAL USING TUTO
+0050            LOCAL  USING BFMNT--L
+0060            LOCAL
+0070*
+008001  #DSNAME         (A54)
+009001  #VOLSER         (A6)
+010001  #PASSWORD       (A8)
+0110END-DEFINE
+0120PERFORM PF-KEY
+0130*
+0140* ------------------------------ MAIN LOOP ----------------------------
+0150*
+0160REPEAT
+0170PERFORM SCREEN-IO
+0180FND.
+0190FIND FILE-MAINTENANCE WITH NODE     =  ##NODE
+0200                      AND  DSNAME   =  #DSNAME
+0210                      AND  VOLSER   =  #VOLSER
+0220                      AND  FUNCTION =  'COMPRESS'
+0230  IF ERROR-CODE NE 0 OR SYSTEM-CODE NE 0
+0240     INCLUDE BERR---C
+0250     ESCAPE BOTTOM (FND.)
+0260  END-IF
+0270  ASSIGN ##MSG-NR = 1007
+0280END-FIND
+0290END-REPEAT
+0300*
+0310* ------------------------------ SCREEN-IO ----------------------------
+0320*
+0330DEFINE SUBROUTINE SCREEN-IO
+0340INPUT WITH TEXT *##MSG-NR,
+0350                 ##MSG-TXT1,
+0360                 ##MSG-TXT2
+0370      USING MAP 'BCOMP--&'
+0380RESET ##MSG
+0390END-SUBROUTINE
+0400*
+0410* ------------------------------ PF-KEY -------------------------------
+0420*
+0430INCLUDE C-PFKEY
+0440END

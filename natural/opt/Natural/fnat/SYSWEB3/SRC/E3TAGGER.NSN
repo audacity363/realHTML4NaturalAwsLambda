@@ -1,0 +1,136 @@
+0010***********************************************************************
+0020* Class ........ Natural Web Interface - Demo Application
+0030* Subprogram ... E3TAGGER
+0040* Author ....... SAG
+0050* Date ......... 2016-03-21
+0060* Description .. Create a table from template with user-defined tags.
+0070***********************************************************************
+0080* Copyright (c) 2016 Software AG, Germany.  All rights reserved.
+0090*********************** Updates in Version 8.3 ************************
+0100* Date       User  iTrac    Reason
+0110* ---------- ----- -------- -------------------------------------------
+0120*
+0130***********************************************************************
+0140* Data definitions
+0150***********************************************************************
+0160DEFINE DATA
+0170PARAMETER USING W3PARM
+0180LOCAL USING W3CONST
+0190* ----- PRIVATE VARIABLES -----
+0200LOCAL
+0210* ---------------------------------------------------------------------
+0220* Table content
+0230* ---------------------------------------------------------------------
+02401 #MAX-ROW (I4) CONST <13>
+02501 #COUNTRY (A20/1:#MAX-ROW) INIT
+0260  <'Brazil','China','France','Germany','India',
+0270  'Italy','Japan','Russia','South Africa','Spain',
+0280  'Switzerland','United Kingdom','United States'>
+02901 #POPULATION (N12/1:#MAX-ROW) INIT
+0300  <204500000,1380000000,64300000,81100000,1314100000,
+0310  62500000,126900000,144300000,55000000,46400000,
+0320  8300000,65100000,321200000>
+03301 #AREA (N12/1:#MAX-ROW) INIT             /* (sq-km )
+0340  <8514877,9596961,551500,357121,3287263,
+0350  301340,377915,17098242,1219090,505370,
+0360  41277,243610,9826675>
+03701 #CAPITAL (A20/1:#MAX-ROW) INIT
+0380  <'Brasilia','Beijing','Paris','Berlin','New Delhi',
+0390  'Rome','Tokyo','Moscow','Pretoria','Madrid',
+0400  'Bern','London','Washington, D.C.'>
+04101 #CONTINENT (A20/1:#MAX-ROW) INIT
+0420  <'America','Asia','Europe','Europe','Asia',
+0430  'Europe','Asia','Europe','Africa','Europe',
+0440  'Europe','Europe','America'>
+0450* ---------------------------------------------------------------------
+0460* Others
+0470* ---------------------------------------------------------------------
+04801 #TEXT       (A) DYNAMIC    /* full html text
+04901 #TABLE      (A) DYNAMIC    /* new table
+05001 #ROW-TABLE  (A) DYNAMIC    /* original row
+05101 #ROW        (A) DYNAMIC    /* new row to be inserted in table
+05201 #II         (I4)
+05301 #A-NUM      (A) DYNAMIC    /* numeric value A format
+05401 #RSP        (I4)
+05501 #ERROR      (A) DYNAMIC
+05601 #MSG        (A) DYNAMIC
+0570END-DEFINE
+0580*
+0590* ----- ERROR HANDLER -----
+0600ON ERROR
+0610  PERFORM W3ERROR ##W3ERROR
+0620  PERFORM W3END ##RPC
+0630  ESCAPE ROUTINE
+0640END-ERROR
+0650* ----- INITIALISE HTTP API -----
+0660PERFORM W3INIT ##RPC
+0670* ----- HEADER FOR SERVER -----
+0680PERFORM W3CONTENT-TYPE 'text/html'
+0690RESET #MSG
+0700* ---------------------------------------------------------------------
+0710* Read the template html into #TEXT
+0720* ---------------------------------------------------------------------
+0730PERFORM W3READ-RESOURCE 1X 'e3tagger.html' #TEXT
+0740* ---------------------------------------------------------------------
+0750* Read the template table row into #ROW-TABLE
+0760* The template row is identified by the <NAT-TABLE> tag
+0770* Keep the tag; delete the tag content from the template
+0780* ---------------------------------------------------------------------
+0790CALLNAT 'W3TAGGER'
+0800  #TEXT                           /* i/o: template text
+0810  #ROW-TABLE                      /* o:   tag content
+0820  'NAT-TABLE'                     /* i:   tag name
+0830  'KEEP-TAG'                      /* i:   tag option
+0840  'DELETE'                        /* i:   option
+0850  1X                              /* i:   new content
+0860  #MSG #RSP                       /* o:   message and response
+0870* ---------------------------------------------------------------------
+0880* Update the variables outside the template row
+0890* ---------------------------------------------------------------------
+0900EXAMINE #TEXT FOR '$TITLE$'  REPLACE 'Natural Web Example'
+0910EXAMINE #TEXT FOR '$HEADER$' REPLACE 'Countries'
+0920* ---------------------------------------------------------------------
+0930* Build the new table rows
+0940* ---------------------------------------------------------------------
+0950RESET #TABLE
+0960FOR #II = 1 TO #MAX-ROW
+0970  MOVE #ROW-TABLE TO #ROW         /* move to working copy
+0980  EXAMINE #ROW FOR '$COUNTRY$'    REPLACE #COUNTRY (#II)
+0990  MOVE EDITED #POPULATION (#II) (EM=ZZZ,ZZZ,ZZZ,ZZ9) TO #A-NUM
+1000  EXAMINE #ROW FOR '$POPULATION$' REPLACE #A-NUM
+1010  MOVE EDITED #AREA (#II) (EM=ZZZ,ZZZ,ZZZ,ZZ9) TO #A-NUM
+1020  EXAMINE #ROW FOR '$AREA$'       REPLACE #A-NUM
+1030  EXAMINE #ROW FOR '$CAPITAL$'    REPLACE #CAPITAL (#II)
+1040  EXAMINE #ROW FOR '$CONTINENT$'  REPLACE #CONTINENT (#II)
+1050  COMPRESS #TABLE #ROW INTO #TABLE LEAVING NO  /* join to new table
+1060END-FOR
+1070* ---------------------------------------------------------------------
+1080* Move the table rows back to the html
+1090* The position is still identified by the <NAT-TABLE> tag
+1100* Add the new content and delete the tag
+1110* ---------------------------------------------------------------------
+1120CALLNAT 'W3TAGGER'
+1130  #TEXT                           /* i/o: template text
+1140  #ROW-TABLE                      /* o:   tag content
+1150  'NAT-TABLE'                     /* i:   tag name
+1160  'DELETE-TAG'                    /* i:   tag option
+1170  'ADD'                           /* i:   option
+1180  #TABLE                          /* i:   new content
+1190  #MSG #RSP                       /* o:   message and response
+1200* ---------------------------------------------------------------------
+1210* Insert message
+1220* ---------------------------------------------------------------------
+1230IF *LENGTH (#MSG) = 0
+1240  COMPRESS #MAX-ROW 'countries successfully listed.' TO #MSG
+1250END-IF
+1260EXAMINE #TEXT FOR '$MSG$' REPLACE #MSG
+1270* ---------------------------------------------------------------------
+1280* Write to output page
+1290* ---------------------------------------------------------------------
+1300PERFORM W3TEXTDYNAMIC  #TEXT
+1310
+1320* ----- END HTTP -----
+1330PERFORM W3END ##RPC
+1340* ----- END MAIN PROGRAM -----
+1350*
+1360END

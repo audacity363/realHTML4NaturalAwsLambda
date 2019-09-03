@@ -1,0 +1,20 @@
+0010/*C               O                */** New Global Data Area G-CTRRS.                                 DA:00.00ED:00.00PF:WNV:09010100
+0020/*C               O                */**
+0030/*C               O                */* Data definitions
+0040/*C                                *
+0050/*DS              0                  1CTRRS-1P
+0060/*DK              0     UDYNAMIC     2G-YOURNAME
+0070/*DK              0     UDYNAMIC     2G-RESULT
+0080/*C                                *
+0090/*DS              0                  1CTRRS-2P
+0100/*DK              0     UDYNAMIC     2G-PERSFIRSTNAME
+0110/*DK              0     UDYNAMIC     2G-PERSLASTNAME
+0120/*DK              0     UDYNAMIC     2G-PERSCITY
+0130/*DK              0     UDYNAMIC     2G-PERSSTREET
+0140/*C                                *
+0150/*DS              0                  1CTRRS-3P
+0160/*DK              0     UDYNAMIC     2G-COMPANYNAME
+0170/*DK              0     UDYNAMIC     2G-COMPANYCOUNTRY
+0180/*DK              0     UDYNAMIC     2G-COMPANYCITY
+0190/*DK              0     UDYNAMIC     2G-COMPANYSTREET
+0200/*C                                *

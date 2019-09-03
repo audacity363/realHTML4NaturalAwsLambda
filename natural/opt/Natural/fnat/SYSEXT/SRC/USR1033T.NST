@@ -1,0 +1,87 @@
+0010Find DBID and FNR of a cataloged DDM
+0020.
+0030Documentation ......... USR1033T    /*  Text object
+0040Interface ............. USR1033N    /*  Cataloged subprogram
+0050Example Program ....... USR1033P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DDMS
+0100.
+0110Keywords .............. DBID, DDM, FNR
+0120.
+0130Function .............. Returns the DBID, FNR and type of a DDM.
+0140.
+0150.
+0160Parameters
+0170----------
+0180Define the following parameters with the DEFINE DATA statement:
+0190.
+020001 PARM
+0210   02 DBID         (N05)      /* DBID of FDIC
+0220   02 FNR          (N05)      /* File number of FDIC
+0230   02 PASSWORD     (A08)      /* Password of FDIC
+0240   02 CIPHERCODE   (B08)      /* Ciphercode of FDIC
+0250   02 DDM-NAME     (A32)      /* Name of the DDM
+0260   02 RESPONSE     (N04)      /* Error code
+0270   02 DDM-DBID     (N05)      /* DBID of the DDM
+0280   02 DDM-FNR      (N05)      /* File number of the DDM
+0290   02 DDM-TYPE     (A01)      /* Type of the DDM
+0300   02 VSAM-SUBTYPE (A01)      /* Subtype of the VSAM DDM
+0310   02 FILE-NAME    (A08)      /* Used by VSAM, ISAM, LEASY
+0320.
+0330Interface Call
+0340--------------
+0350Use the interface with the CALLNAT statement:
+0360.
+0370CALLNAT 'USR1033N' PARM
+0380.
+0390.
+0400Using the Application Programming Interface:
+0410--------------------------------------------
+0420Copy the subprogram USR1033N to the library SYSTEM or the steplib
+0430library respectively, or to the required library.
+0440.
+0450Description of the parameters:
+0460.
+0470DBID, FNR, PASSWORD, CIPHERCODE (Input)
+0480  Has to be filled before invoking the interface with the
+0490  file definition of an FDIC file. If both DBID and FNR are
+0500  zero, the current file definition for FDIC will apply.
+0510.
+0520DDM-NAME (Input)
+0530  Has to be filled before invoking the interface.
+0540  DDM-NAME contains the name of a DDM.
+0550.
+0560DDM-DBID, DDM-FNR (Output)
+0570  The DBID and FNR are returned.
+0580.
+0590DDM-TYPE (Output)
+0600  DDM-TYPE contains the type of the view or the system file.
+0610  Possible values are listed in the documentation of SYSDDM in
+0620  the Natural Utilities documentation.
+0630  This field is not filled on UNIX and PC platforms.
+0640.
+0650VSAM-SUBTYPE (Output)
+0660  If the DDM-TYPE is 'V', the type of the VSAM DDM is returned.
+0670  Possible values are:
+0680  'P' - physical view
+0690  'L' - logical view
+0700  'U' - user view
+0710.
+0720FILE-NAME (Output)
+0730  Additional description of the DDM dependent on the DDM type:
+0740  DDM-TYPE = 'V': FILE-NAME contains the VSAM file name.
+0750  DDM-TYPE = 'I': FILE-NAME contains the ISAM link name.
+0760  DDM-TYPE = 'L': FILE-NAME contains the LEASY catalog name.
+0770.
+0780RESPONSE (Output)
+0790  Error code:
+0800   0001 - Invalid DBID
+0810   0002 - DDM not found
+0820   0003 - Invalid FNR
+0830   0004 - DDM name must not be blank
+0840  -4888 - Currently no logical files available
+0850.
+0860.
+0870*****  End of Description  *****

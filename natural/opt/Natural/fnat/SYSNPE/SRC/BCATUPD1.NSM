@@ -1,0 +1,75 @@
+0010* MAP2: PROTOTYPE
+0020* INPUT USING MAP 'XXXXXXXX'
+0030*     ##TITLE #ACCESS-TYPE #BACKUP-TYPE #DESTROY #DSNAME
+0040*     #EXECUTION-PASSWORD #PASSWORD #READ-PASSWORD #RETPD #SHARE
+0050*     #WRITE-PASSWORD
+0060DEFINE DATA PARAMETER
+00701 ##TITLE (A078)
+00801 #ACCESS-TYPE (A005)
+00901 #BACKUP-TYPE (A001)
+01001 #DESTROY (A003)
+01101 #DSNAME (A054)
+01201 #EXECUTION-PASSWORD (A008)
+01301 #PASSWORD (A008)
+01401 #READ-PASSWORD (A008)
+01501 #RETPD (N04.0)
+01601 #SHARE (A003)
+01701 #WRITE-PASSWORD (A008)
+0180END-DEFINE
+0190FORMAT PS=021 LS=080 ZP=OFF SG=OFF KD=ON  IP=OFF
+0200* MAP2: MAP PROFILES *****************************        410***********
+0210* .TTAAAMMOO   NEI D I N D 7INEI        ?_)¬&:+(                       *
+0220* 023079        N0NNUCN             X        01 SYSPROF YL           1 *
+0230************************************************************************
+0240INPUT          (     IP=OFF                                           /*
+0250                                                                       )
+0260 002T ##TITLE  (AD=ODL CD=NE ) /*.01D078 A078 .
+0270/
+0280/
+0290/
+0300 002T 'Dsname ...............'(NE)
+0310 025T #DSNAME  (AD=MILT'_' CD=NE ) /*.99D054 A054 .
+0320/
+0330 002T 'Password .............'(NE)
+0340 025T #PASSWORD  (AD=MNLT'_' CD=NE ) /*.99D008 A008 .
+0350/
+0360/
+0370 002T 'Share'(NE)
+0380 008T '.' (016)(NE)
+0390 025T #SHARE  (AD=MILT'_' CD=NE ) /*.99D003 A003 .
+0400 035T '(yes/no)'(NE)
+0410/
+0420 002T 'Access Type ..........'(NE)
+0430 025T #ACCESS-TYPE  (AD=MILT'_' CD=NE ) /*.99D005 A005 .
+0440 035T '(read/write)'(NE)
+0450/
+0460/
+0470 002T 'Read Password ........'(NE)
+0480 025T #READ-PASSWORD  (AD=MILT'_' CD=NE ) /*.99D008 A008 .
+0490 035T '(password or *NONE)'(NE)
+0500/
+0510 002T 'Write Password .......'(NE)
+0520 025T #WRITE-PASSWORD  (AD=MILT'_' CD=NE ) /*.99D008 A008 .
+0530/
+0540 002T 'Execution Password ...'(NE)
+0550 025T #EXECUTION-PASSWORD  (AD=MILT'_' CD=NE ) /*.99D008 A008 .
+0560/
+0570/
+0580 002T 'Backup Type ..........'(NE)
+0590 025T #BACKUP-TYPE  (AD=MILT'_' CD=NE ) /*.99U001 A001 .
+0600 035T '(a/b/c/d/e)'(NE)
+0610/
+0620 002T 'Destroy ..............'(NE)
+0630 025T #DESTROY  (AD=MILT'_' CD=NE ) /*.99U003 A003 .
+0640 035T '(yes/no)'(NE)
+0650/
+0660/
+0670 002T 'Retention Period .....'(NE)
+0680 025T #RETPD  (AD=MILT'_' CD=NE ) /*.99D004 N04.0.
+0690/
+0700/
+0710/
+0720/
+0730* MAP2: VALIDATION *****************************************************
+0740* MAP2: END OF MAP *****************************************************
+0750END

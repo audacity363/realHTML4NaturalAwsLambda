@@ -1,0 +1,14 @@
+0010&H View WRITE-FILE
+0020&L
+0030&L
+0040#Zweck@    : Schreiben von Daten in Plattendateien.
+0050&L
+0060&L
+0070#System@   : z/OS, z/VSE, BS2000/OSD.
+0080&L
+0090&L
+0100#Anwendung@: Dieser View ermoeglicht das Schreiben von Daten in
+0110             sequentielle oder Bibliotheksdateien (PDS/LIBRARIAN/LMS).
+0120&L
+0130#Anmerkung@: Die Datei muss vor Ausfuehrung von WRITE-FILE bereits vor-
+0140             handen sein.

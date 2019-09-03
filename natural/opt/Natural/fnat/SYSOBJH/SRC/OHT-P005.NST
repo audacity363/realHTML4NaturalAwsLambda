@@ -1,0 +1,32 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Date Check Value
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor> OHT-P006
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180You can specify a check value for the object date or
+0190'*' for time check only.
+0200
+0210The 'New value' is applied to all object dates,
+0220which match the check value.
+0230
+0240The date value must be specified in international
+0250date format (YYYY-MM-DD).
+0260
+0270A single date, a date range or a special date value
+0280can be specified.
+0290
+0300See next help screen for valid ranges and special date values.
+0310
+0320<HelpTextEnd>

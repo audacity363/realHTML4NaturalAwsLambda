@@ -1,0 +1,58 @@
+<! d6-input.html - start >
+<P>&nbsp;</P>
+<FORM METHOD="GET" ACTION="d6index">
+  <TABLE CLASS="INPUT" BORDER="0" CELLSPACING="0" CELLPADDING="5" ALIGN="CENTER">
+
+  <TR>
+    <TD class="input">&nbsp;</TD>
+    <TD class="input" ALIGN="RIGHT" nowrap><B>Personel-ID:&nbsp;</B></TD>
+    <TD class="input"><INPUT NAME=ID SIZE=8 MAXLENGTH=8 VALUE="$ID$"></TD>
+    <TD class="input">&nbsp;</TD>
+    <TD ROWSPAN="8"><IMG SRC="$GIF$" ALT="$GIF_ALT$" ALIGN="LEFT"></TD>
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT"><B>Name:&nbsp;</B></TD>
+    <TD><INPUT NAME=NAME SIZE=20 MAXLENGTH=20 VALUE="$NAME$"></TD>
+    <TD ALIGN="RIGHT"><B>First:&nbsp;</B></TD>
+    <TD><INPUT NAME=FIRST SIZE=20 MAXLENGTH=20 VALUE="$FIRST$"></TD>
+  </TR>
+  <TR class="gray">
+     <TD ALIGN="RIGHT"><B>Sex:&nbsp;</B></TD>
+     <TD><SELECT NAME=SEX SIZE=1>
+            <OPTION $SELECTED_M$>M 
+	    <OPTION $SELECTED_F$>F</SELECT>
+     </TD>
+     <TD NOWRAP ALIGN="RIGHT"><B>Birth:&nbsp;</B></TD>
+     <TD><INPUT NAME=BIRTH SIZE=10 MAXLENGTH=10 VALUE="$BIRTH$"> (dd.mm.yyyy)</TD>
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT"><B>Country:&nbsp;</B></TD>
+    <TD><INPUT NAME=CNTRY SIZE=3 MAXLENGTH=3 VALUE="$CNTRY$"></TD>
+     <TD>&nbsp;</TD>
+     <TD>&nbsp;</TD>
+  </TR>
+  <TR class="gray">
+    <TD ALIGN="RIGHT"><B>ZIP:&nbsp;</B></TD>
+    <TD><INPUT NAME=ZIP SIZE=10 MAXLENGTH=10 VALUE="$ZIP$"></TD>
+    <TD ALIGN="RIGHT"><B>CITY:&nbsp;</B></TD>
+    <TD><INPUT NAME=CITY SIZE=20 MAXLENGTH=20 VALUE="$CITY$"></TD>
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT"><B>Department:&nbsp;</B></TD>
+    <TD><INPUT NAME=DEPT SIZE=6 MAXLENGTH=6 VALUE="$DEPT$"></TD>
+     <TD>&nbsp;</TD>
+     <TD>&nbsp;</TD>
+  </TR>
+  <TR class="gray">
+    <TD ALIGN="RIGHT"><B>Area-Code:&nbsp;</B></TD>
+    <TD><INPUT NAME=AREA SIZE=6 MAXLENGTH=6 VALUE ="$AREA$"></TD>
+    <TD ALIGN="RIGHT"><B>Phone:&nbsp;</B></TD>
+    <TD><INPUT NAME=PHONE SIZE=15 MAXLENGTH=15 VALUE="$PHONE$"></TD>
+  </TR>
+  <TR>
+    <TD COLSPAN="4" ALIGN="CENTER">&nbsp;<!SUBMIT>&nbsp;</TD>
+  </TR>
+</TABLE>
+</FORM>
+<P></P>
+<! d6-input.html - end >

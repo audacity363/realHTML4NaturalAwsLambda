@@ -1,0 +1,21 @@
+0010/* ---------------------------------------------------------------------
+0020/* Program:        EJECTON
+0030/* Library:        SYSEXBAT (Batch mode samples)
+0040/*
+0050/* Functionality:  Control page ejection
+0060/*
+0070/* Description:    If EJECT is ON, then Natural inserts a page break
+0080/*                 between two Natural pages. If EJECT is OFF, Natural
+0090/*                 suppress page breaks.
+0100/* ---------------------------------------------------------------------
+0110DEFINE DATA LOCAL
+01201 #name  (A10)
+0130END-DEFINE
+0140**
+0150EJECT ON
+0160**
+0170INPUT (IP=OFF AD=M) #name
+0180**
+0190DISPLAY #name
+0200**
+0210END

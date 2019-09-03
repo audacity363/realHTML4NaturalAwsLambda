@@ -1,0 +1,33 @@
+0010** Example 'OCC1N': *OCCURRENCE (called by OCC1P)
+0020**********************************************************************
+0030DEFINE DATA
+0040PARAMETER
+00501 PARM1 (N7/1:V)
+00601 PARM2 (N7/1:V,1:V)
+00701 PARM3 (N7/1:V,1:V,1:V)
+0080LOCAL
+00901 #OCC2 (I4/1:2)
+01001 #OCC3 (I4/1:3)
+01101 #OCC1 (I4)
+0120END-DEFINE
+0130*
+0140MOVE *OCC(PARM1)   TO #OCC1
+0150MOVE *OCC(PARM2,*) TO #OCC2(*)
+0160MOVE *OCC(PARM3,*) TO #OCC3(*)
+0170*
+0180DISPLAY #OCC1 #OCC2(*) #OCC3(*)
+0190DISPLAY *OCC(PARM1,*) *OCC(PARM2,*) *OCC(PARM3,*)
+0200*
+0210NEWPAGE
+0220*
+0230WRITE NOHDR
+0240      'Occurrences of 1. parameter:' *OCC(PARM1)
+0250    / 'Occurrences of 1. parameter:' *OCC(PARM1,1)
+0260    / 'Occurrences of 1. parameter:' *OCC(PARM1,*)
+0270    / 'Occurrences of 2. parameter:' *OCC(PARM2,1) *OCC(PARM2,2)
+0280    / 'Occurrences of 2. parameter:' *OCC(PARM2,*)
+0290    / 'Occurrences of 3. parameter:' *OCC(PARM3,1) *OCC(PARM3,2)
+0300                                     *OCC(PARM3,3)
+0310    / 'Occurrences of 3. parameter:' *OCC(PARM3,*)
+0320*
+0330END

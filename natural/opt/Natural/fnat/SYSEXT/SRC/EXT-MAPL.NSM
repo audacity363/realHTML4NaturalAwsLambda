@@ -1,0 +1,51 @@
+0010* MAP2: PROTOTYPE VERSION 820 --- CREATED BY NAT 0802010000 ---
+0020* INPUT USING MAP 'XXXXXXXX'
+0030*     CMD TEXT-DOCU TEXT-EXA TEXT-INTER
+0040DEFINE DATA PARAMETER
+00501 CMD (A001)
+00601 TEXT-DOCU (A008)
+00701 TEXT-EXA (A008)
+00801 TEXT-INTER (A008)
+0090END-DEFINE
+0100FORMAT PS=011 LS=052 ZP=OFF SG=OFF KD=ON  IP=OFF
+0110* MAP2: MAP PROFILES *****************************        410***********
+0120* .TTOTMO      TUGR4I6I7ITU             ?_):+      'EXT-HE0'           *
+0130* 013052        N1NNUCN____         X        01 SYSPROF YL           E *
+0140************************************************************************
+0150INPUT          (     IP=OFF      HE='EXT-HE0'                         /*
+0160                                                                       )
+0170/
+0180 008T 'K'(YEI)
+0190 011T 'List keywords of interface'(TU)
+0200 038T TEXT-INTER  (AD=OD CD=TU ) /*.01U008 A008 8          .
+0210/
+0220 008T 'T'(YEI)
+0230 011T 'List text object'(TU)
+0240 028T TEXT-DOCU  (AD=OD CD=TU ) /*.01U008 A008 8          .
+0250/
+0260 008T 'L'(YEI)
+0270 011T 'List example program'(TU)
+0280 032T TEXT-EXA  (AD=OD CD=TU ) /*.01U008 A008 8          .
+0290/
+0300 008T 'E'(YEI)
+0310 011T 'Edit example program'(TU)
+0320 032T TEXT-EXA  (AD=OD CD=TU ) /*.02U008 A008 8          .
+0330/
+0340 008T 'R'(YEI)
+0350 011T 'Run example program'(TU)
+0360 031T TEXT-EXA  (AD=OD CD=TU ) /*.03U008 A008 8          .
+0370/
+0380 008T 'X'(YEI)
+0390 011T 'Execute example program'(TU)
+0400 035T TEXT-EXA  (AD=OD CD=TU ) /*.04U008 A008 8          .
+0410/
+0420 008T '.'(YEI)
+0430 011T 'Exit SYSEXT utility'(TU)
+0440/
+0450/
+0460 001T 'Cmd ..'(TU)
+0470 008T CMD  (AD=MIT'_' CD=NE ) /*.99U001 A001            .
+0480/
+0490* MAP2: VALIDATION *****************************************************
+0500* MAP2: END OF MAP *****************************************************
+0510END

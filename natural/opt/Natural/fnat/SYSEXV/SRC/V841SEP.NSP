@@ -1,0 +1,62 @@
+0010* PROGRAM .. V841SEP
+0020* Library .. SYSEXV
+0030* Version .. 8.4.1
+0040*
+0050* Functionality: Enhanced functionality of SEPARATE Statement using
+0060*                array as a source operand
+0070*
+0080************************************************************************
+0090DEFINE DATA LOCAL
+01001 #INPUT-ARRAY (A20/1:3) INIT (1)<'VALUE1,VALUE2'>
+0110                               (2)<'VALUE3'>
+0120                               (3)<'VALUE4, VALUE5'>
+01301 #FIELD      (A20/1:6)
+01401 #NUMBER     (N2)
+0150END-DEFINE
+0160*
+0170FORMAT KD=ON
+0180SET KEY PF3  NAMED 'Exit'
+0190        PF12 NAMED 'Canc'
+0200
+0210SEPARATE #INPUT-ARRAY(*)  INTO #FIELD (*)
+0220                     GIVING NUMBER IN #NUMBER
+0230*
+0240INPUT (IP=OFF PS=100 )
+0250 01T *TIMX  (AD=OTD)
+0260 21T '***** NATURAL 8.4.1 ENHANCEMENTS *****'
+0270 70T *DATX  (AD=OTD DF=L)
+0280 /
+0290 01T 'User'
+0300 06T *USER  (AD=OILT )
+0310 26T '- Statement Enhancements -'(I)
+0320 64T 'Program'
+0330 72T *PROGRAM (AD=OI)
+0340 ///
+0350 02T 'Improved processing of the SEPARATE statement using array as a'-
+0360 ' source operand'(I)
+0370 ///
+0380 02T 'SEPARATE #INPUT-ARRAY(*) INTO #FIELD(*) GIVING NUMBER IN #NUMBER'
+0390 ///
+0400 02T 'The elements in the source array are:'
+0410 /
+0420 06T 'INPUT-ARRAY(1)'               #INPUT-ARRAY(1)(AD=OI) /
+0430 06T 'INPUT-ARRAY(2)'               #INPUT-ARRAY(2)(AD=OI) /
+0440 06T 'INPUT-ARRAY(3)'               #INPUT-ARRAY(3)(AD=OI) //
+0450 02T 'The elements in the destination array are:'
+0460 /
+0470   06T 'FIELD(1)'            #FIELD (1)(AD=OI )  /
+0480   06T 'FIELD(2)'            #FIELD (2)(AD=OI)  /
+0490   06T 'FIELD(3)'            #FIELD (3)(AD=OI)  /
+0500   06T 'FIELD(4)'            #FIELD (4)(AD=OI)  /
+0510   06T 'FIELD(5)'            #FIELD (5)(AD=OI)  /
+0520   06T 'FIELD(6)'            #FIELD (6)(AD=OI)  /
+053002T 'The number of elements in the destination array are:'
+0540               #NUMBER(AD=OI)
+0550IF *PF-KEY = 'PF3'
+0560  ESCAPE ROUTINE
+0570END-IF
+0580IF (*PF-KEY = 'PF12' OR= 'CLR')
+0590  CALLNAT 'UTILSTOP'
+0600END-IF
+0610
+0620END

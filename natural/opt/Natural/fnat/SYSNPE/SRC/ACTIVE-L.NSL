@@ -1,0 +1,31 @@
+0010**DV          0032     V1ACTIVE-JOBS                     ACTIVE-JOBS
+0020**DD          0035N 3.0 2ERROR-CODE                      /* Message code.
+0030**DD          0036A  58 2ERROR-TEXT                      /* Text describing message.
+0040**DD          0037N 5.0 2NODE                            /* Node ID (DBID).
+0050**DD          0038A  10 2SYSTEM-MESSAGE-CODE
+0060**DD          0039A   8 2JOB-NAME                        /* Name of job.
+0070**DD          0040A   6 2TYPE                            /* Type of job. Possible values:
+0080**DD          0041A   8 2STATUS                          /* Status of the address space:
+0090**DD          0042N 7.2 2CPU-USED                        /* Amount of CPU consumed by
+0100**DD          0043B   1 2DISPATCHING-PRIORITY            /* Dispatching priority given by
+0110**DD          0044A   4 2JES-INIT-ID                     /* JES batch initiator identifie
+0120**DD          0045N 7.0 2JOB-NUMBER                      /* JES job identifier.
+0130**DD          0046A   8 2JOB-ID                          /* Job number or TSN of job in
+0140**DD          0047B   4 2ADDRESS                         /* ASCB address.
+0150**DD          0048N 7.0 2REGION                          /* Amount of real storage used
+0160**DD          0049A   8 2PROC-NAME                       /* Name of procedure currently
+0170**DD          0050A   8 2STEP-NAME                       /* Name of step currently
+0180**DD          0051A   6 2CLASSES                         /* JES batch initiator classes
+0190**DD          0052N11.0 2SIO-COUNT                       /* Number of I/O operations
+0200**DD          0053N 7.0 2REGION-ALLOCATED-BELOW          /* Amount of virtual storage
+0210**DD          0054N 7.0 2REGION-LIMIT-BELOW              /* Amount of virtual storage tha
+0220**DD          0055N 7.0 2REGION-ALLOCATED-ABOVE          /* Amount of virtual storage
+0230**DD          0056N 7.0 2REGION-LIMIT-ABOVE              /* Amount of virtual storage tha
+0240**DD          0057B   4 2TCB                             /* TCB address of first ready
+0250**DD          0058N 4.0 2ASID                            /* Address space identifier.
+0260**DD          0059A   3 2DISPATCHABLE                    /* Dispatchability of address
+0270**DD          0060A   2 2PARTITION                       /* PARTITION identifier
+0280**DD          0061N 5.0 2VSIZE                           /* Partition size.
+0290**DD          0062A   3 2REPLY-ID                        /* Identification of open reply
+0300**DD          0063B   2 2SYSTEM-CODE                     /* System error code.
+0310**DD          0064N 7.2 2CPU-MAX                         /* CPU time limit for the job.

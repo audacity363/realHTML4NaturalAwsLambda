@@ -1,0 +1,333 @@
+0010* Program ...... V62WFATT
+0020* Library ...... SYSEXV
+0030* Version ...... 6.2
+0040* Machine ...... UNIX
+0050*
+0060* Functionality  Work File ATTRIBUTES
+0070*                APPEND/NOAPPEND
+0080*                DELETE/KEEP
+0090************************************************************************
+0100*
+0110*
+0120DEFINE DATA LOCAL
+01301 #ATTRIBUTES (A40)
+01401 #SELECTNAME (A253)
+01501 #MSG (A70) INIT <' '>
+0160* Table content
+01701 #ROW (N3)
+01801 #MAX-ROW (N3) CONST <5>
+01901 #LINE (A50)
+02001 #TEXT (A50/1:#MAX-ROW)
+02101 #TEXT1 (A50/1:2) INIT
+0220(001)  <'A flea and a fly in a flue,'>
+0230(002)  <'Were imprisoned, so what could they do?'>
+02401 #TEXT2 (A50/1:3) INIT
+0250(001)  <'Said the fly, "Let us flee!"'>
+0260(002)  <'"Let us fly", said the flea,'>
+0270(003)  <'And they flew through a flaw in the flue.'>
+0280END-DEFINE
+0290*
+0300FORMAT KD=ON
+0310SET KEY PF3  NAMED 'Exit'
+0320  PF12 NAMED 'Canc'
+0330*
+0340* Page 1
+0350*
+0360#ATTRIBUTES := 'NOAPPEND,KEEP'
+0370RESET #TEXT(*)
+0380MOVE #TEXT1(1:2) TO #TEXT(1:2)
+0390*
+0400INPUT  (IP=OFF) WITH TEXT #MSG (AD=I)
+0410  01T *TIMX  (AD=OTD  )
+0420  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0430  70T *DATX  (AD=OTD DF=L  )
+0440  /
+0450  01T 'User'
+0460  06T *USER  (AD=OLTI  )
+0470  22T '- Work File Attributes  (1 of 6) - ' (I)
+0480  64T 'Program'
+0490  72T *PROGRAM   (AD=OI)
+0500  //
+0510  02T 'DEFINE WORK FILE' (I) 'n name TYPE type'
+0520  'ATTRIBUTES' (I) 'attributes'  /
+0530  /
+0540  04T 'NOAPPEND' (I) '........'
+0550  'The file is rewritten from the start'   /
+0560  04T 'APPEND'   '..........'
+0570  'New records are added at the end of the file'   /
+0580  04T 'KEEP' (I) '............'
+0590  'The work file is kept after the close'   /
+0600  04T 'DELETE'   '..........'
+0610  'The work file is deleted after the close'   /
+0620  /
+0630  02T 'Work file 1'   '.......'
+0640  #SELECTNAME (AL=50 AD=MI CD=NE) /
+0650  02T 'Attributes'   '........'
+0660  #ATTRIBUTES (AD=OI) /
+0670  /
+0680  02T 'Text ..............'
+0690  #TEXT(1) (AD=O) /
+0700  02T '                   '
+0710  #TEXT(2) (AD=O) /
+0720  02T '                   '
+0730  #TEXT(3) (AD=O) /
+0740  02T 'Press ENTER to define the work file 1 with'
+0750  'the attributes above.'   /
+0760  02T 'The text will be written into that work file.'
+0770*
+0780IF *PF-KEY = 'PF3'
+0790  ESCAPE ROUTINE
+0800END-IF
+0810IF (*PF-KEY = 'PF12' OR= 'CLR')
+0820  CALLNAT 'UTILSTOP'
+0830END-IF
+0840*
+0850RESET #MSG
+0860*
+0870* Define the work file
+0880*
+0890DEFINE WORK FILE 1 #SELECTNAME TYPE 'ASCII' ATTRIBUTES #ATTRIBUTES
+0900*
+0910FOR #ROW = 1 TO #MAX-ROW
+0920*
+0930  IF #TEXT(#ROW) <> ' '
+0940    WRITE WORK 1 #TEXT(#ROW)
+0950  END-IF
+0960*
+0970END-FOR
+0980*
+0990* Page 2
+1000*
+1010RESET #TEXT(*)
+1020*
+1030INPUT  (IP=OFF) WITH TEXT #MSG (AD=I  )
+1040  01T *TIMX  (AD=OTD  )
+1050  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+1060  70T *DATX  (AD=OTD DF=L  )
+1070  /
+1080  01T 'User'
+1090  06T *USER  (AD=OLTI)
+1100  22T '- Work File Attributes  (2 of 6) - ' (I)
+1110  64T 'Program'
+1120  72T *PROGRAM   (AD=OI)
+1130  //
+1140  02T 'DEFINE WORK FILE' (I) 'n name TYPE type'
+1150  'ATTRIBUTES' (I) 'attributes'   /
+1160  /
+1170  04T 'NOAPPEND' (I) '........'
+1180  'The file is rewritten from the start'   /
+1190  04T 'APPEND'   '..........'
+1200  'New records are added at the end of the file'   /
+1210  04T 'KEEP' (I) '............'
+1220  'The work file is kept after the close'   /
+1230  04T 'DELETE'   '..........'
+1240  'The work file is deleted after the close'   /
+1250  /
+1260  02T 'Work file 1'   '.......'
+1270  #SELECTNAME (AL=50 AD=OI) /
+1280  02T 'Attributes'   '........'
+1290  #ATTRIBUTES (AD=OI) /
+1300  /
+1310  02T 'The text has been written to the work file.'
+1320  'Any previous content has been'   /
+1330  02T 'deleted'   '(NOAPPEND).' (I) /
+1340  02T 'The work file will be kept after'
+1350  'the close'   '(KEEP).' (I) /
+1360  02T 'Press ENTER to close the work file.'
+1370*
+1380IF *PF-KEY = 'PF3'
+1390  ESCAPE ROUTINE
+1400END-IF
+1410IF (*PF-KEY = 'PF12' OR= 'CLR')
+1420  CALLNAT 'UTILSTOP'
+1430END-IF
+1440*
+1450RESET #MSG
+1460CLOSE WORK 1
+1470*
+1480* Page 3
+1490*
+1500#ATTRIBUTES := 'APPEND,KEEP'
+1510RESET #TEXT(*)
+1520MOVE #TEXT2(1:3) TO #TEXT(1:3)
+1530*
+1540INPUT  (IP=OFF) WITH TEXT #MSG (AD=I)
+1550  01T *TIMX  (AD=OTD)
+1560  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+1570  70T *DATX  (AD=OTD DF=L)
+1580  /
+1590  01T 'User'
+1600  06T *USER  (AD=OLTI)
+1610  22T '- Work File Attributes  (3 of 6) - ' (I)
+1620  64T 'Program'
+1630  72T *PROGRAM   (AD=OI)
+1640  //
+1650  02T 'DEFINE WORK FILE' (I) 'n name TYPE type'
+1660  'ATTRIBUTES' (I) 'attributes'   /
+1670  /
+1680  04T 'NOAPPEND'   '........'
+1690  'The file is rewritten from the start'   /
+1700  04T 'APPEND' (I) '..........'
+1710  'New records are added at the end of the file'   /
+1720  04T 'KEEP' (I) '............'
+1730  'The work file is kept after the close'   /
+1740  04T 'DELETE'   '..........'
+1750  'The work file is deleted after the close'   /
+1760  /
+1770  02T 'Work file 1'   '.......'
+1780  #SELECTNAME (AL=50 AD=OI) /
+1790  02T 'Attributes'   '........'
+1800  #ATTRIBUTES (AD=OI) /
+1810  /
+1820  02T 'Text ..............'
+1830  #TEXT(1) (AD=O) /
+1840  02T '                   '
+1850  #TEXT(2) (AD=O) /
+1860  02T '                   '
+1870  #TEXT(3) (AD=O) /
+1880  /
+1890  02T 'Press ENTER to append the text to the work file.'
+1900*
+1910IF *PF-KEY = 'PF3'
+1920  ESCAPE ROUTINE
+1930END-IF
+1940IF (*PF-KEY = 'PF12' OR= 'CLR')
+1950  CALLNAT 'UTILSTOP'
+1960END-IF
+1970*
+1980RESET #MSG
+1990*
+2000* Define the work file
+2010*
+2020DEFINE WORK FILE 1 #SELECTNAME TYPE 'ASCII' ATTRIBUTES #ATTRIBUTES
+2030*
+2040FOR #ROW = 1 TO #MAX-ROW
+2050*
+2060  IF #TEXT(#ROW) <> ' '
+2070    WRITE WORK 1 #TEXT(#ROW)
+2080  END-IF
+2090*
+2100END-FOR
+2110*
+2120* Page 4
+2130*
+2140RESET #TEXT(*)
+2150*
+2160INPUT  (IP=OFF) WITH TEXT #MSG (AD=I)
+2170  01T *TIMX  (AD=OTD)
+2180  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+2190  70T *DATX  (AD=OTD DF=L)
+2200  /
+2210  01T 'User'
+2220  06T *USER  (AD=OLTI)
+2230  22T '- Work File Attributes  (4 of 6) - ' (I)
+2240  64T 'Program'
+2250  72T *PROGRAM   (AD=OI)
+2260  //
+2270  02T 'DEFINE WORK FILE' (I) 'n name TYPE type'
+2280  'ATTRIBUTES' (I) 'attributes'   /
+2290  /
+2300  04T 'NOAPPEND'   '........'
+2310  'The file is rewritten from the start'   /
+2320  04T 'APPEND' (I) '..........'
+2330  'New records are added at the end of the file'   /
+2340  04T 'KEEP' (I) '............'
+2350  'The work file is kept after the close'   /
+2360  04T 'DELETE'   '..........'
+2370  'The work file is deleted after the close'   /
+2380  /
+2390  02T 'Work file 1'   '.......'
+2400  #SELECTNAME (AL=50 AD=OI) /
+2410  02T 'Attributes'   '........'
+2420  #ATTRIBUTES (AD=OI) /
+2430  /
+2440  02T 'The text has been appended to the work file'
+2450  '(APPEND).' (I) /
+2460  02T 'The work file will be kept after the close'
+2470  '(KEEP).' (I) /
+2480  /
+2490  02T 'Press ENTER to close the work file.'
+2500*
+2510IF *PF-KEY = 'PF3'
+2520  ESCAPE ROUTINE
+2530END-IF
+2540IF (*PF-KEY = 'PF12' OR= 'CLR')
+2550  CALLNAT 'UTILSTOP'
+2560END-IF
+2570*
+2580RESET #MSG
+2590CLOSE WORK 1
+2600*
+2610* Page 5
+2620*
+2630#ATTRIBUTES := 'DELETE'
+2640RESET #TEXT(*)
+2650*
+2660INPUT  (IP=OFF) WITH TEXT #MSG (AD=I)
+2670  01T *TIMX  (AD=OTD)
+2680  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+2690  70T *DATX  (AD=OTD DF=L)
+2700  /
+2710  01T 'User'
+2720  06T *USER  (AD=OLTI)
+2730  22T '- Work File Attributes  (5 of 6) - ' (I)
+2740  64T 'Program'
+2750  72T *PROGRAM   (AD=OI)
+2760  //
+2770  02T 'DEFINE WORK FILE' (I) 'n name TYPE type'
+2780  'ATTRIBUTES' (I) 'attributes'   /
+2790  /
+2800  04T 'NOAPPEND'   '........'
+2810  'The file is rewritten from the start'   /
+2820  04T 'APPEND'   '..........'
+2830  'New records are added at the end of the file'   /
+2840  04T 'KEEP'   '............'
+2850  'The work file is kept after the close'   /
+2860  04T 'DELETE' (I) '..........'
+2870  'The work file is deleted after the close'   /
+2880  /
+2890  02T 'Work file'   '.........'
+2900  #SELECTNAME (AL=50 AD=OI) /
+2910  02T 'Attributes'   '........'
+2920  #ATTRIBUTES (AD=OI) /
+2930  /
+2940  02T 'Press ENTER to read the text from the work file.'   /
+2950  02T 'When the end of the file is reached,'
+2960  'the file will be'   /
+2970  02T 'closed automatically. At the close the work file'
+2980  'will be deleted'   '(DELETE).' (I) /
+2990*
+3000IF *PF-KEY = 'PF3'
+3010  ESCAPE ROUTINE
+3020END-IF
+3030IF (*PF-KEY = 'PF12' OR= 'CLR')
+3040  CALLNAT 'UTILSTOP'
+3050END-IF
+3060*
+3070RESET #MSG
+3080*
+3090* Define the work file
+3100*
+3110WRITE TITLE LEFT JUSTIFIED
+3120  01T *TIMX  (AD=OTD)
+3130  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+3140  70T *DATX  (AD=OTD DF=L)
+3150  /
+3160  01T 'User'
+3170  06T *USER  (AD=OLTI)
+3180  22T '- Work File Attributes  (6 of 6) - ' (I)
+3190  64T 'Program'
+3200  72T *PROGRAM   (AD=OI)
+3210  //
+3220DEFINE WORK FILE 1 #SELECTNAME TYPE 'ASCII' ATTRIBUTES #ATTRIBUTES
+3230*
+3240WRITE 'Content of' (I) #SELECTNAME (AL=50 AD=I) /
+3250READ WORK 1 #LINE
+3260  WRITE #LINE
+3270END-WORK
+3280
+3290CLOSE WORK 1  /* already done when end of file reached
+3300*
+3310*
+3320END
+3330

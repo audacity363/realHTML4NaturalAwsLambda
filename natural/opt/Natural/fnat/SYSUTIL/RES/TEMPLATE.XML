@@ -1,0 +1,66 @@
+<?xml version='1.0' ?><SYSUTIL VERSION='1.0' USAGE='Short description of XML member'>
+  <COMMENT>
+
+Template for XML input of SYSUTIL.
+
+SYSUTIL looks for the following XML resource members in the SYSUTIL library:
+  SAG-*     Software AG tools
+  TOOL-*    Customer specific tools
+  USER-uid  User specific tools (uid = *INIT-USER)
+
+The XML of SYSUTIL is name SAG-UTIL.XML.
+
+Description
+
+  </COMMENT>
+  <TOOL>
+    <NAME>Name of the tool. Max: 20 char</NAME>
+    <TITLE>Descriptive title of the tool. Max: 61 char</TITLE>
+    <LIBRARY>LOGON library as needed</LIBRARY>
+    <COMMAND>Command or program to start the tool.
+       Parameters may be added separated by blanks.
+       $PGM$ is replaced by the selected program or a * if none is selected.</COMMAND>
+    <CLEARSCREEN>FALSE or TRUE. For WEBIO applications: Clear the screen before command execution.</CLEARSCREEN>
+    <CATEGORY>The category to which the tool belongs.</CATEGORY>
+    <KEYWORDS>List of keywords (upper case) separated by commas.</KEYWORDS>
+    <DESCRIPTION>Long description in HTML format. 
+       Replace XML special chars in the HTML:
+         & with &amp;
+         <  with &lt;
+         >  with &gt;
+       Alternatively, you can save the description in HTML format (without replacements) in an UTF-8 resource in the SYSUTIL library. Start the DESCRIPTION value with "HTML:" followed by the name of the HTML resource. For example
+         HTML:MyDesc.htm
+	</DESCRIPTION>
+    <MACHINE-CLASS>
+	Machine classes on which the tool is available.
+    Specify the first characters of the machine classes (*MACHINE-CLASS) on which the tool is available.
+      M - Mainframe
+      P - PC
+      U - UNIX
+    If the tool is available on all platforms, you may also use
+      A - All
+    Default (if tag is not given): A
+    </MACHINE-CLASS>
+  </TOOL>
+</SYSUTIL>
+
+
+<?xml version='1.0' ?>
+<SYSUTIL VERSION='1.0' USAGE='Template for SYSUTIL XML'>
+  <COMMENT>
+
+Example
+
+  </COMMENT>
+  <TOOL>
+    <NAME>Customer data</NAME>
+    <TITLE>Read customer data</TITLE>
+    <LIBRARY>CULIB</LIBRARY>
+    <COMMAND>READDATA</COMMAND>
+    <CLEARSCREEN>FALSE</CLEARSCREEN>
+    <CATEGORY>Administration</CATEGORY>
+    <KEYWORDS>DATABASE,READ,CUSTOMER</KEYWORDS>
+    <DESCRIPTION>Read all &lt;strong&gt;customer&lt;/strong&gt; data.</DESCRIPTION>
+    <MACHINE-CLASS>A</MACHINE-CLASS>
+  </TOOL>
+</SYSUTIL>

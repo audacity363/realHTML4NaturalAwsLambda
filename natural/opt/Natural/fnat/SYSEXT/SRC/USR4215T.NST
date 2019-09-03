@@ -1,0 +1,166 @@
+0010Get list of resources in a Natural library
+0020.
+0030Documentation ......... USR4215T    /*  Text object
+0040Interface ............. USR4215N    /*  Cataloged subprogram
+0050Example Program ....... USR4215P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. RESOURCES
+0100.
+0110Keywords .............. +MOD-NAT-6.3.14,
+0120                        FSEC ENABLED, LIST, RESOURCE
+0130.
+0140Function .............. Returns a list of resources (on mainframe
+0150                        short object and long resource name)
+0160                        according to the forwarded range parameters.
+0170                        On mainframe the list is sorted by the short
+0180                        object name, but can be sorted by the long
+0190                        resource name.
+0200                        With MF6.3.14: support for FSEC switch
+0210.
+0220.
+0230Parameters
+0240----------
+0250Define the following parameters with the DEFINE DATA statement:
+0260.
+0270Note: All ranges may contain: one or more '?' or '*' (wildcards) or
+0280====  (one at the end of the range value):
+0290      '*' (Leading characters range)
+0300      '<' (End value range)
+0310      '>' (Start value range)
+0320.
+03301 P-Function (A1)               /* Function code (input):
+0340          C = Create an unsorted list and return first part
+0350          G = Get next part (unsorted list)
+0360          S = Create a sorted list (sorted by the long resource name)
+0370          T = Read sorted list from beginning
+0380          R = Read next part (sorted list)
+0390          D = Delete sort container (sorted list)
+04001 P-Library (A8)                /* Library name of the resources
+04101 P-Library-DBID (N5)           /* DBID of P-Library
+04201 P-Library-FNR (N5)            /* FNR of P-Library
+04301 P-Library-Password (A8)       /* Password of P-Library
+04401 P-Library-Cipher (A8)         /* Adabas Cipher code of P-Library
+04501 P-Resource-Name-Range (A250)  /* Range for the resource name
+04601 P-Resource-Type-Range (A11)   /* Range for the type (extension)
+04701 P-Object-Name-Range (A9)      /* Range for the object name
+0480                                /* (mainframe only)
+04901 P-Object-Date-Range (A11)     /* Range for the resource date
+05001 P-Object-Time-Range (A9)      /* Range for the resource time
+05101 P-Object-User-ID-Range (A9)   /* Range for the resource user ID
+0520                                /* (mainframe only)
+05301 P-Object-Version-Range (A7)   /* Range for the resource version
+0540                                /* (mainframe only)
+0550.
+05601 P-number-Resource-found (I2)  /* Out: Number of entries returned
+0570                                /* in P-Resource-List
+05801 P-Resource-List (10)          /* Out: up to 10 resource entries,
+0590                                /* redefined as
+0600  2 P-Resource-List-Resource-Name (A250) /* Resource name
+0610  2 P-Resource-List-Object-Name (A8)     /* Object name of the resource
+0620                                         /* (mainframe only)
+0630  2 P-Resource-List-Object-Date (A10)    /* Date of the resource
+0640  2 P-Resource-List-Object-Time (A8)     /* Time of the resource
+0650  2 P-Resource-List-Object-User (A8)     /* User ID of the resource
+0660                                         /* (mainframe only)
+0670  2 P-Resource-List-Object-Version (A6)  /* Version of the resource
+0680                                         /* (mainframe only)
+0690
+07001 P-Work-Area-ext (A1527)       /* In/Out: Work area, do not touch
+07101 P-Return-Code (I4)            /* Out:
+0720          < 0 = Natural runtime errors
+0730                NSC check
+0740                -0806
+0750                -0807
+0760                -0839
+0770                -0972
+0780                -4891
+0790            2 = Invalid combination of '*'/'?' and '>'/'<' in resource
+0800                name range.
+0810            3 = Invalid combination of '>' and '<' in resource
+0820                name range.
+0830            4 = Size of USR4215N-Additional-Parameters too small for
+0840                specified version.
+0850            5 = Invalid version for USR4215N-Additional-Parameters.
+0860            7 = Library name must not be blank.
+0870            9 = Invalid combination of '*'/'?' and '>'/'<' in object
+0880                name range.
+0890           10 = Invalid combination of '>' and '<' in object
+0900                name range.
+0910           11 = Invalid value for parameter 'P-Function'
+0920           12 = Size of parameter USR4215N-Additional-Parameters too
+0930                small
+0940           20 = Invalid combination of '*'/'?' and '>'/'<' in object
+0950                date range.
+0960           21 = Invalid combination of '>' and '<' in object
+0970                date range.
+0980           22 = Invalid combination of '*'/'?' and '>'/'<' in object
+0990                time range.
+1000           23 = Invalid combination of '>' and '<' in object
+1010                time range.
+1020           24 = Invalid combination of '*'/'?' and '>'/'<' in object
+1030                user ID range.
+1040           25 = Invalid combination of '>' and '<' in object
+1050                user ID range.
+1060           26 = Invalid combination of '*'/'?' and '>'/'<' in object
+1070                version range.
+1080           27 = Invalid combination of '>' and '<' in object
+1090                version range.
+1100        50005 = Logon to library is not permitted.
+1110
+11201 P-Message-Line (A79)          /* Out: error text, filled when
+1130                                /* P-Return-Code <> 0
+1140.
+11501 USR4215N-Additional-Parameters (A1/1:82) /* future use:
+1160                                /* redefined as
+1170  2 USR4215N-Add-Para-Version (N2) /* Parameter version,
+1180                                /* Must be 0 for the initial version
+1190  2 USR4215N-Add-Para-Version-A8 (A8/1:10) /* MF only
+1200                                /* for USR4215N-Add-Para-Version > 0:
+1210                                /* Version of the resource in
+1220                                /* *NATVERS-format
+1230                                /*
+1240                                /* for USR4215N-Add-Para-Version > 1:
+1250  2 PDA-V2-FSEC-DBID (N05)      /* Fsec-dbid
+1260  2 PDA-V2-FSEC-FNR  (N05)      /* Fsec-fnr
+1270  2 PDA-V2-FSEC-PSW  (A08)      /* Fsec password
+1280  2 PDA-V2-FSEC-CIP  (N08)      /* Fsec cip
+1290.
+1300Interface Call
+1310--------------
+1320Use the interface with the CALLNAT statement:
+1330.
+1340CALLNAT 'USR4215N'
+1350        P-Function
+1360        P-Library
+1370        P-Library-DBID
+1380        P-Library-FNR
+1390        P-Library-Password
+1400        P-Library-Cipher
+1410        P-Resource-Name-Range
+1420        P-Object-Name-Range
+1430        P-Object-Date-Range
+1440        P-Object-Time-Range
+1450        P-Object-User-ID-Range
+1460        P-Object-Version-Range
+1470        P-number-Resource-found
+1480        P-Resource-List-Resource-Name (*)
+1490        P-Resource-List-Object-Name (*)
+1500        P-Resource-List-Object-Date (*)
+1510        P-Resource-List-Object-Time (*)
+1520        P-Resource-List-Object-User (*)
+1530        P-Resource-List-Object-Version (*)
+1540        P-Work-Area-ext
+1550        P-Return-Code
+1560        P-Message-Line
+1570        USR4215N-Additional-Parameters (*)
+1580.
+1590.
+1600Using the Application Programming Interface:
+1610--------------------------------------------
+1620Copy the subprogram USR4215N to the library SYSTEM or the steplib
+1630library respectively, or to the required library.
+1640.
+1650.
+1660***** End of Description *****

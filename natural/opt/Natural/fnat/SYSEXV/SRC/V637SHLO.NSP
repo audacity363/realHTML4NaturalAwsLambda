@@ -1,0 +1,214 @@
+0010*
+0020* Program .. V637SHLO (character version)
+0030* Library .. SYSEXV
+0040* Version .. 6.3.7
+0050*
+0060* Functionality: Read large object field PICTURE from Adabas records
+0070*                (EMPLOYEES-V2009) and save it via Entire Connection.
+0080*                Show the picture using Windows Explorer.
+0090*                Need work files 6, 7 and 8 with work file type Transfer
+0100*                Attention: Because of Entire Connection it doesn't
+0110*                work under Natural WebIO.
+0120************************************************************************
+0130*
+0140DEFINE DATA LOCAL
+01501 EMPLOYEES-VIEW VIEW OF EMPLOYEES-V2009
+0160  2 NAME
+0170  2 PICTURE
+0180  2 L@PICTURE
+0190*
+02001 #PICTURE      (B4000)
+02101 REDEFINE #PICTURE
+0220  2 #PICTURE-A  (A4000)
+02301 #ZERO         (B4000)
+02401 #STRING       (A80)
+02501 #COMMAND      (A80)
+02601 #NAME         (A20)
+02701 #LENGTH       (I4)
+02801 #POSITION     (I4)
+0290*
+03001 #TEMP-FILE    (A20)
+03101 #PICTURE-FILE (A20)
+03201 #EXEC-FILE    (A20)
+03301 #EXPLORER     (A40)
+0340END-DEFINE
+0350*
+0360*
+0370FORMAT KD=ON
+0380SET KEY PF3  NAMED 'Exit'
+0390        PF12 NAMED 'Canc'
+0400*
+0410*
+0420INPUT (IP=OFF )
+0430  01T *TIMX  (AD=OTD CD=GR )
+0440  21T '***** NATURAL 6.3.7 ENHANCEMENTS *****'
+0450  70T *DATX  (DF=L AD=OTD CD=GR )
+0460  /
+0470  01T 'User'
+0480  06T *USER  (AD=OILT  )
+0490  27T '- New Adabas Data Types -'(I)
+0500  64T 'Program'
+0510  72T *PROGRAM (AD=OI)
+0520  ///
+0530  02T 'Show large object field.'(I)
+0540  //
+0550  02T 'Read the large object field PICTURE for NAME="Whitaker".'
+0560  //
+0570  02T 'Save the picture as JPG file on the PC.'
+0580  //
+0590  02T 'Generate a batch file using'   'Entire Connection' (I)
+0600      'to show the picture with'
+0610  /
+0620  02T 'the'   'Windows Explorer' (I) '(Version 6 or above).'
+0630  /
+0640  02T 'For the data transfer to the PC, the work files 6, 7 and 8 are '-
+0650      'needed.'
+0660  /
+0670  02T 'Define the work files 6, 7 and 8 with type Transfer.' (I)
+0680  //
+0690  02T 'Do'  'NOT'(I) 'use this program with'
+0700      'Natural WebIO.'(I)
+0710  //
+0720  05T 'Please press ENTER.'
+0730*
+0740IF *PF-KEY = 'PF3'
+0750  ESCAPE ROUTINE
+0760END-IF
+0770IF (*PF-KEY = 'PF12' OR= 'CLR')
+0780  CALLNAT 'UTILSTOP'
+0790END-IF
+0800*
+0810*
+0820#TEMP-FILE    := 'C:\TEMP\'
+0830#PICTURE-FILE := 'PICTURE-TEST'
+0840#EXEC-FILE    := 'EX-TEST'
+0850#EXPLORER     := 'C:\WINDOWS\EXPLORER.EXE'
+0860*
+0870* Define path and names for workfiles and used Browser
+0880*
+0890INPUT (IP=OFF AD=MIT CD=NE)
+0900  01T *TIMX  (AD=OTD  )
+0910  21T '***** NATURAL 6.3.7 ENHANCEMENTS *****'
+0920  70T *DATX  (DF=L AD=OTD  )
+0930  /
+0940  01T 'User'
+0950  06T *USER  (AD=OILT  )
+0960  27T '- New Adabas Data Types -'(I)
+0970  64T 'Program'
+0980  72T *PROGRAM (AD=OI)
+0990  ///
+1000  02T 'Show large object field.'(I)
+1010  //
+1020  02T 'Define the file names, path name and the browser used on the '-
+1030      'PC.'
+1040  /
+1050  02T 'The generated files will be deleted after showing '-
+1060      'the picture.'
+1070  //
+1080  02T 'Name of picture file:'   25T #PICTURE-FILE
+1090  //
+1100  02T 'Name of batch file:'   25T #EXEC-FILE
+1110  //
+1120  02T 'Path name for files:'   25T #TEMP-FILE
+1130  //
+1140  02T 'Browser for picture:'   25T #EXPLORER
+1150  ///
+1160  05T 'Please press ENTER.'
+1170*
+1180IF *PF-KEY = 'PF3'
+1190  ESCAPE ROUTINE
+1200END-IF
+1210IF (*PF-KEY = 'PF12' OR= 'CLR')
+1220  CALLNAT 'UTILSTOP'
+1230END-IF
+1240*
+1250SET CONTROL '+'                      /* Using Entire Connection
+1260*
+1270#NAME := 'Whitaker'
+1280*
+1290* Get picture of one record
+1300*
+1310FIND EMPLOYEES-VIEW WITH NAME = #NAME
+1320  IF L@PICTURE GT 0                     /* PICTURE is available
+1330    /*
+1340    /* Set the file name for .jpg file
+1350    /*
+1360    COMPRESS #TEMP-FILE #PICTURE-FILE '.JPG' INTO #STRING LEAVING NO
+1370    COMPRESS 'SET PCFILE 6 DOWN DATA' #STRING INTO #COMMAND
+1380    DOWNLOAD PC 7 COMMAND #COMMAND
+1390    /*
+1400    #PICTURE  := PICTURE    /* picture from Adabas
+1410    #LENGTH   := L@PICTURE  /* length of the picture
+1420    #POSITION := 1          /* start for writting the picture
+1430    /*
+1440    /* Write whole picture in .jpg file
+1450    /*
+1460    REPEAT WHILE (#LENGTH > 0)
+1470      MOVE SUBSTRING (PICTURE,#POSITION) TO #PICTURE
+1480      IF #LENGTH < 4000            /* end of binary data found
+1490        /* Set end of data H'FF'
+1500        ADD 1 TO #LENGTH
+1510        MOVE H'FF' TO SUBSTRING (#PICTURE,#LENGTH,1)
+1520        /* Set binary zeros for rest of block
+1530        RESET #ZERO
+1540        MOVE SUBSTRING (#PICTURE,1,#LENGTH) TO
+1550             SUBSTRING (#ZERO,1,#LENGTH)
+1560        MOVE #ZERO TO #PICTURE
+1570        SUBTRACT 1 FROM #LENGTH
+1580      END-IF
+1590      /*
+1600      /* write picture to file
+1610      /*
+1620      WRITE WORK 6 #PICTURE
+1630      /*
+1640      #POSITION := #POSITION + 4000
+1650      #LENGTH := #LENGTH - 4000
+1660    END-REPEAT
+1670    IF #LENGTH = 0
+1680      RESET #PICTURE
+1690      /* Set H'FF' and binary zeros for rest of block
+1700      MOVE H'FF' TO SUBSTRING (#PICTURE,1,1)
+1710      WRITE WORK 6 #PICTURE
+1720    END-IF
+1730    CLOSE WORK 6
+1740    /*
+1750    ESCAPE BOTTOM
+1760  END-IF
+1770END-FIND
+1780*
+1790* Create batch file to show picture with Explorer (version 6 or above)
+1800*
+1810COMPRESS #TEMP-FILE #EXEC-FILE '.BAT' INTO #STRING LEAVING NO
+1820COMPRESS 'SET PCFILE 8 DOWN DATA ' #STRING INTO #COMMAND
+1830DOWNLOAD PC 7 COMMAND #COMMAND
+1840*
+1850COMPRESS #TEMP-FILE #PICTURE-FILE '.JPG' INTO #STRING LEAVING NO
+1860WRITE WORK 8 'DOS ' #EXPLORER #STRING
+1870CLOSE WORK 8
+1880*
+1890* Execute batch file to show the picture in .jpg file
+1900*
+1910COMPRESS #TEMP-FILE #EXEC-FILE '.BAT' INTO #STRING LEAVING NO
+1920DOWNLOAD PC 7 COMMAND #STRING
+1930*
+1940* Delete batch file and picture file on file system
+1950*
+1960COMPRESS #TEMP-FILE #EXEC-FILE '.BAT' INTO #STRING LEAVING NO
+1970COMPRESS 'DOS DEL ' #STRING INTO #COMMAND
+1980DOWNLOAD PC 7 COMMAND #COMMAND
+1990*
+2000COMPRESS #TEMP-FILE #EXEC-FILE '.NCF' INTO #STRING LEAVING NO
+2010COMPRESS 'DOS DEL ' #STRING INTO #COMMAND
+2020DOWNLOAD PC 7 COMMAND #COMMAND
+2030*
+2040COMPRESS #TEMP-FILE #PICTURE-FILE '.JPG' INTO #STRING LEAVING NO
+2050COMPRESS 'DOS DEL' #STRING INTO #COMMAND
+2060DOWNLOAD PC 7 COMMAND #COMMAND
+2070*
+2080COMPRESS #TEMP-FILE #PICTURE-FILE '.NCF' INTO #STRING LEAVING NO
+2090COMPRESS 'DOS DEL' #STRING INTO #COMMAND
+2100DOWNLOAD PC 7 COMMAND #COMMAND
+2110CLOSE WORK 7
+2120*
+2130*
+2140END

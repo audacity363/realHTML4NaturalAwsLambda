@@ -1,0 +1,56 @@
+0010Get information on logical file
+0020.
+0030Documentation ......... USR2004T    /*  Text object
+0040Interface ............. USR2004N    /*  Cataloged subprogram
+0050Example Program ....... USR2004P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. SYSTEM FILES
+0100.
+0110Keywords .............. +CURRENT-VERSION,
+0120                        DBID, FNAT, FNR, FUSER, LFILE, SYSPROF
+0130.
+0140Interface Versions .... USR0011N, USR2004N
+0150.
+0160Function .............. Logical File Assignment is returned
+0170                        to the calling Natural program.
+0180                        With USR2004N, enhanced value of DBID and FNR
+0190                        can be used.
+0200.
+0210.
+0220Parameters
+0230----------
+0240Define the following parameters with the DEFINE DATA statement:
+0250.
+0260  01 LFILE    (P03)  /*  LFILE number
+0270  01 FILENAME (A12)  /*  Purpose of this logical file
+0280  01 DBID     (P05)  /*  Physical DBID
+0290  01 FNR      (P05)  /*  Physical FNR
+0300  01 DBTYPE   (A07)  /*  Physical Type of DB
+0310  01 ERR-MSG  (A48)  /*  Error Message
+0320  01 RC       (P03)  /*  Response Code
+0330.
+0340Interface Call
+0350--------------
+0360Use the interface with the CALLNAT statement:
+0370.
+0380CALLNAT 'USR2004N'
+0390         LFILE FILENAME DBID FNR DBTYPE ERR-MSG RC
+0400.
+0410.
+0420Using the Application Programming Interface:
+0430--------------------------------------------
+0440Copy the subprogram USR2004N to the library SYSTEM or the steplib
+0450library respectively, or to the required library.
+0460.
+0470.
+0480LFILE must be filled with the number of the wanted logical file
+0490before calling the subprogram.
+0500.
+0510FILE-NAME returns the purpose of the logical file, whereas
+0520DBID, FNR and DBTYPE return the physical attributes of the file.
+0530.
+0540If an LFILE is not assigned, it is indicated via ERR-MSG and RC.
+0550.
+0560***** End of Description *****

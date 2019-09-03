@@ -1,0 +1,39 @@
+0010** Example 'DYNAMX01': Dynamic variables (with COMPRESS and SEPARATE)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #MYDYNTEXT1 (A)   DYNAMIC
+00501 #TEXT       (A20)
+00601 #DYN1       (A)   DYNAMIC
+00701 #DYN2       (A)   DYNAMIC
+00801 #DYN3       (A)   DYNAMIC
+0090END-DEFINE
+0100*
+0110MOVE ' HELLO WORLD ' TO #MYDYNTEXT1
+0120WRITE #MYDYNTEXT1 (AL=25) 'with length' *LENGTH (#MYDYNTEXT1)
+0130/*  dynamic variable with leading and trailing blanks
+0140*
+0150MOVE ' HELLO WORLD ' TO #TEXT
+0160*
+0170MOVE #TEXT TO #MYDYNTEXT1
+0180WRITE #MYDYNTEXT1 (AL=25) 'with length' *LENGTH (#MYDYNTEXT1)
+0190/*  dynamic variable with whole variable length of #TEXT
+0200*
+0210COMPRESS #TEXT INTO #MYDYNTEXT1
+0220WRITE #MYDYNTEXT1 (AL=25) 'with length' *LENGTH (#MYDYNTEXT1)
+0230/*  dynamic variable with leading blanks of #TEXT
+0240*
+0250*
+0260#MYDYNTEXT1 := 'HERE COMES THE SUN'
+0270SEPARATE #MYDYNTEXT1 INTO #DYN1 #DYN2 #DYN3 IGNORE
+0280*
+0290WRITE / #MYDYNTEXT1 (AL=25) 'with length' *LENGTH (#MYDYNTEXT1)
+0300WRITE #DYN1 (AL=25) 'with length' *LENGTH (#DYN1)
+0310WRITE #DYN2 (AL=25) 'with length' *LENGTH (#DYN2)
+0320WRITE #DYN3 (AL=25) 'with length' *LENGTH (#DYN3)
+0330/*  #DYN1, #DYN2, #DYN3 are automatically extended or reduced
+0340*
+0350EXAMINE #MYDYNTEXT1 FOR 'SUN' REPLACE 'MOON'
+0360WRITE / #MYDYNTEXT1 (AL=25) 'with length' *LENGTH (#MYDYNTEXT1)
+0370/*  #MYDYNTEXT1 is automatically extended or reduced
+0380*
+0390END

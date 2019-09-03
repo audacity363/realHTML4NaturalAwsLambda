@@ -1,0 +1,11 @@
+0010&H View MAIN-STORAGE
+0020&L
+0030&L
+0040#Zweck@    : Anzeigen von Hauptspeicher.
+0050&L
+0060#System@   : z/OS, z/VSE, BS2000/OSD.
+0070&L
+0080&L
+0090#Anwendung@:
+0100&L
+0110#Anmerkung@: Im BS2000 ist nur das Lesen von Memory Pools erlaubt.

@@ -1,0 +1,62 @@
+0010* Read Spool
+0020*
+0030DEFINE DATA GLOBAL USING TUTO
+0040            INDEPENDENT
+005001  +G-JOB-NAME     (A8)
+006001  +G-JOB-NUMBER   (N5)
+0070   LOCAL  USING WRITE-L
+0080   LOCAL  USING RSPOOL-L
+0090   LOCAL  1 #JOBN      (N5)
+0100          1 #JOB       (A8)
+0110          1 #TYPE      (A2)
+0120          1 #DS        (N3)
+0130          1 #SEL       (A1/1:5)
+0140          1 #CODE      (A2/1:5) CONST (1) <'CC'>
+0150                                      (2) <'RD'>
+0160                                      (3) <'LS'>
+0170                                      (4) <'PU'>
+0180                                      (5) <'XM'>
+0190          1 #I         (I1)
+0200END-DEFINE
+0210*
+0220ASSIGN #JOB = +G-JOB-NAME
+0230ASSIGN #JOBN = +G-JOB-NUMBER
+0240*
+0250REPEAT UNTIL *PF-KEY = '*PF3'
+0260*
+0270INPUT (AD=MIL'_' IP=OFF ZP=OFF)
+0280  // ##TITLE (AD=OI IP=OFF)
+0290  // '  JOB-Name.........:' #JOB
+0300   / '  Job number.......:' #JOBN
+0310  // '  Mark spool type..:' #SEL(1) 'CC' (I) 'completion codes'
+0320   / 21X #SEL(2) 'RD' (I) 'reader queue'
+0330   / 21X #SEL(3) 'LS' (I) 'list queue'
+0340   / 21X #SEL(4) 'PU' (I) 'punch queue'
+0350   / 21X #SEL(5) 'XM' (I) 'transmit queue'
+0360   / '  Data set number..:' #DS
+0370*
+0380IF SELECTION NOT UNIQUE #SEL (*)
+0390   REINPUT *1011 MARK *#SEL (1)
+0400ELSE
+0410   FOR #I = 1 TO 5
+0420       IF #SEL (#I) NE ' '
+0430          ASSIGN #TYPE = #CODE (#I)
+0440          ESCAPE BOTTOM
+0450       END-IF
+0460   END-FOR
+0470END-IF
+0480*
+0490FIND READ-SPOOL WITH JOB-NAME   = #JOB
+0500                 AND JOB-NUMBER = #JOBN
+0510                 AND TYPE       = #TYPE
+0520                 AND DATA-SET   = #DS
+0530                 AND NODE       = ##NODE
+0540   IF ERROR-CODE > 0
+0550      REINPUT ERROR-TEXT
+0560   END-IF
+0570   DISPLAY NOTITLE NOHDR RECORD (AL=79)
+0580END-FIND
+0590*
+0600END-REPEAT
+0610*
+0620END

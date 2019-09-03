@@ -1,0 +1,54 @@
+0010Get information on certain Natural session parameters
+0020.
+0030Documentation ......... USR1005T    /*  Text object
+0040Interface ............. USR1005N    /*  Cataloged subprogram
+0050Example Program ....... USR1005P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. SESSION PARAMETERS
+0100.
+0110Keywords .............. SESSION PARAMETER, PARAMETER, GLOBALS, NATPARM,
+0120                        AUTO, CC, CF, CPCVERR, CPU TIME LIMIT,
+0130                        DAY DIFFERENTIAL, DBUPD, DC, DD, DELETE,
+0140                        DELETE PROGRAMS, DFOUT, DFSTACK, DFTITLE, DO,
+0150                        DTFORM, DYNPARM, EJ, ERROR-TA, FCDP, FS, IA, ID,
+0160                        IM, LANGUAGE CODE, LE, LOWER-UPPER CASE, LS, LT,
+0170                        MADIO, MAXCL, MAXIMUM CPU TIME, MESSAGE LINE,
+0180                        ML, MT, NATURAL COMMANDS, NC, OPF, PF-KEY LINE,
+0190                        PM, PS, RECAT, REINP, RELEASE ISN, RI, SA, SF,
+0200                        SL, SM, STATUS LINE, STEPLIB, STRUCTURED MODE,
+0210                        TD, THSEPCH, TIME DIFFERENTIAL, TIMEZONE,
+0220                        TQMARK, TS, UDB, UPDATE COMMAND, WH, ZD, ZP
+0230.
+0240Function .............. Read some Natural session parameters being
+0250                        currently in effect.
+0260.
+0270Parameters
+0280----------
+0290Define the following parameters with the DEFINE DATA statement:
+0300.
+031001 PARM  (A253/4)       /* 'Byteconainer' contains all information.
+0320                        /* See USR1005P for the redefinitions of this
+0330                        /* field; they are self-explanatory.
+0340                        /* Later versions will exceed the list of
+0350                        /* redefinitions, but existing programs
+0360                        /* will not be affected.
+0370.
+0380Interface Call
+0390--------------
+0400Use the interface with the CALLNAT statement:
+0410.
+0420CALLNAT 'USR1005N' PARM
+0430.
+0440.
+0450Using the Application Programming Interface:
+0460--------------------------------------------
+0470Copy the subprogram USR1005N to the library SYSTEM or the steplib
+0480library respectively, or to the required library.
+0490.
+0500ATTENTION: The system parameter DELETE and the statistics
+0510line are not available.
+0520.
+0530*****  End of Description  *****
+0540

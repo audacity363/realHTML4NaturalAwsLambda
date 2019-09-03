@@ -1,0 +1,61 @@
+0010Commit or rollback reliable RPC messages
+0020.
+0030Documentation ......... USR6305T    /*  Text object
+0040Interface ............. USR6305N    /*  Cataloged subprogram
+0050Example Program ....... USR6305P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC - RELIABLE RPC
+0100.
+0110Keywords .............. CLIENT, COMMIT, RELIABLE, ROLLBACK, RPC, UOW
+0120.
+0130Function .............. Commit/rollback reliable RPC messagee(s)
+0140.
+0150.
+0160Parameters
+0170----------
+0180Define the following parameters with the DEFINE DATA statement:
+0190.
+0200INPUT
+0210       FUNCTION     (A08)  Function code
+0220                             'COMMIT'
+0230                             'ROLLBACK'
+0240OUTPUT
+0250       RC           (N04)  return value
+0260                             0     ok
+0270                             1     invalid function code
+0280                             9999  Broker error (see MESSAGE)
+0290       MESSAGE      (A80)  message text
+0300.
+0310.
+0320Interface Call
+0330--------------
+0340Use the interface with the CALLNAT statement:
+0350.
+0360CALLNAT 'USR6305N' FUNCTION RC MESSAGE
+0370.
+0380.
+0390Using the Application Programming Interface:
+0400--------------------------------------------
+0410Copy the subprogram USR6305N to the library SYSTEM or the steplib
+0420library respectively, or to the required library.
+0430.
+0440Functionality:
+0450--------------
+0460Commit or Rollback all reliable RPC messages that have been created
+0470after the reliable state "client commit" has been set and after the
+0480last call to USR6305N.
+0490.
+0500After commit all reliable RPC messages are available for processing
+0510by an appropriate RPC server within a single UOW.
+0520(UOW state ACCEPTED)
+0530.
+0540After rollback all reliable RPC messages are deleted and no longer
+0550available for processing.
+0560(UOW state CANCELLED)
+0570.
+0580The request is ignored if no reliable RPC messages are available for
+0590commit or rollback.
+0600.
+0610***** End of Description *****

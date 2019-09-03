@@ -1,0 +1,100 @@
+0010/* EXAM-HGG - HELP Global (Validate START-VALUE)
+0020/* Called by: EXAM-HGL
+0030/**********************************************************************
+0040DEFINE DATA
+0050PARAMETER
+0060  01 ##PROCESSOR      (A08)
+0070  01 ##START-VALUE    (A40)
+0080  01 ##MSG            (A72)
+0090LOCAL
+0100  01 KW-COMMAND VIEW OF COMMAND
+0110     02 PROCESSOR-NAME
+0120     02 COMMAND-LINE  (1:8)
+0130     02 NATURAL-ERROR
+0140     02 RETURN-CODE
+0150     02 RESULT-FIELD  (1:8)
+0160  01 IX               (I01)
+0170  01 KEY-TAB          (A40/1:3)
+0180  01 KEYW16           (A16)
+0190END-DEFINE
+0200/**********************************************************************
+0210IF ##START-VALUE = ' '
+0220  ESCAPE ROUTINE
+0230ELSE
+0240  SEPARATE ##START-VALUE LEFT INTO KEY-TAB (*) IGNORE
+0250           WITH INPUT DELIMITER                 /* needed
+0260END-IF
+0270/**********************************************************************
+0280FOR. FOR IX 1 3   /*  Check each keyword in ##START-VALUE:
+0290  /*
+0300  IF KEY-TAB (IX) = ' '
+0310    ESCAPE BOTTOM (FOR.)  /*  No keyword was given
+0320  END-IF
+0330  /*
+0340  /* Truncate keyword:
+0350  MOVE KEY-TAB (IX) TO KEYW16
+0360  MOVE KEYW16 TO KEY-TAB (IX)
+0370  MOVE KEYW16 TO KW-COMMAND.COMMAND-LINE (1)
+0380  /*
+0390  /* Find keyword with specified type:
+0400  MOVE IX TO KW-COMMAND.COMMAND-LINE (2)
+0410  /*
+0420  /**************************************
+0430  PROCESS KW-COMMAND ACTION TEXT USING
+0440      PROCESSOR-NAME = ##PROCESSOR
+0450      COMMAND-LINE (*) = COMMAND-LINE (*)
+0460  /**************************************
+0470  IF NATURAL-ERROR = 0    /*  Keyword found with type
+0480    IF RESULT-FIELD (8) = MASK (N'S')  /*  No synonyms allowed
+0490      COMPRESS 'Start value must not contain the synonym "' KEYW16 '".'
+0500        TO ##MSG LEAVING NO
+0510      ESCAPE ROUTINE
+0520    ELSE
+0530      ESCAPE TOP   /*  keyword checked successfully
+0540    END-IF
+0550  ELSE      /*  Keyword not found with specified type
+0560    /*
+0570    RESET KW-COMMAND.COMMAND-LINE (2)  /* re-test without type
+0580    /**************************************
+0590    PROCESS KW-COMMAND ACTION TEXT USING
+0600        PROCESSOR-NAME = ##PROCESSOR
+0610        COMMAND-LINE (*) = COMMAND-LINE (*)
+0620    /**************************************
+0630    IF NATURAL-ERROR = 0
+0640      COMPRESS 'Keyword "' KEYW16 '" is not of type "' IX '".'
+0650        TO ##MSG LEAVING NO
+0660    ELSE
+0670      COMPRESS 'Keyword "' KEYW16 '" not found.'
+0680        TO ##MSG LEAVING NO
+0690    END-IF
+0700    /*
+0710    ESCAPE ROUTINE
+0720  END-IF
+0730END-FOR
+0740/*
+0750COMPRESS KEY-TAB (*) TO ##START-VALUE /*  Normalize the line
+0760/**********************************************************************
+0770/* Now check whether the keyword(s) form a valid function:
+0780RESET COMMAND-LINE (*)
+0790MOVE KEY-TAB (1) TO COMMAND-LINE (4)
+0800MOVE KEY-TAB (2) TO COMMAND-LINE (5)
+0810MOVE KEY-TAB (3) TO COMMAND-LINE (6)
+0820/***********************************
+0830PROCESS KW-COMMAND ACTION TEXT USING
+0840  PROCESSOR-NAME = ##PROCESSOR
+0850  COMMAND-LINE (*) = COMMAND-LINE (*)
+0860/***********************************
+0870IF NATURAL-ERROR > 0
+0880  IF NATURAL-ERROR = 6931
+0890    MOVE 'This function is not defined.' TO ##MSG
+0900  ELSE
+0910    COMPRESS 'Command Error: NAT' NATURAL-ERROR
+0920      TO ##MSG LEAVING NO
+0930  END-IF
+0940ELSE
+0950  IF RESULT-FIELD (3) = '0000000000'
+0960    MOVE  'Keyword(s) found, but this is not a function.' TO ##MSG
+0970  END-IF
+0980END-IF
+0990/*********************************************************************
+1000END

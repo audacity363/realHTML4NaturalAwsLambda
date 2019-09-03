@@ -1,0 +1,166 @@
+0010/* EXAM-HGI - HELP Global Individually
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (1:8)
+0070     02 NATURAL-ERROR
+0080     02 RETURN-CODE
+0090     02 RESULT-FIELD (01:15)
+0100     02 GETSET-FIELD-NAME
+0110     02 GETSET-FIELD-VALUE
+0120     /*********************
+0130  01 MX              (I01) CONST <15>
+0140  01 IY              (I01)
+0150  01 NB              (N03)
+0160  01 #NB             (N03/01:15)
+0170  01 PROC-NAME       (A08)
+0180  01 MSG             (A72)
+0190  01 #TITLE          (A72)
+0200  01 LEAVE           (L)
+0210  01 #CMD-IFN        (A01) INIT <'I'>
+0220  01 #CMD-BEHIND     (A01) INIT <'+'>
+0230  01 #CMD-SEP        (A01) INIT <'S'>
+0240  01 #CMD-UPPER      (A01) INIT <'T'>
+0250  01 #CMD-INTERNAL   (A01) INIT <'A'>
+0260  01 #CMD-RTYPE      (A01)
+0270END-DEFINE
+0280DEFINE WINDOW PARMS
+0290  SIZE 13 * 70
+0300  BASE 02 / 02
+0310  TITLE ' (HGI) Individual List of Global Functions'
+0320  CONTROL SCREEN
+0330  FRAMED POSITION OFF
+0340DEFINE WINDOW G-LIST
+0350  SIZE 21 * 70
+0360  BASE 02 / 02
+0370  TITLE #TITLE
+0380  CONTROL SCREEN
+0390  FRAMED POSITION OFF
+0400SET KEY ALL
+0410/**********************************************************************
+0420/* Ask for currently used name:
+0430/*
+0440PROCESS COMMAND ACTION GET USING
+0450    PROCESSOR-NAME = ' '
+0460    GETSET-FIELD-NAME = 'NAME&'
+0470IF NATURAL-ERROR NE 0
+0480  CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0490  WRITE MSG
+0500  ESCAPE ROUTINE
+0510END-IF
+0520/*
+0530MOVE GETSET-FIELD-VALUE TO PROC-NAME
+0540/**********************************************************************
+0550REP. REPEAT
+0560  RESET NB COMMAND-LINE (2)
+0570  MOVE FALSE TO LEAVE
+0580  /********************************************************************
+0590  INPUT WINDOW = 'PARMS' (AD=MIT' ' IP=OFF  ) WITH TEXT MSG
+0600    / 'Processor name ...................' PROC-NAME (AD=OI)
+0610    / 'Return IFN, too ..................' #CMD-IFN
+0620    / 'Start BEHIND given function ......' #CMD-BEHIND
+0630    / 'Separate the keywords ............' #CMD-SEP
+0640    / 'Upper case for abbrev. keywords ..' #CMD-UPPER
+0650    / 'Return internal keywords, too ....' #CMD-INTERNAL
+0660    / 'Restriction Type .................' #CMD-RTYPE
+0670    / 'Restriction ......................' COMMAND-LINE (4) (AL=16)
+0680    / 'Start Value ......................' COMMAND-LINE (2) (AL=40)
+0690  /********************************************************************
+0700  SET WINDOW OFF
+0710  IF *PF-KEY NE 'ENTR'
+0720    ESCAPE ROUTINE
+0730  END-IF
+0740  RESET MSG
+0750  /********************************************************************
+0760  /* Options for HELP:
+0770  /*
+0780  RESET COMMAND-LINE (3)   /* 'Location' is <Global> in this program
+0790  /*
+0800  IF #CMD-IFN NE ' '
+0810    RESET INITIAL #CMD-IFN
+0820  END-IF
+0830  IF #CMD-BEHIND NE ' '
+0840    RESET INITIAL #CMD-BEHIND
+0850  END-IF
+0860  IF #CMD-SEP NE ' '
+0870    RESET INITIAL #CMD-SEP
+0880  END-IF
+0890  IF #CMD-UPPER NE ' '
+0900    RESET INITIAL #CMD-UPPER
+0910  END-IF
+0920  IF #CMD-INTERNAL NE ' '
+0930    RESET INITIAL #CMD-INTERNAL
+0940  END-IF
+0950  IF NOT #CMD-RTYPE = '1' OR = '2' OR = '3'
+0960    RESET INITIAL #CMD-RTYPE
+0970  END-IF
+0980  /******************************************************************
+0990  COMPRESS 'G' #CMD-IFN #CMD-BEHIND
+1000    #CMD-SEP #CMD-UPPER #CMD-INTERNAL #CMD-RTYPE
+1010    TO COMMAND-LINE (1) LEAVING NO
+1020  /******************************************************************
+1030  COMPRESS 'List Global Functions in' PROC-NAME
+1040    'with options =' COMMAND-LINE (1) TO #TITLE
+1050  /******************************************************************
+1060  LI. REPEAT
+1070    RESET RESULT-FIELD (*)
+1080    PROCESS COMMAND ACTION HELP USING
+1090      PROCESSOR-NAME = PROC-NAME
+1100      COMMAND-LINE (*) = COMMAND-LINE (*)
+1110    /*
+1120    IF NATURAL-ERROR NE 0
+1130      CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+1140      WRITE MSG
+1150      ESCAPE ROUTINE
+1160    END-IF
+1170    /*
+1180    MOVE ALL RESULT-FIELD (MX)       /*  Take the last line
+1190      TO COMMAND-LINE (2)            /*  Make it the new start value
+1200      UNTIL 51                       /*  Do not take the IFN
+1210    EXAMINE COMMAND-LINE (2)         /*  New start value ...
+1220      TRANSLATE INTO UPPER           /*  ... must be given in upper case
+1230    /*
+1240    RESET #NB (*)
+1250    FO. FOR IY 1 MX
+1260      IF RESULT-FIELD (IY) = ' '
+1270        MOVE '*** End of list ***' TO RESULT-FIELD (IY)
+1280        MOVE TRUE TO LEAVE
+1290        ESCAPE BOTTOM (FO.)
+1300      ELSE
+1310        ADD 1 TO NB
+1320        MOVE NB TO #NB (IY)
+1330      END-IF
+1340    END-FOR
+1350    /*
+1360    /*************************************
+1370    INPUT WINDOW = 'G-LIST' (AD=ODT' ' SG=F ZP=F IP=F  )
+1380    WITH TEXT MSG
+1390      / 'No. Global Function'  56T 'IFN'
+1400      / '---' '-' (50) 56T '----------'
+1410      / #NB (01) RESULT-FIELD (01) (AL=72)
+1420      / #NB (02) RESULT-FIELD (02) (AL=72)
+1430      / #NB (03) RESULT-FIELD (03) (AL=72)
+1440      / #NB (04) RESULT-FIELD (04) (AL=72)
+1450      / #NB (05) RESULT-FIELD (05) (AL=72)
+1460      / #NB (06) RESULT-FIELD (06) (AL=72)
+1470      / #NB (07) RESULT-FIELD (07) (AL=72)
+1480      / #NB (08) RESULT-FIELD (08) (AL=72)
+1490      / #NB (09) RESULT-FIELD (09) (AL=72)
+1500      / #NB (10) RESULT-FIELD (10) (AL=72)
+1510      / #NB (11) RESULT-FIELD (11) (AL=72)
+1520      / #NB (12) RESULT-FIELD (12) (AL=72)
+1530      / #NB (13) RESULT-FIELD (13) (AL=72)
+1540      / #NB (14) RESULT-FIELD (14) (AL=72)
+1550      / #NB (15) RESULT-FIELD (15) (AL=72)
+1560    /*************************************
+1570    SET WINDOW OFF
+1580    IF *PF-KEY NE 'ENTR'
+1590    OR LEAVE
+1600      ESCAPE BOTTOM
+1610    END-IF
+1620  END-REPEAT
+1630  /********************************************
+1640END-REPEAT
+1650/**********************************************************************
+1660END

@@ -1,0 +1,74 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1069N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+00601 USR1069L
+0070  2 INPUTS
+0080    3 FUNCTION               (A1)
+0090    3 PRINTER-ID             (I1)
+0100  2 INPUT-OUTPUTS
+0110    3 PHYSICAL-NAME          (A80)
+0120    3 Redefine PHYSICAL-NAME
+0130      4 PHYSICAL-NAME-1      (A50)
+0140      4 PHYSICAL-NAME-2      (A30)
+0150    3 PAGE-SIZE              (I4)
+0160    3 LINE-SIZE              (I4)
+0170    3 MAX-PAGES              (I4)
+0180    3 PRINT-METHOD           (A8)
+0190  2 OUTPUTS
+0200    3 LOGICAL-NAME           (A8)
+0210    3 RESPONSE               (I4)
+0220/*
+02301 USR1069N                             /* Parameter extension
+0240  2 VERSION                  (I1) INIT <2>
+0250  2 OUTPUT-TARGET            (I4)      /* Version > 0
+0260  2 PHYSICAL-NAME-LONG       (A256)    /* Version > 1
+0270  2 Redefine PHYSICAL-NAME-LONG
+0280    3 PHYS-NAME-LONG-1       (A64)
+0290    3 PHYS-NAME-LONG-2       (A64)
+0300    3 PHYS-NAME-LONG-3       (A64)
+0310    3 PHYS-NAME-LONG-4       (A64)
+03201 REDEFINE USR1069N
+0330  2 EXTENDED-PARMS
+0340    3 EXTENDED-DATA          (A1/1:261)
+0350/*
+0360END-DEFINE
+0370/***********************************************************************
+0380SET KEY ALL
+0390SET CONTROL 'L'        /* Accept lower case
+0400/*
+0410FUNCTION   := 'G'
+0420PRINTER-ID := 1
+0430/*
+0440REPEAT
+0450  INPUT (AD=MILT'_' IP=OFF)
+0460      'Get or set a printer configuration:' (I)
+0470    / '-' (35) (I) /
+0480    / 'Function ............' FUNCTION
+0490    / 'Logical printer ID ..' PRINTER-ID    (NL=2)
+0500                           2X LOGICAL-NAME  (AD=O)
+0510    /* activate next 2 lines for version 0 and 1:
+0520    /*  // 'Physical printer ....' PHYSICAL-NAME-1 (AD=MILW'_')
+0530    /*     '                     ' PHYSICAL-NAME-2 (AD=MILW'_')
+0540    /* used for version >1:
+0550   // 'Long name' PHYS-NAME-LONG-1 (AD=MILW'_')
+0560    / '         ' PHYS-NAME-LONG-2 (AD=MILW'_')
+0570    / '         ' PHYS-NAME-LONG-3 (AD=MILW'_')
+0580    / '         ' PHYS-NAME-LONG-4 (AD=MILW'_')
+0590    / 'Page size ...........' PAGE-SIZE     (NL=3)
+0600    / 'Line size ...........' LINE-SIZE     (NL=3)
+0610    / 'Max. pages ..........' MAX-PAGES     (NL=5)
+0620    / 'Print method ........' PRINT-METHOD
+0630    / 'Output target .......' OUTPUT-TARGET (NL=1)
+0640   // 'Response ............' RESPONSE      (AD=O)
+0650  /*
+0660  IF *PF-KEY NE 'ENTR'
+0670    ESCAPE ROUTINE
+0680  END-IF
+0690  /*
+0700  CALLNAT 'USR1069N'
+0710          USR1069L
+0720          USR1069N.EXTENDED-PARMS
+0730END-REPEAT
+0740END

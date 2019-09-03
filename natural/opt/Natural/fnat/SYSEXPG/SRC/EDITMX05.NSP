@@ -1,0 +1,15 @@
+0010** Example 'EDITMX05': Edit mask (EM for date and time system variables)
+0020************************************************************************
+0030WRITE NOTITLE //
+0040  'DATE INTERNAL :' *DATX (DF=L) /
+0050  '              :' *DATX (EM=N(9)' 'ZW.'WEEK 'YYYY)  /
+0060  '              :' *DATX (EM=ZZJ'.DAY 'YYYY)        /
+0070  '     ROMAN    :' *DATX (EM=R)  /
+0080  '     AMERICAN :' *DATX (EM=MM/DD/YYYY)      12X 'OR  ' *DAT4U /
+0090  '     JULIAN   :' *DATX (EM=YYYYJJJ)         15X 'OR  ' *DAT4J /
+0100  '     GREGORIAN:' *DATX (EM=ZD.''L(10)''YYYY) 5X 'OR  ' *DATG ///
+0110  'TIME INTERNAL :' *TIMX                      14X 'OR  ' *TIME /
+0120  '              :' *TIMX (EM=HH.II.SS.T) /
+0130  '              :' *TIMX (EM=HH.II.SS' 'AP) /
+0140  '              :' *TIMX (EM=HH)
+0150END

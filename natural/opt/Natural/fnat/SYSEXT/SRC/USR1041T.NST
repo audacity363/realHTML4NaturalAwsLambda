@@ -1,0 +1,131 @@
+0010Install error transaction program (*ERROR-TA)
+0020.
+0030Documentation ......... USR1041T    /*  Text object
+0040Interface ............. USR1041N    /*  Source program
+0050Example Program ....... USR1041P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR HANDLING
+0100.
+0110Keywords .............. *ERROR-NR, *ERROR-TA, ERROR
+0120.
+0130Function .............. With USR1041N you can install your own Error
+0140                        Transaction, where USR1041P serves as example
+0150                        how to build such a routine.
+0160.
+0170General Remarks:
+0180----------------
+0190Existing error transactions will continue to execute in future
+0200Natural versions, that might support three digit level numbers,
+0210without any adaptation. In case the level number would exceed 99,
+0220the fifth parameter passed via the stack will have the value 99.
+0230.
+0240.
+0250Parameters
+0260----------
+0270Define the following parameters with the DEFINE DATA statement:
+0280.
+029001 ERROR-NUMBER    (N05)
+030001 LINENUM         (N04)
+031001 STATUS          (A01)
+032001 PROG            (A08)
+033001 LEVEL           (N02)
+034001 LEVELI4         (I04)    /* Optional parameter
+0350.
+0360The two different parameter layouts (standard and extended layout) are
+0370described below.
+0380.
+0390.
+0400Interface Call
+0410--------------
+0420Use the interface with the FETCH statement:
+0430.
+0440FETCH 'USR1041N' ERROR-NUMBER LINENUM
+0450                 STATUS PROG LEVEL
+0460                 LEVELI4                /* Optional parameter
+0470.
+0480.
+0490Using the Application Programming Interface:
+0500--------------------------------------------
+0510Copy the program USR1041N to the library SYSTEM or the steplib
+0520library respectively, or to the required library.
+0530.
+0540.
+0550Unlike other application programming interfaces, USR1041N is a
+0560Natural program and is delivered as source code. Primarily, USR1041N
+0570is designed as a sample error transaction. You do not need the parameter
+0580descriptions and calling samples below in this case.
+0590.
+0600To install this program as error transaction, you should either code
+0610"MOVE 'USR1041N' TO *ERROR-TA" in your program or
+0620start Natural with the dynamic parameter ETA='USR1041N'.
+0630.
+0640If you want to verify your *ERROR-TA, you simply have to code
+0650"MOVE 0001 TO *ERROR-NR" and run the program.
+0660.
+0670For more information, please read the Natural System Variables
+0680documentation for "*ERROR-TA" and "*ERROR-NR", or the Natural
+0690Parameter documentation for ETA.
+0700.
+0710In addition, USR1041N may be used to output user error messages.
+0720.
+0730.
+0740There are two different parameter layouts possible:
+0750.
+0760Layout 1:
+077001 ERROR-NUMBER    (N05)     /* Standard layout
+078001 LINENUM         (N04)     /* before support of 3 digit level
+079001 STATUS          (A01)
+080001 PROG            (A08)
+081001 LEVEL           (N02)
+0820.
+0830Layout 2:
+084002 ERROR-NUMBER    (N05)     /* Extendend Layout 1; allows a level
+085002 LINENUM         (N04)     /* of more than 2 digits
+086002 STATUS          (A01)
+087002 PROG            (A08)
+088002 LEVEL           (N02)
+089002 LEVELI4         (I04)
+0900.
+0910Description of the parameters:
+0920------------------------------
+093001 ERROR-NUMBER    (N05) (Input):
+0940   Allowed values are: 0001 thru 9999
+095001 LINENUM         (N04) (Input):
+0960   Allowed values are: 0001 thru 9999
+097001 STATUS          (A01)
+0980   Allowed values are: S, C, L, O and U.
+0990   'U' indicates a user defined error.
+100001 PROG            (A08)
+1010   Any non-blank value is allowed.
+102001 LEVEL           (N02)
+1030   Allowed values are: 01 thru 99
+1040.
+1050Additional parameter: if number of digits is greater than 2,
+1060use LEVELI4 in addition.
+1070.
+108001 LEVELI4         (I04)  /* Optional parameter
+1090   Allowed values are: 01 thru 512.
+1100.
+1110The calling program has to use the following statement:
+1120-------------------------------------------------------
+1130Layout 1:
+1140.
+1150MOVE 0020 TO ERROR-NUMBER     /* or any other error number ...
+1160MOVE 0000 TO LINENUM
+1170MOVE 'U'  TO STATUS
+1180MOVE *PROGRAM TO PROG
+1190MOVE *LEVEL   TO LEVEL
+1200FETCH 'USR1041N' ERROR-NUMBER LINENUM STATUS PROG LEVEL
+1210.
+1220Layout 2: Extendend Layout 1; allows a level of more than 2 digits
+1230.
+1240MOVE 0020 TO ERROR-NUMBER     /* or any other error number ...
+1250MOVE 0000 TO LINENUM
+1260MOVE 'U'  TO STATUS
+1270MOVE *PROGRAM TO PROG
+1280MOVE *LEVEL   TO LEVELI4
+1290FETCH 'USR1041N' ERROR-NUMBER LINENUM STATUS PROG LEVEL LEVELI4
+1300.
+1310*****  End of Description  *****

@@ -1,0 +1,17 @@
+0010&H View SEND-MESSAGE
+0020&L
+0030&L
+0040#Zweck@    : Senden einer Nachricht an TP-Benutzer oder Systemkonsole.
+0050&L
+0060#System@   : z/OS, z/VSE, BS2000/OSD.
+0070&L
+0080&L
+0090#Anwendung@: Im BS2000 koennen Nachrichten ausser an die Systemkonsole
+0100             nur an TIAM Tasks gesendet werden.
+0110             Wird eine BS2000 Benutzerkennung als Empfaenger angegeben,
+0120             wird die Nachricht an alle Dialog-Tasks dieser Benutzer-
+0130             kennung gesendet. Es kann auch eine Nachricht an eine
+0140             Datenstation, die mit '$DIALOG' verbunden ist, gesendet
+0150             werden.
+0160&L
+0170#Anmerkung@:

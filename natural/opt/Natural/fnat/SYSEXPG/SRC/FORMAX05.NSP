@@ -1,0 +1,13 @@
+0010** Example 'FORMAX05': FORMAT (without parameter IS
+0020**                     and compare with FORMAX06)
+0030************************************************************************
+0040DEFINE DATA LOCAL
+00501 VIEWEMP VIEW OF EMPLOYEES
+0060  2 NAME
+0070  2 FIRST-NAME
+0080END-DEFINE
+0090*
+0100READ (3) VIEWEMP BY NAME STARTING FROM 'JONES'
+0110  DISPLAY NAME FIRST-NAME
+0120END-READ
+0130END

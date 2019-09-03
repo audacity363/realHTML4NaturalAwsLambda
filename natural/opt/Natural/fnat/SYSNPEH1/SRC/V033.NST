@@ -1,0 +1,18 @@
+0010&H View COMMON-DATA
+0020&L
+0030&L
+0040#Purpose@: Maintain a common data area accessible to multiple
+0050           applications.
+0060&L
+0070&L
+0080#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0090&L
+0100&L
+0110#Usage@  : This view may be used to share memory between multiple
+0120           applications. This memory is accessed by a unique name
+0130           and is split up into data slots.
+0140&L
+0150#Notes@  :
+0160
+0170
+0180

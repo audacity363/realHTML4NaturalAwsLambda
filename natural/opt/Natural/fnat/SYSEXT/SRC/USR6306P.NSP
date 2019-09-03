@@ -1,0 +1,101 @@
+0010/* RPC: Retrieve UOW status for current EntireX Broker user
+0020/*
+0030/* Function ... Retrieve UOW status for current EntireX Broker user.
+0040/*
+0050/* This program serves as example how to design a user-defined
+0060/* program call 'USR6306N'.
+0070/*
+0080/* Parameter ..
+0090/*
+0100/*     INPUT
+0110/*              UOW-ID-IN    (A16)  UOWID for UOW to be retrieved
+0120/*                                  'ALL' or blank
+0130/*                                  'LAST'
+0140/*                                  ID of UOW
+0150/*     OUTPUT
+0160/*              USER-ID      (A32)  creator of UOW
+0170/*              BROKER-ID    (A32)  Broker  of UOW
+0180/*              UOW-COUNT    (I4)   number  of UOWs
+0190/*              UOW-INFO     (/*)
+0200/*               UOW-ID      (A16)  ID of UOW
+0210/*               UOW-STATUS  (A10)  status of UOW
+0220/*               USER-STATUS (A32)  user information about UOW
+0230/*               CREATE-TIME (A32)  creation time of UOW
+0240/*              RC           (N04)  return value
+0250/*                                  0    ok
+0260/*                                  1    user not logged on
+0270/*                                  2    no UOW created in session
+0280/*                                  101  CIS version can't be determined
+0290/*                                  110  Invalid restart information
+0300/*                                  111  API version can't be determined
+0310/*                                  112  PSF info call failed
+0320/*                                  9999 Broker error (see MESSAGE)
+0330/*              MESSAGE      (A80)  message text
+0340/*
+0350/***********************************************************************
+0360DEFINE DATA LOCAL
+03701 USR6306-PARMS
+0380  2 P-UOW-ID-IN     (A16)
+0390  2 P-USER-ID       (A32)
+0400  2 P-BROKER-ID     (A32)
+0410  2 P-UOW-COUNT     (I4)
+0420  2 P-UOW-INFO      (/1:*)
+0430    3 P-UOW-ID      (A16)
+0440    3 P-UOW-STATUS  (A10)
+0450    3 P-USER-STATUS (A32)
+0460    3 P-CREATE-TIME (A32)
+0470  2 P-RC            (N04)
+0480  2 P-MESSAGE       (A80)
+04901 #CREATE-TIME      (A15)
+05001 #I                (I4)
+05101 #MAX              (I4)
+0520END-DEFINE
+0530*
+0540DEFINE WINDOW RPC-UOW    SIZE 8*65 BASE 5/9
+0550  TITLE 'Show status about UOWs for current EntireX Broker user'
+0560  CONTROL SCREEN
+0570*
+0580IF *DATA = 1
+0590  /* get optional selection criteria - possible values are:
+0600  /* - ID of existing UOW = UOW with the given UOWID
+0610  /* - ALL                = all UOWs of user (default)
+0620  /* - LAST               = last created UOW of user in session
+0630  INPUT P-UOW-ID-IN
+0640END-IF
+0650*
+0660SET KEY PF3
+0670*
+0680CALLNAT 'USR6306N' USING USR6306-PARMS
+0690*
+0700IF P-RC = 0
+0710  IF P-UOW-COUNT = 0
+0720    P-MESSAGE := 'No UOWs found.'
+0730  ELSE
+0740    COMPRESS
+0750      P-UOW-COUNT 'UOWs found - press Enter to list or PF3 to stop.'
+0760      TO P-MESSAGE
+0770  END-IF
+0780END-IF
+0790*
+0800INPUT WINDOW='RPC-UOW'       (AD=MIT'_')           /
+0810  'User ID    :' P-USER-ID   (AD=IOT' ')           /
+0820  'Broker ID  :' P-BROKER-ID (AD=IOT' ')           //
+0830                 P-MESSAGE   (AD=IOT AL=79 IP=OFF)
+0840*
+0850  IF *PF-KEY = 'ENTR' AND P-RC = 0 AND P-UOW-COUNT > 0
+0860    WRITE
+0870      'UOWID            '                           -
+0880      'UOW-STATUS USER-STATUS                      '-
+0890      'CREATE-TIME'
+0900    FOR #I = 1 TO *OCCURRENCE(P-UOW-ID,1)
+0910       #CREATE-TIME := SUBSTR(P-CREATE-TIME(#I),5,15)
+0920       WRITE P-UOW-ID      (#I)
+0930             P-UOW-STATUS  (#I)
+0940             P-USER-STATUS (#I)
+0950             #CREATE-TIME
+0960    END-FOR
+0970  END-IF
+0980*
+0990**END-REPEAT
+1000*
+1010END

@@ -1,0 +1,14 @@
+0010&H View COPY-FILE
+0020&L
+0030&L
+0040#Zweck@    : Kopiert Dateien oder Bibliothekselemente.
+0050&L
+0060&L
+0070#System@   : z/OS, z/VSE, BS2000/OSD.
+0080&L
+0090&L
+0100#Anwendung@: Zum Kopieren in eine BS2000-Datei ist es notwendig, dass
+0110             diese Zielumgebung lokal verfuegbar ist.
+0120&L
+0130#Anmerkung@: Die Urspruns- und Zieldatei muessen vor Ausfuehrung der
+0140             Funktion bereits existieren.

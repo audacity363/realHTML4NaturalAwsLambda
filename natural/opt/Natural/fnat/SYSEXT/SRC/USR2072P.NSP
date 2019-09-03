@@ -1,0 +1,45 @@
+0010/* RPC: Support of EntireX Security on Server side
+0020/*
+0030/* Function ... Set Password for Logon to EntireX Broker on Server side.
+0040/*
+0050/* This program serves as example how to design a user-defined
+0060/* program call 'USR2072N'.
+0070/*
+0080/* Parameter ..
+0090/*     INPUT
+0100/*             PASSWORD  (A32)  - Password for user ID SRVUSER
+0110/*
+0120/*     OUTPUT
+0130/*             nothing returned
+0140/*
+0150/* Program Option ..
+0160/*            #MIXED_CASE(A01)  - Accept SRVUSER's password
+0170/*                                in upper and lower case letters.
+0180/*
+0190/***********************************************************************
+0200DEFINE DATA LOCAL
+02101 PARM-INPUT
+0220  2 I-PASSW     (A32)
+0230LOCAL
+02401 #MIXED_CASE (A1) INIT<'N'>
+0250END-DEFINE
+0260*
+0270DEFINE WINDOW RPC-LOGON     SIZE 5*50 BASE 8/16
+0280  TITLE ' Set password for LOGON to EntireX Broker' CONTROL SCREEN
+0290*
+0300SET KEY PF3
+0310*
+0320SET CONTROL 'L'
+0330*
+0340INPUT WINDOW='RPC-LOGON'   /
+0350      'Please enter password:' I-PASSW (AD=NM) /
+0360      'Mixed case           :' #MIXED_CASE (AD=IMT)
+0370*
+0380IF *PF-KEY NE 'PF3'
+0390  IF NOT (#MIXED_CASE = 'Y' OR = 'y')
+0400    EXAMINE I-PASSW TRANSLATE INTO UPPER
+0410  END-IF
+0420  CALLNAT 'USR2072N' USING PARM-INPUT
+0430END-IF
+0440*
+0450END

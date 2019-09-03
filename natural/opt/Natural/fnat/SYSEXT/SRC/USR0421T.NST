@@ -1,0 +1,92 @@
+0010Maintain user long error message on FUSER
+0020.
+0030Documentation ......... USR0421T    /*  Text object
+0040Interface ............. USR0421N    /*  Cataloged subprogram
+0050Example Program ....... USR0421P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR MESSAGES
+0100.
+0110Keywords .............. ERROR, FUSER, SYSERR
+0120.
+0130Function .............. A long user error text may be added, modified
+0140                        or deleted on Natural system file FUSER.
+0150                        It is presumed, that interface 'USR0420N'
+0160                        has been previously invoked to read the
+0170                        long text before updating it.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+023001 PARM-AREA                  /*  Parameters for CALLNAT
+0240   02 LIBRARY      (A08)      /*  Must not be blank
+0250   02 ERR-NUMBER   (N04)      /*  1 thru 9999
+0260   02 LANG-NUMBER  (I01)      /*  similar to *LANGUAGE (1 thru 60)
+0270   02 RESPONSE     (N04)      /*  status after execution of USR0421N
+0280                              /*  0   -  okay
+0290                              /* < 0  -  Natural error
+0300                              /*  1   -  Short text not found.
+0310                              /*  2   -  Enter Library.
+0320                              /*  3   -  Invalid Error Number.
+0330                              /*  4   -  Invalid Language Number.
+0340                              /*  5   -  Text has been added.
+0350                              /*  6   -  "SYS" Libraries not supported.
+0360                              /*  7   -  Text has been modified.
+0370                              /*  8   -  Text cannot be deleted.
+0380                              /*  9   -  Text has been deleted.
+0390                              /*  10  -  Text cannot be added.
+0400                              /*  11  -  Function disabled by layout
+0410                              /*         definition.
+0420   02 LONG-TEXT    (A78/1:20) /*  Text to be updated
+043001 LAYOUT-CHECK    (A01) OPTIONAL /* Check SYSERR LAYOUT for LIBRARY
+0440.
+0450.
+0460Interface Call
+0470--------------
+0480Use the interface with the CALLNAT statement:
+0490.
+0500CALLNAT 'USR0421N' PARM-AREA
+0510                   LAYOUT-CHECK /* Optional parameter
+0520.
+0530.
+0540Using the Application Programming Interface:
+0550--------------------------------------------
+0560Copy the subprogram USR0421N to the library SYSTEM or the steplib
+0570library respectively, or to the required library.
+0580.
+0590.
+0600The calling program should use the following statement to DELETE
+0610an existing long text:
+0620.
+0630IF #FUNCTION = 'DELETE'
+0640   MOVE 'ABC' TO LIBRARY
+0650   MOVE 1234  TO ERROR-NUMBER
+0660   MOVE *LANGUAGE TO LANG-NUMBER
+0670   MOVE 'X' TO LAYOUT-CHECK
+0680   RESET LONG-TEXT (*)
+0690   /*
+0700   CALLNAT 'USR0421N' PARM-AREA LAYOUT-CHECK
+0710   /*
+0720END-IF
+0730.
+0740The calling program should use the following statement to SAVE
+0750an existing long text:
+0760.
+0770IF #FUNCTION = 'SAVE'
+0780   MOVE 'ABC' TO LIBRARY
+0790   MOVE 1234  TO ERROR-NUMBER
+0800   MOVE *LANGUAGE TO LANG-NUMBER
+0810   MOVE 'X' TO LAYOUT-CHECK
+0820   MOVE '.' TO LONG-TEXT (*)
+0830   MOVE 'Tx' TO LONG-TEXT (01)
+0840   MOVE 'Ex' TO LONG-TEXT (04)
+0850   MOVE 'Ac' TO LONG-TEXT (18)
+0860   /*
+0870   CALLNAT 'USR0421N' PARM-AREA LAYOUT-CHECK
+0880   /*
+0890END-IF
+0900.
+0910.
+0920***** End of Description *****

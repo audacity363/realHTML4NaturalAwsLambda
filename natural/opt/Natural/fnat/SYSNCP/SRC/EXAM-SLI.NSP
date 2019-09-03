@@ -1,0 +1,217 @@
+0010/*  EXAM-SLI - SET Location using IKNs
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (1:8)
+0070     02 RESULT-FIELD (1:6)
+0080     02 GETSET-FIELD-NAME
+0090     02 GETSET-FIELD-VALUE
+0100     02 RETURN-CODE
+0110     02 NATURAL-ERROR
+0120  01 IX                    (I01)
+0130  01 CURR-LOC              (A10)
+0140  01 REDEFINE CURR-LOC
+0150     02 CURR-LOC-N10       (N10)
+0160  01 MK                    (I01)
+0170  01 MSG                   (A72)
+0180  01 PROC-NAME             (A08)
+0190  01 TOP-IKN1              (A10)
+0200  01 REDEFINE TOP-IKN1
+0210     02 FILLER              6X
+0220     02 TOP-IKN1-N4        (N04)
+0230  01 TOP-IKN2              (A10)
+0240  01 REDEFINE TOP-IKN2
+0250     02 FILLER              6X
+0260     02 TOP-IKN2-N4        (N04)
+0270  01 TOP-IKN3              (A10)
+0280  01 REDEFINE TOP-IKN3
+0290     02 FILLER              6X
+0300     02 TOP-IKN3-N4        (N04)
+0310  01 W-IKN1                (N04)
+0320  01 W-IKN2                (N04)
+0330  01 W-IKN3                (N04)
+0340  01 MOD                   (C)
+0350  01 KILO       (I04)  CONST <1024>
+0360  01 MEGA       (I04)  CONST <1048576>
+0370  01 Y          (I04)
+0380END-DEFINE
+0390DEFINE WINDOW GETSET
+0400  SIZE 13 * 42
+0410  BASE IX / IX
+0420  TITLE ' (SLI) Set Location using IKNs '
+0430  CONTROL SCREEN
+0440  FRAMED POSITION OFF
+0450SET KEY ALL
+0460IX := *LEVEL * 2
+0470/**********************************************************************
+0480PROCESS COMMAND ACTION GET USING
+0490  PROCESSOR-NAME = ' '                     /*  Current processor
+0500  GETSET-FIELD-NAME = 'NAME&'
+0510/*
+0520IF NATURAL-ERROR NE 0
+0530  WRITE '*** NCPWORK currently not accessible ***' (I)
+0540  ESCAPE ROUTINE
+0550END-IF
+0560/*
+0570MOVE GETSET-FIELD-VALUE TO PROC-NAME
+0580/**********************************************************************
+0590PROCESS COMMAND ACTION GET USING
+0600  PROCESSOR-NAME = PROC-NAME
+0610  GETSET-FIELD-NAME = 'TOP-IKN1'
+0620MOVE GETSET-FIELD-VALUE TO TOP-IKN1
+0630/**********************************************************************
+0640PROCESS COMMAND ACTION GET USING
+0650  PROCESSOR-NAME = PROC-NAME
+0660  GETSET-FIELD-NAME = 'TOP-IKN2'
+0670MOVE GETSET-FIELD-VALUE TO TOP-IKN2
+0680/**********************************************************************
+0690PROCESS COMMAND ACTION GET USING
+0700  PROCESSOR-NAME = PROC-NAME
+0710  GETSET-FIELD-NAME = 'TOP-IKN3'
+0720MOVE GETSET-FIELD-VALUE TO TOP-IKN3
+0730/**********************************************************************
+0740REPEAT
+0750  /********************************************************************
+0760  PROCESS COMMAND ACTION GET USING
+0770    PROCESSOR-NAME = PROC-NAME
+0780    GETSET-FIELD-NAME = 'CURR-LOCATION'
+0790  MOVE GETSET-FIELD-VALUE TO CURR-LOC
+0800  IF CURR-LOC NE MASK (NNNNNNNNNN)
+0810    MOVE ALL '0' TO CURR-LOC
+0820  END-IF
+0830  /********************************************************************
+0840  /* Compute the IKNs using CURR-LOCATION:
+0850  Y := CURR-LOC-N10
+0860  DIVIDE MEGA INTO Y GIVING W-IKN1 REMAINDER Y
+0870  DIVIDE KILO INTO Y GIVING W-IKN2 REMAINDER W-IKN3
+0880  /*
+0890  IF W-IKN1 = 001 THRU 999
+0900   ADD 1000 TO W-IKN1
+0910  END-IF
+0920  IF W-IKN2 = 001 THRU 999
+0930   ADD 2000 TO W-IKN2
+0940  END-IF
+0950  IF W-IKN3 = 001 THRU 999
+0960   ADD 3000 TO W-IKN3
+0970  END-IF
+0980  /********************************************************************
+0990  INPUT WINDOW = 'GETSET'
+1000  (AD=OIL CD=NE IP=F SG=ON ZP=ON CV=MOD )
+1010  WITH TEXT MSG MARK MK
+1020    / 'Current Processor Name ...' PROC-NAME
+1030    / 'Current Location (IFN) ...' CURR-LOC
+1040    / 'Topmost IKN Type #1 ......' TOP-IKN1-N4
+1050    / '            Type #2 ......' TOP-IKN2-N4
+1060    / '            Type #3 ......' TOP-IKN3-N4
+1070    / '-' (42)
+1080    / 'Wanted Location IKN #1 ...' W-IKN1 (AD=MIL)
+1090    / '                IKN #2 ...' W-IKN2 (AD=MIL)
+1100    / '                IKN #3 ...' W-IKN3 (AD=MIL)
+1110  SET WINDOW OFF
+1120  RESET MSG
+1130  /********************************************************************
+1140  IF *PF-KEY NE 'ENTR'
+1150  OR MOD NOT MODIFIED
+1160    ESCAPE ROUTINE
+1170  END-IF
+1180  /********************************************************************
+1190  /* Check for non-defined constellation of IKN:
+1200  IF W-IKN3 GT 0
+1210  AND ( W-IKN2 EQ 0 OR W-IKN1 EQ 0 )
+1220    MOVE 'Invalid IKN setting.' TO MSG
+1230    MK := 3
+1240    ESCAPE TOP
+1250  END-IF
+1260  IF ( W-IKN2 GT 0 AND W-IKN1 EQ 0 )
+1270    MOVE 'Invalid IKN setting.' TO MSG
+1280    MK := 2
+1290    ESCAPE TOP
+1300  END-IF
+1310  /********************************************************************
+1320  /* Check for unknown IKN:
+1330  IF W-IKN1 NE 0
+1340    IF NOT W-IKN1 = 1001 THRU TOP-IKN1-N4
+1350      COMPRESS 'IKN is not in range: 1001 -' TOP-IKN1-N4 TO MSG
+1360      MK := 1
+1370      ESCAPE TOP
+1380    END-IF
+1390  END-IF
+1400  IF W-IKN2 NE 0
+1410    IF NOT W-IKN2 = 2001 THRU TOP-IKN2-N4
+1420      COMPRESS 'IKN is not in range: 2001 -' TOP-IKN2-N4 TO MSG
+1430      MK := 2
+1440      ESCAPE TOP
+1450    END-IF
+1460  END-IF
+1470  IF W-IKN3 NE 0
+1480    IF NOT W-IKN3 = 3001 THRU TOP-IKN3-N4
+1490      COMPRESS 'IKN is not in range: 3001 -' TOP-IKN3-N4 TO MSG
+1500      MK := 3
+1510      ESCAPE TOP
+1520    END-IF
+1530  END-IF
+1540  /********************************************************************
+1550  /* Check whether there is a Keyword for the given IKN:
+1560  IF W-IKN1 NE 0
+1570    COMMAND-LINE (1) := 'IKN'
+1580    COMMAND-LINE (2) := W-IKN1
+1590    PROCESS COMMAND ACTION HELP
+1600    USING PROCESSOR-NAME = PROC-NAME
+1610      COMMAND-LINE (*) = COMMAND-LINE (*)
+1620    IF RESULT-FIELD (1) = ' '
+1630      COMPRESS 'No Keyword for this IKN:' W-IKN1 TO MSG
+1640      MK := 1
+1650      ESCAPE TOP
+1660    END-IF
+1670  END-IF
+1680  IF W-IKN2 NE 0
+1690    COMMAND-LINE (1) := 'IKN'
+1700    COMMAND-LINE (2) := W-IKN2
+1710    PROCESS COMMAND ACTION HELP
+1720    USING PROCESSOR-NAME = PROC-NAME
+1730      COMMAND-LINE (*) = COMMAND-LINE (*)
+1740    IF RESULT-FIELD (1) = ' '
+1750      COMPRESS 'No Keyword for this IKN:' W-IKN2 TO MSG
+1760      MK := 2
+1770      ESCAPE TOP
+1780    END-IF
+1790  END-IF
+1800  IF W-IKN3 NE 0
+1810    COMMAND-LINE (1) := 'IKN'
+1820    COMMAND-LINE (2) := W-IKN3
+1830    PROCESS COMMAND ACTION HELP
+1840    USING PROCESSOR-NAME = PROC-NAME
+1850      COMMAND-LINE (*) = COMMAND-LINE (*)
+1860    IF RESULT-FIELD (1) = ' '
+1870      COMPRESS 'No Keyword for this IKN:' W-IKN3 TO MSG
+1880      MK := 3
+1890      ESCAPE TOP
+1900    END-IF
+1910  END-IF
+1920  /********************************************************************
+1930  RESET MK CURR-LOC-N10
+1940  IF W-IKN1 GT 1000
+1950    CURR-LOC-N10 := ( W-IKN1 - 1000 ) * MEGA
+1960  END-IF
+1970  IF W-IKN2 GT 2000
+1980    CURR-LOC-N10 := ( ( W-IKN2 - 2000 ) * KILO ) + CURR-LOC-N10
+1990  END-IF
+2000  IF W-IKN3 GT 3000
+2010    CURR-LOC-N10 := W-IKN3 - 3000 + CURR-LOC-N10
+2020  END-IF
+2030  /*
+2040  PROCESS COMMAND ACTION SET USING
+2050    PROCESSOR-NAME = PROC-NAME
+2060    GETSET-FIELD-NAME = 'CURR-LOCATION'
+2070    GETSET-FIELD-VALUE = CURR-LOC
+2080  /*
+2090  IF NATURAL-ERROR NE 0
+2100    CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+2110    ESCAPE TOP
+2120  END-IF
+2130  /*
+2140  COMPRESS 'Current Location is now:' CURR-LOC TO MSG
+2150  /*
+2160END-REPEAT
+2170END

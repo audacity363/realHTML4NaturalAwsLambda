@@ -1,0 +1,54 @@
+0010* Text-Member fuer den Aufbau des ENTIRE SYSTEM SERVER Tutorial Menu
+0020*                        PFKEY PFKEY PFKEY PFKEY PFKEY PFKEY
+0030* PF1-PF6                            Ende        Benu  Sys
+0040* PF7-PF12                -     +          Sprac       Node
+0050*
+0060* Sie sollten Ihre eigenen Beispiele im Member TUTO0002
+0070* definieren.
+0080* Aenderungen in diesem Member sollten Sie nicht durchfuehren,
+0090* da sie mit der naechsten Auslieferungen des Tutorials
+0100* ueberschrieben wuerden.
+0110* Aufbau des Tutorials:
+0120*    View Name             (a16)
+0130*    Programm Name         (a8)
+0140*    Markierung (Flag)     (a1) E=EBCDIC-Maschine, I=PC, *nixen, VAXen
+0150*    Programm Beschreibung (a47)
+0160*
+0170ACTIVE-JOBS     BACTIVE  Anzeige der aktiven BS2000 Tasks
+0180CATALOG         BCATLG   Anzeige von 'Katalog Eintraegen'
+0190CATALOG-UPDATE  BCATUPD  Pflege von 'Katalog Eintraegen'
+0200COMMON-DATA     BCOMDTA  Gemeinsam benutzbarer Arbeitsspeicher
+0210CONSOLE         BCONSOL  Operator Konsole
+0220COPY-FILE       BCOPYFI  Kopieren von BS2000 Dateien und LMS Elementen
+0230ENTER-PROCEDURE BENTPR   Starten eines Jobs mit ENTER-PROCEDURE
+0240EVENTING        BEVENT   Programm zu Programm Kommunikation
+0250FILE-ALLOCATE   BALLOC   Einrichten einer BS2000 Datei
+0260FILE-ATTRIBUTES BFATTR   Anzeige der Attribute einer Datei
+0270FILE-MAINTENANCEBCOMP    Nicht belegten Plattenplatz freigeben
+0280HELP-INFO       BHELP    Text einer BS2000 Meldung anzeigen
+0290JOB-SWITCHES    BSW      BS2000 Job und User Switches
+0300JOB-VARIABLES   BJV      BS2000 Jobvariablen
+0310LIB-DIRECTORY   BLIB     Inhaltsverzeichnis einer LMS-Bibliothek
+0320LIB-UPDATE      BLIBU    Verschiede Aktionen auf LMS Elementen
+0330MAIN-STORAGE    BMAINS  EInhalt eines 'Memory Pools' anzeigen
+0340NATPROC-LOGON   BESYLG   Logon an ENTIRE SYSTEM SERVER durchfuehren
+0350NATPROC-USERS   BNPUSR   ENTIRE SYSTEM SERVER Benutzer/Tasks anzeigen
+0360PRINT-DOCUMENT  BPRDOC   Drucken eines Dokuments
+0370READ-FILE       BREADS   Lesen BS2000 Datei/Suchen nach einer Zeichenkete
+0380READ-FILE       BREADL   Lesen LMS-Element/Suchen nach einer Zeichenkett
+0390SEND-EMAIL      BSEML    Senden einer E-Mail ueber das Internet
+0400SEND-MESSAGE    BSMSG    Nachricht an einen Benutzer oder Console senden
+0410SPOOL-QUEUE     BSPOOLQ  Anzeige der 'Spool Queue'
+0420SPOOL-FILES     BSPOOLF  Anzeige von Attributen eines Druckauftrages
+0430SUBMIT          BSUBMI   Starten eines 'Batch Jobs'
+0440SYSTEM-INFO     BSYSIN   System Informationen anzeigen
+0450SYSTEM-COMMAND  BSYSCMD  BS2000 Kommando absetzen
+0460TASK-INFO       BTASKI   Anzeige von Attributen eines BS2000 Jobs
+0470USER-ATTRIBUTES BUSERA   BS2000 Benutzerprofil - Anzeige
+0480VTOC            BVTOC    Liste der 'Katalog Eintraege' einer Platte
+0490VTOC-UPDATE     BVTOCU   Umbenennen / Loeschen einer BS2000 Datei
+0500WRITE-FILE      BWRTF    Schreiben in eine BS2000 Datei
+0510WRITE-FILE      BPCOSF   Upload vom PC in eine BS2000 Datei
+0520WRITE-FILE      BWRTL    Schreiben in ein LMS Element
+0530WRITE-FILE      BPCLMS   Upload vom PC in ein LMS Element
+0540WRITE-SPOOL     BWRTS    Drucken einer Datei/von Saetzen

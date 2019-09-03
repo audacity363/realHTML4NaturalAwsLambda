@@ -1,0 +1,97 @@
+0010* Program   MACTIVE
+0020* View      ACTIVE-JOBS
+0030*
+0040* Function  Display active tasks with related jes-info
+0050*
+0060* ----------------------------------------------------------------------
+0070*
+0080DEFINE DATA GLOBAL USING TUTO
+0090            LOCAL  USING ACTIVE-L
+0100            LOCAL
+011001  #DISPLAY (15)
+0120    02 JOB-NAME     (A8)
+0130    02 TYPE         (A6)
+0140    02 CPU-USED     (N7.2)
+0150    02 REGION       (N7)    /* stl 10-05-28 was N5
+0160    02 JOB-NUMBER   (N7)    /* sju 02-02-18 was N5
+0170    02 STATUS       (A8)
+0180    02 PROC-NAME    (A8)
+0190    02 STEP-NAME    (A8)
+0200*
+021001  #JOB-NAME       (A8)   INIT <'*'>
+022001  #TYPE           (A6)   INIT <'*'>
+023001  #CPU            (N7.2)
+024001  #STATUS         (A8)   INIT <'*'>
+0250*
+026001  #I              (P2)
+027001  #COUNT          (P8)
+028001  #CVAR           (C)
+0290END-DEFINE
+0300ASSIGN #CVAR = (AD=I)
+0310PERFORM PF-KEY
+0320*
+0330* ------------------------------ MAIN LOOP ----------------------------
+0340*
+0350REPEAT
+0360FND.
+0370FIND ACTIVE-JOBS WITH NODE     =  ##NODE
+0380                 AND  JOB-NAME =  #JOB-NAME
+0390                 AND  TYPE     =  #TYPE
+0400                 AND  CPU-USED >= #CPU
+0410                 AND  STATUS   =  #STATUS
+0420  IF ERROR-CODE NE 0
+0430     ASSIGN ##MSG-NR = 1000
+0440     ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0450     ESCAPE BOTTOM (FND.)
+0460  END-IF
+0470  IF #I = 15
+0480     PERFORM SCREEN-IO
+0490     IF #CVAR MODIFIED
+0500        ESCAPE BOTTOM (FND.)
+0510     END-IF
+0520  END-IF
+0530  ADD 1 TO #I
+0540  ADD 1 TO #COUNT
+0550  MOVE BY NAME ACTIVE-JOBS TO #DISPLAY (#I)
+0560END-FIND
+0570DECIDE FOR FIRST CONDITION
+0580  WHEN ##MSG-NR NE 0                     /* ERROR OCCURED
+0590       IGNORE
+0600  WHEN #I > 0
+0610       ASSIGN ##MSG-NR = 1030            /* BOTTOM OF DATA
+0620  WHEN #COUNT = 0
+0630       ASSIGN ##MSG-NR = 1031            /* NOTHING FOUND
+0640  WHEN ANY
+0650       PERFORM SCREEN-IO
+0660  WHEN NONE
+0670       IGNORE
+0680END-DECIDE
+0690RESET #COUNT
+0700END-REPEAT
+0710*
+0720* ------------------------------ SCREEN-IO ----------------------------
+0730*
+0740DEFINE SUBROUTINE SCREEN-IO
+0750INPUT WITH TEXT *##MSG-NR,
+0760                 ##MSG-TXT1,
+0770                 ##MSG-TXT2
+0780      USING MAP 'MACTIVM&'
+0790RESET ##MSG
+0800DECIDE FOR EVERY CONDITION
+0810  WHEN #JOB-NAME = ' '
+0820       ASSIGN #JOB-NAME = '*'
+0830  WHEN #TYPE = ' '
+0840       ASSIGN #TYPE = '*'
+0850  WHEN #STATUS = ' '
+0860       ASSIGN #STATUS = '*'
+0870  WHEN NONE
+0880       IGNORE
+0890END-DECIDE
+0900RESET #DISPLAY (*)
+0910RESET #I
+0920END-SUBROUTINE
+0930*
+0940* ------------------------------ PF-KEY -------------------------------
+0950*
+0960INCLUDE C-PFKEY
+0970END

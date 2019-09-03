@@ -1,0 +1,155 @@
+0010/**********************************************************************
+0020/* Program to call USR4217N
+0030/*                 (call webMethod Optimize data collector)
+0040/*
+0050/* Note: on mainframes XML must be activated: XML=(ON,RDOC=ON,PARSE=ON)
+0060/* ====
+0070/*
+0080/**********************************************************************
+0090/*---------------------------------------------------------------------
+0100/*---------------- Compiler options -----------------------------------
+0110/*---------------------------------------------------------------------
+0120OPTIONS LOWSRCE=ON
+0130/*---------------------------------------------------------------------
+0140/*---------------- Data definitions -----------------------------------
+0150/*---------------------------------------------------------------------
+0160Define Data
+0170/*---------------------------------------------------------------------
+0180/*---------------- Local data -----------------------------------------
+0190/*---------------------------------------------------------------------
+0200Local
+0210/*---------------------------------------------------------------------
+0220/* Parameter for USR4217N
+0230/*---------------------------------------------------------------------
+02401 P-Target                   (A) Dynamic
+02501 P-Event-Type               (A) Dynamic
+02601 P-Array-of-Data            (1:*)
+0270  2 P-Array-of-Data-Name     (A) Dynamic
+0280  2 P-Array-of-Data-Value    (A) Dynamic
+02901 P-Time-A                   (A) Dynamic  /* if blank set actual time
+0300*                                            local time expected
+03101 P-Return-Msg               (A) Dynamic
+03201 P-Return-Code              (I4)
+03301 P-Return-Soapmsg           (A) Dynamic
+03401 P-Return-Soapcode          (A) Dynamic
+0350/*---------------------------------------------------------------------
+0360/* Other local data
+0370/*---------------------------------------------------------------------
+03801 Input-Array-of-Data        (1:6)
+0390  2 Input-Data-Name          (A35)
+0400  2 Input-Data-Value         (A35)
+04101 Input-Event                (A70)
+04201 Input-Time                 (A19)
+04301 Input-Url                  (A280)
+04401 Redefine Input-Url
+0450  2 Input-Url-1              (A70)
+0460  2 Input-Url-2              (A70)
+0470  2 Input-Url-3              (A70)
+0480  2 Input-Url-4              (A70)
+04901 Input-Debug                (A1)
+05001 Rand-Val                   (I4)
+0510END-DEFINE
+0520/**********************************************************************
+0530/**********************************************************************
+0540SET CONTROL 'L'                   /* lower case
+0550/*---------------------------------------------------------------------
+0560/* Fill the Parameters for USR4217N
+0570/*---------------------------------------------------------------------
+0580Input-Url :=
+0590  'http://winxpsql:12603/services/WSDimensionalDataCollector'
+0600/*
+0610Input-Event := 'TestOptimizeAPI'
+0620/*
+0630Expand Array P-Array-of-Data to (1:6)
+0640Input-Data-Name (1)  := 'TestApplication'    /* Dimension 01
+0650Input-Data-Value (1) := 'TestOptimizeAPI'
+0660Input-Data-Name (2)  := 'TestUser'           /* Dimension 02
+0670Input-Data-Value (2) := *USER
+0680Input-Data-Name (3)  := 'TestKpi01'          /* KPI 01
+0690Input-Data-Value (3) := '20'
+0700Input-Data-Name (4)  := 'TestKpi02'          /* KPI 02
+0710Input-Data-Value (4) := '18'
+0720Input-Data-Name (5)  := 'TestKpi03'          /* KPI 03
+0730Input-Data-Value (5) := '3072'
+0740Input-Data-Name (6)  := 'TestKpi04'          /* KPI 04
+0750* Input-Data-Value (6) := '2750'
+0760/*
+0770Input-Debug := 'N'
+0780/*
+0790Set Key All
+0800/*---------------------------------------------------------------------
+0810/* Input Data
+0820/*---------------------------------------------------------------------
+0830Repeat
+0840  Rand-Val := *TIMN * 37
+0850  Divide 101 into Rand-Val remainder Rand-Val   /* random value 0 - 100
+0860  Input-Data-Value (6) := Rand-Val
+0870  Move edited *TIMX (EM=YYYY-MM-DD'T'HH:II:SS) to Input-Time
+0880
+0890  Input (AD=MI IP=OFF)
+0900    5X 'Send Data to the webMethods Optimize for Infrastructure '-
+0910    'Data Collector'
+0920    / 5X '========================================================'-
+0930    '=============='
+0940    /  5X 'URL of the Data Collector:'
+0950    /  5X '>' Input-Url-1
+0960    /  5X '>' Input-Url-2
+0970    /  5X '>' Input-Url-3
+0980    /  5X '>' Input-Url-4
+0990    /  5X 'Type of the event:'
+1000    /  5X '>' Input-Event
+1010    /  5X 'Data Name' 44T 'Data Value'
+1020    /  5X '>'Input-Data-Name (1) Input-Data-Value (1)
+1030    /  5X '>'Input-Data-Name (2) Input-Data-Value (2)
+1040    /  5X '>'Input-Data-Name (3) Input-Data-Value (3)
+1050    /  5X '>'Input-Data-Name (4) Input-Data-Value (4)
+1060    /  5X '>'Input-Data-Name (5) Input-Data-Value (5)
+1070    /  5X '>'Input-Data-Name (6) Input-Data-Value (6)
+1080    /  5X 'Time of the event:'
+1090    /  5X '>' Input-Time
+1100    /  5X 'Debug mode (Y/N):'
+1110    /  5X '>' Input-Debug (AD=T)
+1120    //  5X 'Press PF5 to send the data to Optimize.'-
+1130    ' Press PF3 to stop.'
+1140  If Input-Url-1 = '.' or *PF-KEY = 'PF3'
+1150    Stop
+1160  End-If
+1170  If *PF-KEY <> 'PF5'
+1180    Escape Top
+1190  End-If
+1200  P-Target                    := Input-Url
+1210  P-Event-Type                := Input-Event
+1220  Expand Array P-Array-of-Data to (1:6)
+1230  P-Array-of-Data-Name (1:6)  := Input-Data-Name (1:6)
+1240  P-Array-of-Data-Value (1:6) := Input-Data-Value (1:6)
+1250  P-Time-A                    := Input-Time
+1260/*---------------------------------------------------------------------
+1270/* Call USR4217N
+1280/*---------------------------------------------------------------------
+1290  If Input-Debug = 'Y'
+1300    P-Return-Code := 9999     /* 9999 = switch on debug mode
+1310  Else
+1320    Input-Debug := 'N'
+1330    P-Return-Code := 0        /* 9999 = switch on debug mode
+1340  End-if
+1350  Callnat 'USR4217N'
+1360    P-Target
+1370    P-Event-Type
+1380    P-Array-of-Data (*)
+1390    P-Time-A
+1400    P-Return-Msg
+1410    P-Return-Code
+1420    P-Return-Soapmsg
+1430    P-Return-Soapcode
+1440/*
+1450  Print 'Data send to the Optimize API for Natural (USR4217N).'
+1460    /   '-----------------------------------------------------'
+1470    /   'P-Time-A ..........:' P-Time-A
+1480    /   'P-Return-Msg ......:' P-Return-Msg
+1490    /   'P-Return-Code .....:' P-Return-Code (AD=L)
+1500    /   'P-Return-Soapmsg ..:' P-Return-Soapmsg
+1510    /   'P-Return-Soapcode .:' P-Return-Soapcode
+1520End-repeat
+1530/**********************************************************************
+1540/**********************************************************************
+1550END

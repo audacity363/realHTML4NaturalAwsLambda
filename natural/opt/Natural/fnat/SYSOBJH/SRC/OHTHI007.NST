@@ -1,0 +1,29 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> SYSOBJH Internal Commands
+0080<Header2> Part 6
+0090/* <Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>OHTHI006
+0140<Successor>OHTHI008
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170SET TRACE or SET TRACE ON
+0180  Set trace mode on (trace output to screen)
+0190
+0200SET TRACE WORKFILE
+0210  Set trace mode on (trace output to work file 10)
+0220
+0230SET TRACEFILE
+0240  Set the trace file (work file 10)
+0250
+0260SET TRACE OFF
+0270  Set trace mode off
+0280
+0290<HelpTextEnd>

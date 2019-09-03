@@ -1,0 +1,105 @@
+0010/*  EXAM-GCL - GET LAST COMMAND
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 GETSET-FIELD-NAME
+0070     02 GETSET-FIELD-VALUE
+0080  01 PS         (I01)
+0090  01 IX         (I01)
+0100  01 IY         (I01)
+0110  01 #STACK     (A78/00:11)
+0120  01 CMD-LONG   (A78) INIT <'LA'>
+0130  01 REDEFINE CMD-LONG
+0140     02 CMD     (A02)
+0150END-DEFINE
+0160/*
+0170DEFINE WINDOW EXAM
+0180  SIZE PS * 72
+0190  BASE IX / IX
+0200  TITLE GETSET-FIELD-NAME
+0210  CONTROL SCREEN
+0220  FRAMED POSITION OFF
+0230/*
+0240SET KEY ALL
+0250IX := *LEVEL * 2
+0260/*
+0270IF *DATA = 1
+0280  INPUT CMD-LONG
+0290ELSE
+0300  IGNORE
+0310END-IF
+0320/*
+0330/**********************************************************************
+0340DECIDE ON FIRST CMD
+0350  VALUE 'L'                       /*  Last Cmd --> STACK TOP DATA
+0360    PERFORM REMOVE-DATA-FROM-STACK
+0370    MOVE 'LAST' TO GETSET-FIELD-NAME
+0380  VALUE 'LC'                      /*  Last Cmd --> *COM
+0390    RESET *COM
+0400    MOVE 'LAST-COM' TO GETSET-FIELD-NAME
+0410  VALUE 'LA'                      /*  Last Cmds --> STACK TOP DATA
+0420    PERFORM REMOVE-DATA-FROM-STACK
+0430    MOVE 'LAST-ALL' TO GETSET-FIELD-NAME
+0440  VALUE 'M'                       /*  Last Multi Cmd --> STACK TOP DATA
+0450    PERFORM REMOVE-DATA-FROM-STACK
+0460    MOVE 'MULTI' TO GETSET-FIELD-NAME
+0470  VALUE 'MC'                      /*  Last Multi Cmd --> *COM
+0480    RESET *COM
+0490    MOVE 'MULTI-COM' TO GETSET-FIELD-NAME
+0500  NONE ESCAPE ROUTINE
+0510END-DECIDE
+0520/**********************************************************************
+0530PROCESS COMMAND ACTION GET USING
+0540  PROCESSOR-NAME = ' '
+0550  GETSET-FIELD-NAME = GETSET-FIELD-NAME
+0560/**********************************************************************
+0570RESET #STACK (*)
+0580PS := 3
+0590/*
+0600REPEAT UNTIL *DATA LE 0
+0610  INPUT #STACK (IY)
+0620  ADD 1 TO IY
+0630  ADD 1 TO PS
+0640  IF IY = 12
+0650    PERFORM REMOVE-DATA-FROM-STACK
+0660    ESCAPE BOTTOM
+0670  END-IF
+0680END-REPEAT
+0690/**********************************************************************
+0700IF GETSET-FIELD-NAME = SCAN 'COM'
+0710  INPUT WINDOW = 'EXAM' (AD=OIL IP=F )
+0720    / '*COM ...' *COM (AL=64)
+0730ELSE
+0740  IF GETSET-FIELD-NAME = SCAN 'MULTI'
+0750    INPUT WINDOW = 'EXAM' (AD=OIL IP=F )
+0760      / 'Multi Cmd ...' #STACK (00) (AL=64)
+0770  ELSE
+0780    INPUT WINDOW = 'EXAM' (AD=OIL IP=F )
+0790      / 'Last Cmd ...' #STACK (00) (AL=64)
+0800      / 'Last -1 ....' #STACK (01) (AL=64)
+0810      / 'Last -2 ....' #STACK (02) (AL=64)
+0820      / 'Last -3 ....' #STACK (03) (AL=64)
+0830      / 'Last -4 ....' #STACK (04) (AL=64)
+0840      / 'Last -5 ....' #STACK (05) (AL=64)
+0850      / 'Last -6 ....' #STACK (06) (AL=64)
+0860      / 'Last -7 ....' #STACK (07) (AL=64)
+0870      / 'Last -8 ....' #STACK (08) (AL=64)
+0880      / 'Last -9 ....' #STACK (09) (AL=64)
+0890      / 'Last -10 ...' #STACK (10) (AL=64)
+0900      / 'Last -11 ...' #STACK (11) (AL=64)
+0910  END-IF
+0920END-IF
+0930/**********************************************************************
+0940SET WINDOW OFF
+0950ESCAPE ROUTINE
+0960/**********************************************************************
+0970DEFINE REMOVE-DATA-FROM-STACK
+0980  RESET *COM
+0990  REPEAT UNTIL *DATA LE 0
+1000    INPUT #STACK (0)
+1010    /* WRITE #STACK (0) (AL=64)
+1020  END-REPEAT
+1030END-SUBROUTINE
+1040/**********************************************************************
+1050END

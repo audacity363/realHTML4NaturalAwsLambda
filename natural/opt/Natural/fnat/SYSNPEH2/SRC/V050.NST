@@ -1,0 +1,15 @@
+0010&H View AUTHORIZED-LIBRARIES
+0020&L
+0030&L
+0040#Purpose@: Liste APF authorisierte Dateien bzw. Libraries
+0050&L
+0060#OpSys@  : z/OS
+0070&L
+0080&L
+0090#Usage@  : Diese View zeigt alle APF authorisierten Dateien an.
+0100           Diese Dateien koennen statisch beim IPL des Systems definiert
+0110           worden sein, oder dynamisch mittels eines Operator Kommandos.
+0120           Viele Produkte brauchen diese authorisierten Dateien und
+0130           wir koennen nun ermitteln, ob eine Datei authorisiert ist.
+0140&L
+0150#Notes@  :

@@ -1,0 +1,68 @@
+0010Get runtime settings of RPC server
+0020.
+0030Documentation ......... USR4010T    /*  Text object
+0040Interface ............. USR4010N    /*  Cataloged subprogram for server
+0050                                    /*  environment
+0060Client Interface Object USR4010X    /*  See below how to use
+0070Example Program ....... USR4010P    /*  Source program
+0080.
+0090Product Code .......... RPC
+0100.
+0110Category .............. RPC
+0120.
+0130Keywords .............. RPC, RUNTIME, SERVER, SETTING
+0140.
+0150Function .............. Retrieve runtime settings of server.
+0160.
+0170.
+0180Parameters
+0190----------
+0200Define the following parameters with the DEFINE DATA statement:
+0210.
+0220    OUTPUT
+0230         USR4010-PARM (A300) redefined as:
+0240.
+0250         FUSER-DBID   (N5)     - DBID of FUSER
+0260         FUSER-FNR    (N5)     - FNR  of FUSER
+0270         FNAT-DBID    (N5)     - DBID of FNAT
+0280         FNAT-FNR     (N5)     - FNR  of FNAT
+0290         FSEC-DBID    (N5)     - DBID of FSEC
+0300         FSEC-FNR     (N5)     - FNR  of FSEC
+0310.
+0320         STEP-NAME    (A8/15)  - Name of STEPLIB
+0330         STEP-DBID    (N5/15)  - DBID of STEPLIB
+0340         STEP-FNR     (N5/15)  - FNR  of STEPLIB.
+0350.
+0360Interface Call
+0370--------------
+0380Use the interface with the CALLNAT statement:
+0390.
+0400CALLNAT 'USR4010N' USR4010-PARM
+0410.
+0420.
+0430Using the Application Programming Interface:
+0440--------------------------------------------
+0450Since this interface is intended to be executed via RPC, both the server
+0460environment and the client environment must be prepared appropriately.
+0470.
+0480Server environment:
+0490Copy the subprogram USR4010N to the library SYSTEM or the steplib
+0500library respectively, or to the required library in the server
+0510environment.
+0520.
+0530Client environment:
+0540If AUTORPC=ON:
+0550  The interface USR4010N must not be available in the client
+0560  environment to avoid that the interface is called locally.
+0570If AUTORPC=OFF:
+0580  The client interface USR4010X must be copied to the client environment
+0590  with the name USR4010N.
+0600
+0610.
+0620Functionality:
+0630--------------
+0640The following information is retrieved from the RPC server:
+0650- System file assignment for FUSER, FNAT, FSEC.
+0660- Steplib chain.
+0670.
+0680***** End of Description *****

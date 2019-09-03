@@ -1,0 +1,43 @@
+0010/*  EXAM-GC - GET COMMAND
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  1 CMD (A02)
+0050  1 IX (I1)
+0060  1 MOD (C)
+0070END-DEFINE
+0080DEFINE WINDOW EXAM
+0090  SIZE 14 * 55
+0100  BASE IX / IX
+0110  TITLE ' (GC) Get Last Command'
+0120  CONTROL SCREEN
+0130  FRAMED POSITION OFF
+0140SET KEY ALL
+0150REPEAT
+0160  RESET CMD
+0170  IX := *LEVEL * 2
+0180  /*************************************************
+0190  INPUT WINDOW = 'EXAM' (AD=MIT'_' IP=OFF CV=MOD ) /
+0200    08T   'Code ' (I) 'Function        ' (I) //
+0210    08T   ' L   '  'Last Cmd --> STACK TOP DATA' /
+0220    08T   ' LC  '  'Last Cmd --> *COM  ' /
+0230    08T   ' LA  '  'Last Cmds --> STACK TOP DATA' /
+0240    08T   ' M   '  'Last Multi Cmd --> STACK TOP DATA' /
+0250    08T   ' MC  '  'Last Multi Cmd --> *COM' /
+0260    08T   ' .   '  'Exit               ' //
+0270    09T    CMD
+0280  /**************************************************
+0290  IF *PF-KEY NE 'ENTR'
+0300  OR MOD NOT MODIFIED
+0310    ESCAPE ROUTINE
+0320  END-IF
+0330  /*
+0340  DECIDE ON FIRST CMD
+0350    VALUE '.'
+0360      ESCAPE ROUTINE
+0370    VALUE 'L', 'LC', 'LA', 'M', 'MC'
+0380      FETCH RETURN 'EXAM-GCL' CMD
+0390    NONE
+0400      REINPUT 'Please enter valid code.'
+0410  END-DECIDE
+0420END-REPEAT
+0430END

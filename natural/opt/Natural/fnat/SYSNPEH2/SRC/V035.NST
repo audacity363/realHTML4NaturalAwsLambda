@@ -1,0 +1,15 @@
+0010&H View CONSOLE
+0020&L
+0030&L
+0040#Zweck@    : Anzeige der Bedienkonsole.
+0050&L
+0060&L
+0070#System@   : z/OS, z/VSE, BS2000/OSD.
+0080&L
+0090&L
+0100#Anwendung@: Dieser View zeigt den Inhalt der aktuellen Operator-
+0110             konsole an. Das Ausfuehren von Operatorkommandos ist
+0120             ebenfalls moeglich.
+0130&L
+0140&L
+0150#Anmerkung@:

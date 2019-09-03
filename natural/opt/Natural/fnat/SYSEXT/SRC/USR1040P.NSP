@@ -1,0 +1,33 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1040N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR1040L
+0070   2 INPUTS
+0080     3 FUNCTION         (A01)
+0090   2 INPUT-OUTPUTS
+0100     3 UDB-PARM         (N05)
+0110   2 OUTPUTS
+0120     3 RESPONSE         (I04)
+0130/*
+0140END-DEFINE
+0150/*
+0160SET KEY ALL
+0170ASSIGN FUNCTION = 'G'
+0180/*
+0190INPUT (AD=MITL'_' IP=OFF)
+0200  /  'Get or set the UDB Parameter:' (I)
+0210  /  '-' (29) (I) /
+0220  /  'Function ..........' FUNCTION
+0230  /  'UDB Parameter .....' UDB-PARM
+0240///  'Press any PF-key to stop.'
+0250/*
+0260IF *PF-KEY NE 'ENTR'
+0270  ESCAPE ROUTINE
+0280END-IF
+0290/*
+0300CALLNAT 'USR1040N' USR1040L
+0310/*
+0320WRITE (AD=IL) '=' UDB-PARM / '=' RESPONSE
+0330END

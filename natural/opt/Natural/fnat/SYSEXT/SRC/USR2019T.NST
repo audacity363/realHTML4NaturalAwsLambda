@@ -1,0 +1,185 @@
+0010Read or save Natural source code from/to the source area
+0020.
+0030Documentation ......... USR2019T    /*  Text object
+0040Interface ............. USR2019N    /*  Cataloged subprogram
+0050Example Program ....... USR2019P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. EDITOR
+0100.
+0110Keywords .............. +MOD-NAT-6.3.14,
+0120                        EDITOR, FNAT, FSEC ENABLED,
+0130                        FUSER, READ, SAVE, SYSTEM FILE
+0140.
+0150Function .............. This interface reads a Natural source into the
+0160                        source area or saves the current source area
+0170                        into a data base or into the the file system
+0180                        of an operating system.
+0190                        With OS6.3.14: FSEC data can be
+0200                        defined (see version 4).
+0210.
+0220.
+0230Parameters
+0240----------
+0250Define the following parameters with the DEFINE DATA statement:
+0260.
+0270Input ...... SYSTEM-FILE (A01), if DBID and FNR are 0
+0280                    the system file to be listed.
+0290                    Possible values are:
+0300                    'U' - FUSER system file
+0310                    'N' - FNAT system file
+0320
+0330Input ...... DBID (N05), FNR (N05), PASSWORD (A08), CIPHERCODE (N08)
+0340                    Description of the data base environment. If
+0350                    no values are entered, the current FNAT/FUSER
+0360                    definition is used.
+0370                    Attention: DBID/FNR are currently ignored in a
+0380                    UNIX/PC environment for OPT-ACCESS = 'W'.
+0390
+0400In/Output .. OBJECT-CLASS (I01)
+0410                    Object classes are defined in NAL-OBJC.
+0420                    This routine is valid for:
+0430                    executables, data areas and template sources.
+0440
+0450In/Output .. LIBRARY (A08)
+0460                    Library where the object is located. If
+0470                    LIBRARY is blank, the current library is used.
+0480
+0490Input ...... OBJECT-NAME (A32)
+0500                    Name of the object.
+0510
+0520In/Output .. OBJECT-TYPE (A02)
+0530                    Version 0: Internal object type.
+0540                    Version 1: External object type.
+0550
+0560                      Type   Object Name
+0570                      ----   -----------
+0580                        P    Program
+0590                        S    Subroutine
+0600                        H    Helproutine
+0610                        N    Subprogram
+0620                        C    Copycode
+0630                        T    Text
+0640                        G    GDA
+0650                        L    LDA
+0660                        A    PDA
+0670                        M    Map
+0680                        3    Dialog       (not on mainframe)
+0690                        4    Class
+0700
+0710                    If OBJECT-TYPE is filled, the object must be
+0720                    of the specified type when the object is read
+0730                    into the source area. If OPT-ACCESS = 'W', the
+0740                    object will be saved with that type.
+0750                    If OBJECT-TYPE is left blank, the subprogram
+0760                    returns the internal object type when the
+0770                    object is read into the source area.
+0780
+0790Output ..... OBJECT-KIND (A01)
+0800                    This routine handles source objects only.
+0810                    The value 'S' will be returned.
+0820
+0830Input ...... OPT-ACCESS (A01)
+0840                    Access type.
+0850                    Possible values are:
+0860                    'R' - Read object
+0870                    'W' - Save object
+0880
+0890Input ...... OPT-ET (L)
+0900                    Option for transaction handling (OPT-ACCESS='W').
+0910                    For future use. The subprogram issues always
+0920                    an ET or BT.
+0930
+0940Input ...... OPT-REPLACE (A01)
+0950                    Option if an object with the same name should
+0960                    be replaced (OPT-ACCESS = 'W').
+0970                    Possible values are:
+0980                    'Y' - Replace existing object
+0990                    'N' - Do not replace existing object. It is
+1000                          not possible to specify PASSWORD and
+1010                          CIPHERCODE.
+1020
+1030Input ...... OPT-SESNUM (B02), OPT-BUFFNAME (A08)
+1040                    Ignored.
+1050
+1060Input ...... OPT-NSC-CHECK (A01)
+1070                    Not used, security check always enabled.
+1080
+1090Output ..... EDIT-MODE (A01)
+1100                    Programming mode; returned if OPT-ACCESS = 'R'
+1110                    Possible values are:
+1120                    'R' - Report mode
+1130                    'S' - Structured mode
+1140
+1150In/Output .. USR2019N.VERSION (I01)
+1160                    Version number of the subprogram.
+1170                    The actual version number is 1. Parameter
+1180                    Version 0: internal object type usage (do not use)
+1190                    Version 1: external object type usage
+1200                    Version 2: parameter to renumber SA before save
+1210                               (OPT-ACCESS = 'W' only)
+1220                    Version 3: Mainframe only: value increment renumber
+1230                    Version 4: Add Fsec data
+1240
+1250Input ...... USR2019N.RENUMBER-SA (A01)
+1260                    Renumber source area, before an object is saved
+1270                    (OPT-ACCESS = 'W' only, USR2019N Version = 2)
+1280                    Possible values:
+1290                       'N'  don't renumber source area
+1300                       'Y'  renumber source area
+1310
+1320Input ...... USR2019N.RENUMBER-INC (I02)
+1330                    If USR2019N.RENUMBER-SA = 'Y', may contain the
+1340                    increment, with which the source area will be
+1350                    renumbered.
+1360                    If (increment * number of lines) > 9999, the
+1370                    system determines an increment.
+1380                    (OPT-ACCESS = 'W' only, USR2019N Version >= 3)
+1390                    Possible values:
+1400                     0 - 9999 renumber increment
+1410                     other    ignored
+1420
+1430Input ...... USR2019N.FSEC_DBID  (N5)
+1440             USR2019N.FSEC_FNR   (N5)
+1450             USR2019N.FSEC_PASSW (A8)
+1460             USR2019N.FSEC_CIPHC (N8)
+1470                    Description of the FSEC definition
+1480                    (USR2019N Version >= 4)
+1490
+1500Output ..... NAD-MSG
+1510                    Data used for message exchange.
+1520                    For further information see the PDA NAD-MSG.
+1530                    The following message numbers are possible:
+1540                    =  0000  Ok
+1550                    =  1001
+1560                    =  1005
+1570                    =  1007
+1580                    and some Natural error messages, e.g. NAT0082
+1590                    NSC check
+1600                    = -0106 SAVE/CATALOG/STOW/... not available.
+1610                    = -0806 Library :1: not found.
+1620                    = -0807 Logon to library :1: is not permitted.
+1630                    = -0839 The library 'SYSSEC' :1: has not been found.
+1640                    = -0972 User is not authorized to use command: :1:.
+1650                    = -4891 Invalid DBID/FNR specified for a library.
+1660
+1670Output ..... NAD-FLD
+1680                    Description of the field in error.
+1690                    For further information see the PDA NAD-FLD.
+1700
+1710Interface Call
+1720--------------
+1730Use the interface with the CALLNAT statement:
+1740.
+1750CALLNAT 'USR2019N' USR2019L  USR2019N.EXTENDED-PARMS
+1760                   USR-MSG   USR-FLD
+1770.
+1780.
+1790Using the Application Programming Interface:
+1800--------------------------------------------
+1810Copy the subprogram USR2019N to the library SYSTEM or the steplib
+1820library respectively, or to the required library.
+1830.
+1840.
+1850*****  End of Description  *****

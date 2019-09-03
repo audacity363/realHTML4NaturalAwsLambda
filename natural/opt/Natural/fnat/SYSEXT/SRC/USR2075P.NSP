@@ -1,0 +1,98 @@
+0010/* Function ... Terminate an EntireX Broker service means all server
+0020/*              tasks with the specified server-class, server-name,
+0030/*              and service type.
+0040/*
+0050/* This program serves as an example of how to design a user-defined
+0060/* program to call USR2075N.
+0070/***********************************************************************
+0080*
+0090DEFINE DATA
+0100 LOCAL
+0110 1 USR2075-PARMS
+0120    2 FUNCTION (A17)         /* IN : TERMINATE-SERVICE
+0130    2 SRVNODE  (A192)        /* IN
+0140    2 SRVCLASS (A32)         /* IN
+0150    2 SRVNAME  (A192)        /* IN
+0160    2 SERVICE  (A32)         /* IN
+0170    2 IMMEDIATE (L)          /* IN : immediate shutdown
+0180    2 USER-ID  (A32)         /* IN
+0190    2 PASSWORD (A32)         /* IN
+0200    2 MESSAGE  (A)   DYNAMIC /* OUT
+0210    2 RC       (I2)          /* OUT  0=O.K., 1=Error Broker
+0220*
+0230  1 YN_IMMED   (A1)  INIT <'N'>
+0240  1 YN_MIXED   (A1)  INIT <'N'>
+0250*
+0260  1 A2_MESSAGE (A64/1:2)
+0270  1 I_PL       (I4)
+0280END-DEFINE
+0290*
+0300FUNCTION  := 'TERMINATE-SERVICE'
+0310SRVNODE   := 'localhost:1971' /* default value for EntireX Broker on OpenSystems
+0320SRVCLASS  := 'RPC'
+0330COMPRESS 'SRV1' INTO SRVNAME LEAVING NO SPACE
+0340SERVICE   := 'CALLNAT'
+0350*
+0360SET KEY ALL
+0370/*
+0380REPEAT
+0390  /*
+0400  INPUT (AD=MI'_' IP=OFF CD=NE)
+0410      5T 'Terminate an EntireX Broker service' (YEI)
+0420   // 5T 'Command ..................' (TU) FUNCTION (AD=T) '(TERMINATE-SERVICE)' (TU)
+0430   // 5T 'EntireX Broker name ......' (TU) SRVNODE   (AL=40)
+0440    / 5T 'Server class .............' (TU) SRVCLASS
+0450    / 5T 'Server name ..............' (TU) SRVNAME   (AL=40)
+0460    / 5T 'Service type .............' (TU) SERVICE
+0470    / 5T 'Terminate immediately ....' (TU) YN_IMMED  (AD=T) '(Y/N)' (TU)
+0480    / 5T 'User ID ..................' (TU) USER-ID
+0490    / 5T 'Password .................' (TU) PASSWORD  (AD=N)
+0500    / 5T 'Mixed case for password ..' (TU) YN_MIXED  (AD=T) '(Y/N)' (TU)
+0510   // 5T 'Response: '            (TU) RC        (AD=OL ZP=ON CD=TU)
+0520      23T  '0 -  success message from RPC server or Broker' (TU)
+0530    / 23T  '1 -  error message from EntireX Broker' (TU)
+0540    / 23T  '2 -  error message from API' (TU)
+0550    / 23T  '3 -  Natural Security error on client' (TU)
+0560
+0570    / 5T 'Message:' (TU) A2_MESSAGE(1) (AD=OL CD=TU)
+0580    / 14T                A2_MESSAGE(2) (AD=OL CD=TU)
+0590   // 5T 'Press any PF-key to stop.' (TU)
+0600  /*
+0610  IF *PF-KEY NE 'ENTR'
+0620    ESCAPE ROUTINE
+0630  END-IF
+0640  /*
+0650  IF YN_IMMED NE 'Y'
+0660  THEN
+0670    IMMEDIATE := FALSE
+0680  ELSE
+0690    IMMEDIATE := TRUE
+0700  END-IF
+0710  /*
+0720  IF YN_MIXED NE 'Y'
+0730  THEN
+0740    EXAMINE PASSWORD AND TRANSLATE INTO UPPER
+0750  END-IF
+0760  MOVE LEFT JUSTIFIED SRVNODE TO SRVNODE
+0770  MOVE LEFT JUSTIFIED SRVNAME TO SRVNAME
+0780  /*
+0790  CALLNAT 'USR2075N' USR2075-PARMS
+0800  /*
+0810  /* Wrap a longer message at a blank
+0820  IF *LENGTH(USR2075-PARMS.MESSAGE) > 64
+0830  THEN
+0840    EXAMINE DIRECTION BACKWARD
+0850            SUBSTRING(USR2075-PARMS.MESSAGE,1,64) FOR ' '
+0860            GIVING POSITION IN I_PL
+0870    A2_MESSAGE(1) := SUBSTRING(USR2075-PARMS.MESSAGE,1,I_PL)
+0880    ADD 1 TO I_PL
+0890    A2_MESSAGE(2) := SUBSTRING(USR2075-PARMS.MESSAGE,I_PL)
+0900  ELSE
+0910    A2_MESSAGE(1) := USR2075-PARMS.MESSAGE
+0920    A2_MESSAGE(2) := ' '
+0930  END-IF
+0940  /*
+0950END-REPEAT
+0960*
+0970END
+0980

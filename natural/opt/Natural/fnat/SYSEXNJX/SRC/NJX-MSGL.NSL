@@ -1,0 +1,15 @@
+0010/*DF   S            0001U         1  1OUTPUTMESSAGE_SUCCESS                                           DA:00.00ED:00.00PF:WNV:09010100
+0020/*DF   S            0002U         1  1OUTPUTMESSAGE_ERROR
+0030/*DF   S            0003U         1  1OUTPUTMESSAGE_WARNING
+0040/*DS                                 1OUTPUTMESSAGE
+0050/*DF   S            0004U         1  2MESSAGETYPE
+0060/*DF                    U   DYNAMIC  2SHORTTEXT
+0070/*DF                    U   DYNAMIC  2LONGTEXT
+0080/*HS0001
+0090/*I                      S
+0100/*HS0002
+0110/*I                      E
+0120/*HS0003
+0130/*I                      W
+0140/*HS0004
+0150/*I                      S

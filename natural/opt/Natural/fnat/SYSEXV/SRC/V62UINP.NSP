@@ -1,0 +1,77 @@
+0010* Program ...... V62UINP
+0020* Library ...... SYSEXV
+0030* Version ...... 6.2
+0040* Machine ...... UNIX
+0050*
+0060* Functionality  Natural Unicode Support
+0070*                Unicode Input
+0080************************************************************************
+0090*
+0100*
+0110DEFINE DATA LOCAL
+01201 UNICODE1    (U11)    /* Unicode field
+01301 UNICODE2    (U11)    /* Unicode field
+0140END-DEFINE
+0150*
+0160FORMAT KD=ON
+0170SET KEY PF3  NAMED 'Exit'
+0180    PF12 NAMED 'Canc'
+0190*
+0200*
+0210MOVE  UH'03A403B9002003B503AF03BD03B103B9002003C403BF'
+0220  TO UNICODE1  /* Greek
+0230MOVE  UH'03A403B9002003B503AF03BD03B103B9002003C403BF'
+0240  TO UNICODE2  /* Greek
+0250INPUT  (IP=OFF)
+0260  01T *TIMX  (AD=OTD)
+0270  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0280  70T *DATX  (AD=OTD DF=L)
+0290  /
+0300  01T 'User'
+0310  06T *USER  (AD=OLTI)
+0320  25T     '- Natural Unicode Support  -' (I)
+0330  64T 'Program'
+0340  72T *PROGRAM   (AD=OI)
+0350  /
+0360  15T '           - Unicode Input Handling -' (I)
+0370  //
+0380  02T 'When characters outside the current code page have'
+0390  'to be read, a Unicode'  /
+0400  02T 'field must be supplied with the INPUT statement:'  /
+0410  /
+0420  02T '  INPUT' (I) '''Unicode Text 1:'''
+0430  'UNICODE1' (I) '(AD=M)   /* defined as (U11)'  /
+0440  02T '  Unicode Text 1:'  UNICODE1 (AD=M CD=NE) /
+0450  /
+0460  02T 'In some fixed fonts some characters require two spaces,'
+0470  'e.g. Chinese'  /
+0480  02T 'characters. The'  'new DL parameter' (I)
+0490  'defines the display length of an input field,'  /
+0500  02T 'i.e. the size of the input window. The default'
+0510  'display length is the length of'  /
+0520  02T 'the input field. If the defined DL size is less'
+0530  'than the visible field size,'  /
+0540  02T 'you can scroll in the input field to view the'
+0550  'entire content. Both input'  /
+0560  02T 'fields on the current page are defined as ''(U11)''.'
+0570  'If you change the font to'  /
+0580  02T 'MS Mincho, the Greek characters will no longer fit'
+0590  'into Text 1 and you can'  /
+0600  02T 'scroll inside this field, whereas Text 2 still'
+0610  'shows the full text.'  /
+0620  /
+0630  02T '  INPUT' (I) '''Unicode Text 2 (DL=22):'''
+0640  'UNICODE2' (I) '(AD=M'  'DL=22)' (I)
+0650  '  /* defined as (U11)'  /
+0660  02T '  Unicode Text 2 (DL=22):'  UNICODE2 (AD=M DL=22 CD=NE)
+0670*
+0680IF *PF-KEY = 'PF3'
+0690  ESCAPE ROUTINE
+0700END-IF
+0710IF (*PF-KEY = 'PF12' OR= 'CLR')
+0720  CALLNAT 'UTILSTOP'
+0730END-IF
+0740*
+0750*
+0760END
+0770

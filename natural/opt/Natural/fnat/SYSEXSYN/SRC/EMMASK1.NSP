@@ -1,0 +1,15 @@
+0010** Example 'EMMASK1': Edit mask
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #TEXT  (A4)
+0050END-DEFINE
+0060*
+0070ASSIGN #TEXT = 'BLUE'
+0080WRITE NOTITLE 'MASK 1:' 5X #TEXT (EM=X.X.X.X)
+0090      /       'MASK 2:' 5X #TEXT (EM=X^X^X^X)
+0100      /       'MASK 3:' 5X #TEXT (EM=X--X--X)
+0110      /       'MASK 4:' 5X #TEXT (EM=X-X-X-X-X-X)
+0120      /       'MASK 5:' 5X #TEXT (EM=X' 'X' 'X' 'X)
+0130      /       'MASK 6:' 5X #TEXT (EM=XX....XXX)
+0140      /       'MASK 7:' 5X #TEXT (EM=1234XXXX)
+0150END

@@ -1,0 +1,141 @@
+0010DB: 148 FILE: 006  - UNIT-ATTRIBUTES                  DEFAULT SEQUENCE:
+0020                              Cataloged by ESY353   on 2013-08-27 10:45:04
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2013-08-27 10:45:04
+0080*      by user ESY353
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to MVS and VSE
+0230*
+0240  1 A1 UNIT-HEX                          B    2    D Hexadecimal unit add
+0250*      Hexadecimal unit address
+0260*      (used for comparisons).
+0270*      (X'12A' > X'120'
+0280*      but '12A' < '120')
+0290  1 A2 UNIT                              A    4    D Unit address in EBCD
+0300*      Unit address in EBCDIC.
+0310  1 A3 VOLSER                            A    6    D Volume serial number
+0320*      Volume serial number currently
+0330*      mounted on the unit.
+0340  1 A4 CLASS                             A    4    D The device class:
+0350*      The device class:
+0360*      DASD   direct access
+0370*      TAPE   tape
+0380*      COMM   communications
+0390*      CTCA   channel-to-channel
+0400*      adapter
+0410*      DISP   display station
+0420*      UREC   unit record
+0430  1 A5 DEVICE-STATUS                     A    7    D The device status:
+0440*      The device status:
+0450*      ONLINE  device online
+0460*      OFFLINE device offline
+0470*      CHANGE  status changing
+0480  1 A7 SERIES                            A    6    D Device series (e.g.
+0490*      Device series (e.g. '3380').
+0500  1 A8 VOLUME-STATUS                     A    8    D The volume status:
+0510*      The volume status:
+0520*      PRIVATE  private volume
+0530*      PUBLIC   public volume
+0540*      STORAGE  storage vloume
+0550  1 A9 DCB-COUNT                         N  3.0    D Number of DCBs curre
+0560*      Number of DCBs currently open
+0570*      on the unit.
+0580  1 AA ACTIVITY                          A    9    D Activity of device:
+0590*      Activity of device:
+0600*      ALLOCATED  device allocated
+0610*      BUSY       device busy
+0620  1 AB DEVICE-TYPE                       B    4    D UCBTYP device type i
+0630*      UCBTYP device type internal
+0640*      code.
+0650  1 AC DENSITY                           A    9    D Tape density:
+0660*      Tape density:
+0670*      800
+0680*      1600
+0690*      6250
+0700*      800/1600
+0710*      1600/6250
+0720  1 AI UCB-ADDRESS                       B    4    D Memory address of un
+0730*      Memory address of unit control
+0740*      block for unit.
+0750*
+0760*      MVS fields
+0770*
+0780  1 AD FREE-CYLINDERS                    N  7.0    D Number of free cylin
+0790*      Number of free cylinders on
+0800*      disk pack.
+0810  1 AE FREE-TRACKS                       N  4.0    D Number of free track
+0820*      Number of free tracks (in
+0830*      addition to FREE-CYLINDERS).
+0840  1 AP FREE-CYLINDERS-TRACK-MANAGED      N  7.0    D Number of free cylin
+0850*      Number of free cylinders in
+0860*      track managed space on volume.
+0870  1 AF FREE-EXTENTS                      N  4.0    D Number of free exten
+0880*      Number of free extents on
+0890*      disk pack.
+0900  1 AQ FREE-EXTENTS-TRACK-MANAGED        N  4.0    D Number of free exten
+0910*      Number of free extents in
+0920*      track managed space on volume.
+0930  1 AG CONTIG-CYLINDERS                  N  7.0    D Number of cylinders
+0940*      Number of cylinders in largest
+0950*      free extent.
+0960  1 AH CONTIG-TRACKS                     N  4.0    D Number of tracks in
+0970*      Number of tracks in largest
+0980*      free extent (in addition to
+0990*      CONTIG-CYLINDERS).
+1000  1 AR CONTIG-CYLINDERS-TRACK-MANAGED    N  7.0    D Number of cylinders
+1010*      Number of cylinders in largest
+1020*      free extent in track managed
+1030*      space on volume.
+1040  1 AJ BLOCK-SIZE                        N  5.0    D Maximum blocksize pe
+1050*      Maximum blocksize permitted
+1060*      on this unit/device.
+1070  1 AK TOTAL-CYLINDERS                   N  7.0    D Total number of cyli
+1080*      Total number of cylinders on
+1090*      disk pack.
+1100  1 AT TOTAL-CYLINDERS-TRACK-MANAGED     N  7.0    D Total number of cyli
+1110*      Total number of cylinders in
+1120*      track managed space on volume.
+1130  1 AL TRACKS-PER-CYLINDER               N  3.0    D Number of tracks per
+1140*      Number of tracks per cylinder.
+1150  1 AM VTOC-TYPE                         A    1    D Type of VTOC :
+1160*      Type of VTOC :
+1170*      N - Normal
+1180*      I - Indexed
+1190  1 AN SMS                               A    3    D SMS managed device :
+1200*      SMS managed device :
+1210*      YES
+1220*      NO
+1230  1 AO EAV                               A    3    D Extended address vol
+1240*      Extended address volume :
+1250*      YES
+1260*      NO
+1270  1 A6 MOUNT-STATUS                      A   10    D The mount status:
+1280*      The mount status:
+1290*      MOUNT PEND  mount
+1300*      NOT READY   not ready
+1310*      RESIDENT    resident
+1320*      REMOVABLE   removable
+1330*      RESERVED    reserved
+1340  1 AS SHARED-DASD                       A    3    D Shared DASD Indicato
+1350*      Shared DASD Indicator:
+1360*      YES
+1370*      NO
+1380*
+1390*      End of UNIT-ATTRIBUTES
+1400*
+1410******DDM OUTPUT TERMINATED******

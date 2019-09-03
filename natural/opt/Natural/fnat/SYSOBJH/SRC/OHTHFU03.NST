@@ -1,0 +1,29 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> UNLOAD/LOAD/SCAN Function
+0080<Header2> Object Type
+0090/* <Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110<InputValues>
+0120<InputNames>
+0130<Predecessor>OHTHFU02
+0140<Successor>OHTHFU04
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180Object Type
+0190  Then select the object type you want to process.
+0200  One of the following object types can be selected:
+0210    All objects (load or scan function only)
+0220    Natural library objects
+0230    Natural system error messages
+0240    Natural command processor sources
+0250    Natural-related objects (internal format only)
+0260    External files (internal format only)
+0270    FDTs
+0280    Selection or List Workplan
+0290<HelpTextEnd>

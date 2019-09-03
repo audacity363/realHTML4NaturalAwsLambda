@@ -1,0 +1,17 @@
+0010** Example 'EMDATI': Edit mask for date and time variables
+0020************************************************************************
+0030*
+0040WRITE NOTITLE
+0050  'DATE INTERNAL :' *DATX (DF=L) /
+0060  '              :' *DATX (EM=N(9)' 'ZW.'WEEK 'YYYY)  /
+0070  '              :' *DATX (EM=ZZJ'.DAY 'YYYY)        /
+0080  '     ROMAN    :' *DATX (EM=R)  /
+0090  '     AMERICAN :' *DATX (EM=MM/DD/YYYY)      12X 'OR  ' *DAT4U /
+0100  '     JULIAN   :' *DATX (EM=YYYYJJJ)         15X 'OR  ' *DAT4J /
+0110  '     GREGORIAN:' *DATX (EM=ZD.''L(10)''YYYY) 5X 'OR  ' *DATG ///
+0120*
+0130  'TIME INTERNAL :' *TIMX                      14X 'OR  ' *TIME /
+0140  '              :' *TIMX (EM=HH.II.SS.T) /
+0150  '              :' *TIMX (EM=HH.II.SS' 'AP) /
+0160  '              :' *TIMX (EM=HH)
+0170END

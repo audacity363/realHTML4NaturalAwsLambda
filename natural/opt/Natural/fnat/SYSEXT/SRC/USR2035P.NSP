@@ -1,0 +1,45 @@
+0010/* RPC: Support of SSL
+0020/*
+0030/* Function ... Set/Get the SSL parameters to be used for the
+0040/*              communication to EntireX Broker via SSL.
+0050/*
+0060/* This program serves as example how to design a user-defined
+0070/* program call 'USR2035N'.
+0080/*
+0090/* Parameter ..
+0100/*     INPUT
+0110/*             FUNCTION  (A1)   - Function code
+0120/*                                P: set passed SSL parameters
+0130/*                                G: get already set SSL parameters
+0140/*     INOUT
+0150/*             SSLPARMS  (A128) - Parameter string for SSL communication
+0160/*                                P: passed parameter string is saved
+0170/*                                G: saved  parameter string is returned
+0180DEFINE DATA LOCAL
+01901 PARM-INPUT
+0200  2 I-FUNCTION  (A1)
+0210  2 I-SSLPARMS  (A128)
+0220  2 REDEFINE I-SSLPARMS
+0230    3 I-SSLPARMS-1 (A64)
+0240    3 I-SSLPARMS-2 (A64)
+0250END-DEFINE
+0260*
+0270DEFINE WINDOW RPC-SETSSLPARMS  SIZE 6*69 BASE 8/10
+0280  TITLE ' Set SSL parameter string' CONTROL SCREEN
+0290*
+0300SET KEY PF3
+0310*
+0320I-FUNCTION := 'G'
+0330CALLNAT 'USR2035N' USING PARM-INPUT
+0340*
+0350INPUT WINDOW='RPC-SETSSLPARMS'   /
+0360      'Please enter SSL parameter string:' /
+0370      '-' I-SSLPARMS-1 (AD=MIT) /
+0380      '-' I-SSLPARMS-2 (AD=MIT) /
+0390*
+0400IF *PF-KEY NE 'PF3'
+0410  I-FUNCTION := 'P'
+0420  CALLNAT 'USR2035N' USING PARM-INPUT
+0430END-IF
+0440*
+0450END

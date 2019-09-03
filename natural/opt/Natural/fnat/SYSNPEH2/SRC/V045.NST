@@ -1,0 +1,13 @@
+0010&H View CHECK-SECURTIY
+0020&L
+0030&L
+0040#Zweck@    : Teste Security Information fuer gegebene Klassen und
+0050             deren Auspraegung
+0060#System@   : z/OS.
+0070&L
+0080&L
+0090#Anwendung@: Man kann hiermit in einer Anwendung Verletzungen der
+0100             Security-Regeln vorbeugen, in dem man VOR dem eigentlichen
+0110             Zugriff auf eine Resource mit diesem View die Berechtigung
+0120             abtestet
+0130#Notes@  :

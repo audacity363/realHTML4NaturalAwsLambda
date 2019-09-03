@@ -1,0 +1,58 @@
+0010/*  This copycode can directly be used. For more information read the
+0020/*  text object 'USR2036T' in library SYSEXT.
+0030/***********************************************************************
+0040/*
+0050/*  Copycode Interface .... USR2036Z    /*  Copycode source
+0060/*  Documentation ......... USR2036T    /*  Text object
+0070/*  Example Program ....... USR2036P    /*  Source program
+0080/*
+0090/*  Function .............. Convert binary variable (B8) into numeric
+0100/*                          variable with format (P20), (N20) or (F8).
+0110/*
+0120/*
+0130/*  Transferred Parameters
+0140/*  ----------------------
+0150/*  &1&   Input:  binary variable (B8)
+0160/*  &2&   Output: numeric variable (P20), (N20) or (F8)
+0170/*
+0180/*
+0190/*  Additional Data Definitions
+0200/*  ---------------------------
+0210/*  1 USR2036_B8     (B8)  /* variables used in copycode USR2036Z
+0220/*  1 REDEFINE USR2036_B8
+0230/*    2 USR2036_B81  (B3)
+0240/*    2 USR2036_B82  (B3)
+0250/*    2 USR2036_B83  (B2)
+0260/*  1 USR2036_I41    (I4)
+0270/*  1 USR2036_I42    (I4)
+0280/*  1 USR2036_I43    (I4)
+0290/*
+0300/*
+0310/*  Using Copycode Interface
+0320/*  ------------------------
+0330/*  Copy the copycode USR2036Z to the required library.
+0340/*
+0350/*  Add the additional data definitions for the copycode to the data
+0360/*  definitions of your program.
+0370/*
+0380/*  Use the copycode with the INCLUDE statement:
+0390/*     INCLUDE USR2036Z 'P_BINARY' 'P_NUMERIC'
+0400***********************************************************************
+0410*
+0420* Get binary value (B8)
+0430*
+0440MOVE &1& TO USR2036_B8
+0450*
+0460* Transform data into integer
+0470*
+0480USR2036_I41 := USR2036_B81
+0490USR2036_I42 := USR2036_B82
+0500USR2036_I43 := USR2036_B83
+0510*
+0520* Convert into numeric value (possible format: (P20), (N20), (F8))
+0530*
+0540&2& := ( USR2036_I41 * 00000001099511627776 ) +
+0550       ( USR2036_I42 * 00000000000000065536 ) +
+0560         USR2036_I43
+0570*
+0580***********************************************************************

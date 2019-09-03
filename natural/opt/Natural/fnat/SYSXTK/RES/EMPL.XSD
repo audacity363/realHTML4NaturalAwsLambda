@@ -1,0 +1,519 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!--
+ Natural Tamino Demo
+
+ DESCRIPTION
+              Employee Schema Data for Tamino 4x
+
+ AUTHOR       SAG   01.2000
+
+ (c) Copyright Software AG 2000-2003. All rights reserved.
+
+-->
+<xs:schema xmlns:tsd = "http://namespaces.softwareag.com/tamino/TaminoSchemaDefinition" xmlns:xs = "http://www.w3.org/2001/XMLSchema">
+  <xs:annotation>
+    <xs:appinfo>
+      <tsd:schemaInfo name = "Employee">
+        <tsd:collection name = "NATDemoData"></tsd:collection>
+        <tsd:doctype name = "Employee">
+          <tsd:logical>
+            <tsd:content>closed</tsd:content>
+          </tsd:logical>
+        </tsd:doctype>
+        <tsd:adminInfo>
+          <tsd:created>2003-01-29T08:46:10.515+01:00</tsd:created>
+          <tsd:modified>2003-01-29T08:46:10.515+01:00</tsd:modified>
+          <tsd:version>TSD4</tsd:version>
+          <tsd:server>4.1.1.1</tsd:server>
+        </tsd:adminInfo>
+      </tsd:schemaInfo>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name = "Employee">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:standard></tsd:standard>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref = "Full-Name" minOccurs = "0"></xs:element>
+        <xs:element ref = "Mar-Stat" minOccurs = "0"></xs:element>
+        <xs:element ref = "Sex" minOccurs = "0"></xs:element>
+        <xs:element ref = "Birth" minOccurs = "0"></xs:element>
+        <xs:element ref = "Full-Address" minOccurs = "0"></xs:element>
+        <xs:element ref = "Telephone" minOccurs = "0"></xs:element>
+        <xs:element ref = "Dept" minOccurs = "0"></xs:element>
+        <xs:element ref = "Job-Title" minOccurs = "0"></xs:element>
+        <xs:element ref = "Income" minOccurs = "0" maxOccurs = "6"></xs:element>
+        <xs:element ref = "Leave-Data" minOccurs = "0"></xs:element>
+        <xs:element ref = "Leave-Booked" minOccurs = "0" maxOccurs = "4"></xs:element>
+        <xs:element ref = "Lang" minOccurs = "0" maxOccurs = "4"></xs:element>
+      </xs:sequence>
+      <xs:attribute name = "Personnel-ID" use = "required">
+        <xs:simpleType>
+          <xs:restriction base = "xs:string">
+            <xs:maxLength value = "8"></xs:maxLength>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name = "Mar-Stat">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "1"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Sex">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "1"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Birth">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "10"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Dept">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "6"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Full-Name">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref = "First-Name" minOccurs = "0"></xs:element>
+        <xs:element ref = "Middle-Name" minOccurs = "0"></xs:element>
+        <xs:element ref = "Middle-I" minOccurs = "0"></xs:element>
+        <xs:element ref = "Name" minOccurs = "0"></xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name = "First-Name">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "20"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Middle-Name">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "20"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Middle-I">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "20"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Name">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "20"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Full-Address">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref = "Address-Line" minOccurs = "0" maxOccurs = "6"></xs:element>
+        <xs:element ref = "City" minOccurs = "0"></xs:element>
+        <xs:element ref = "Zip" minOccurs = "0"></xs:element>
+        <xs:element ref = "Post-Code" minOccurs = "0"></xs:element>
+        <xs:element ref = "Country" minOccurs = "0"></xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name = "Address-Line">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "20"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "City">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "20"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Zip">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "20"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Post-Code">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "10"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Country">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "3"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Telephone">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref = "Phone" minOccurs = "0"></xs:element>
+        <xs:element ref = "Area-Code" minOccurs = "0"></xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name = "Phone">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "15"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Area-Code">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "6"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Job-Title">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "25"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Income">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref = "Curr-Code" minOccurs = "0"></xs:element>
+        <xs:element ref = "Salary" minOccurs = "0"></xs:element>
+        <xs:element ref = "Bonus" minOccurs = "0" maxOccurs = "4"></xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name = "Curr-Code">
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "3"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Salary">
+    <xs:simpleType>
+      <xs:restriction base = "xs:decimal">
+        <xs:totalDigits value = "9"></xs:totalDigits>
+        <xs:fractionDigits value = "0" fixed = "true"></xs:fractionDigits>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Bonus">
+    <xs:simpleType>
+      <xs:restriction base = "xs:decimal">
+        <xs:totalDigits value = "9"></xs:totalDigits>
+        <xs:fractionDigits value = "0" fixed = "true"></xs:fractionDigits>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Leave-Data">
+    <xs:complexType>
+      <xs:sequence minOccurs = "0">
+        <xs:element ref = "Leave-Due" minOccurs = "0"></xs:element>
+        <xs:element ref = "Leave-Taken" minOccurs = "0"></xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name = "Leave-Due">
+    <xs:simpleType>
+      <xs:restriction base = "xs:decimal">
+        <xs:totalDigits value = "2"></xs:totalDigits>
+        <xs:fractionDigits value = "0" fixed = "true"></xs:fractionDigits>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Leave-Taken">
+    <xs:simpleType>
+      <xs:restriction base = "xs:decimal">
+        <xs:totalDigits value = "2"></xs:totalDigits>
+        <xs:fractionDigits value = "0" fixed = "true"></xs:fractionDigits>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Leave-Booked">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref = "Leave-Start" minOccurs = "0"></xs:element>
+        <xs:element ref = "Leave-End" minOccurs = "0"></xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name = "Leave-Start">
+    <xs:simpleType>
+      <xs:restriction base = "xs:decimal">
+        <xs:totalDigits value = "8"></xs:totalDigits>
+        <xs:fractionDigits value = "0" fixed = "true"></xs:fractionDigits>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Leave-End">
+    <xs:simpleType>
+      <xs:restriction base = "xs:decimal">
+        <xs:totalDigits value = "8"></xs:totalDigits>
+        <xs:fractionDigits value = "0" fixed = "true"></xs:fractionDigits>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name = "Lang">
+    <xs:annotation>
+      <xs:appinfo>
+        <tsd:elementInfo>
+          <tsd:physical>
+            <tsd:native>
+              <tsd:index>
+                <tsd:text></tsd:text>
+              </tsd:index>
+            </tsd:native>
+          </tsd:physical>
+        </tsd:elementInfo>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base = "xs:string">
+        <xs:maxLength value = "3"></xs:maxLength>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+</xs:schema>

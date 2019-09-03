@@ -1,0 +1,36 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1042N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR1042L
+0070   2 INPUTS
+0080     3 FUNCTION         (A01)
+0090   2 INPUT-OUTPUTS
+0100     3 UPDATE-CMD       (L)
+0110   2 OUTPUTS
+0120     3 DBUPD            (L)
+0130     3 RESPONSE         (I04)
+0140/*
+0150END-DEFINE
+0160/*
+0170SET KEY ALL
+0180ASSIGN FUNCTION = 'G'
+0190/*
+0200INPUT (AD=MITL'_' IP=OFF)
+0210  /  'Get or set the value of the UPDATE command:' (I)
+0220  /  '-' (43) (I) /
+0230  /  'Function ..........' FUNCTION
+0240  /  'UPDATE command ....' UPDATE-CMD (EM=OFF/ON)
+0250///  'Press any PF-key to stop.'
+0260/*
+0270IF *PF-KEY NE 'ENTR'
+0280  ESCAPE ROUTINE
+0290END-IF
+0300/*
+0310CALLNAT 'USR1042N' USR1042L
+0320/*
+0330WRITE (AD=IL) '=' UPDATE-CMD (EM=OFF/ON)
+0340            / '=' DBUPD      (EM=OFF/ON)
+0350            / '=' RESPONSE
+0360END

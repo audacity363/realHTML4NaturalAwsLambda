@@ -1,0 +1,12 @@
+0010**DV          0013     V1CATALOG                         CATALOG
+0020**DD          0016N 3.0 2ERROR-CODE
+0030**DD          0017A  58 2ERROR-TEXT
+0040**DD          0018N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0019A  44 2DSNAME
+0060**DD          0020B   4 2DEVICE
+0070**DD          0021A   6 2VOLSER
+0080**DD          0022N 3.0 2VOLUME-SEQUENCE
+0090**DD          0023N 3.0 2NUMBER-OF-VOLUMES
+0100**DD          0024A   6 2SERIES
+0110**DD          0025A   4 2CLASS
+0120**DD          0026A   8 2TYPE

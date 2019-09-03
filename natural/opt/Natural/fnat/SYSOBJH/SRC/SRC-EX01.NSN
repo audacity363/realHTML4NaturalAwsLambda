@@ -1,0 +1,67 @@
+0010************************************************************************
+0020* Application: SYSOBJH (Object Handler)
+0030* Program:     SRC-EX01
+0040* Platforms:   Mainframe 4.1 / UNIX 6.1/ NGU 6.1
+0050**----------------------------------------------------------------------
+0060* Function:    Source of the user exit OBJHEX01;
+0070*              User Exit interface of SYSOBJH
+0080*              To activate this exit catalog or stow as OBJHEX01 in
+0090*              library SYSOBJH
+0100**----------------------------------------------------------------------
+0110* Remarks: This Exit is invoked when SYSOBJH incurs a potential
+0120*          error (in batch mode only). Parameters:
+0130*
+0140*            OBJHEX01-Return-Code (input)
+0150*                   Contains the error number.
+0160*
+0170*            OBJHEX01-Return-Message (input)
+0180*                   Contains the error message.
+0190*
+0200*            OBJHEX01-Termination-Code (input/output)
+0210*                   Contains the condition code set by SYSOBJH.
+0220*                   The following values are defined:
+0230*                     30  Internal error in SYSOBJH utility
+0240*                     40  Error in command for SYSOBJH
+0250*                     50  Error during SYSOBJH processing
+0260*                     60  NSC Error
+0270*                     99  Natural Error
+0280*                   (can be changed by this user exit.)
+0290*
+0300*            OBJHEX01-Terminate-SYSOBJH (input/output)
+0310*                   Set to TRUE by SYSOBJH except for
+0320*                   OBJHEX01-Return-Code = 1000 (Nothing found).
+0330*                   If set to FALSE by this user exit, SYSOBJH will
+0340*                   continue.
+0350*                   If set to TRUE by this user exit, SYSOBJH will
+0360*                   terminate with condition code
+0370*                   OBJHEX01-Termination-Code.
+0380*
+0390*          CONTROL must be returned to SYSOBJH.
+0400************************************************************************
+0410DEFINE DATA PARAMETER
+04201 OBJHEX01-PARAMETERS
+0430  2 OBJHEX01-RETURN-CODE              (I4)
+0440  2 OBJHEX01-RETURN-MESSAGE           (A79/4)
+0450  2 OBJHEX01-TERMINATION-CODE         (I4)
+0460  2 OBJHEX01-TERMINATE-SYSOBJH        (L)
+04701 OBJHEX01-ADDITIONALS                (A1/1:2)
+04801 REDEFINE OBJHEX01-ADDITIONALS
+0490  2 OBJHEX01-ADDITIONALS-VERSION      (N2)
+0500END-DEFINE
+0510/*---------------------------------------------------------------------
+0520/* Sample code:
+0530PRINT 'Return Code ........' OBJHEX01-RETURN-CODE (AD=L)
+0540    / 'Termination Code ...' OBJHEX01-TERMINATION-CODE (AD=L)
+0550    / 'Terminate Natural ..' OBJHEX01-TERMINATE-SYSOBJH (EM=NO/YES)
+0560   // 'Error Message:'
+0570    / OBJHEX01-RETURN-MESSAGE (1)
+0580    / OBJHEX01-RETURN-MESSAGE (2)
+0590    / OBJHEX01-RETURN-MESSAGE (3)
+0600    / OBJHEX01-RETURN-MESSAGE (4)
+0610RESET OBJHEX01-TERMINATION-CODE
+0620      OBJHEX01-TERMINATE-SYSOBJH
+0630/* End of sample code
+0640/*
+0650ESCAPE ROUTINE                /* RETURN TO CALLING PROGRAM
+0660/*---------------------------------------------------------------------
+0670END

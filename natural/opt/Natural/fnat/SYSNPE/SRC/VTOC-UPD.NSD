@@ -1,0 +1,106 @@
+0010DB: 148 FILE: 007  - VTOC-UPDATE                      DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:27
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:27
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A1 DSNAME                            A   54    D Fully qualified data
+0250*      Fully qualified data set name.
+0260*      For BS2000, fully qualified
+0270*      file name
+0280  1 A4 NEWNAME                           A   54    D New DSNAME / FILE NA
+0290*      New DSNAME / FILE NAME to be
+0300*      assigned to data set / file
+0310*      (when function = RENAME).
+0320*      Must be supplied without
+0330*      CAT-ID/UserID in BS2000.
+0340  1 FN FUNCTION                          A    8    D Function to be perfo
+0350*      Function to be performed:
+0360*      RENAME   rename data set/file
+0370*      SCRATCH  delete data set
+0380*      PURGE    delete data set/file
+0390*      (regardless of
+0400*      expiration date).
+0410*      RELEASE  release unused space
+0420*      For BS2000, the RELEASE
+0430*      function can be performed by
+0440*      the FILE-MAINTENANCE view with
+0450*      FUNCTION=COMPRESS.
+0460*
+0470*      Fields common to MVS and VSE
+0480*
+0490  1 A2 VOLSER                            A    6    D Volume serial number
+0500*      Volume serial number.
+0510*
+0520*      MVS fields
+0530*
+0540  1 A5 LEAVE                             N  5.0    D Specifies the number
+0550*      Specifies the number of free
+0560*      tracks to leave after the
+0570*      unused tracks are freed with
+0580*      FUNCTION='RELEASE'.
+0590  1 A6 CATALOG-UPDATE                    A    3    D After file is scratc
+0600*      After file is scratched or
+0610*      renamed, catalog will be
+0620*      updated accordingly :
+0630*      YES
+0640*      NO
+0650  1 A7 WAIT                              A    3    D For VOLUME = 'MIGRAT
+0660*      For VOLUME = 'MIGRAT' only.
+0670*      Possible values:
+0680*      NO  (default)
+0690*      YES
+0700*      Specifies if the application
+0710*      should wait for completion of
+0720*      the DFSMShsm HDELETE request.
+0730*
+0740*      BS2000 fields
+0750*
+0760  1 ES SYSTEM-CODE                       B    2      System error code.
+0770*      System error code.
+0780  1 B1 ERASE-OPTION                      A    7    D Possible values:
+0790*      Possible values:
+0800*      DESTROY  overwrite with x'00'
+0810*      (not for tape files)
+0820*      DATA     erase only data -
+0830*      keep allocated space
+0840*      and catalog entry
+0850*      (not for tape files)
+0860*      SPACE    same as DATA, but
+0870*      release allocated
+0880*      space (not for tape
+0890*      files and private
+0900*      disks)
+0910*      CATALOG  erase only catalog
+0920*      entry (only for tape
+0930*      and private disk -
+0940*      default for tape)
+0950  1 B2 ERASE-RANGE                       A    1    D Range of generation
+0960*      Range of generation data set
+0970*      to be deleted:
+0980*      A  all files after the gene-
+0990*      ration number in DSNAME
+1000*      B  all files before the gene-
+1010*      ration number in DSNAME
+1020  1 B3 PASSWORD                          A    8    D
+1030*
+1040*      End of VTOC-UPDATE
+1050*
+1060******DDM OUTPUT TERMINATED******

@@ -1,0 +1,213 @@
+0010** Example 'URLX01': ENCODED-STR := SAGENC(<DECODED-STR>)
+0020************************************************************************
+0030DEFINE DATA
+0040LOCAL
+00501 SAMPLE-STRING (A72)
+0060/*
+00701 #URL-DEC      (A) DYNAMIC
+00801 #URL-ENC      (A) DYNAMIC
+0090/*
+01001 #URL-DEC-U    (U) DYNAMIC
+0110/*
+01201 L-RET         (I4)   /* Return code
+01301 L-ERR-CHAR    (U1)   /* Error character
+01401 L-ERR-CHAR-DEC(A12)  /* Decoded error character
+01501 L-SPACE       (A1)   /* '%'  => %20, ' '  => ' ',
+0160                       /* else => '+' (default)
+01701 L-UNRES       (A1)   /* 'E' => encode, else => don't encode (default)
+01801 L-RES         (A1)   /* 'E' => encode (default), else => don't encode
+01901 L-OTHER       (A1)   /* 'E' => encode (default), else => don't encode
+02001 L-CP          (A64)  /* default *CODEPAGE
+02101 L-CP-TAB-CHAR (U1/1:1)
+02201 L-CP-TAB-ENC  (A12/1:1)
+02301 L-MSG         (U72)
+0240END-DEFINE
+0250/*
+0260/*
+0270/*
+0280WRITE 'Sample string to be processed:'
+0290/* The string below shall be encoded and decoded again.
+0300/* After decoding it should be unchanged.
+0310SAMPLE-STRING := '"Decoded data!"'
+0320WRITE SAMPLE-STRING (AL=72) /
+0330/*
+0340/* Assign the sample string to the input variable #URL-DEC of the
+0350/* simple encoding function.
+0360#URL-DEC      := SAMPLE-STRING
+0370/*
+0380/* Copycode SAGENCP containing the prototype definition is used at
+0390/* compilation time only in order to determine the type of the return
+0400/* variable for function call reference and to check the parameters,
+0410/* if this is desired. SAGENCP is optional.
+0420INCLUDE SAGENCP
+0430/*
+0440/* SAGENC(<#URL-DEC>) is the simple encoding function call.
+0450/*
+0460/* Function SAGENC %-encodes a string to code page ISO-8859-1.
+0470/* According to standard RFC3986, reserved characters and characters
+0480/* below US-ASCII x'7F', which are not allowed in a URL, will be
+0490/* %-encoded.
+0500/* Also the space and the percent sign will be encoded.
+0510/* Unreserved characters according to RCF3986 and characters above
+0520/* US-ASCII x'7F' will not be encoded. If you want to encode such
+0530/* characters, use the extended encoding function.
+0540/*
+0550/* ---- Space                       ' ' -> '+'
+0560/* ---- Percent sign                '%' -> '%25'
+0570/*
+0580/* Unreserved characters according to RFC3986 (will not be encoded!):
+0590/* ---- Period (fullstop)           '.' -- '%2E'
+0600/* ---- Tilde                       '~' -- '%7E'
+0610/* ---- Hyphen                      '-' -- '%2D'
+0620/* ---- Underscore character        '_' -- '%5F'
+0630/* ---- digits, lower and upper case characters
+0640/* ---- 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+0650/*
+0660/* Reserved characters according to RFC3986:
+0670/* ---- Exclamation mark            '!' -> '%21'
+0680/* ---- Number sign                 '#' -> '%23'
+0690/* ---- Dollar sign                 '$' -> '%24'
+0700/* ---- Ampersand                   '&' -> '%26'
+0710/* ---- Apostrophe                  ''' -> '%27'
+0720/* ---- Left parenthesis            '(' -> '%28'
+0730/* ---- Right parenthesis           ')' -> '%29'
+0740/* ---- Asterisk                    '*' -> '%2A'
+0750/* ---- Plus sign                   '+' -> '%2B'
+0760/* ---- Comma                       ',' -> '%2C'
+0770/* ---- Reverse solidus (backslash) '/' -> '%2F'
+0780/* ---- Colon                       ':' -> '%3A'
+0790/* ---- Semi-colon                  ';' -> '%3B'
+0800/* ---- Equals sign                 '=' -> '%3D'
+0810/* ---- Question mark               '?' -> '%3F'
+0820/* ---- Commercial at               '@' -> '%40'
+0830/* ---- Square bracket open         '[' -> '%5B'
+0840/* ---- Square bracket close        ']' -> '%5D'
+0850/*
+0860/* Other characters below x'7F' (US-ASCII) but not allowed in URL
+0870/* ---- Quotation mark              '"' -> '%22'
+0880/* ---- Less than                   '<' -> '%3C'
+0890/* ---- Greater than                '>' -> '%3E'
+0900/* ---- Reverse solidus (backslash) '\' -> '%5C'
+0910/* ---- Accent, Circumflex          '^' -> '%5E'
+0920/* ---- Accent, Grave               '`' -> '%60'
+0930/* ---- Opening brace               '{' -> '%7B'
+0940/* ---- Vertical bar                '|' -> '%7C'
+0950/* ---- Closing brace               '}' -> '%7D'
+0960/*
+0970#URL-ENC := SAGENC(<#URL-DEC>)
+0980/*
+0990/*
+1000WRITE 'Simple function, encoded:'
+1010WRITE #URL-ENC (AL=72)
+1020/*
+1030/* Copycode SAGDECP containing the prototype definition is used at
+1040/* compilation time only in order to determine the type of the return
+1050/* variable for function call reference and to check the parameters,
+1060/* if this is desired. SAGDECP is optional.
+1070INCLUDE SAGDECP
+1080/*
+1090/* SAGDEC(<#URL-ENC>) is the simple decoding function call.
+1100/* It decodes the above described %-encodings.
+1110/*
+1120#URL-DEC := SAGDEC(<#URL-ENC>)
+1130/*
+1140/*
+1150/* The result after encoding and decoding must be equal to the original
+1160/* SAMPLE-STRING.
+1170WRITE 'Simple function, decoded:'
+1180WRITE #URL-DEC (AL=72)
+1190/*
+1200/*
+1210/*
+1220WRITE /
+1230/*
+1240/*
+1250/*
+1260/* Assign the sample string to the input variable #URL-DEC-U of the
+1270/* enhanced encoding function.
+1280#URL-DEC-U := SAMPLE-STRING
+1290/*
+1300/* Copycode SAGENCEP containing the prototype definition is used at
+1310/* compilation time only in order to determine the type of the return
+1320/* variable for function call reference and to check the parameters,
+1330/* if this is desired. SAGENCEP is optional.
+1340INCLUDE SAGENCEP
+1350/*
+1360/* This is the enhanced encoding function call.
+1370/* The way characters will be %-encoded depends on the input
+1380/* parameter of the function.
+1390/* The parameters of the encoding and decoding function are preset
+1400/* with the default values.
+1410/* L-CP-TAB-CHAR(*) and L-CP-TAB-ENC(*) don't have default values.
+1420/* L-CP-TAB-CHAR(1) = 'ä' and L-CP-TAB-ENC(1) = '%C3%A4' will not be
+1430/* used for the sample string '"Decoded data!"'. The string does not
+1440/* contain an 'ä'.
+1450L-SPACE     := '+'           /* encoding and decoding
+1460L-UNRES     := 'D'           /* encoding only
+1470L-RES       := 'E'           /* encoding only
+1480L-OTHER     := 'E'           /* encoding only
+1490L-CP        := 'UTF-8'       /* encoding and decoding
+1500                             /* e.g. ISO-8859-1, UTF-16BE, UTF-32BE
+1510L-CP-TAB-CHAR(1) := 'ä'      /* encoding only
+1520L-CP-TAB-ENC (1) := '%C3%A4' /* encoding only
+1530/*
+1540/* Note, that all possible parameters are specified for this sample
+1550/* call.
+1560/* If the default values shall be used and no return code is wanted,
+1570/* all parameters can be omitted. The string #URL-DEC-U is mandatory.
+1580/*
+1590#URL-ENC := SAGENCE(<#URL-DEC-U,L-RET,L-ERR-CHAR,L-SPACE,L-UNRES,
+1600  L-RES,L-OTHER,L-CP,L-CP-TAB-CHAR(*),L-CP-TAB-ENC(*) >)
+1610WRITE 'Extended function, encoded:'
+1620WRITE #URL-ENC (AL=72)
+1630IF L-RET NE 0 THEN
+1640  /* If L-RET = 0, the function worked ok. Else L-RET contains the
+1650  /* Natural error returned by the GIVING clause of MOVE ENCODED.
+1660  /* The error comes up when a character cannot be converted into
+1670  /* the target codepage, e.g. because a character does not exist
+1680  /* in the target codepage.
+1690  COMPRESS 'Error' L-RET 'with MOVE ENCODED of' L-ERR-CHAR INTO L-MSG
+1700  WRITE L-MSG
+1710END-IF
+1720/*
+1730/* Copycode SAGDECEP containing the prototype definition is used at
+1740/* compilation time only in order to determine the type of the return
+1750/* variable for function call reference and to check the parameters,
+1760/* if this is desired. SAGDECEP is optional.
+1770INCLUDE SAGDECEP
+1780/*
+1790/* This is the 1st enhanced decoding function call with 5 parameters.
+1800/* Note that all possible parameters are specified for this sample
+1810/* call.
+1820/* Since the parameters have the default values, the subsequent
+1830/* function calls return the same result although parameters
+1840/* have been omitted.
+1850#URL-DEC-U := SAGDECE(<#URL-ENC,L-RET,L-ERR-CHAR-DEC,L-SPACE,L-CP>)
+1860WRITE 'Extended function, decoded:'
+1870WRITE #URL-DEC-U (AL=72)
+1880IF L-RET NE 0 THEN
+1890  /* If L-RET = 0, the function worked ok. Else L-RET contains the
+1900  /* Natural error returned by the GIVING clause of MOVE ENCODED.
+1910  /* The error comes up when a %-encoded character cannot be converted
+1920  /* into the target codepage, e.g. because a character does not exist
+1930  /* in the target codepage.
+1940  COMPRESS 'Error' L-RET 'with MOVE ENCODED of' L-ERR-CHAR INTO L-MSG
+1950  WRITE L-MSG
+1960  RESET L-RET
+1970END-IF
+1980/*
+1990/* This is the 2nd enhanced decoding function call with one parameter.
+2000#URL-DEC-U := SAGDECE(<#URL-ENC>)
+2010WRITE #URL-DEC-U (AL=72)
+2020/* L-RET will not be returned.
+2030/*
+2040/* This is the 3rd enhanced decoding function call with 3 parameters.
+2050#URL-DEC-U := SAGDECE(<#URL-ENC,L-RET,2X,L-CP>)
+2060WRITE #URL-DEC-U (AL=72)
+2070IF L-RET NE 0 THEN
+2080  COMPRESS 'Error' L-RET 'with MOVE ENCODED of' L-ERR-CHAR INTO L-MSG
+2090  WRITE L-MSG
+2100  RESET L-RET
+2110END-IF
+2120/*
+2130END

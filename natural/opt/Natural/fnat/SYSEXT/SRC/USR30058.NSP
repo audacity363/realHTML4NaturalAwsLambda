@@ -1,0 +1,208 @@
+0010**  Example program for USR3005N
+0020**  This program shows, how data can be updated in Predict.
+0030**  It updates a single file object.
+0040**
+0050DEFINE DATA LOCAL
+00601 REQUEST-RESULT(A) DYNAMIC
+0070*
+0080LOCAL USING PARSER-X                /* Local Data Area is located
+0090                                    /* in Library SYSEXXT
+0100LOCAL
+01101 XML_PARSER_XPATH             (A) DYNAMIC
+01201 XML_PARSER_XPATH_TYPE        (A1)
+01301 XML_PARSER_CONTENT           (A) DYNAMIC
+01401 XML_PARSER_CONTENT_IS_EMPTY  (L)
+01501 XML_PARSER_ERROR_TEXT        (A253)
+01601 XML_PARSER_RESPONSE          (I2)
+01701 #XNAME (A) DYNAMIC
+01801 #XVALUE (A) DYNAMIC
+01901 #MSG-NR(I4)
+02001 #MSG-TEXT(A79)
+02101 #MSG-TYPE(A8)
+02201 #ADDITIONAL-MSG-NR(I4)
+02301 #ADDITIONAL-MSG-TEXT(A79)
+02401 #INVALID-ATTRIBUTE(A32)
+02501 #INDEX-IN-INVALID-ATTRIBUTE(I4)
+02601 #LINE-WITH-APOSTROPH(A30)
+02701 #LINE-WITHOUT-APOSTROPH(A50)
+0280END-DEFINE
+0290COMPRESS *USER '''s execution'  TO #LINE-WITH-APOSTROPH LEAVING NO
+0300INCLUDE USR3005Y '''1'''
+0310                 '#LINE-WITH-APOSTROPH' '#LINE-WITHOUT-APOSTROPH'
+0320**
+0330** With the above coding apostrophs in values are translated
+0340** so that a correct value clause can be assembled
+0350**
+0360PRINT 'Example program' *PROGRAM 'for USR3005N'
+0370/     'This program shows, how data can be updated in Predict.'
+0380/     'It updates a single file object.'
+0390/
+0400**
+0410** First lock the object to be updated
+0420**
+0430COMPRESS
+0440'<Predict>'
+0450  '<Request>'
+0460    '<Lock>'
+0470      '<Search>'
+0480         '<Object-type value=''FILE-U''/>'
+0490         '<Attribute name=''ID'' value=''EXAMPLE-EMP''/>'
+0500      '</Search>'
+0510    '</Lock>'
+0520  '</Request>'
+0530'</Predict>'
+0540**
+0550TO REQUEST-RESULT
+0560*
+0570PRINT 'Request passed to USR3005N' /
+0580PRINT REQUEST-RESULT
+0590*
+0600CALLNAT 'USR3005N' REQUEST-RESULT
+0610*
+0620PRINT / 'Result returned from USR3005N' /
+0630PRINT REQUEST-RESULT
+0640*
+0650INCLUDE PARSER_X                    /* Copy Code is located
+0660                                    /* in Library SYSEXXT
+0670                                    /*
+0680  'REQUEST-RESULT'                  /* XML FILE TO BE PARSED
+0690  'XML_PARSER_XPATH'                /* XPATH TO REPESENT ELEMENT...
+0700  'XML_PARSER_XPATH_TYPE'           /* TYPE OF CALLBACK
+0710  'XML_PARSER_CONTENT'              /* CONTENT OF FOUND ELEMENT
+0720  'XML_PARSER_CONTENT_IS_EMPTY'     /* IS TRUE IF ELEMENT IS EMPTY
+0730  'XML_PARSER_ERROR_TEXT'           /* ERROR MESSAGE
+0740  'XML_PARSER_RESPONSE'             /* ERROR NR; 0 = OK
+0750*
+0760IF #MSG-TYPE NE 'SUCCESS'
+0770  WRITE 'Object can not be locked'
+0780  ESCAPE ROUTINE
+0790END-IF
+0800**
+0810COMPRESS
+0820'<Predict>'
+0830  '<Request>'
+0840    '<Update>'
+0850      '<Search>'
+0860        '<Object-type value=''FILE-U''/>'
+0870        '<Attribute name=''ID'' value=''EXAMPLE-EMP''/>'
+0880      '</Search>'
+0890      '<Set>'
+0900        '<Row>'
+0910          '<Structure Name=''Abstract''>'
+0920          '<Attribute Name=''Abstract-line'' Value=''This file was'' />'
+0930          '<Attribute Name=''Abstract-line'' Value=''updated by'' />'
+0940          '<Attribute Name=''Abstract-line'' Value='''
+0950             #LINE-WITHOUT-APOSTROPH '''/>'
+0960          '<Attribute Name=''Abstract-line'' Value=''of'
+0970                     *PROGRAM '''/>'
+0980          '</Structure>'
+0990        '</Row>'
+1000      '</Set>'
+1010    '</Update>'
+1020  '</Request>'
+1030'</Predict>'
+1040*
+1050TO REQUEST-RESULT
+1060*
+1070PRINT 'Request passed to USR3005N' /
+1080PRINT REQUEST-RESULT
+1090*
+1100CALLNAT 'USR3005N' REQUEST-RESULT
+1110*
+1120PRINT / 'Result returned from USR3005N' /
+1130PRINT REQUEST-RESULT
+1140*
+1150INCLUDE PARSER_X                    /* Copy Code is located
+1160                                    /* in Library SYSEXXT
+1170                                    /*
+1180  'REQUEST-RESULT'                  /* XML FILE TO BE PARSED
+1190  'XML_PARSER_XPATH'                /* XPATH TO REPESENT ELEMENT...
+1200  'XML_PARSER_XPATH_TYPE'           /* TYPE OF CALLBACK
+1210  'XML_PARSER_CONTENT'              /* CONTENT OF FOUND ELEMENT
+1220  'XML_PARSER_CONTENT_IS_EMPTY'     /* IS TRUE IF ELEMENT IS EMPTY
+1230  'XML_PARSER_ERROR_TEXT'           /* ERROR MESSAGE
+1240  'XML_PARSER_RESPONSE'             /* ERROR NR; 0 = OK
+1250*
+1260**
+1270** Now unlock the updated object
+1280**
+1290COMPRESS
+1300'<Predict>'
+1310  '<Request>'
+1320    '<Unlock>'
+1330      '<Search>'
+1340         '<Object-type value=''FILE-U''/>'
+1350         '<Attribute name=''ID'' value=''EXAMPLE-EMP''/>'
+1360      '</Search>'
+1370    '</Unlock>'
+1380  '</Request>'
+1390'</Predict>'
+1400**
+1410TO REQUEST-RESULT
+1420*
+1430PRINT 'Request passed to USR3005N' /
+1440PRINT REQUEST-RESULT
+1450*
+1460CALLNAT 'USR3005N' REQUEST-RESULT
+1470*
+1480PRINT / 'Result returned from USR3005N' /
+1490PRINT REQUEST-RESULT
+1500*
+1510INCLUDE PARSER_X                    /* Copy Code is located
+1520                                    /* in Library SYSEXXT
+1530                                    /*
+1540  'REQUEST-RESULT'                  /* XML FILE TO BE PARSED
+1550  'XML_PARSER_XPATH'                /* XPATH TO REPESENT ELEMENT...
+1560  'XML_PARSER_XPATH_TYPE'           /* TYPE OF CALLBACK
+1570  'XML_PARSER_CONTENT'              /* CONTENT OF FOUND ELEMENT
+1580  'XML_PARSER_CONTENT_IS_EMPTY'     /* IS TRUE IF ELEMENT IS EMPTY
+1590  'XML_PARSER_ERROR_TEXT'           /* ERROR MESSAGE
+1600  'XML_PARSER_RESPONSE'             /* ERROR NR; 0 = OK
+1610*
+1620DEFINE SUBROUTINE CALLBACK
+1630*
+1640EXAMINE XML_PARSER_XPATH TRANSLATE INTO UPPER
+1650DECIDE ON FIRST VALUE OF XML_PARSER_XPATH
+1660*
+1670  VALUE 'PREDICT/RESULT/MESSAGE/?NUMBER'
+1680    #MSG-NR := VAL(XML_PARSER_CONTENT)
+1690*
+1700  VALUE 'PREDICT/RESULT/MESSAGE/?TEXT'
+1710    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#MSG-TEXT'
+1720*
+1730  VALUE 'PREDICT/RESULT/MESSAGE/?TYPE'
+1740    #MSG-TYPE := XML_PARSER_CONTENT
+1750    EXAMINE #MSG-TYPE TRANSLATE INTO UPPER
+1760    IF #MSG-TYPE NE 'SUCCESS'
+1770**
+1780** Possible Values of ?TYPE are SUCCESS, ERROR and WARNING
+1790**
+1800      PRINT #MSG-NR
+1810      PRINT #MSG-TEXT
+1820    END-IF
+1830  VALUE 'PREDICT/RESULT/MESSAGE/?ADDITIONAL-MSG-NUMBER'
+1840    #ADDITIONAL-MSG-NR := VAL(XML_PARSER_CONTENT)
+1850*
+1860  VALUE 'PREDICT/RESULT/MESSAGE/?ADDITIONAL-MSG-TEXT'
+1870    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#ADDITIONAL-MSG-TEXT'
+1880    PRINT #ADDITIONAL-MSG-NR
+1890    PRINT #ADDITIONAL-MSG-TEXT
+1900 VALUE 'PREDICT/RESULT/MESSAGE/?INVALID-ATTRIBUTE'
+1910    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#INVALID-ATTRIBUTE'
+1920    PRINT #INVALID-ATTRIBUTE 'is invalid'
+1930  VALUE 'PREDICT/RESULT/MESSAGE/?INDEX-IN-INVALID-ATTRIBUTE'
+1940    #INDEX-IN-INVALID-ATTRIBUTE := VAL(XML_PARSER_CONTENT)
+1950    PRINT 'Occurrence' #INDEX-IN-INVALID-ATTRIBUTE
+1960    'of' #INVALID-ATTRIBUTE 'is invalid'
+1970*
+1980  NONE IGNORE
+1990*
+2000END-DECIDE
+2010END-SUBROUTINE /* CALLBACK
+2020*
+2030DEFINE SUBROUTINE PARSER_ERROR
+2040   PRINT 'Parser Error'
+2050   PRINT XML_PARSER_ERROR_TEXT
+2060 END-SUBROUTINE
+2070*
+2080END

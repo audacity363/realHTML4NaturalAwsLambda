@@ -1,0 +1,30 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> SYSOBJH Objects
+0080<Header2> Page 2 of 3
+0090/* <Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110<InputValues>
+0120<InputNames>
+0130<Predecessor>OHTHO001
+0140<Successor>OHTHO003
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170Types of Object Handler Workplans:
+0180
+0190Procedure (Header: TYPE PROCEDURE)
+0200  A PROCEDURE contains a sequence of fully specified commands separated by
+0210  semicolons. The Object Handler can be started in batch mode to perform such
+0220  a PROCEDURE. A PROCEDURE may contain any kind of command in any combination.
+0230
+0240Selection (Header: TYPE SELECTION)
+0250  A SELECTION contains a selection criterion for objects. It can be used in
+0260  Object Handler commands.
+0270
+0280List (Header: TYPE LIST)
+0290  A LIST contains a list of objects. It can be used in Object Handler commands.
+0300<HelpTextEnd>

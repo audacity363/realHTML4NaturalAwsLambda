@@ -1,0 +1,70 @@
+0010Get system variable *NET-USER
+0020.
+0030Documentation ......... USR2012T    /*  Text object
+0040Interface ............. USR2012N    /*  Cataloged subprogram
+0050Example Program ....... USR2012P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL ENVIRONMENT
+0100.
+0110Keywords .............. GET, *NET-USER
+0120.
+0130Function .............. This interface reads the value of the system
+0140                        variable *NET-USER.
+0150                        This variable contains the the full name
+0160                        of the account under which the user logged on
+0170                        to the operationg system. On Windows NT for
+0180                        example it contains <domain name> <user name>.
+0190                        During execution of a method subprogram on a
+0200                        NaturalX server, the variable contains the
+0210                        account under which the client is logged
+0220                        on, provided that the request is executed with
+0230                        authentication and not anonymous.
+0240.
+0250.
+0260Parameters
+0270----------
+0280Define the following parameters with the DEFINE DATA statement:
+0290.
+0300
+0310 1 USR2012L
+0320   2 OUTPUTS
+0330     3 NET-USER        (A253)
+0340     3 RESPONSE        (I4)
+0350 /*
+0360 1 USR2012N
+0370   2 VERSION           (I1)     INIT <0>
+0380 1 REDEFINE USR2012N
+0390   2 EXTENDED-PARMS
+0400     3 EXTENDED-DATA   (A1/1:1)
+0410.
+0420Interface Call
+0430--------------
+0440Use the interface with the CALLNAT statement:
+0450.
+0460CALLNAT 'USR2012N' USR2012L USR2012N.EXTENDED-PARMS
+0470.
+0480.
+0490Using the Application Programming Interface:
+0500--------------------------------------------
+0510Copy the subprogram USR2012N to the library SYSTEM or the steplib
+0520library respectively, or to the required library.
+0530.
+0540.
+0550Parameter Description:
+0560----------------------
+0570Output ..... 1 NET-USER  (A253)
+0580                      The value of the system variable NET-USER.
+0590
+0600Output ..... 1 RESPONSE (I4)
+0610                      Response code. Possible values are:
+0620                         0 - Ok
+0630
+0640In/Output .. USR2012N.VERSION (I1)
+0650                    Version number of the subprogram.
+0660                    0 is the version number for the original
+0670                    parameter layout.
+0680.
+0690.
+0700*****  End of Description  *****

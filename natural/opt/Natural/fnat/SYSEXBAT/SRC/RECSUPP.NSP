@@ -1,0 +1,19 @@
+0010/* ---------------------------------------------------------------------
+0020/* Program:        RESUPP
+0030/* Library:        SYSEXBAT (Batch mode samples)
+0040/*
+0050/* Functionality:  Record suppression
+0060/*
+0070/* Description:    The terminal command %* is used to hide the next
+0080/*                 input data.
+0090/* ---------------------------------------------------------------------
+0100DEFINE DATA LOCAL
+01101 #username  (A10)
+01201 #password  (A10)
+0130END-DEFINE
+0140**
+0150INPUT (IP=OFF AD=M) #username #password
+0160**
+0170DISPLAY #username #password
+0180**
+0190END

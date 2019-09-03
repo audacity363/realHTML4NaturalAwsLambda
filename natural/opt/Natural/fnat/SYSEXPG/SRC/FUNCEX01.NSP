@@ -1,0 +1,36 @@
+0010** Example 'FUNCEX01': Function call  (Program)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+0040  1 #NUM  (I2) INIT <5>
+0050  1 #A    (I2) INIT <1>
+0060  1 #B    (I2) INIT <2>
+0070  1 #C    (I2) INIT <3>
+0080  1 #CHAR (A1) INIT <'A'>
+0090END-DEFINE
+0100*
+0110IF #NUM = F#ADDITION(<#A,#B,#C>)   /* Function with three parameters.
+0120  WRITE 'Sum of #A,#B,#C' #NUM
+0130ELSE
+0140  IF #NUM = F#ADDITION(<1X,#B,#C>) /* Function with optional parameters.
+0150    WRITE 'Sum of #B,#C' #NUM
+0160  END-IF
+0170END-IF
+0180*
+0190DECIDE ON FIRST #CHAR
+0200  VALUE F#CHAR(<>)(1)             /* Function with result array.
+0210     WRITE 'Character A found'
+0220  VALUE F#CHAR(<>)(2)
+0230     WRITE 'Character B found'
+0240  NONE
+0250     IGNORE
+0260END-DECIDE
+0270*
+0280IF F#EVEN(<#B>)                   /* Function with logical result value.
+0290  WRITE #B 'is an even number'
+0300END-IF
+0310*
+0320F#TEXT(<'Hello', '*'>)            /* Function used as a statement.
+0330*
+0340WRITE F#TEXT(<(IR=A12) 'Good'>)   /* Function with intermediate result.
+0350*
+0360END

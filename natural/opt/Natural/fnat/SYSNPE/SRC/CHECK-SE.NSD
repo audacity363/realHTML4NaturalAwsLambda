@@ -1,0 +1,50 @@
+0010DB: 148 FILE: 045  - CHECK-SECURITY                   DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:20
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:20
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      MVS fields
+0230*
+0240  1 A1 ENTITY                            A  200    D Entity (DSNAME) to b
+0250*      Entity (DSNAME) to be security
+0260*      checked.
+0270  1 A2 CLASS                             A    8    D Class of entity,e.g.
+0280*      Class of entity,e.g. 'DATASET'
+0290*      Default is 'FACILITY'
+0300  1 A3 ATTRIBUTE                         A    8    D Entity attribute :
+0310*      Entity attribute :
+0320*      READ
+0330*      UPDATE
+0340*      CONTROL
+0350*      ALTER
+0360  1 A4 INSTALLATION-PARMS                A  250    D Installation paramet
+0370*      Installation parameters to
+0380*      be passed to security system.
+0390  1 A5 ALLOWED                           A    8      Access allowed indic
+0400*      Access allowed indicator :
+0410*      NOSEC    - Security not
+0420*      installed
+0430*      YES      - Access allowed
+0440*      NO       - Access disallowed
+0450*      ERROR-nn - Error returned by
+0460*      security system
+0470*
+0480*      End of CHECK-SECURITY
+0490*
+0500******DDM OUTPUT TERMINATED******

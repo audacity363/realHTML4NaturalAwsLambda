@@ -1,0 +1,111 @@
+0010Get TECH information
+0020.
+0030Documentation ......... USR2026T    /*  Text object
+0040Interface ............. USR2026N    /*  Cataloged subprogram
+0050Example Program ....... USR2026P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. SYSTEM COMMANDS
+0100.
+0110Keywords .............. +MOD-NAT-6.3.9, +MOD-NAT-9.1.1,
+0120                        ENVIRONMENT, ERROR, STEPLIB, TECH
+0130.
+0140Function .............. Natural TECH information is returned
+0150                        to the calling Natural program.
+0160                        With OS 6.3.9: version = 3 added
+0170                        See ADDITIONALS and NAT-VERSION-FULL
+0180                        but also NAT-VERSION.
+0190                        With NAT9.1.1: version = 5 added
+0200                        See ADDITIONALS with NAT-EDITOR
+0210.
+0220.
+0230Parameters
+0240----------
+0250Define the following parameters with the DEFINE DATA statement:
+0260.
+02701 TECH-BLOCK1                        /* First map of TECH cmd
+0280  2 NAT-TIME            (T)          /* *TIMX
+0290  2 NAT-DATE            (D)          /* *DATX
+0300  2 NAT-USER            (A8)         /* *USER
+0310  2 NAT-LIB             (A8)         /* *LIBRARY-ID
+0320  2 NAT-VERSION         (A2)         /* Natural version
+0330  2 NAT-LEVEL           (A4)         /* Natural SM level
+0340  2 START-UP            (A8)         /* Startup transaction
+0350  2 SECURITY            (A3)         /* Natural Security active (Yes/No)
+0360  2 NAT-OS              (A32)        /* *OS
+0370  2 NAT-OSVERS          (A16)        /* *OSVERS
+0380  2 NAT-MACHINE-CLASS   (A16)        /* *MACHINE-CLASS
+0390  2 NAT-HARDWARE        (A15)        /* *HARDWARE
+0400  2 NAT-TPSYS           (A8)         /* *TPSYS
+0410  2 NAT-DEVICE          (A8)         /* *DEVICE
+0420  2 NAT-INIT-ID         (A8)         /* *INIT-ID
+0430  2 LAST-CMD            (A32)        /* Last command issued
+0440
+04501 TECH-BLOCK2                        /* Second map of TECH cmd
+0460                                     /* Last occurred error:
+0470  2 ERROR-NUM           (N7)         /* Error number
+0480  2 ERROR-LINE          (N4)         /* Error line
+0490  2 ERROR-PROGRAM       (A8)         /* Error program
+0500  2 ERROR-PGM-TYPE      (A1)         /* Object type of error program
+0510  2 ERROR-PGM-TYPE-LONG (A11)        /* Object type (long description)
+0520  2 ERROR-LEVEL         (I4)         /* Object level of error program
+0530  2 ERROR-LIB           (A8)         /* Library containing error program
+0540  2 ERROR-DBID          (I4)         /* DBID of library
+0550  2 ERROR-FNR           (I4)         /* FNR of library
+0560  2 ERROR-CLASS         (A6)         /* Error class
+0570  2 ERROR-TYPE          (A25)        /* Error type
+0580  2 ERROR-TIME          (A19)        /* Error time
+0590  2 ERROR-TA            (A8)         /* Error transaction
+0600
+06101 TECH-BLOCK3                        /* Third map of TECH cmd
+0620  2 STEP-LIB            (A8/1:11)    /* Currently active steplib library
+0630  2 STEP-DBID           (A5/1:11)    /* DBID of steplib library
+0640  2 STEP-FNR            (A5/1:11)    /* FNR of steplib library
+0650  2 OBJ-NAME            (A8/1:10)    /* Name of active programming obj.
+0660  2 OBJ-TYPE            (A1/1:10)    /* Object type
+0670  2 OBJ-LEVEL           (N3/1:10)    /* Object level
+0680  2 OBJ-LINE            (A4/1:10)    /* Object line
+0690
+07001 TECH-BLOCK4
+0710  2 RETURN-CODE         (I4)         /* 0 - Array okay
+0720                                     /* 1 - Array not correctly defined
+0730                                     /* 2 - Additionals too small
+0740                                     /* 3 - Invalid version
+0750  2 ADDITIONALS         (A1/1:102)
+0760  2 REDEFINE ADDITIONALS
+0770    3 ADD-VERSION       (N2)
+0780                                     /* Version 1 :
+0790    3 NAT-CODEPAGE      (A64)        /* *CODEPAGE
+0800    3 NAT-LOCALE        (A8)         /* *LOCALE
+0810                                     /* Version 2 :
+0820    3 NAT-HARDWARE-16   (A16)        /* *HARDWARE (with full length A16)
+0830                                     /* Version 3 :
+0840    3 NAT-VERSION-FULL  (A10)        /* Natural full version
+0850                                     /* with format: aaiissffff
+0860                                     /* a - major version
+0870                                     /* i - minor version
+0880                                     /* s - service pack
+0890                                     /* f - cumulative fix
+0900                                     /* Version 4 :
+0910                                     /* not supported on LUW
+0920                                     /* Version 5 :
+0930    3 NAT-DUMMY         (I1)         /* only supported on mainframes
+0940    3 NAT-EDITOR        (A1)         /* Natural editors enabled:
+0950                                     /* 'E' enabled, 'D' disabled
+0960.
+0970Interface Call
+0980--------------
+0990Use the interface with the CALLNAT statement:
+1000.
+1010ADD-VERSION := 5
+1020CALLNAT 'USR2026N'  TECH-BLOCK1 TECH-BLOCK2 TECH-BLOCK3 TECH-BLOCK4
+1030.
+1040.
+1050Using the Application Programming Interface:
+1060--------------------------------------------
+1070Copy the subprogram USR2026N to the library SYSTEM or the steplib
+1080library respectively, or to the required library.
+1090.
+1100.
+1110***** End of Description *****

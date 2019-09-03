@@ -1,0 +1,9 @@
+0001define data local
+0002    1 timestamp (A20)
+0003end-define
+0004
+0005move edited *timx (em=DD.MM.YYYY_HH:II:SS) to timestamp 
+0006define work file 1 "/tmp/test"
+0007write work file 1 timestamp
+0008close work file 1
+0009END

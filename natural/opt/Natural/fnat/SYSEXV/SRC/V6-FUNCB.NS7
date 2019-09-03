@@ -1,0 +1,15 @@
+0010*
+0020* Function .. V6-FUNCB
+0030* Library ... SYSEXV
+0040* Version ... 6.1
+0050*
+0060* Functionality: External function without parameters
+0070************************************************************************
+0080*
+0090Define Function Fct1              /* Function without parameters
+0100  RETURNS #Var1 (A20)
+0110  /*
+0120  Move 'Window Title' to #Var1
+0130End-Function
+0140*
+0150End

@@ -1,0 +1,35 @@
+0010 DB: 000 FILE: 027  - SAG-TOURS-E-CONTRACT             DEFAULT SEQUENCE:
+0020
+0030T L DB Name                              F Leng  S D Remark
+0040- - -- --------------------------------  - ----  - - ------------------------
+0050  1 B1 CONTRACT-ID                       P  6.0  N D
+0060  1 B2 CONTRACT-TYPE                     A    1  N
+0070*      'A' = 'charter contract',  'B'
+0080*      = 'Sailor contract'
+0090  1 B3 PRICE                             P 10.3  N
+0100  1 B4 DID-CONDITIONS                    A    8  N D
+0110*      ID of document including
+0120*      contract conditions
+0130  1 B5 DATE-RESERVATION                  N  8.0  N D
+0140  1 B6 DATE-BOOKING                      N  8.0  N D
+0150  1 B7 DATE-CANCELLATION                 N  8.0  N D
+0160G 1 B8 DEPOSIT
+0170  2 B9 DATE-D                            N  8.0  N
+0180  2 CA AMOUNT-D                          P 10.3  N
+0190G 1 CB PAYMENT-OF-BALANCE
+0200  2 CC DATE-P                            N  8.0  N
+0210  2 CD AMOUNT-P                          P 10.3  N
+0220  1 CE ID-CUSTOMER                       N  8.0  N D
+0230*      PERSON-ID of customer
+0240  1 CF ID-CRUISE                         N  8.0  N D
+0250*      CRUISE-ID, subject of contract
+0260  1 CG ID-AGENCY                         A    8  N D
+0270*      COMPANY-ID of agency, which
+0280*      regotiate the contract
+0290  1 T3 CONTRACT-TIMESTAMP                T   12  N
+0300*      used for Natural Constract
+0310  1 CH CONTRACT-TYPE-SP                  A    5    S
+0320*      -------- SOURCE FIELD(S) -------
+0330*      CONTRACT-TYPE(1-1)
+0340*      CONTRACT-ID(1-4)
+0350******DDM OUTPUT TERMINATED******

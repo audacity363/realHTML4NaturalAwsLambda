@@ -1,0 +1,23 @@
+0010** Example 'REIEX1': REINPUT
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #FUNCTION (A1)
+00501 #PARM     (A1)
+0060END-DEFINE
+0070*
+0080INPUT #FUNCTION #PARM
+0090*
+0100DECIDE FOR FIRST CONDITION
+0110  WHEN #FUNCTION = 'A' AND #PARM = 'X'
+0120    REINPUT 'Function A with parameter X selected.'
+0130            MARK *#PARM
+0140  WHEN #FUNCTION = 'C' THRU 'D'
+0150    REINPUT 'Function C or D selected.'
+0160  WHEN #FUNCTION = 'X'
+0170    STOP
+0180  WHEN NONE
+0190    REINPUT 'Please enter a valid function.'
+0200            MARK *#FUNCTION
+0210END-DECIDE
+0220*
+0230END

@@ -1,0 +1,209 @@
+0010************************************************************************
+0020* Application: SYSOBJH (Object Handler)
+0030* Program:     SRC-EX02
+0040* Platforms:   Mainframe 4.1 / UNIX 6.1/ NGU 6.1
+0050**----------------------------------------------------------------------
+0060* Function:    Source of the user exit OBJHEX02;
+0070*              User Exit interface of SYSOBJH
+0080*              To activate this exit catalog or stow as OBJHEX02 in
+0090*              library SYSOBJH
+0100**----------------------------------------------------------------------
+0110* Remarks: This Exit is invoked when objects were rejected or not
+0120*          replaced during the LOAD function
+0130*          (in batch and command mode only).
+0140*
+0150*          Parameters:
+0160*             SRC-not-replaced (Input)
+0170*                Number of Natural sources not replaced
+0180*
+0190*             CAT-not-replaced (Input)
+0200*                Number of Natural cataloged objects not replaced
+0210*
+0220*             ERR-not-replaced (Input)
+0230*                Number of error messages not replaced
+0240*
+0250*             ERL-rejected     (Input)
+0260*                Number of long error messages rejected because of
+0270*                missing short error message
+0280*
+0290*             SRT-rejected     (Input)
+0300*                Number of cataloged subroutines rejected because of
+0310*                existing subroutine name
+0320*
+0330*             NCP-not-replaced (Input)
+0340*                Number of Natural Command Processor sources
+0350*                not replaced
+0360*
+0370*             RES-not-replaced (Input)
+0380*                Number of Resources not replaced (Open Systems only)
+0390*
+0400*             EXT-not-replaced (Input)
+0410*                Number of external objects not replaced
+0420*                (Open Systems only)
+0430*
+0440*             FDT-not-replaced (Input)
+0450*                Number of FDTs not replaced
+0460*
+0470*             REL-not-replaced (Input)
+0480*                Number of Natural related objects not replaced
+0490*                (Open Systems only)
+0500*
+0510*             DDM-not-replaced (Input)
+0520*                Number of DDMs not replaced (Mainframe only)
+0530*
+0540*             DEB-not-replaced (Input)
+0550*                Number of Debug Environments not replaced
+0560*                (Mainframe only)
+0570*
+0580*             PRF-not-replaced (Input)
+0590*                Number of Profiles not replaced (Mainframe only)
+0600*
+0610*             DLI-not-replaced (Input)
+0620*                Number of DL/I Subfiles not replaced (Mainframe only)
+0630*
+0640*             CAT-rejected-Version (Input)
+0650*                Number of cataloged Natural objects rejected because of
+0660*                newer version
+0670*
+0680*            OBJHEX02-Termination-Code (input/output)
+0690*                   Set to 0 by SYSOBJH.
+0700*                   (can be changed by this user exit.)
+0710*
+0720*            OBJHEX02-Terminate-SYSOBJH (input/output)
+0730*                   Set to FALSE by SYSOBJH.
+0740*                   If set to FALSE by this user exit, SYSOBJH will
+0750*                   continue.
+0760*                   If set to TRUE by this user exit, SYSOBJH will
+0770*                   terminate with condition code
+0780*                   OBJHEX02-Termination-Code (in batch mode only).
+0790*
+0800*            OBJHEX02-ADDITIONALS (A1/1:V)
+0810*                Parameters for future use, redefined as follows
+0820*              ADDITIONALS-VERSION (N2)
+0830*                  Version of the additional parameters:
+0840*                    Version 0 : V=2, no additional parameters
+0850*                    Version 1 : V=6
+0860*              CAT-REJECTED-XREF (I4)
+0870*                  (Version 1 and above)
+0880*                  Number of cataloged Natural objects rejected because
+0890*                  of XREF reasons (no XREF data and/or not documented
+0900*                  in Predict).
+0910*
+0920*          CONTROL must be returned to SYSOBJH.
+0930************************************************************************
+0940DEFINE DATA PARAMETER
+09501 OBJHEX02-STATISTICS
+0960  2 SRC-NOT-REPLACED                  (I4)
+0970  2 CAT-NOT-REPLACED                  (I4)
+0980  2 ERR-NOT-REPLACED                  (I4)
+0990  2 ERL-REJECTED                      (I4)
+1000  2 SRT-REJECTED                      (I4)
+1010  2 NCP-NOT-REPLACED                  (I4)
+1020  2 RES-NOT-REPLACED                  (I4)
+1030  2 EXT-NOT-REPLACED                  (I4)
+1040  2 FDT-NOT-REPLACED                  (I4)
+1050  2 REL-NOT-REPLACED                  (I4)
+1060  2 DDM-NOT-REPLACED                  (I4)
+1070  2 DEB-NOT-REPLACED                  (I4)
+1080  2 PRF-NOT-REPLACED                  (I4)
+1090  2 DLI-NOT-REPLACED                  (I4)
+1100  2 CAT-REJECTED-VERSION              (I4)
+11101 OBJHEX02-PARAMETERS
+1120  2 OBJHEX02-TERMINATION-CODE         (I4)
+1130  2 OBJHEX02-TERMINATE-SYSOBJH        (L)
+11401 OBJHEX02-ADDITIONALS                (A1/1:V)
+1150LOCAL
+11601 LOCAL-ADDITIONALS                   (A1/1:6)
+11701 REDEFINE LOCAL-ADDITIONALS
+1180  2 LOCAL-ADDITIONALS-VERSION         (N2)
+1190  2 CAT-REJECTED-XREF                 (I4)
+12001 SIZE-LOCAL-ADDITIONALS              (I4)
+1210END-DEFINE
+1220/*---------------------------------------------------------------------
+1230/* Sample code:
+1240/*
+1250NEWPAGE
+1260CAT-REJECTED-XREF := 0
+1270SIZE-LOCAL-ADDITIONALS := *OCCURRENCE (OBJHEX02-ADDITIONALS)
+1280IF SIZE-LOCAL-ADDITIONALS > 1
+1290  LOCAL-ADDITIONALS (1:2) := OBJHEX02-ADDITIONALS (1:2)
+1300  IF LOCAL-ADDITIONALS-VERSION > 0     /* Version 1 or above
+1310    IF SIZE-LOCAL-ADDITIONALS >= 6
+1320      LOCAL-ADDITIONALS (3:6) := OBJHEX02-ADDITIONALS (3:6)
+1330    END-IF
+1340  END-IF
+1350  IF LOCAL-ADDITIONALS-VERSION > 1
+1360    PRINT / 'New version of user exit' *PROGRAM '(SRC-EX02) available'
+1370            'in library SYSOBJH.'
+1380    NEWPAGE
+1390  END-IF
+1400END-IF
+1410/*
+1420PRINT 'Termination Code ...' OBJHEX02-TERMINATION-CODE (AD=L)
+1430    / 'Terminate Natural ..' OBJHEX02-TERMINATE-SYSOBJH (EM=NO/YES)
+1440/*
+1450IF SRC-NOT-REPLACED > 0
+1460  PRINT SRC-NOT-REPLACED 'sources not replaced'
+1470END-IF
+1480IF CAT-NOT-REPLACED > 0
+1490  PRINT CAT-NOT-REPLACED 'cataloged objects not replaced'
+1500END-IF
+1510IF ERR-NOT-REPLACED > 0
+1520  PRINT ERR-NOT-REPLACED 'error messages not replaced'
+1530END-IF
+1540IF ERL-REJECTED     > 0
+1550  PRINT ERL-REJECTED 'long error messages rejected'
+1560END-IF
+1570IF SRT-REJECTED     > 0
+1580  PRINT SRT-REJECTED 'subroutines rejected'
+1590END-IF
+1600IF NCP-NOT-REPLACED > 0
+1610  PRINT NCP-NOT-REPLACED 'NCPs not replaced'
+1620END-IF
+1630IF RES-NOT-REPLACED > 0
+1640  PRINT RES-NOT-REPLACED 'Resources not replaced'
+1650END-IF
+1660IF EXT-NOT-REPLACED > 0
+1670  PRINT EXT-NOT-REPLACED 'external objects not replaced'
+1680END-IF
+1690IF FDT-NOT-REPLACED > 0
+1700  PRINT FDT-NOT-REPLACED 'FDTs not replaced'
+1710END-IF
+1720IF REL-NOT-REPLACED > 0
+1730  PRINT REL-NOT-REPLACED 'Natural related not replaced'
+1740END-IF
+1750IF DDM-NOT-REPLACED > 0
+1760  PRINT DDM-NOT-REPLACED 'DDMs not replaced'
+1770END-IF
+1780IF DEB-NOT-REPLACED > 0
+1790  PRINT DEB-NOT-REPLACED 'Debug Environments not replaced'
+1800END-IF
+1810IF PRF-NOT-REPLACED > 0
+1820  PRINT PRF-NOT-REPLACED 'Profiles not replaced'
+1830END-IF
+1840IF DLI-NOT-REPLACED > 0
+1850  PRINT DLI-NOT-REPLACED 'DL/I Subfiles not replaced'
+1860END-IF
+1870IF CAT-REJECTED-VERSION > 0
+1880  PRINT CAT-REJECTED-VERSION
+1890        'cataloged objects rejected (version check)'
+1900END-IF
+1910IF CAT-REJECTED-XREF > 0
+1920  PRINT CAT-REJECTED-XREF
+1930        'cataloged objects rejected (XREF)'
+1940END-IF
+1950/*
+1960IF (CAT-NOT-REPLACED > 0) OR (SRT-REJECTED > 0)
+1970  OBJHEX02-TERMINATION-CODE  := 101
+1980  OBJHEX02-TERMINATE-SYSOBJH := TRUE
+1990  PRINT 'Termination Code set to' OBJHEX02-TERMINATION-CODE
+2000        'by' *PROGRAM
+2010ELSE
+2020  RESET OBJHEX02-TERMINATION-CODE
+2030        OBJHEX02-TERMINATE-SYSOBJH
+2040END-IF
+2050/* End of sample code
+2060/*
+2070ESCAPE ROUTINE                /* RETURN TO CALLING PROGRAM
+2080/*---------------------------------------------------------------------
+2090END

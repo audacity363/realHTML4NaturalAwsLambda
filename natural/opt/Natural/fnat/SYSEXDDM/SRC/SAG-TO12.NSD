@@ -1,0 +1,36 @@
+0010 DB: 000 FILE: 027  - SAG-TOURS-G-VERTRAG              DEFAULT SEQUENCE:
+0020
+0030T L DB Name                              F Leng  S D Remark
+0040- - -- --------------------------------  - ----  - - ------------------------
+0050  1 B1 VERTRAG-ID                        P  6.0  N D
+0060  1 B2 VERTRAG-TYP                       A    1  N
+0070*      'A' wenn Charter-Vertrag, 'B'
+0080*      wenn Mitsegler-Vertr
+0090  1 B3 PREIS                             P 10.3  N
+0100  1 B4 DID-BEDINGUNG                     A    8  N D
+0110*      ID des Dokuments mit
+0120*      Vertragsbedingungen/Zusaetze
+0130  1 B5 DATUM-RESERVIERUNG                N  8.0  N D
+0140  1 B6 DATUM-BUCHUNG                     N  8.0  N D
+0150  1 B7 DATUM-STORNO                      N  8.0  N D
+0160G 1 B8 ANZAHLUNG
+0170  2 B9 DATUM-A                           N  8.0  N
+0180  2 CA BETRAG-A                          P 10.3  N
+0190G 1 CB RESTZAHLUNG
+0200  2 CC DATUM-R                           N  8.0  N
+0210  2 CD BETRAG-R                          P 10.3  N
+0220  1 CE ID-KUNDE                          N  8.0  N D
+0230*      PERSON-ID des Vertragskunden
+0240  1 CF ID-REISE                          N  8.0  N D
+0250*      REISE-ID (Vertragsgegenstand)
+0260  1 CG ID-AGENTUR                        A    8  N D
+0270*      FIRMA-ID der Agentur, die den
+0280*      Vertrag vermittelt.
+0290  1 T3 CONTRACT-TIMESTAMP                T   12  N
+0300*      wird benutzt für Natural
+0310*      Constract
+0320  1 CH VERTRAG-TYP-SP                    A    5  N S
+0330*      -------- SOURCE FIELD(S) -------
+0340*      CONTRACT-TYPE(1-1)
+0350*      CONTRACT-ID(1-4)
+0360******DDM OUTPUT TERMINATED******

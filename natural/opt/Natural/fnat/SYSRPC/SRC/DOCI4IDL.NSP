@@ -1,0 +1,285 @@
+0010/*( Dokumentation and Testing of RPCI-IDL
+0020*
+0030* Program .... DOCI4IDL
+0040*
+0050* Function ... Generates a client interface object source from an IDL
+0060*              file given as array input
+0070*
+0080* Keywords ... CLIENT INTERFACE OBJECT GENERATION SOURCE IDL
+0090*
+0100* Resp. ...... NAu
+0110*
+0120* Created .... November 2009
+0130*
+0140* Library .... SYSRPC
+0150* Version .... 6.3
+0160*
+0170**********************************************************************
+0180*
+0190* Interface Program Description:
+0200* ------------------------------
+0210*
+0220* This routine is used to generate one client interface object
+0230* from an IDL file together with a PDA object and a test program.
+0240*
+0250* It is a simplified version of DOCI-IDL/RPCI-IDL designed to only
+0260* return the source lines of the three objects in an X-array and to
+0270* return the object names derived from the IDL program name or the
+0280* alias name if given. If the alias name is longer than 8 characters
+0290* it is shortened.
+0300*
+0310*
+0320* Parameter Description:
+0330* ----------------------
+0340* For a complete list see DOCI-IDL
+0350*
+0360* 1 RPCI4IDL_PARAMS
+0370*   2 FUNCTION-CODE      (A1) possible values:
+0380*                               C_Clear_MSG: 'C'  /* In, clear message
+0390*                                                        collector
+0400*                               C_PUT-IDL  : 'I'  /* In
+0410*                               C_REL-MEM  : 'R'  /* In
+0420*                               C_SRC-SENT : 'S'  /* Out
+0430*                               C_ERROR    : 'E'  /* Out
+0440*
+0450*   2 FLAGS              (A8)       /* InOut
+0460*   2 REDEFINE FLAGS
+0470*     3 FLAG_OVERWRITE   (A1) possible values:
+0480*                               'Y'
+0490*                               'N' (default)
+0500*     3 FLAG_DO-ALL      (A1) possible values:
+0510*                               'Y' (default)
+0520*                               'N'
+0530*                               '1' 1st interface only
+0540*     3 FLAG_DO-WHAT     (A1) possible values:
+0550*                               'S' return Sources of client interface
+0560*                                   objects, no STOW
+0570*     3 FLAG_SINGLE-STEP (A1) possible values:
+0580*                               'Y'
+0590*                               'N' (default)
+0600*     3 FLAG_OUTPUT      (A1) possible values for output format:
+0610*                               ' ' normal text
+0620*                              ('X') XML style for PARSE XML, see
+0630*                                   subroutine PARSE_XML in DOCI3IDL.
+0640*     3 FLAG_VARNAMES    (A1) possible values:
+0650*                               ' ','K' Keep the variable names
+0660*                               'D'     use Dummy names
+0670*
+0680*   2 RESPONSE-CODE (I4)            /* Out
+0690*   2 MESSAGE       (A)     DYNAMIC /* Out
+0700*
+0710*   2 XARRAY        (A/1:*) DYNAMIC /* InOut, possible content
+0720*       dependent on FUNCTION-CODE:
+0730*       for C_PUT-IDL:
+0740*       In:           (1)   Path where the IDL file is to be found.
+0750*                           Start the string with the keyword
+0760*                           'from-path' followed by what you want to see
+0770*                           as path in the sources of the client-server
+0780*                           interface objects. (Informational)
+0790*                           A different header is generated with
+0800*                           additional informations given. Syntax:
+0810* 'from-path' <location>;'wrapper-version' <version>;'sysidl-version' <version>
+0820*
+0830*       Out:                object names
+0840*                             (1) PDA
+0850*                             (2) Interface object
+0860*                             (3) Test program
+0870*
+0880*
+0890*   2 SOURCE_LINES  (A/1:*,1:*) DYNAMIC  /* InOut, possible content
+0900*       dependent on FUNCTION-CODE:
+0910*
+0920*       for C_PUT-IDL:
+0930*       In:           (1,1:*) the content of the IDL file line by line
+0940*
+0950*       Out:          (1:*,1:*) if FLAG_DO-WHAT='S': the sources of the
+0960*                           generated Client/Server Interfaces (stubs)
+0970*                           1st index: sources
+0980*                             (1) PDA
+0990*                             (2) Interface object
+1000*                             (3) Test program
+1010*                           2nd index: lines
+1020*   2 SOURCE_AMOUNT (I4/1:*)             /* Out
+1030*                           Number of lines of the three objects PDA,
+1040*                           Interface object, testprogram
+1050*                           Index := 1st index of SOURCE_LINES(*,*)
+1060***********************************************************************
+1070****** Maintenance log ************************************************
+1080*
+1090* Date        User  Refer.  Description
+1100* ----------- ----- ------- -------------------------------------------
+1110* 14.Aug.2007 NAu01 intern  add 'VMS' for *Machine-class
+1120* 14.Nov.2008 NAu02 nrt3599 send IDL lines and get C/S-interface source.
+1130* 14.Dec.2009 NAu03 P321689 Return a PDA object with the parameter
+1140*                           names from the IDL and a test program.
+1150***********************************************************************
+1160/*)
+1170DEFINE DATA
+1180LOCAL /* PDA of RPCI4IDL
+1190  1 RPCI4IDL_PARAMS
+1200    2 FUNCTION-CODE (A1)                     /* InOut
+1210    2 FLAGS         (A8)                     /* InOut
+1220    2 REDEFINE FLAGS
+1230      3 FLAG_OVERWRITE   (A1) /* generate although object exists
+1240      3 FLAG_DO-ALL      (A1) /* all definitions of an IDL: Y,N,1=1st_only
+1250      3 FLAG_DO-WHAT     (A1) /* Generate or calculate: C,G,S=source
+1260      3 FLAG_SINGLE-STEP (A1) /* process in single steps: Y,N
+1270      3 FLAG_OUTPUT      (A1) /* ' '/X=XML style for PARSE XML
+1280      3 FLAG_VARNAMES    (A1) /* ' '=K=Keep; D=Dummy names      /* NAu03
+1290
+1300    /*
+1310    2 RESPONSE-CODE      (I4)                /* Out
+1320    2 MESSAGE            (A)         DYNAMIC /* Out
+1330    /*
+1340    2 TARGET-LIBRARY     (A)         DYNAMIC /* In
+1350    2 XARRAY             (A/1:*)     DYNAMIC /* InOut
+1360    2 SOURCE_LINES       (A/1:*,1:*) DYNAMIC /* InOut
+1370    2 SOURCE_AMOUNT      (I4/1:*)            /* Out
+1380LOCAL
+1390  /* Constants
+1400  /*  for FUNCTION-CODE
+1410  1 C_PUT-IDL      (A1) CONST <'I'> /* NAu02
+1420  1 C_REL-MEM      (A1) CONST <'R'>
+1430  1 C_SRC-SENT     (A1) CONST <'S'> /* Out /* NAu02
+1440  1 C_ERROR        (A1) CONST <'E'> /* Out
+1450  1 C_EXIT         (A1) CONST <'.'>
+1460  /*
+1470  /* Trigger to generate an IDL header within the client-server
+1480  /* interface objects:                         /* NAu02
+1490  1 C_FROM-PATH       (A9)  CONST <'from-path'>
+1500  1 C_WRAPPER-VERSION (A15) CONST <'wrapper-version'>
+1510  1 C_SYSIDL-VERSION  (A14) CONST <'sysidl-version'>
+1520  /*
+1530  /* Indices
+1540  1 #I             (I4)
+1550  1 #J             (I4)
+1560  /*
+1570  1 N_OUT-LINES    (I4)
+1580  1 LINE-SIZE      (I4) CONST <120> /*+ Attention! same value as in
+1590  1 OUT-LINES      (A120/1:3)      /*- this line A120.
+16001 AA6(A12)
+1610END-DEFINE
+1620/*
+1630/* The ON ERROR block is necessary running the callnat RPCI4IDL on a
+1640/* RPC server on mainframe because there is no CMACCSYS or similar that
+1650/* runs the Natural command STOW without using the STACK. So RPCI4IDL
+1660/* stacks at last a STOP command, which leads to the error NAT6979. The
+1670/* program pair RPCP-MSG/RPCI-MSG serve as interface to the error
+1680/* message collector on the RPC server to check the status. A time frame
+1690/* to be checked can be configured in RPCP-MSG.
+1700/*
+1710ON ERROR
+1720  DECIDE ON FIRST VALUE OF *ERROR-NR
+1730    VALUE 6979
+1740      FETCH 'RPCP-MSG'
+1750    NONE VALUE
+1760      IGNORE
+1770  END-DECIDE
+1780END-ERROR
+1790*
+1800FORMAT LS=130 PS=0
+1810/*
+1820/* Parameter setting
+1830/*
+1840FUNCTION-CODE := C_PUT-IDL
+1850FLAGS         := 'YYGN K'
+1860* FLAGS         := 'YYSN K'
+1870/*( Flags single values
+1880* FLAG_OVERWRITE   := 'Y'
+1890* FLAG_DO-ALL      := 'Y' (default)
+1900* FLAG_DO-WHAT     := 'S' return Source of client interface object, no STOW
+1910* FLAG_SINGLE-STEP := 'N' no intermediate results
+1920* FLAG_OUTPUT      := ' ' normal text
+1930* FLAG_VARNAMES    := 'K' Keep the variable names
+1940/*)
+1950/*( Input IDL lines
+1960/*
+1970EXPAND ARRAY SOURCE_LINES TO (1:1,1:21)
+1980SOURCE_LINES(1, 1) := 'LIBRARY ''GR2A3V'' is  '
+1990SOURCE_LINES(1, 2) := '  PROGRAM ''GR2_A'':''GR2_A_oder_so''  is'
+2000SOURCE_LINES(1, 3) := '    DEFINE DATA PARAMETER'
+2010SOURCE_LINES(1, 4) := '      1 iparm IN '
+2020SOURCE_LINES(1, 5) := '        2 gr_a'
+2030SOURCE_LINES(1, 6) := '          3 av_v_v_v  (AV/13:2000)  '
+2040SOURCE_LINES(1, 7) := '          3 av_v10_v10_v10  (AV/ 1: V10,1:V,1: 10)  '
+2050SOURCE_LINES(1, 8) := '      1 ioparm IN OUT'
+2060SOURCE_LINES(1, 9) := '        2 gr_a'
+2070SOURCE_LINES(1,10) := '          3 av_v_v_v  (AV/V,V,V)  '
+2080SOURCE_LINES(1,11) := '          3 av_v10_v10_v10  (AV/V10,V10,V10)  '
+2090SOURCE_LINES(1,12) := '      1 oparm OUT'
+2100SOURCE_LINES(1,13) := '        2 gr_a'
+2110SOURCE_LINES(1,14) := '         3 gr_a (/v)'
+2120SOURCE_LINES(1,15) := '          4 av_v_v_v  (AV/V,V)  '
+2130SOURCE_LINES(1,16) := '          4 av_v10_v10_v10  (AV/V10,V10)  '
+2140SOURCE_LINES(1,17) := '      1 Function_Result  OUT'
+2150SOURCE_LINES(1,18) := '        2 gr_a'
+2160SOURCE_LINES(1,19) := '          3 av_v_v_v  (AV/V,V,V)  '
+2170SOURCE_LINES(1,20) := '          3 av_v10_v10_v10  (AV/V10,V10,V10)  '
+2180SOURCE_LINES(1,21) := '    END-DEFINE'
+2190
+2200/*)
+2210/*  Display result
+2220/*
+2230REPEAT
+2240  INPUT (IP=OFF AD=MI)
+2250    / 4T *PROGRAM(AD=I) '- Generate a Natural Client Interface Object from an IDL source'(I)
+2260    /
+2270    / 2T 'Function' FUNCTION-CODE (AD=MT) '(I, .) '
+2280    / 14T 'I=Put IDL lines'
+2290    / 14T '.=Exit and print source lines'
+2300    /
+2310    / 2T 'Flags:   overwrite' FLAG_OVERWRITE  (AD=T) '(N,Y)'
+2320    / 2T '    variable names' FLAG_VARNAMES   (AD=T) '(K,I,D)'
+2330    /
+2340    / 2T OUT-LINES( 1)
+2350    / 2T OUT-LINES( 2)
+2360    / 2T OUT-LINES( 3)
+2370    /
+2380    / 2T 'Response code: ' RESPONSE-CODE (AD=O EM=NZZZ9)
+2390    / 2T 'Message . . .: ' MESSAGE       (AD=O AL=90)
+2400
+2410  IF FUNCTION-CODE  = C_EXIT
+2420  THEN
+2430    /* release global memory as last call
+2440    FUNCTION-CODE := C_REL-MEM
+2450    CALLNAT 'RPCI4IDL' RPCI4IDL_PARAMS /* 2nd call of the interface
+2460    /*
+2470    IF RESPONSE-CODE = 0
+2480    THEN
+2490      N_OUT-LINES := *OCC(SOURCE_LINES,1)
+2500      FOR #I 1 N_OUT-LINES
+2510        FOR #J 1 SOURCE_AMOUNT(#I)
+2520          PRINT SOURCE_LINES(#I,#J)
+2530        END-FOR
+2540        SKIP 1
+2550      END-FOR
+2560    END-IF
+2570    ESCAPE MODULE
+2580  ELSE
+2590    /*
+2600    /*  FUNCTION-CODE = C_PUT-IDL
+2610    RESIZE AND RESET ARRAY XARRAY TO (1:1)
+2620    /* Trigger an IDL header to be generated within the client-server
+2630    /* interface object:
+2640    COMPRESS C_FROM-PATH 'source lines;'
+2650          /* C_WRAPPER-VERSION '18.8.2009; ' /* optional
+2660            C_SYSIDL-VERSION '14:28;'       /* trigger value
+2670        INTO XARRAY(1)
+2680
+2690    CALLNAT 'RPCI4IDL' RPCI4IDL_PARAMS /* 1st call of the interface
+2700  END-IF
+2710  /*
+2720  DECIDE ON FIRST VALUE OF FUNCTION-CODE
+2730    VALUE C_SRC-SENT,'3',C_ERROR
+2740      N_OUT-LINES := *OCC(XARRAY)
+2750      FOR #I 1 N_OUT-LINES
+2760        OUT-LINES(#I) := XARRAY(#I)
+2770      END-FOR
+2780      FUNCTION-CODE := C_EXIT
+2790    NONE VALUE IGNORE
+2800  END-DECIDE
+2810
+2820END-REPEAT
+2830/* ---
+2840END
+2850

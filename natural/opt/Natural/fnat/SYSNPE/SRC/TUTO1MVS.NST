@@ -1,0 +1,63 @@
+0010* Text member for building ENTIRE SYSTEM SERVER's tutorial menu
+0020*                        PFKEY PFKEY PFKEY PFKEY PFKEY PFKEY
+0030* PF1-PF6                            Exit        User  Sys
+0040* PF7-PF12               Up    Down        Lang        Node
+0050*
+0060* The user site may make its own entries to the tutorial
+0070* in any other member 'TUTOnnnn'.
+0080* Changes should not be made in member 'TUTO0000' because
+0090* they will be gone with subsequent releases.
+0100* The format is fixed:
+0110*    View name           (a16)
+0120*    Program name        (a8)
+0130*    Flag                (a1)                       .NPR321.
+0140*    Program description (a47)           (was a48)  .NPR321.
+0150*
+0160ACCOUNTING      MACCOUNTEDisplay Accounting Information
+0170ACTIVE-JOBS     MACTIVE  Display Active Tasks with related JES-Info
+0180ADDRESS-SPACE   MASCB    Display address-space information
+0190ALLOCATIONS     MALLOCS  Display DD allocations for a given job
+0200AUTHORIZED-LIBS MAUTH    Display authorized Datasets/Libraries
+0210CATALOG         MCATLG   List catalog information
+0220CATALOG-UPDATE  MCATUPD  Catalog maintenance
+0230CHECK-SECURITY  MCHKSEC  Check if access to a resource is allowed
+0240COMMON-DATA     MCOMDTA  Shared Main Storage Data
+0250CONSOLE         MCONSOL  Operator Console
+0260CONSOLE-LOG     MCONSLG  Display Console Log
+0270COPY-FILE       MCOPYFI  Copy files from node to node
+0280DEVICE-NAMES    MDEVNAM  Overview of generic device names
+0290EVENTING        MEVENT   Program to Program Communication
+0300FILE-ALLOCATE   MALLOC   Data set allocation
+0310FILE-ATTRIBUTES MFATTR   Display attributes for a given file
+0320FILE-MAINTENANCEMCOMP    Compress a partitioned data set
+0330IDCAMS          MIDCAMS  IDCAMS utility
+0340IEBCOPY         MIEBCPY  IEBCOPY utility
+0350LIB-DIRECTORY   MLIBDIR  Display LIB-directory and list members
+0360LIB-UPDATE      MLIBUPD  Perform various operations on LIB directory
+0370LIB-ZAP         MZAP     AMASPZAP utility
+0380LOAD-MODULE     MLOADMI  Return information on applied zaps
+0390LOAD-MODULE     MLOADME  Return names of external symbols and related in
+0400LOADED-MODULES  MLOADM   Display executing/loaded modules for given job
+0410MAIN-STORAGE    MMAINS  EDisplay main storage for a given job
+0420NATPROC-LOGON   MNPLOG   Logon to ENTIRE SYSTEM SERVER (ESY)
+0430NATPROC-USERS   MNPUSER  Display ENTIRE SYSTEM SERVER (ESY) Users/Tasks
+0440NET-OPER        MNETOPR  Issue NET commands and display response
+0450READ-FILE       MREADSC  Scan OS-file for a certain string
+0460READ-SPOOL      MRSPOOL  Read SYSOUT from spool
+0470RESOURCE-CONTROLMENQDEQ  Resource control through ENQ/DEQ
+0480SEND-EMAIL      MSEML    Send e-mail via Internet
+0490SEND-MESSAGE    MSMSG    Send message to COM-PLETE/TSO user or console
+0500SPOOL-FILES     MSPOOLF  Display spool files information for given job
+0510SPOOL-QUEUE     MSPOOLQ  Display spool queue
+0520SPOOL-UPDATE    MSPOOLU  Alter status of a spool job
+0530SUBMIT          MSUBMIT  Submit batch job via INTERNAL READER
+0540SYSTEM-COMMAND  MCOMMAND Execute TSO Commands
+0550SYSTEM-INFO     MSYSINF  Display system information
+0560TCB             MTCB     Display information on all tasks for given job
+0570UNIT-ATTRIBUTES MUNIT    List DASD Units and mounted Volume
+0580VTOC            MVTOC    List VTOC of a specific volume
+0590VTOC-UPDATE     MVTOCU   VTOC maintenance
+0600WRITE-FILE      MWRTF    Write to OS sequential data set or LIB member
+0610WRITE-SPOOL     MPRINTS  Using Infoprint Server
+0620WRITE-SPOOL     MWRTS    Write directly to spool
+0630WHO-ALLOC       MWHODS   Who is now using the dataset

@@ -1,0 +1,12 @@
+0010**DF          0011A  54 1#I-DSN
+0020**DF          0013A   8 1#I-MEMBER
+0030**DF          0014A   6 1#I-VOL
+0040**DF          0015N   5 1#I-NODE                         /* was N3 02-02-15
+0050**DF          0016A  54 1#O-DSN
+0060**DF          0017A   8 1#O-MEMBER
+0070**DF          0018A   6 1#O-VOL
+0080**DF   F      2   A   3 1#O-DISP
+0090**HF1
+0100**I                      INIT<'SHR'>
+0110**DF          0020N   5 1#O-NODE                         /* was N3 02-02-15
+0120**DF          0021A  80 1#RECORD

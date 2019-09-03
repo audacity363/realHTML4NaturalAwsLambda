@@ -1,0 +1,46 @@
+0010Get error level for error in nested copycodes
+0020.
+0030Documentation ......... USR1016T    /*  Text object
+0040Interface ............. USR1016N    /*  Cataloged subprogram
+0050Example Program ....... USR1016P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. RUNTIME
+0100.
+0110Keywords .............. *ERROR-NR, *ERROR-TA, *LEVEL,
+0120                        COPYCODE, INCLUDE
+0130.
+0140Function .............. Get the level of the nested Copycodes.
+0150                        Use it within the ERROR-TA.
+0160.
+0170.
+0180Parameters
+0190----------
+0200Define the following parameters with the DEFINE DATA statement:
+0210.
+0220 1 PGMNAME  (A16/1:10)
+0230 1 LINE     (A04/1:10)
+0240 1 COUNTER  (I02)
+0250.
+0260Interface Call
+0270--------------
+0280Use the interface with the CALLNAT statement:
+0290.
+0300CALLNAT 'USR1016N' PGMNAME (*) LINE (*) COUNTER
+0310.
+0320.
+0330Using the Application Programming Interface:
+0340--------------------------------------------
+0350Prerequisit: USR2006N which is called by USR1016N.
+0360.
+0370Copy the subprograms USR1016N and USR2006N to the library SYSTEM or the
+0380steplib library respectively, or to the required library.
+0390.
+0400The subprograms USR1016N should be used inside an ERROR-TA.
+0410.
+0420For test purposes, please RUN the program USR1016X.
+0430USR1016Y and USR1016Z are the referenced Copycodes.
+0440USR1016E is the corresponding *ERROR-TA.
+0450.
+0460***** End of Description *****

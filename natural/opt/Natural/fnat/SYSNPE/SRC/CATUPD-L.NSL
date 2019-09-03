@@ -1,0 +1,17 @@
+0010**DV          0018     V1CATALOG-UPDATE                  CATALOG-UPDATE
+0020**DD          0021N 3.0 2ERROR-CODE
+0030**DD          0022A  58 2ERROR-TEXT
+0040**DD          0023N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0024A  44 2DSNAME
+0060**DD          0025A 240 2VOLUMES
+0070**DRR         0026     R2VOLUMES                         /* REDEF. BEGIN : VOLUMES
+0080**DFR         0027A   6 3#V1
+0090**DFR         0028A   6 3#V2
+0100**DFR         0029A   6 3#V3
+0110**DFR         0030A   6 3#V4
+0120**DFR         0031A   6 3#V5
+0130**DFR         0032A   6 3#V6
+0140**DFR         0033A   6 3#V7
+0150**DFR         0034A   6 3#V8
+0160**DD          0035A   8 2DEVICE
+0170**DD          0036A   8 2FUNCTION

@@ -1,0 +1,60 @@
+0010* Program   DEVENT
+0020* View      EVENTING
+0030*
+0040* Function  Demonstrate Task Communication via Eventing View
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* wkk 08-09-25   NPE342:   5 digit node-number
+0090*
+0100* ----------------------------------------------------------------------
+0110DEFINE DATA
+0120   GLOBAL USING TUTO
+0130   LOCAL  USING EVENT--L
+0140END-DEFINE
+0150*
+0160*
+0170REPEAT
+0180   ASSIGN EVENTING.NODE = ##NODE
+0190   INPUT 15X ##TITLE (AD=OI IP=OFF)
+0200      // 17X '- DEFINE / DELETE an Event'
+0210       / 17X '- WAIT for / POST an Event'
+0220       / 17X '- LIST Events'
+0230       / 17X '- SEND / RECEIVE Messages to/from another Task'
+0240     /// 10X 'Function ........' (I) EVENTING.FUNCTION   (AD=M)
+0250      // 10X 'Event Name ......' (I) EVENTING.EVENT-NAME (AD=M)
+0260      // 10X 'Node ............' (I) EVENTING.NODE       (AD=M EM=ZZZZZ)
+0270* wkk 08-09-25 changed above EM from ZZZ
+0280      // 10X 'Maximal Wait-Time' (I) EVENTING.MAX-TIME   (AD=M)
+0290             '(Seconds)'
+0300      // 10X 'Message Text ....' (I)
+0310              EVENTING.MESSAGE-ARRAY (01)  (AD=M AL=40)
+0320     /// 10X 'Error Text ......'     EVENTING.ERROR-TEXT (AD=OI AL=50)
+0330       / 10X 'Error Code ......'     EVENTING.ERROR-CODE (AD=OI EM=ZZZ)
+0340   IF EVENTING.FUNCTION    = 'LIST' AND
+0350      EVENTING.EVENT-NAME= ' '
+0360      MOVE '*' TO EVENTING.EVENT-NAME
+0370   END-IF
+0380   IF EVENTING.FUNCTION    = 'RECEIVE' AND
+0390      EVENTING.MESSAGE-ARRAY (01) = ' '
+0400      MOVE '*' TO EVENTING.MESSAGE-ARRAY (01)
+0410   END-IF
+0420*
+0430   FIND EVENTING WITH FUNCTION      = EVENTING.FUNCTION
+0440                  AND EVENT-NAME    = EVENTING.EVENT-NAME
+0450                  AND MAX-TIME      = EVENTING.MAX-TIME
+0460                  AND MESSAGE-ARRAY = EVENTING.MESSAGE-ARRAY (01)
+0470                  AND NODE          = EVENTING.NODE
+0480*
+0490      IF FUNCTION = 'LIST'
+0500         WRITE 'Event:' EVENT-NAME    'Waitors:' NUMBER-OF-WAITERS
+0510         /     15X 'Messages:' NUMBER-OF-MESSAGES //
+0520      END-IF
+0530      IF FUNCTION = 'RECEIVE'
+0540         WRITE 'Message:' MESSAGE-ARRAY (01) (AL=40) /
+0550      END-IF
+0560*
+0570    END-FIND
+0580END-REPEAT
+0590*
+0600END

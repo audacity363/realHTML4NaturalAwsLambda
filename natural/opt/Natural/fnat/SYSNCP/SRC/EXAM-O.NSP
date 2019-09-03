@@ -1,0 +1,94 @@
+0010/*  EXAM-O - 'OPEN' a Processor explicitely
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (1:8)
+0070     02 NATURAL-ERROR
+0080     02 RETURN-CODE
+0090     02 RESULT-FIELD (1:9)
+0100     02 GETSET-FIELD-NAME
+0110     02 GETSET-FIELD-VALUE
+0120  01 PROC-NAME (A08)
+0130  01 MSG       (A72)
+0140  01 MOD       (C)
+0150  01 IX        (I01)
+0160  01 ALREADY   (L)
+0170END-DEFINE
+0180DEFINE WINDOW OPEN-PROC
+0190  SIZE 14 * 70
+0200  BASE IX / IX
+0210  TITLE ' (O) Open A Processor '
+0220  CONTROL SCREEN
+0230  FRAMED POSITION OFF
+0240SET KEY ALL
+0250IX := *LEVEL * 2
+0260/**********************************************************************
+0270/* Test whether Processor is already open:
+0280PROCESS COMMAND ACTION GET USING
+0290  PROCESSOR-NAME = ' '
+0300  GETSET-FIELD-NAME = 'NAME&'
+0310/**********************************************************************
+0320MOVE GETSET-FIELD-VALUE TO PROC-NAME
+0330IF PROC-NAME = ' '
+0340  MOVE FALSE TO ALREADY
+0350ELSE
+0360  MOVE TRUE  TO ALREADY
+0370END-IF
+0380/**********************************************************************
+0390REPEAT
+0400  /****************************************************************
+0410  IF NATURAL-ERROR = 0
+0420    IF ALREADY
+0430      COMPRESS 'Processor' PROC-NAME 'is already open.' TO MSG
+0440    ELSE
+0450      PROCESS COMMAND ACTION GET USING
+0460              PROCESSOR-NAME = ' '
+0470              GETSET-FIELD-NAME = 'NAME&'
+0480      MOVE GETSET-FIELD-VALUE TO PROC-NAME  /* New processor name
+0490      COMPRESS 'Processor' PROC-NAME 'is open now.' TO MSG
+0500    END-IF
+0510    /****************************************************************
+0520    PROCESS COMMAND ACTION TEXT USING
+0530      PROCESSOR-NAME = PROC-NAME
+0540      COMMAND-LINE (*) = COMMAND-LINE (*)
+0550    /****************************************************************
+0560    IF NATURAL-ERROR NE 0
+0570      CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0580    END-IF
+0590    /****************************************************************
+0600    INPUT WINDOW = 'OPEN-PROC' (AD=OIT IP=F) WITH TEXT MSG
+0610      /  'Processor Name ........' PROC-NAME
+0620      /  '(1) Header 1 ..........' RESULT-FIELD (01) (AL=40)
+0630      /  '(2) Header 2 ..........' RESULT-FIELD (02) (AL=40)
+0640      /  '(3) Keyword Type 1 ....' RESULT-FIELD (03) (AL=16)
+0650      /  '(4) Keyword Type 2 ....' RESULT-FIELD (04) (AL=16)
+0660      /  '(5) Keyword Type 3 ....' RESULT-FIELD (05) (AL=16)
+0670      /  '(6) No. Keyw Type 1 ...' RESULT-FIELD (06) (AL=10)
+0680      /  '(7) No. Keyw Type 2 ...' RESULT-FIELD (07) (AL=10)
+0690      /  '(8) No. Keyw Type 3 ...' RESULT-FIELD (08) (AL=10)
+0700      /  '(9) No. of Function ...' RESULT-FIELD (09) (AL=10)
+0710    /****************************************************************
+0720    SET WINDOW OFF
+0730    ESCAPE ROUTINE
+0740    /****************************************************************
+0750  ELSE
+0760    CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0770    /****************************************************************
+0780    INPUT WINDOW = 'OPEN-PROC' (AD=MIT IP=F CV=MOD ) WITH TEXT MSG
+0790      /  'Processor Name ...' PROC-NAME
+0800    /****************************************************************
+0810    SET WINDOW OFF
+0820    IF *PF-KEY NE 'ENTR'
+0830    OR MOD NOT MODIFIED
+0840      ESCAPE ROUTINE
+0850    END-IF
+0860    /****************************************************************
+0870    PROCESS COMMAND ACTION TEXT USING
+0880      PROCESSOR-NAME = PROC-NAME
+0890      COMMAND-LINE (*) = COMMAND-LINE (*)
+0900    /****************************************************************
+0910  END-IF
+0920END-REPEAT
+0930/********************************************************************
+0940END

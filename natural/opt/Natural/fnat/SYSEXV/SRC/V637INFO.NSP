@@ -1,0 +1,60 @@
+0010*
+0020* Program .. V637INFO (character version)
+0030* Library .. SYSEXV
+0040* Version .. 6.3.7
+0050*
+0060* Functionality: Readme Information about Adabas 6.1.6 Support
+0070*                and the required settings for the Unicode data fields
+0080************************************************************************
+0090*
+0100*
+0110FORMAT KD=ON
+0120SET KEY PF3  NAMED 'Exit'
+0130        PF12 NAMED 'Canc'
+0140*
+0150INPUT (IP=OFF)
+0160  01T *TIMX  (AD=OTD)
+0170  21T '***** NATURAL 6.3.7 ENHANCEMENTS *****'
+0180  70T *DATX  (AD=OTD DF=L)
+0190  /
+0200  01T 'User'
+0210  06T *USER  (AD=OTD )
+0220  20T '- Readme Information for Adabas 6.1.6 -'(I)
+0230  64T 'Program'
+0240  72T *PROGRAM (AD=OI)
+0250  ///
+0260  02T 'How to get the data of the new EMPLOYEES file' (I)
+0270  //
+0280  05T '- Install Adabas 6.1.6 or higher (recommended version 6.1.8'-
+0290      ' or higher).'
+0300  /
+0310  05T '- In Adabas,DBA Workbench:'
+0320  /
+0330  10T '- Create new database with DBID 19 and add ''LoadDemofiles'''-
+0340      '.'
+0350  //
+0360  05T '- In Natural,Configuration Utility define:  '
+0370  /
+0380  010T '- Global Configuration File/DBMS Assignments:'
+0390  /
+0400  010T '  DBID 19 with type ADA2'
+0410  /
+0420  010T '- Edit/Database Management/Adabas Specific:'
+0430  /
+0440  010T '  - for a big-endian machine, like HP-UX, Solaris, AIX:'
+0450  /
+0460  010T '    OPRB=(DBID=19,UPD=1-200,WCHARSET=''UTF-16BE'')'
+0470  /
+0480  010T '  - for a little-endian machine, like Linux Intel, Windows,'-
+0490       ' OpenVMS:'
+0500  /
+0510  010T '    OPRB=(DBID=19,UPD=1-200,WCHARSET=''UTF-16LE'')'
+0520  //
+0530*
+0540IF *PF-KEY = 'PF3'
+0550  ESCAPE ROUTINE
+0560END-IF
+0570IF (*PF-KEY = 'PF12' OR= 'CLR')
+0580  CALLNAT 'UTILSTOP'
+0590END-IF
+0600END

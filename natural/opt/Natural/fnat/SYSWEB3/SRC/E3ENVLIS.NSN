@@ -1,0 +1,94 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3ENVLIS
+0050*
+0060* DESCRIPTION   List all variables sent by the HTTP server.
+0070*
+0080* AUTHOR        SAG   08.09.1998
+0090*
+0100* Version       8.3
+0110*
+0120* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0130*
+0140* HISTORY
+0150* USER    DATE       REASON
+0160* ------+----------+----------------------------------------------
+0170*       ! --.--.-- !
+0180* ------+----------+----------------------------------------------
+0190*
+0200* ------ PARAMETER -----------------------------------------------
+0210DEFINE DATA
+0220PARAMETER USING W3PARM
+0230LOCAL  USING W3CONST
+0240LOCAL  USING W3PINFO
+0250LOCAL
+02601 V                    (I2)  CONST <5>
+02701 W3ARRAY              (A72/1:V)
+02801 W3ARRAYVALUE         (A250/1:V)
+02901 W3ARRAYLEN           (I4/1:V)
+03001 W3ARRAYANZ           (I4)
+03101 W3ARRAYSERVER        (L/1:V)
+03201 W3ARRAYSTART         (I4) INIT <1>
+03301 W3ARRAYMAX           (I4)
+0340*
+03501 W3VALUE              (A) DYNAMIC
+03601 #II                  (I4)
+0370END-DEFINE
+0380* ---------------------------------------------------- error handling
+0390ON ERROR
+0400  PERFORM W3ERROR ##W3ERROR
+0410  PERFORM W3END ##RPC
+0420  ESCAPE ROUTINE
+0430END-ERROR
+0440* ======================================================== Main Program
+0450* ------------------------------------------------------- init HTML Generation
+0460PERFORM W3INIT ##RPC
+0470* --------------------------------------------- Set type of return Page
+0480PERFORM W3CONTENT-TYPE 'text/html'
+0490* ------------------------------------------- Set head of the HTML page
+0500PERFORM W3TEXTLINE "<!DOCTYPE 'HTML PUBLIC -//W3C//DTD HTML 3.2//EN'>"
+0510PERFORM W3TEXTLINE '<HTML><HEAD><META HTTP-EQUIV="Content-Type" '-
+0520  'CONTENT="text/html; charset=iso-8859-1"><TITLE>'
+0530PERFORM W3TEXTLINE 'Basic Routines- List All Environment Variables'
+0540PERFORM W3TEXTLINE '</TITLE></HEAD><BODY>'
+0550*
+0560COMPRESS "<H2>" 'List All Environment Variables'
+0570  "</H2><HR>" ##HTTP_NEWLINE 'Read the first five values:'
+0580  "<P>" ##HTTP_NEWLINE INTO W3VALUE
+0590PERFORM W3TEXTDYNAMIC W3VALUE
+0600*
+0610W3ARRAYANZ := V
+0620PERFORM W3LIST-ENVIRONMENT W3ARRAYSTART W3ARRAYANZ W3ARRAY(1:W3ARRAYANZ)
+0630  W3ARRAYVALUE(1:W3ARRAYANZ) W3ARRAYLEN(1:W3ARRAYANZ)
+0640  W3ARRAYSERVER(1:W3ARRAYANZ) W3ARRAYMAX
+0650*
+0660PERFORM W3TEXTLINE "<TABLE BORDER='0'>"
+0670*
+0680FOR #II = 1 TO W3ARRAYANZ
+0690  COMPRESS "<TR><TD>" W3ARRAY(#II) "</TD><TD>" INTO W3VALUE
+0700  PERFORM W3TEXTDYNAMIC W3VALUE
+0710  IF W3ARRAYVALUE(#II) NE " " THEN
+0720    PERFORM W3HTML W3ARRAYVALUE(#II)
+0730  ELSE
+0740    PERFORM W3TEXT '(empty)'
+0750  END-IF
+0760*
+0770  COMPRESS "</TD></TR>" ##HTTP_NEWLINE INTO W3VALUE
+0780  PERFORM W3TEXTDYNAMIC W3VALUE
+0790END-FOR
+0800PERFORM W3TEXTLINE "</TABLE>"
+0810*
+0820* --- END THE HTML PAGE ---
+0830COMPRESS "<TABLE BORDER='0' WIDTH='100%' CELLSPACING='0' "-
+0840  "CELLPADDING='5'>"
+0850  '<TR BGCOLOR="#00cc66"><TD>' *PROGRAM '&#32;-&#32;' *DATE '&#32;' *TIME
+0860  "</TD><TD ALIGN='RIGHT'>" 'Natural'
+0870  "</TD></TR></TABLE>"
+0880  '</BODY></HTML>' INTO W3VALUE
+0890PERFORM W3TEXTDYNAMIC W3VALUE
+0900*
+0910* --- END Web Interface ---
+0920PERFORM W3END ##RPC
+0930*
+0940END

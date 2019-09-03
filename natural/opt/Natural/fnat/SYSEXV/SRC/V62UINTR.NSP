@@ -1,0 +1,242 @@
+0010* Program ...... V62UINTR
+0020* Library ...... SYSEXV
+0030* Version ...... 6.2
+0040* Machine ...... UNIX
+0050*
+0060* Functionality  Introduction to Unicode
+0070*                Code Page, Code Point and Code Unit
+0080*                Traditional Code Page
+0090*                What is Unicode?
+0100*                Unicode Representation
+0110************************************************************************
+0120*
+0130*
+0140FORMAT KD=ON
+0150SET KEY PF3  NAMED 'Exit'
+0160    PF12 NAMED 'Canc'
+0170*
+0180*
+0190INPUT  (IP=OFF)
+0200  01T *TIMX  (AD=OTD)
+0210  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0220  70T *DATX  (AD=OTD DF=L)
+0230  /
+0240  01T 'User'
+0250  06T *USER  (AD=OLTI)
+0260  21T     '- Introduction to Unicode (1 of 5) -' (I)
+0270  64T 'Program'
+0280  72T *PROGRAM   (AD=OI)
+0290  /
+0300  15T '    - Code Page, Code Point and Code Unit  -' (I)
+0310  //
+0320  2T 'A'   'code page' (I)
+0330  'assigns numbers for a set of characters so that the computer can'
+0340  /
+0350  2T 'store it. Each of these numbers is named'
+0360  'code point.' (I)
+0370  'The storage used to'   /
+0380  2T 'store such a number is called the'   'code unit.'
+0390  (I) //
+0400  2T 'Similar to integer values, the number is stored'
+0410  'endian dependent,' (I) 'i.e. swapped'   /
+0420  2T 'on little and un-swapped on big endian machines.'   //
+0430  2T 'The ''traditional'' code page can contain a maximum'
+0440  'of 256 characters because'   /
+0450  2T 'it stores each number in one byte. There are hundreds'
+0460  'of code pages to'   /
+0470  2T 'support the various languages and platforms.'   //
+0480  2T 'Example'   /
+0490  2T 'Character: A  Code Page: windows-1252  Code Point: X''41'''
+0500  /
+0510  2T 'Character: A  Code Page: IBM01141      Code Point: X''C1'''
+0520
+0530*
+0540IF *PF-KEY = 'PF3'
+0550  ESCAPE ROUTINE
+0560END-IF
+0570IF (*PF-KEY = 'PF12' OR= 'CLR')
+0580  CALLNAT 'UTILSTOP'
+0590END-IF
+0600*
+0610INPUT  (IP=OFF)
+0620  01T *TIMX  (AD=OTD)
+0630  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0640  70T *DATX  (AD=OTD DF=L)
+0650  /
+0660  01T 'User'
+0670  06T *USER  (AD=OLTI)
+0680  21T     '- Introduction to Unicode (2 of 5) -' (I)
+0690  64T 'Program'
+0700  72T *PROGRAM   (AD=OI)
+0710  /
+0720  15T '    - Code Page, Code Point and Code Unit  -' (I)
+0730  //
+0740  02T 'Unicode characters are commenly denoted by U-xxxx'
+0750  'where xxxx is the'   /
+0760  02T 'hexadecimal value of the corresponding code point.'   /
+0770  /
+0780  2T 'Each'   'code page (character set)' (I)
+0790  'has a'   'name' (I)
+0800  'and alias name(s) defined by the'   /
+0810  2T 'Internet Assigned Numbers Authority'
+0820  '(www.iana.org/assignments/character-sets).'   /
+0830  /
+0840  2T 'Examples for character set names:'   /
+0850  2T 'US-ASCII'
+0860  '     Most commonly used in the Internet.'
+0870  'The character set names are'   /
+0880  2T '              expressed in US-ASCII'   /
+0890  2T 'windows-1252'   ' MS-Windows West Europe'   /
+0900  2T 'EBCDIC-US'   '    IBM mainframe'   /
+0910  2T 'IBM01140'   '     EBCDIC-US + Euro'   /
+0920  2T 'IBM01141'   '     EBCDIC-DE + Euro'   /
+0930  2T 'UTF-16'   '       Unicode, two byte encoding'
+0940*
+0950IF *PF-KEY = 'PF3'
+0960  ESCAPE ROUTINE
+0970END-IF
+0980IF (*PF-KEY = 'PF12' OR= 'CLR')
+0990  CALLNAT 'UTILSTOP'
+1000END-IF
+1010*
+1020INPUT  (IP=OFF)
+1030  01T *TIMX  (AD=OTD)
+1040  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+1050  70T *DATX  (AD=OTD DF=L)
+1060  /
+1070  01T 'User'
+1080  06T *USER  (AD=OLTI)
+1090  21T     '- Introduction to Unicode (3 of 5) -' (I)
+1100  64T 'Program'
+1110  72T *PROGRAM   (AD=OI)
+1120  /
+1130  15T '           - Traditional Code Page  -' (I)
+1140  //
+1150  2T 'Possible problems when using traditional code pages:' (I) /
+1160  /
+1170  2T 'Characters from different languages cannot be'
+1180  'displayed together, e.g. there'   /
+1190  2T 'are no Greek characters in the code page windows-1252.'   /
+1200  /
+1210  2T 'Wrong characters are displayed when a different'
+1220  'code page is used. This is'   /
+1230  2T 'because two code pages can use the same number for'
+1240  'different characters:'   /
+1250  2T '  X''4E'' is displayed as ''+'' in the code page'
+1260  'EBCDIC-US and as ''N'' in the'   /
+1270  2T '  code page US-ASCII.'   /
+1280  /
+1290  2T 'Two code pages can use different numbers for'
+1300  'the same character:'   /
+1310  2T '  ''A'' is stored as X''C1'' in the code page'
+1320  'EBCDIC-US and as X''41'' in the code'   /
+1330  2T '  page US-ASCII.'
+1340*
+1350IF *PF-KEY = 'PF3'
+1360  ESCAPE ROUTINE
+1370END-IF
+1380IF (*PF-KEY = 'PF12' OR= 'CLR')
+1390  CALLNAT 'UTILSTOP'
+1400END-IF
+1410*
+1420INPUT  (IP=OFF)
+1430  01T *TIMX  (AD=OTD)
+1440  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+1450  70T *DATX  (AD=OTD DF=L)
+1460  /
+1470  01T 'User'
+1480  06T *USER  (AD=OLTI)
+1490  21T     '- Introduction to Unicode (4 of 5) -' (I)
+1500  64T 'Program'
+1510  72T *PROGRAM   (AD=OI)
+1520  /
+1530  15T '              - What is Unicode? -' (I)
+1540  //
+1550  2T 'Unicode' (I)
+1560  'provides a unique number for every character,'   /
+1570  2T '      no matter what the platform,'   /
+1580  2T '      no matter what the program,'   /
+1590  2T '      no matter what the language.'   /
+1600  /
+1610  2T 'Unicode UTF-16' (I)
+1620  'uses a two byte encoding to store a character.'   /
+1630  2T 'Unicode Version 4.0' (I)
+1640  'provides currently codes for 96,382 characters.'   /
+1650  /
+1660  2T 'With'   'Unicode,' (I)
+1670  'characters from different languages can displayed together:'
+1680  /
+1690  4T UH'004103A9040205D00635307E8CAA0020002000200020'   /
+1700  2T '(Latin-A, Greek-Omega, Cyrillic-Dje, Hebrew-Alef,'
+1710  'Arabic-Sad, Hiragana-Ma,'   /
+1720  2T 'CJK Ideograph)'   /
+1730  /
+1740  2T 'A'   'Unicode' (I)
+1750  'string can be moved to any platform without loss'
+1760  'of information.'
+1770*
+1780IF *PF-KEY = 'PF3'
+1790  ESCAPE ROUTINE
+1800END-IF
+1810IF (*PF-KEY = 'PF12' OR= 'CLR')
+1820  CALLNAT 'UTILSTOP'
+1830END-IF
+1840INPUT  (IP=OFF)
+1850  01T *TIMX  (AD=OTD)
+1860  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+1870  70T *DATX  (AD=OTD DF=L)
+1880  /
+1890  01T 'User'
+1900  06T *USER  (AD=OLTI)
+1910  21T     '- Introduction to Unicode (5 of 5) -' (I)
+1920  64T 'Program'
+1930  72T *PROGRAM   (AD=OI)
+1940  /
+1950  15T '           - Unicode Representation -' (I)
+1960  //
+1970  2T 'What you see when a Unicode string is displayed'
+1980  'depends on the'
+1990  'supplemental' (I) /
+2000  2T 'language support' (I)
+2010  'installed in your system and the'
+2020  'font' (I) 'selected in your'   /
+2030  2T 'Natural environment. A placeholder is displayed for'
+2040  'Unicode characters which'   /
+2050  2T 'are not available in the selected font.'   /
+2060  /
+2070  2T 'If characters from different languages are'
+2080  'displayed on the same page, a font'   /
+2090  2T 'supporting all these languages should be selected.'   /
+2100  /
+2110  2T 'In the following example the text ''What is Unicode?'''
+2120  'is translated into'   /
+2130  2T 'various languages.'   /
+2140  /
+2150  6T 'Latin .....'
+2160  'Quod est Unicode?'   /
+2170  6T 'Spanish ...'
+2180  UH'00BF0051007500E900200065007300200055006E00690063006F00640065003F'
+2190  /
+2200  6T 'Russian ...'
+2210  UH'04270442043E002004420430043A043E043500200055006E00690063006F0064'-
+2220  UH'0065003F'   /
+2230  6T 'Greek .....'
+2240  UH'03A403B9002003B503AF03BD03B103B9002003C403BF00200055006E00690063'-
+2250  UH'006F00640065003B'   /
+2260  6T 'Japanese ..'
+2270  UH'30E630CB30B330FC30C93068306F4F55304BFF1F0020'   /
+2280  6T 'Chinese ...'
+2290  UH'4EC09EBD662F0055006E00690063006F0064006500287D714E0078BC002F6A19'-
+2300  UH'6E96842C570B78BC0029003F'   /
+2310*
+2320IF *PF-KEY = 'PF3'
+2330  ESCAPE ROUTINE
+2340END-IF
+2350IF (*PF-KEY = 'PF12' OR= 'CLR')
+2360  CALLNAT 'UTILSTOP'
+2370END-IF
+2380*
+2390*
+2400END
+2410
+2420

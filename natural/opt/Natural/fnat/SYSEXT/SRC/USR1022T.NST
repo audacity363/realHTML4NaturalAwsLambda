@@ -1,0 +1,39 @@
+0010Get type of database
+0020.
+0030Documentation ......... USR1022T    /*  Text object
+0040Interface ............. USR1022N    /*  Cataloged subprogram
+0050Example Program ....... USR1022P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATABASE
+0100.
+0110Keywords .............. +PREVIOUS-VERSION,
+0120                        DATABASE, DBID, LFILE, TYPE
+0130.
+0140Interface Versions .... USR1022N, USR2023N
+0150.
+0160Function .............. Returns types of all available data bases
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+0230  1 DB-TYPE (A1/0:255)  /* each byte indicates the type of the
+0240                        /* respective data base
+0250.
+0260Interface Call
+0270--------------
+0280Use the interface with the CALLNAT statement:
+0290.
+0300CALLNAT 'USR1022N' DB-TYPE (*)
+0310.
+0320.
+0330Using the Application Programming Interface:
+0340--------------------------------------------
+0350Copy the subprogram USR1022N to the library SYSTEM or the steplib
+0360library respectively, or to the required library.
+0370.
+0380.
+0390***** End of Description *****

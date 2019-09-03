@@ -1,0 +1,68 @@
+0010Maintain Natural Profiler monitoring
+0020.
+0030Documentation ......... USR8210T    /*  Text object
+0040Interface ............. USR8210N    /*  Cataloged subprogram
+0050Example Program ....... USR8210P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. PROFILER
+0100.
+0110Keywords .............. +NEW-NAT-8.3.3,
+0120                        PROFILER, TRACE
+0130.
+0140Function .............. Start or pause Natural Profiler monitoring
+0150                        or get the current state of the Natural Profiler
+0160                        monitoring process.
+0170                        The interface is applicable for the NaturalONE
+0180                        Profiler.
+0190.
+0200.
+0210Parameters
+0220----------
+0230Define the following parameters with the DEFINE DATA statement:
+0240.
+02501 P-FUNCTION          (A) DYNAMIC /* BY VALUE
+02601 P-RETURN            (I4)
+02701 P-MESSAGE           (A) DYNAMIC
+0280.
+0290Interface Call
+0300--------------
+0310Use the interface with the CALLNAT statement:
+0320.
+0330CALLNAT 'USR8210N' 'Start' P-RETURN P-MESSAGE /* Start Profiler
+0340CALLNAT 'USR8210N' 'Pause' P-RETURN P-MESSAGE /* Pause Profiler
+0350CALLNAT 'USR8210N' 'State' P-RETURN P-MESSAGE /* Get Profiler state
+0360.
+0370.
+0380Using the Application Programming Interface:
+0390--------------------------------------------
+0400Copy the subprogram USR8210N to the library SYSTEM, to the appropriate
+0410steplib library, or to the required library.
+0420.
+0430Description of the parameters:
+0440.
+04501 P-FUNCTION (Input by value)
+0460  Function code; possible values are:
+0470  'Start' - Start Natural Profiler monitoring
+0480  'Pause' - Pause Natural Profiler monitoring
+0490  'State' - Get the current state of the Natural Profiler monitoring
+0500            process.
+0510.
+05201 P-RETURN (Output)
+0530  Return code; values for function Start or Pause:
+0540   0 - No error occurred. Function successfully performed.
+0550  Return code; values for function State:
+0560   0 - Natural Profiler monitoring is started.
+0570   1 - Natural Profiler monitoring is paused.
+0580  Return code; general values:
+0590  11 - Invalid value for P-FUNCTION specified.
+0600  12 - Natural Profiler is not initialized.
+0610  13 - Function not supported by NATRDC1.
+0620  99 - Unexpected return code from NATRDC1.
+0630.
+06401 P-MESSAGE (Output)
+0650  Success/error message
+0660.
+0670.
+0680***** End of Description *****

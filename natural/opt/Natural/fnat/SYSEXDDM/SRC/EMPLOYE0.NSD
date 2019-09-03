@@ -1,0 +1,160 @@
+0010DB: 00102 FILE: 00001  - EMPLOYEES-TAMINO
+0020TYPE: XML
+0030COLLECTION: NATDemoData
+0040SCHEMA: Employee
+0050DOCTYPE: Employee
+0060NAMESPACE-PREFIX: xs
+0070NAMESPACE-URI: http://www.w3.org/2001/XMLSchema
+0080
+0090T L  Name                             F Leng       D Remark
+0100- -- -------------------------------- - ---------- - ------------------------
+0110G  1 EMPLOYEE
+0120     FLAGS=MULT_REQUIRED,MULT_ONCE
+0130     TAG=Employee
+0140     XPATH=/Employee
+0150G  2 GROUP$1
+0160     FLAGS=GROUP_ATTRIBUTES
+0170   3 PERSONNEL-ID                     U          8 D xs:string
+0180     FLAGS=ATTR_REQUIRED
+0190     TAG=@Personnel-ID
+0200     XPATH=/Employee/@Personnel-ID
+0210G  2 GROUP$2
+0220     FLAGS=GROUP_SEQUENCE,MULT_REQUIRED,MULT_ONCE
+0230G  3 FULL-NAME
+0240     FLAGS=MULT_OPTIONAL
+0250     TAG=Full-Name
+0260     XPATH=/Employee/Full-Name
+0270G  4 GROUP$3
+0280     FLAGS=GROUP_SEQUENCE,MULT_REQUIRED,MULT_ONCE
+0290   5 FIRST-NAME                       U         20 D xs:string
+0300     FLAGS=MULT_OPTIONAL
+0310     TAG=First-Name
+0320     XPATH=/Employee/Full-Name/First-Name
+0330   5 MIDDLE-NAME                      U         20 D xs:string
+0340     FLAGS=MULT_OPTIONAL
+0350     TAG=Middle-Name
+0360     XPATH=/Employee/Full-Name/Middle-Name
+0370   5 MIDDLE-I                         U         20 D xs:string
+0380     FLAGS=MULT_OPTIONAL
+0390     TAG=Middle-I
+0400     XPATH=/Employee/Full-Name/Middle-I
+0410   5 NAME                             U         20 D xs:string
+0420     FLAGS=MULT_OPTIONAL
+0430     TAG=Name
+0440     XPATH=/Employee/Full-Name/Name
+0450   3 MAR-STAT                         U          1 D xs:string
+0460     FLAGS=MULT_OPTIONAL
+0470     TAG=Mar-Stat
+0480     XPATH=/Employee/Mar-Stat
+0490   3 SEX                              U          1 D xs:string
+0500     FLAGS=MULT_OPTIONAL
+0510     TAG=Sex
+0520     XPATH=/Employee/Sex
+0530   3 BIRTH                            U         10 D xs:string
+0540     FLAGS=MULT_OPTIONAL
+0550     TAG=Birth
+0560     XPATH=/Employee/Birth
+0570G  3 FULL-ADDRESS
+0580     FLAGS=MULT_OPTIONAL
+0590     TAG=Full-Address
+0600     XPATH=/Employee/Full-Address
+0610G  4 GROUP$4
+0620     FLAGS=GROUP_SEQUENCE,MULT_REQUIRED,MULT_ONCE
+0630   5 ADDRESS-LINE                     U         20   xs:string
+0640     FLAGS=ARRAY,MULT_OPTIONAL
+0650     OCC=1:6
+0660     TAG=Address-Line
+0670     XPATH=/Employee/Full-Address/Address-Line
+0680   5 CITY                             U         20 D xs:string
+0690     FLAGS=MULT_OPTIONAL
+0700     TAG=City
+0710     XPATH=/Employee/Full-Address/City
+0720   5 ZIP                              U         20 D xs:string
+0730     FLAGS=MULT_OPTIONAL
+0740     TAG=Zip
+0750     XPATH=/Employee/Full-Address/Zip
+0760   5 POST-CODE                        U         10 D xs:string
+0770     FLAGS=MULT_OPTIONAL
+0780     TAG=Post-Code
+0790     XPATH=/Employee/Full-Address/Post-Code
+0800   5 COUNTRY                          U          3 D xs:string
+0810     FLAGS=MULT_OPTIONAL
+0820     TAG=Country
+0830     XPATH=/Employee/Full-Address/Country
+0840G  3 TELEPHONE
+0850     FLAGS=MULT_OPTIONAL
+0860     TAG=Telephone
+0870     XPATH=/Employee/Telephone
+0880G  4 GROUP$5
+0890     FLAGS=GROUP_SEQUENCE,MULT_REQUIRED,MULT_ONCE
+0900   5 PHONE                            U         15 D xs:string
+0910     FLAGS=MULT_OPTIONAL
+0920     TAG=Phone
+0930     XPATH=/Employee/Telephone/Phone
+0940   5 AREA-CODE                        U          6 D xs:string
+0950     FLAGS=MULT_OPTIONAL
+0960     TAG=Area-Code
+0970     XPATH=/Employee/Telephone/Area-Code
+0980   3 DEPT                             U          6 D xs:string
+0990     FLAGS=MULT_OPTIONAL
+1000     TAG=Dept
+1010     XPATH=/Employee/Dept
+1020   3 JOB-TITLE                        U         25 D xs:string
+1030     FLAGS=MULT_OPTIONAL
+1040     TAG=Job-Title
+1050     XPATH=/Employee/Job-Title
+1060G  3 INCOME
+1070     FLAGS=ARRAY,MULT_OPTIONAL
+1080     OCC=1:6
+1090     TAG=Income
+1100     XPATH=/Employee/Income
+1110G  4 GROUP$6
+1120     FLAGS=GROUP_SEQUENCE,MULT_REQUIRED,MULT_ONCE
+1130   5 CURR-CODE                        U          3   xs:string
+1140     FLAGS=MULT_OPTIONAL
+1150     TAG=Curr-Code
+1160     XPATH=/Employee/Income/Curr-Code
+1170   5 SALARY                           P        9.0   xs:decimal
+1180     FLAGS=MULT_OPTIONAL
+1190     TAG=Salary
+1200     XPATH=/Employee/Income/Salary
+1210   5 BONUS                            P        9.0   xs:decimal
+1220     FLAGS=ARRAY,MULT_OPTIONAL
+1230     OCC=1:4
+1240     TAG=Bonus
+1250     XPATH=/Employee/Income/Bonus
+1260G  3 LEAVE-DATA
+1270     FLAGS=MULT_OPTIONAL
+1280     TAG=Leave-Data
+1290     XPATH=/Employee/Leave-Data
+1300G  4 GROUP$7
+1310     FLAGS=GROUP_SEQUENCE,MULT_OPTIONAL
+1320   5 LEAVE-DUE                        P        2.0 D xs:decimal
+1330     FLAGS=MULT_OPTIONAL
+1340     TAG=Leave-Due
+1350     XPATH=/Employee/Leave-Data/Leave-Due
+1360   5 LEAVE-TAKEN                      P        2.0 D xs:decimal
+1370     FLAGS=MULT_OPTIONAL
+1380     TAG=Leave-Taken
+1390     XPATH=/Employee/Leave-Data/Leave-Taken
+1400G  3 LEAVE-BOOKED
+1410     FLAGS=ARRAY,MULT_OPTIONAL
+1420     OCC=1:4
+1430     TAG=Leave-Booked
+1440     XPATH=/Employee/Leave-Booked
+1450G  4 GROUP$8
+1460     FLAGS=GROUP_SEQUENCE,MULT_REQUIRED,MULT_ONCE
+1470   5 LEAVE-START                      P        8.0   xs:decimal
+1480     FLAGS=MULT_OPTIONAL
+1490     TAG=Leave-Start
+1500     XPATH=/Employee/Leave-Booked/Leave-Start
+1510   5 LEAVE-END                        P        8.0   xs:decimal
+1520     FLAGS=MULT_OPTIONAL
+1530     TAG=Leave-End
+1540     XPATH=/Employee/Leave-Booked/Leave-End
+1550   3 LANG                             U          3   xs:string
+1560     FLAGS=ARRAY,MULT_OPTIONAL
+1570     OCC=1:4
+1580     TAG=Lang
+1590     XPATH=/Employee/Lang
+1600******DDM OUTPUT TERMINATED******

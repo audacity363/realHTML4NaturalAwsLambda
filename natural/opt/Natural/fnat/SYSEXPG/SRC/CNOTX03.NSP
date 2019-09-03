@@ -1,0 +1,18 @@
+0010** Example 'CNOTX03': C* Notation (multiple-value fields)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 EMPL-VIEW VIEW OF EMPLOYEES
+0050  2 NAME
+0060  2 CITY
+0070  2 INCOME    (1:3)
+0080    3 C*BONUS
+0090    3 BONUS   (1:3)
+0100END-DEFINE
+0110*
+0120LIMIT 2
+0130READ EMPL-VIEW BY CITY
+0140  /*
+0150  DISPLAY NAME C*BONUS (1:3) BONUS (1:3,1:3)
+0160END-READ
+0170*
+0180END

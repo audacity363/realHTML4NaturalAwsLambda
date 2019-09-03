@@ -1,0 +1,38 @@
+0010/*  User Exit NCP-REEM: Runtime Action Definition: Separation line
+0020/***********************************************************************
+0030/*  Description .... This subprogram is invoked by program 'NCP-REED'.
+0040/*                   NCP-REED contains the 'Runtime Action Definition'
+0050/*                   editor (you start this function when entering
+0060/*                   'ED' in the 'Result Editor' screen.)
+0070/*
+0080/*                   The variable RULER contains the separation line.
+0090/*
+0100/*                   After you modified the source, you should STOW it.
+0110/*
+0120/***********************************************************************
+0130DEFINE DATA PARAMETER  /* Calling program is NCP-REED
+0140  01 RULER  (A64)      /* Contents may be modified
+0150  01 NAME   (A08)      /* Processor name. (Field is write protected.)
+0160  01 LIB    (A08)      /* Library. (Field is write protected.)
+0170LOCAL
+0180  01 #RULER (A64) INIT
+0190     < '----,----1----,----2----,----3'
+0200     - '----,----4----,----5----,----6----' >
+0210END-DEFINE
+0220/***********************************************************************
+0230DECIDE ON FIRST *INIT-USER
+0240  VALUE 'ABC'                     /*  This is only an example
+0250    MOVE ALL '-' TO RULER
+0260  VALUE 'RKE'                     /*  This is only an example
+0270    IF LIB = 'RKE1'
+0280      MOVE '----:----1----:----2----:----3'
+0290        -  '----:----4----:----5----:----6----' TO RULER
+0300    ELSE
+0310      MOVE #RULER TO RULER
+0320    END-IF
+0330  NONE
+0340    MOVE #RULER TO RULER
+0350END-DECIDE
+0360/***********************************************************************
+0370/*
+0380END

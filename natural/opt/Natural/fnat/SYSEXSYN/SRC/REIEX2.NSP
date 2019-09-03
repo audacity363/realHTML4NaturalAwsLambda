@@ -1,0 +1,18 @@
+0010** Example 'REIEX2': REINPUT  (with attributes)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #A (A20)
+00501 #B (N7.2)
+00601 #C (A5)
+00701 #D (N3)
+0080END-DEFINE
+0090*
+0100INPUT (AD=A) #A  #B  #C  #D
+0110*
+0120IF #A = ' ' OR #B = 0
+0130  REINPUT (AD=P) 'RETYPE VALUES'
+0140                 MARK *#A (AD=I CD=RE)    /* put cursor on first field
+0150                      *#B (AD=U CD=PI)    /* and change colours
+0160END-IF
+0170*
+0180END

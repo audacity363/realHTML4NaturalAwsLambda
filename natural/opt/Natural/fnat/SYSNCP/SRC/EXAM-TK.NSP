@@ -1,0 +1,82 @@
+0010/*  EXAM-TK - TEXT for Keyword
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (1:8)
+0070     02 NATURAL-ERROR
+0080     02 RETURN-CODE
+0090     02 RESULT-FIELD (1:9)
+0100     02 GETSET-FIELD-NAME
+0110     02 GETSET-FIELD-VALUE
+0120  01 MSG     (A72)
+0130  01 MOD     (C)
+0140  01 IX      (I01)
+0150END-DEFINE
+0160DEFINE WINDOW INFO-TEXT
+0170  SIZE 16 * 70
+0180  BASE IX / IX
+0190  TITLE ' (TK) Text for Keyword'
+0200  CONTROL SCREEN
+0210  FRAMED POSITION OFF
+0220SET KEY ALL
+0230IX := *LEVEL * 2
+0240SET KEY ALL
+0250/***********************************************************************
+0260PROCESS COMMAND ACTION GET USING
+0270  PROCESSOR-NAME = ' '
+0280  GETSET-FIELD-NAME = 'NAME&'
+0290/*
+0300IF NATURAL-ERROR NE 0
+0310  CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0320  WRITE MSG (AD=I)
+0330  ESCAPE ROUTINE
+0340END-IF
+0350/*
+0360MOVE GETSET-FIELD-VALUE TO PROCESSOR-NAME
+0370RESET COMMAND-LINE (*)
+0380/***********************************************************************
+0390REPEAT
+0400  /******************************************************
+0410  INPUT WINDOW = 'INFO-TEXT' (AD=MIT IP=F CV=MOD) WITH TEXT MSG
+0420    /  ' Processor Name .......' PROCESSOR-NAME (AD=OI)
+0430    /  ' Keyword ..............' COMMAND-LINE (1) (AD=MIT AL=16)
+0440    /  ' Keyword Type .........' COMMAND-LINE (2) (AD=MIT AL=01)
+0450  /******************************************************
+0460  SET WINDOW OFF
+0470  IF *PF-KEY NE 'ENTR'
+0480  OR MOD NOT MODIFIED
+0490    ESCAPE ROUTINE
+0500  END-IF
+0510  RESET MSG
+0520  /******************************************************
+0530  PROCESS COMMAND ACTION TEXT USING
+0540    PROCESSOR-NAME = PROCESSOR-NAME
+0550    COMMAND-LINE (*) = COMMAND-LINE (*)
+0560  /**************************************
+0570  IF NATURAL-ERROR > 0
+0580    CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0590    ESCAPE TOP
+0600  END-IF
+0610  /***************************************************************
+0620  INPUT WINDOW = 'INFO-TEXT' (AD=OIT' ' IP=OFF ) WITH TEXT MSG
+0630    /  ' Processor Name .......' PROCESSOR-NAME
+0640    /  ' Keyword ..............' COMMAND-LINE (1) (AL=16)
+0650    /  ' Keyword Type .........' COMMAND-LINE (2) (AL=01)
+0660    /  ' (1) Keyword Text .....' RESULT-FIELD (1) (AL=40)
+0670    /  ' (2) Keyword Name .....' RESULT-FIELD (2) (AL=16)
+0680    /  ' (3) Keyword short ....' RESULT-FIELD (3) (AL=16)
+0690    /  ' (4) Explanation ......' RESULT-FIELD (4) (AL=16)
+0700    /  ' (5) IKN ..............' RESULT-FIELD (5) (AL=16)
+0710    /  ' (6) Min. length ......' RESULT-FIELD (6) (AL=16)
+0720    /  ' (7) Max. length ......' RESULT-FIELD (7) (AL=16)
+0730    /  ' (8) Type code ........' RESULT-FIELD (8) (AL=16)
+0740  /***************************************************************
+0750  SET WINDOW OFF
+0760  IF *PF-KEY NE 'ENTR'
+0770    ESCAPE ROUTINE
+0780  END-IF
+0790  RESET MSG
+0800END-REPEAT
+0810/**************************************
+0820END

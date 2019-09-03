@@ -1,0 +1,71 @@
+0010* Program   MRSPOOL
+0020* View      READ-SPOOL
+0030*
+0040* Function  Read SYSOUT records from JES
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* sju 02-02-15   NPE321:   7 digit job-number
+0090* wkk 03-04-23   NPE322:   issue REINPUT carefully (prob 239274)
+0100* ======================================================================
+0110*
+0120DEFINE DATA
+0130GLOBAL USING TUTO
+0140LOCAL USING RSPOOL-L
+0150LOCAL 1 #JOBN      (N7)   /* was n5 sju 02-02-15
+01601 #JOB       (A8)
+01701 #TYPE      (A2)
+01801 #DS        (N3)
+01901 #STRING    (A50)
+02001 #SEL       (A1/1:6)
+02101 #CODE      (A2/1:6) CONST (1) <'SI'>
+0220  (2) <'JL'>
+0230  (3) <'SM'>
+0240  (4) <'SO'>
+0250  (5) <'CC'>
+0260  (6) <'AL'>
+02701 #I         (I1)
+0280END-DEFINE
+0290*
+0300REPEAT
+0310  INPUT WITH TEXT *##MSG-NR,
+0320    ##MSG-TXT1,
+0330    ##MSG-TXT2
+0340    USING MAP 'MRSPOOL&'
+0350  RESET ##MSG
+0360*
+0370  IF #STRING = ' '
+0380    ASSIGN #STRING = '*'
+0390  END-IF
+0400*
+0410  IF SELECTION NOT UNIQUE #SEL (*)
+0420    REINPUT *1011
+0430  ELSE
+0440    FOR #I = 1 TO 6
+0450      IF #SEL (#I) NE ' '
+0460        ASSIGN #TYPE = #CODE (#I)
+0470      END-IF
+0480    END-FOR
+0490  END-IF
+0500*
+0510  FIND READ-SPOOL WITH JOB-NAME   = #JOB
+0520      AND JOB-NUMBER = #JOBN
+0530      AND TYPE       = #TYPE
+0540      AND DATA-SET   = #DS
+0550      AND NODE       = ##NODE
+0560      AND RECORD     = #STRING
+0570    IF ERROR-CODE > 0
+0580*      WKK START 03-04-23
+0590      IF *COUNTER GT 1           /* ALREADY DONE SOME DISPLAYS
+0600        INPUT (AD=O IP=OFF) ERROR-TEXT
+0610        ESCAPE BOTTOM
+0620      ELSE
+0630*      WKK END   03-04-24
+0640        REINPUT ERROR-TEXT
+0650      END-IF              /* WKK 03-04-23
+0660    END-IF
+0670    DISPLAY NOTITLE NOHDR RECORD (AL=79)
+0680  END-FIND
+0690END-REPEAT
+0700*
+0710END

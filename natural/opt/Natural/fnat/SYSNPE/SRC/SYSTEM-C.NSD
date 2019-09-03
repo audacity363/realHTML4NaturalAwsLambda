@@ -1,0 +1,61 @@
+0010DB: 148 FILE: 046  - SYSTEM-COMMAND                   DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:26
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:26
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to MVS and BS2000
+0230*
+0240  1 A1 LINE                              A  132      Output line. If more
+0250*      Output line. If more than one
+0260*      output line is expected, a
+0270*      FIND loop is required to
+0280*      retrieve all of them.
+0290M 1 A2 COMMAND                           A   80    D MVS: Commands to be
+0300*      MVS: Commands to be executed
+0310*      by TSO.
+0320*      BS2000: The values specified
+0330*      with the field occurences
+0340*      will be taken without any
+0350*      changes and concatenated
+0360*      to a single command which
+0370*      is passed to the system.
+0380*      It should be kept in mind
+0390*      that the execution of the
+0400*      command is done under the
+0410*      BS2000 userID where the
+0420*      ESY node is running.
+0430*
+0440*      MVS fields
+0450*
+0460M 1 A4 SUB-COMMAND                       A   80    D input for utility ca
+0470*      input for utility called
+0480*      with COMMAND field.
+0490  1 A5 PROFILE                           A    3    D Specify PROFILE = 'N
+0500*      Specify PROFILE = 'NO' to
+0510*      suppress generation of the
+0520*      PROFILE PREFIX(user)
+0530*      statement.
+0540  1 A6 CAPS                              A    3    D ON OR OFF; DEFAULT =
+0550*      ON OR OFF; DEFAULT = ON;
+0560*      TRANSLATE COMMAND IN UPPERCASE
+0570  1 A3 SUB-LINE                          A  121
+0580*
+0590*      End of SYSTEM-COMMAND
+0600*
+0610******DDM OUTPUT TERMINATED******

@@ -1,0 +1,89 @@
+0010Search user short error message on FNAT or FUSER
+0020.
+0030Documentation ......... USR1027T    /*  Text object
+0040Interface ............. USR1027N    /*  Cataloged subprogram
+0050Example Program ....... USR1027P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR MESSAGES
+0100.
+0110Keywords .............. *LANGUAGE, ERROR, FNAT, FUSER, SYSERR
+0120.
+0130Function .............. Find next used error number on FUSER.
+0140.
+0150.
+0160Parameters
+0170----------
+0180Define the following parameters with the DEFINE DATA statement:
+0190.
+020001 PARMS
+0210   02 LIBRARY      (A08)  /*  In ...... Library name
+0220   02 ERROR-NUMBER (N04)  /*  In/Out .. 0001 thru 9999
+0230   02 BEHIND       (L)    /*  In ...... Start with/behind ERROR-NUMBER
+0240   02 LANGUAGE     (I01)  /*  In ...... The language of the text
+0250   02 LANG-EXACTLY (L)    /*  In ...... Find only specified LANGUAGE
+0260   02 S-TEXT       (A79)  /*  Out ..... Short message
+0270   02 RESPONSE     (N04)  /*  Out ..... Error code
+0280.
+0290Interface Call
+0300--------------
+0310Use the interface with the CALLNAT statement:
+0320.
+0330CALLNAT 'USR1027N' PARMS
+0340                   P-CP         /* Optional parameter
+0350                   P-CP-SUPPORT /* Optional parameter
+0360.
+0370.
+0380Using the Application Programming Interface:
+0390--------------------------------------------
+0400Copy the subprogram USR1027N to the library SYSTEM or the steplib
+0410library respectively, or to the required library.
+0420.
+0430LIBRARY ...
+0440  Fill in the name of the library to which the text belongs to.
+0450  If LIBRARY is <blank>, *LIBRARY-ID is taken instead. Both
+0460  FUSER and FNAT libraries are accepted. When the library name
+0470  starts with 'SYS', FNAT will be accessed, otherwise FUSER will be
+0480  accessed. Exception: library 'SYSTEM', which is always a FUSER
+0490  library.
+0500.
+0510ERROR-NUMBER ...
+0520  In/Out field. It can take any value between 0001 and 9999 (incl.).
+0530  It indicates the start value for the search. When the next error
+0540  number can be found, it contains the number of that message,
+0550  otherwise it remains unchanged.
+0560.
+0570BEHIND ...
+0580  If you set <true>, the search will start BEHIND the given
+0590  ERROR-NUMBER. If you set <false>, the search will start with
+0600  the given ERROR-NUMBER.
+0610.
+0620LANGUAGE ...
+0630  Language code, similar to *LANGUAGE. If LANGUAGE is zero, the current
+0640  contents of *LANGUAGE are taken.
+0650.
+0660LANG-EXACTLY ...
+0670  If you specify <true>, the search will recognize texts with the given
+0680  LANGUAGE; if you specify <false>, the search will find you the next
+0690  available ERROR-NUMBER, even if the text is not available for the
+0700  specified LANGUAGE. In this case, S-TEXT will be <blank>.
+0710.
+0720S-TEXT ...
+0730  Output field. It will contain the respective text or <blank>.
+0740.
+0750RESPONSE ...
+0760  Output field. It will contain the response code. See below.
+0770.
+0780.
+0790The interface finds the next available error message from
+0800the Natural system file FUSER or FNAT, respectively.
+0810.
+0820RESPONSE indicates the status:
+0830  0000 ...  No error occurred
+0840  0002 ...  LIBRARY is invalid or missing
+0850  0003 ...  ERROR-NUMBER is invalid
+0860  0004 ...  LANGUAGE not correct
+0870  0009 ...  Nothing found for specified criteria
+0880.
+0890***** End of Description *****

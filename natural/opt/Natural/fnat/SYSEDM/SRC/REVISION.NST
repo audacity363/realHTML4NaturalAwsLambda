@@ -1,0 +1,21 @@
+0010************************************************************************
+0020* Application: SYSEDM (Adabas/Natural Data Collector for Optimize)
+0030* Object: REVISION
+0040* Date: 2018-01-25 16:00
+0050* Version: 3
+0060* Rev: 0001
+0070* Client: 0
+0080************************************************************************
+0090* Function
+0100* SYSEDM version, revision, last edit date and client version.
+0110* The client version (if <> 0) overwrites the version sent from
+0120* Optimize.
+0130************************************************************************
+0140* IMPORTANT: Do not modify this member
+0150************************************************************************
+0160* History
+0170* Rev  Date       (iTrac)  Description
+0180* ----------------------------------------------------------------------
+0190* 0001 2018-01-25 ES-12502 Provide a NAT* program to receive Adabas file
+0200*      name on OS
+0210

@@ -1,0 +1,51 @@
+0010**C           0   *
+0020**C           0   *Natural Web Interface -  New Demo Application
+0030**C           0   *
+0040**C           0   *DESCRIPTION  Internal Parameter
+0050**C           0   *
+0060**C           0   *AUTHOR        SAG   21.08.97
+0070**C           0   *
+0080**C           0   *VERSION       6.2.
+0090**C           0   *
+0100**C           0   *(c) Copyright  Software AG 1997-2005. All rights reserved.
+0110**C           0   *
+0120**DS          0         1#DEMO-MENU
+0130**DK          0   A   1 2#SE
+0140**DK          0   A   1 2#ME
+0150**DK          0   A   1 2#BR
+0160**DK          0   A   1 2#LI
+0170**DK          0   A   1 2#CH
+0180**DK          0   A   1 2#DE
+0190**DK          0   A   1 2#SH
+0200**DK          0   A   1 2#AD
+0210**DK          0   A   1 2#DD
+0220**DK          0   A   1 2#DC
+0230**DK          0   A   1 2#DA
+0240**DK          0   A   1 2#CL
+0250**DK          0   A   1 2#HO
+0260**DS          0         1#DEMO-PARM
+0270**DF B        0   A     2#GIF
+0280**DE                     DY
+0290**DF B        0   A     2#JAVA
+0300**DE                     DY
+0310**DK          0   N   5 2#START
+0320**DK          0   N   7 2#END-MAX
+0330**DK          0   N   5 2#END
+0340**DF B        0   A     2#PERSON
+0350**DE                     DY
+0360**DF B        0   A     2#FROM
+0370**DE                     DY
+0380**DF B        0   A     2#TO
+0390**DE                     DY
+0400**DF B        0   A     2#TODO
+0410**DE                     DY
+0420**DF B        0   A     2#STATUS
+0430**DE                     DY
+0440**DF B        0   A     2#CAPTION
+0450**DE                     DY
+0460**DF B        0   A     2#OT
+0470**DE                     DY
+0480**DF B        0   A     2#MSG
+0490**DE                     DY
+0500**DK          0   A   1 2#QUOTE
+0510**DK          0   A   1 2#DQUOTE

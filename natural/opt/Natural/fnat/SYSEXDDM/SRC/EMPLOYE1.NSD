@@ -1,0 +1,127 @@
+0010DB: 019 FILE: 009  - EMPLOYEES-V2009                  DEFAULT SEQUENCE:
+0020                              Cataloged by RKE      on 2009-08-06 13:17:58
+0030TYPE: ADABAS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060G 1 A0 PERSONNEL-DATA
+0070  2 AA PERSONNEL-ID                      A    8    D
+0080       HD=PERSONNEL/ID
+0090*      CNNNNNNN
+0100*      C=COUNTRY
+0110G 2 AB ID-DATA
+0120  3 AC PERSONNEL-NO                      I    4    D
+0130  3 AD ID-CARD                           B    8  N
+0140*      HF-OPTION IN FDT
+0150  3 AE L@SIGNATURE                       I    4      LENGTH INDICATOR
+0160  3 AE SIGNATURE                         A       N   LA
+0170       LE=16381
+0180       OPTIONS=LA
+0190G 1 B0 FULL-NAME
+0200  2 BA FIRST-NAME                        U   20  N
+0210  2 BB MIDDLE-NAME                       U   20  N
+0220  2 BC NAME                              U   25  N D
+0230  1 CA MAR-STAT                          A    1  F
+0240       HD=MARTIAL/STATUS
+0250*      M=MARRIED
+0260*      S=SINGLE
+0270*      D=DIVORCED
+0280*      W=WIDOWED
+0290  1 DA SEX                               A    1  F
+0300       HD=S/E/X
+0310  1 EA BIRTH                             D    6  N D NC
+0320       HD=DATE/OF/BIRTH
+0330       EM=YYYY-MM-DD
+0340  1 EA N@BIRTH                           I    2    D NULL INDICATOR
+0350P 1 F0 PRIVATE-ADDRESS
+0360M 2 FA PRIVATE-ADDRESS-LINE              U   30  N
+0370       HD=PRIVATE-ADDRESS
+0380  2 FB PRIVATE-CITY                      U   20  N D
+0390  2 FC PRIVATE-POST-CODE                 A   10  N
+0400       HD=PRIVATE/POST CODE
+0410  2 FD PRIVATE-COUNTRY                   A    3  N
+0420       HD=PRIVATE/COUNTRY
+0430G 2 F1 PRIVATE-PHONE-EMAIL
+0440  3 FE PRIVATE-AREA-CODE                 A    6  N
+0450       HD=PRIVATE/AREA CODE
+0460  3 FF PRIVATE-PHONE                     A   15  N
+0470  3 FG PRIVATE-FAX                       A   15  N
+0480  3 FH PRIVATE-MOBILE                    A   15  N
+0490M 3 FI PRIVATE-EMAIL                     A   80  N D
+0500P 1 I0 BUSINESS-ADDRESS
+0510M 2 IA BUSINESS-ADDRESS-LINE             U   20  N
+0520       HD=BUSINESS-ADDRESS
+0530  2 IB BUSINESS-CITY                     U   20  N D
+0540  2 IC BUSINESS-POST-CODE                A   10  N
+0550       HD=BUSINESS/POST CODE
+0560  2 ID BUSINESS-COUNTRY                  A    3  N
+0570       HD=BUSINESS/COUNTRY
+0580  2 IE BUSINESS-ROOM-NUMBER              A    5  N
+0590       HD=ROOM
+0600G 2 I1 BUSINESS-PHONE-EMAIL
+0610  3 IF BUSINESS-AREA-CODE                A    6  N
+0620       HD=BUSINESS/AREA CODE
+0630  3 IG BUSINESS-PHONE                    A   15  N
+0640  3 IH BUSINESS-FAX                      A   15  N
+0650  3 II BUSINESS-MOBILE                   A   15  N
+0660M 3 IJ BUSINESS-EMAIL                    A   80  N D
+0670  1 JA DEPARTMENT                        A    6    D
+0680  1 KA JOB-TITLE                         U   33  N D
+0690       HD=CURRENT/POSITION
+0700P 1 L0 INCOME
+0710*      ANNUAL INCOMES
+0720*      DURING YEARS WITH THE
+0730*      INTERNATIONAL ENTERPRISE
+0740  2 LA CURRENCY-CODE                     A    3  N
+0750       HD=CURRENCY/CODE
+0760  2 LB SALARY                            P  9.2  N
+0770       HD=ANNUAL/SALARY
+0780M 2 LC BONUS                             P  9.2  N D
+0790*      BONUS PER YEAR
+0800*      IN CURRENCY UNIT
+0810  1 MA TOTAL-INCOME                      F    4  N
+0820G 1 N0 LEAVE-DATA
+0830*      LEAVE/VACATION INFO
+0840*      FOR EMPLOYEE WITHIN 1 YEAR
+0850  2 NA LEAVE-DUE                         N  2.0
+0860       HD=LEAVE/DUE
+0870*      VACATION DAYS/YEAR
+0880*      EMPLOYEE IS ENTITLED TO
+0890  2 NB LEAVE-TAKEN                       N  2.1  N
+0900*      VACATION DAYS TAKEN
+0910*      IN THIS YEAR
+0920P 1 O0 LEAVE-BOOKED
+0930  2 OA LEAVE-START                       N  8.0  N
+0940       HD=LEAVE/START
+0950       EM=9999/99/99
+0960  2 OB LEAVE-END                         N  8.0  N
+0970       HD=LEAVE/END
+0980       EM=9999/99/99
+0990M 1 PA LANGUAGE                          A    3  N D
+1000       HD=LANG/SPOKEN
+1010  1 QA LAST-UPDATE                       T   12
+1020  1 RA L@PICTURE                         I    4      LENGTH INDICATOR
+1030  1 RA PICTURE                           A       N   LOB
+1040       DY
+1050       OPTIONS=LB
+1060P 1 S0 DOCUMENTS
+1070  2 SA DOCUMENT-DESCRIPTION              U   40  N
+1080  2 SB DOCUMENT-TYPE                     A    3  N
+1090M 2 SC L@DOCUMENT                        I    4      LENGTH INDICATOR
+1100M 2 SC DOCUMENT                          A       N   LOB
+1110       DY
+1120       OPTIONS=LB
+1130  1 H1 LEAVE-LEFT                        B    5  N S
+1140       HD=LEAVE/REMAINING
+1150*      EXISTS OF
+1160*      LEAVE-DUE AND LEAVE-TAKEN
+1170  1 S1 DEPARTMENT-SECTION                A    2    U
+1180       HD=SECTION
+1190*      EXISTS OF
+1200*      DEPARTMENT(1-2)
+1210  1 S2 DEPARTMENT-PERSON                 A   46  N S
+1220*      EXISTS OF
+1230*      DEPARTMENT AND NAME(1-20)
+1240P 1 S3 CURRENCY-SALARY                   A    9    S
+1250*      EXISTS OF
+1260*      CURRENCY-CODE AND SALARY
+1270******DDM OUTPUT TERMINATED******

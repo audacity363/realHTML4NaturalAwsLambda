@@ -1,0 +1,19 @@
+0010** Example 'FINDX07': FIND  (with several clauses)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 EMPLOY-VIEW VIEW OF EMPLOYEES
+0050  2 NAME
+0060  2 FIRST-NAME
+0070  2 CITY
+0080  2 SALARY    (1)
+0090  2 CURR-CODE (1)
+0100END-DEFINE
+0110*
+0120FIND EMPLOY-VIEW WITH  PHONETIC-NAME = 'JONES' OR = 'BECKR'
+0130                 AND   CITY          = 'BOSTON' THRU 'NEW YORK'
+0140                 BUT NOT               'CHAPEL HILL'
+0150                 SORTED BY NAME
+0160                 WHERE SALARY (1)    < 28000
+0170  DISPLAY NOTITLE NAME FIRST-NAME CITY SALARY (1)
+0180END-FIND
+0190END

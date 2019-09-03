@@ -1,0 +1,14 @@
+0010** Example 'FORMAX07': FORMAT (without parameter ES and ZP
+0020**                     and compare with FORMAX08)
+0030************************************************************************
+0040DEFINE DATA LOCAL
+00501 VIEWEMP VIEW OF EMPLOYEES
+0060  2 NAME
+0070  2 FIRST-NAME
+0080  2 BONUS (1:2,1:1)
+0090END-DEFINE
+0100*
+0110READ (4) VIEWEMP BY NAME STARTING FROM 'JONES'
+0120  DISPLAY NAME FIRST-NAME BONUS (1:2,1:1)
+0130END-READ
+0140END

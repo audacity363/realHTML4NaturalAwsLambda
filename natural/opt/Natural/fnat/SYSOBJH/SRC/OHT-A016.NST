@@ -1,0 +1,26 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Type of New Option Workplan
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180Select the function for which the new Option Workplan is to be used.
+0190
+0200Unload into work files.
+0210     The Option Workplan can be used for Unload commands.
+0220
+0230Load/Scan work files.
+0240     The Option Workplan can be used for Load or Scan commands.
+0250
+0260<HelpTextEnd>

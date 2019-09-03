@@ -1,0 +1,10 @@
+0010 <HTML><HEAD><TITLE>Natural Web Interface</TITLE></HEAD>
+0020 <BODY ALINK="#CC0000" TEXT="#000000" BGCOLOR="#FFFFFF">
+0030 <P ALIGN="CENTER"><IMG SRC="/pictures/natw_sam.gif"
+0040 WIDTH="219" HEIGHT="229" ALT="Sam-Logo"><BR>
+0050 <FONT COLOR="TEAL" SIZE="+2"><B>Natural Web Interface</B></FONT>
+0060 <P ALIGN="CENTER">a part of Natural<BR><BR>&nbsp;
+0070 <TABLE BORDER='0' WIDTH='100%' CELLSPACING='0' CELLPADDING='5'>
+0080 <TR BGCOLOR='#00CC66'><TD>This static page is saved as text with name
+0090 T3-HTML at library SYSWEB.</TD><TD ALIGN='RIGHT'>Natural</TD>
+0100 </TR></TABLE></BODY></HTML>

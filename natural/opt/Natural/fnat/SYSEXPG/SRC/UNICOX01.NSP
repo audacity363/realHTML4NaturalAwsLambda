@@ -1,0 +1,60 @@
+0010** Example 'UNICOX01': List all Unicode characters
+0020************************************************************************
+0030*
+0040DEFINE DATA LOCAL
+00501 MAX-I2         (I4) CONST <65535>  /* total number of unicode chars
+00601 MAX-LINES      (I4) CONST <1023>   /* number of printed lines
+0070*
+00801 U-LONG         (U65536)
+00901 REDEFINE U-LONG
+0100  2 U1           (U1/0:MAX-I2)
+01101 REDEFINE U-LONG
+0120  2 CHARACTER    (U64/0:MAX-LINES)  /* one line with U-chars
+0130*
+01401 U-BIG          (U71680)           /* 70*1024
+01501 REDEFINE U-BIG
+0160  2 U-LINE       (U70/0:MAX-LINES)  /* full line
+0170  2 REDEFINE U-LINE
+0180    3 U-LINEX    (0:MAX-LINES)
+0190      4 U-CP     (U4)
+0200      4 U-FILLER (U2)
+0210      4 U-CHAR   (U64)
+0220*
+02301 I1             (I4)
+02401 I2             (I4)
+02501 #CODEPOINT     (B2)
+02601 RSP            (I4)
+02701 A4             (A4)
+0280END-DEFINE
+0290*
+0300
+0310FORMAT LS=140
+0320
+0330* Run through all values in the Unicode table
+0340FOR I1 = 0 TO MAX-I2
+0350  MOVE I1 TO #CODEPOINT
+0360  /*
+0370  /* Code page 'UTF-16BE' is the big endian Unicode
+0380  /* which contains the binary code point values.
+0390  MOVE ENCODED #CODEPOINT IN CODEPAGE 'UTF-16BE' TO U1(I1) GIVING RSP
+0400END-FOR
+0410*
+0420WRITE NOTITLE
+0430  19T '- List All Unicode Characters  -' //
+0440*
+0450*
+0460* Fill the lines with the codepoint and characters
+0470FOR I1 = 0 TO MAX-LINES
+0480  I2 := 64 * I1                   /* codepoint of first u-char in line
+0490  MOVE I2 TO #CODEPOINT
+0500  MOVE EDITED #CODEPOINT (EM=HHHH) TO A4
+0510  MOVE A4             TO U-CP (I1)
+0520  MOVE U'  '          TO U-FILLER (I1)
+0530  MOVE CHARACTER (I1) TO U-CHAR (I1)
+0540END-FOR
+0550*
+0560* Print all lines on one page
+0570* DL parameter is used to print double space characters completely
+0580WRITE U-LINE(*) (DL=136)
+0590*
+0600END

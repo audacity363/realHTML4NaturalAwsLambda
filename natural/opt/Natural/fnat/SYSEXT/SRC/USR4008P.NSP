@@ -1,0 +1,53 @@
+0010/* RPC: Set library for RPC execution
+0020/*
+0030/* Function ... Set library for execution of programs under RPC.
+0040/*              Remark: The Logon-Indicator of RPC needs to be set,
+0050/*                      in order that setting of library for execution
+0060/*                      can become effective.
+0070/*
+0080/* This program serves as example how to design a user-defined
+0090/* program call 'USR4008N'.
+0100/*
+0110/* Parameter ..
+0120/*
+0130/*       P-FUNC (A01)         /* IN:    FUNCTION,
+0140/*                                      G= GET, P= PUT
+0150/*       P-LIB  (A01)         /* INOUT: LIBRARY FOR RPC EXECUTION
+0160/*
+0170/***********************************************************************
+0180DEFINE DATA LOCAL
+01901 PARM-INPUT
+0200  2 P-FUNC     (A01)
+0210  2 P-LIB      (A08)
+0220END-DEFINE
+0230*
+0240DEFINE WINDOW RPC-LIB       SIZE 8*50 BASE 8/16
+0250  TITLE ' Set library for RPC-execution' CONTROL SCREEN
+0260*
+0270P-FUNC := 'G'               /* GET FUNCTION FOR CURRENT VALUE
+0280SET KEY PF3
+0290*
+0300* ****************************************
+0310/* SAMPLE FOR BATCH-MODE OR CALL VIA STACK
+0320* ****************************************
+0330IF *DATA > 0
+0340  INPUT (AD=T) P-FUNC P-LIB
+0350  CALLNAT 'USR4008N' USING P-FUNC P-LIB
+0360ELSE
+0370* ****************************************
+0380/* SAMPLE FOR CALLING ONLINE
+0390* ****************************************
+0400  REPEAT UNTIL *PF-KEY = 'PF3' OR P-FUNC = '.'
+0410*
+0420    CALLNAT 'USR4008N' USING P-FUNC P-LIB
+0430*
+0440    INPUT WINDOW='RPC-LIB' (AD=MIT'_')  /
+0450      'Please enter' /
+0460      '   Function:' P-FUNC   '           G= GET, P= PUT'  /
+0470      '    Library:' P-LIB  //
+0480      'or hit PF3 to leave.'
+0490*
+0500  END-REPEAT
+0510END-IF
+0520*
+0530END

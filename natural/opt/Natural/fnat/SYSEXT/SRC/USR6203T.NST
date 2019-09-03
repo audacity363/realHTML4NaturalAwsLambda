@@ -1,0 +1,79 @@
+0010Maintain a resource in a Natural library
+0020.
+0030Documentation ......... USR6203T    /*  Text object
+0040Interface ............. USR6203N    /*  Cataloged subprogram
+0050Example Program ....... USR6203P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. RESOURCES
+0100.
+0110Keywords .............. CREATE, GET, PATH, RESOURCE
+0120.
+0130Function .............. This interface searchs for a resource file
+0140                        to get the path of the resource, to create
+0150                        an empty resource if it doesn't exist or to
+0160                        delete the specified resource.
+0170                        The search can be done on the specified library
+0180                        or additionally on the steplibs.
+0190.
+0200.
+0210Parameters
+0220----------
+0230Define the following parameters with the DEFINE DATA statement:
+0240.
+0250Input ...... 1 P-FUNCTION (A1)
+0260                     'L' - Search in specified library and get path
+0270                           of resource.
+0280                     'S' - Search in specified library and in the
+0290                           steplibs and get path of resource.
+0300                     'C' - Search in specified library; create resource
+0310                           in specified library if it wasn't found;
+0320                           get path of resource.
+0330                     'A' - Search in specified library and in the
+0340                           steplibs; create resource in specified
+0350                           library if it wasn't found;
+0360                           get path of resource.
+0370                     'D' - Search in specified library;
+0380                           delete resource in specified library;
+0390                           get path of resource.
+0400                     'X' - Search in specified library and in the
+0410                           steplibs; delete resource in the found
+0420                           library; get path of resource.
+0430.
+0440Input ...... 1 P-RESOURCE-NAME (A253)
+0450                     Resource object name (optional with extension)
+0460                     For the functions 'C' and 'A' the extension should
+0470                     be correctly defined to create the resource file.
+0480                     For the functions 'D' and 'X' the extension has
+0490                     to be correctly defined to delete the specific
+0500                     resource.
+0510.
+0520Input ...... 1 P-LIBRARY-NAME (A8)
+0530                     Use blank for current library
+0540.
+0550Output ..... 1 P-PATH-NAME (A253)
+0560                     Full path name inclusive specified resource name
+0570.
+0580Output ..... 1 P-RESPONSE (I4)
+0590                     Response code. Possible values are:
+0600                        0 - Resource file successfully found.
+0610                        1 - Invalid function code.
+0620                       -1 - Resource file not found.
+0630.
+0640.
+0650Interface Call
+0660--------------
+0670Use the interface with the CALLNAT statement:
+0680.
+0690CALLNAT 'USR6203N'  P-FUNCTION P-RESOURCE-NAME
+0700                    P-LIBRARY-NAME P-PATH-NAME
+0710                    P-RESPONSE
+0720.
+0730.
+0740Using the Application Programming Interface:
+0750--------------------------------------------
+0760Copy the subprogram USR6203N to the library SYSTEM or the steplib
+0770library respectively, or to the required library.
+0780.
+0790*****  End of description  *****

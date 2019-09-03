@@ -1,0 +1,13 @@
+0010&H View ALLOCATIONS
+0020&L
+0030&L
+0040#Zweck@    : Anzeige der DD-Zuweisungen.
+0050&L
+0060#System@   : z/OS.
+0070&L
+0080&L
+0090#Anwendung@: Dieser View informiert ueber Dateien eines Jobs, die durch
+0100             DD-Anweisung zugewiesen wurden. Ausserdem werden die per
+0110             DYNALLOC angeforderten Dateien angezeigt.
+0120&L
+0130#Anmerkung@:

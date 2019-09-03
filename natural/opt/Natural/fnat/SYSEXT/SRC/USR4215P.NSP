@@ -1,0 +1,181 @@
+0010/* This program serves as example how to design a user-defined
+0020/* program to call 'USR4215N'
+0030/***********************************************************************
+0040/*---------------------------------------------------------------------
+0050/*---------------- Compiler options -----------------------------------
+0060/*---------------------------------------------------------------------
+0070OPTIONS LOWSRCE=ON
+0080/*---------------------------------------------------------------------
+0090/*---------------- Data definitions -----------------------------------
+0100/*---------------------------------------------------------------------
+0110DEFINE DATA LOCAL
+0120/*---------------------------------------------------------------------
+0130/* Parameters for USR4215N
+0140/*---------------------------------------------------------------------
+01501 USR4215N-PARA
+0160  2 P-FUNCTION                        (A1)
+0170  2 P-LIBRARY                         (A8)
+0180  2 P-LIBRARY-DBID                    (N5)
+0190  2 P-LIBRARY-FNR                     (N5)
+0200  2 P-LIBRARY-PASSWORD                (A8)
+0210  2 P-LIBRARY-CIPHER                  (A8)
+0220  2 P-RESOURCE-NAME-RANGE             (A250)
+0230  2 P-RESOURCE-TYPE-RANGE             (A11)
+0240  2 P-OBJECT-NAME-RANGE               (A9)
+0250  2 P-OBJECT-DATE-RANGE               (A11)
+0260  2 P-OBJECT-TIME-RANGE               (A9)
+0270  2 P-OBJECT-USER-ID-RANGE            (A9)
+0280  2 P-OBJECT-VERSION-RANGE            (A7)
+0290  2 P-NUMBER-RESOURCE-FOUND           (I2)
+0300  2 P-RESOURCE-LIST                   (10)
+0310    3 P-RESOURCE-LIST-RESOURCE-NAME   (A250)
+0320    3 P-RESOURCE-LIST-OBJECT-NAME     (A8)
+0330    3 P-RESOURCE-LIST-OBJECT-DATE     (A10)
+0340    3 P-RESOURCE-LIST-OBJECT-TIME     (A8)
+0350    3 P-RESOURCE-LIST-OBJECT-USER     (A8)
+0360    3 P-RESOURCE-LIST-OBJECT-VERSION  (A6)
+0370  2 P-WORK-AREA-EXT                   (A1527)
+0380  2 P-RETURN-CODE                     (I4)
+0390  2 P-MESSAGE-LINE                    (A79)
+04001 USR4215N-ADDITIONAL-PARAMETERS      (A1/1:108)
+04101 REDEFINE USR4215N-ADDITIONAL-PARAMETERS
+0420  2 USR4215N-ADD-PARA-VERSION         (N2)
+0430  2 USR4215N-ADD-PARA-VERSION-A8      (A8/1:10) /* V1 MF only
+0440  2 V2-FSEC-DBID                      (N05)    /* V2 Fsec-dbid
+0450  2 V2-FSEC-FNR                       (N05)    /*    Fsec-fnr
+0460  2 V2-FSEC-PSW                       (A08)    /*    Fsec password
+0470  2 V2-FSEC-CIP                       (N08)    /*    Fsec cip
+0480/*---------------------------------------------------------------------
+0490/* Other local variables
+0500/*---------------------------------------------------------------------
+05101 INPUT-SORTED                        (A1)
+05201 MAINFRAME                           (L)
+05301 VI2-1                               (I2)
+0540END-DEFINE
+0550/**********************************************************************
+0560/*---------------------------------------------------------------------
+0570/*---------------- Start of main program ------------------------------
+0580/*---------------------------------------------------------------------
+0590/*---------------------------------------------------------------------
+0600/* Inits
+0610/*---------------------------------------------------------------------
+0620IF (*MACHINE-CLASS = 'MAINFRAME')
+0630  THEN MAINFRAME := TRUE
+0640  ELSE MAINFRAME := FALSE
+0650END-IF
+0660SET KEY ALL
+0670P-LIBRARY-DBID         := 0
+0680P-LIBRARY-FNR          := 0
+0690P-LIBRARY-PASSWORD     := ' '
+0700P-LIBRARY-CIPHER       := ' '
+0710P-LIBRARY              := 'SYSEXV'
+0720P-RESOURCE-NAME-RANGE  := '*'
+0730P-RESOURCE-TYPE-RANGE  := '*'
+0740P-OBJECT-NAME-RANGE    := '*'
+0750P-OBJECT-DATE-RANGE    := '*'
+0760P-OBJECT-TIME-RANGE    := '*'
+0770P-OBJECT-USER-ID-RANGE := '*'
+0780P-OBJECT-VERSION-RANGE := '*'
+0790/*---------------------------------------------------------------------
+0800/* Main processing loop
+0810/*---------------------------------------------------------------------
+0820SET CONTROL 'L'
+0830MAIN-REPEAT.
+0840REPEAT
+0850  INPUT (AD=MIT LS=80 IP=OFF) WITH TEXT 'Press any PF-Key to stop.'
+0860        20X 'Create List of Resources'
+0870      / 20X '========================'
+0880      /  5X 'Library ................' P-LIBRARY
+0890      /  5X 'Resource Name Range ....' P-RESOURCE-NAME-RANGE (AL=40)
+0900      /  5X 'Resource Type Range ....' P-RESOURCE-TYPE-RANGE
+0910      /  5X 'Resource Obj Name Range ' P-OBJECT-NAME-RANGE
+0920      /  5X 'Resource Date Range ....' P-OBJECT-DATE-RANGE
+0930      /  5X 'Resource Time Range ....' P-OBJECT-TIME-RANGE
+0940      /  5X 'Resource UID Range .....' P-OBJECT-USER-ID-RANGE
+0950      /  5X 'Resource Version Range .' P-OBJECT-VERSION-RANGE
+0960      /  5X 'DBID ...................' P-LIBRARY-DBID
+0970      /  5X 'FNR ....................' P-LIBRARY-FNR
+0980      /  5X 'Password ...............' P-LIBRARY-PASSWORD
+0990      /  5X 'Cipher .................' P-LIBRARY-CIPHER
+1000      /  5X 'DBID of FSEC ...........' V2-FSEC-DBID
+1010      /  5X 'FNR of FSEC ............' V2-FSEC-FNR
+1020      /  5X 'Password of FSEC .......' V2-FSEC-PSW
+1030      /  5X 'Cipher of FSEC .........' V2-FSEC-CIP
+1040      /  5X 'Sorted List (Y/N) ......' INPUT-SORTED
+1050  IF (*PF-KEY <> 'ENTR')
+1060    ESCAPE BOTTOM (MAIN-REPEAT.)
+1070  END-IF
+1080  /*-------------------------------------------------------------------
+1090  /* Execute the requested function
+1100  /*-------------------------------------------------------------------
+1110  IF (INPUT-SORTED = 'Y')
+1120    THEN P-FUNCTION := 'S'
+1130    ELSE P-FUNCTION := 'C'
+1140  END-IF
+1150  REPEAT-CALL.
+1160  REPEAT
+1170    PERFORM CALL-USR4215N
+1180    IF (P-RETURN-CODE <> 0)
+1190      ESCAPE BOTTOM
+1200    END-IF
+1210    NEWPAGE
+1220    PRINT 'Found' P-NUMBER-RESOURCE-FOUND (AD=L) 'Resources, RC='
+1230          P-RETURN-CODE (AD=L)
+1240    FOR VI2-1 = 1 TO P-NUMBER-RESOURCE-FOUND
+1250      IF MAINFRAME
+1260        PRINT P-RESOURCE-LIST-OBJECT-NAME (VI2-1)
+1270          10T P-RESOURCE-LIST-OBJECT-DATE (VI2-1)
+1280          21T P-RESOURCE-LIST-OBJECT-TIME (VI2-1)
+1290          30T P-RESOURCE-LIST-OBJECT-USER (VI2-1)
+1300          39T P-Resource-List-Object-Version (VI2-1)
+1310          46T P-Resource-List-Resource-Name (VI2-1)
+1320          /* 39T USR4215N-ADD-PARA-VERSION-A8 (VI2-1)
+1330          /* 48T P-RESOURCE-LIST-RESOURCE-NAME (VI2-1)
+1340      ELSE
+1350        PRINT P-RESOURCE-LIST-OBJECT-DATE (VI2-1)
+1360          12T P-RESOURCE-LIST-OBJECT-TIME (VI2-1)
+1370          21T P-RESOURCE-LIST-RESOURCE-NAME (VI2-1)
+1380      END-IF
+1390      IF (*PF-KEY <> 'ENTR')
+1400        ESCAPE BOTTOM (REPEAT-CALL.)
+1410      END-IF
+1420    END-FOR
+1430    IF (P-NUMBER-RESOURCE-FOUND < 10)    /* Ready
+1440      ESCAPE BOTTOM (REPEAT-CALL.)
+1450    END-IF
+1460    IF (INPUT-SORTED = 'Y')
+1470      THEN P-FUNCTION := 'R'
+1480      ELSE P-FUNCTION := 'G'
+1490    END-IF
+1500  END-REPEAT /* (Repeat-Call.)
+1510END-REPEAT /* (Main-Repeat.)
+1520/*---------------------------------------------------------------------
+1530/*---------------- End of main program --------------------------------
+1540/*---------------------------------------------------------------------
+1550/**********************************************************************
+1560/**********************************************************************
+1570/*---------------------------------------------------------------------
+1580/*---------------- Subroutine Call-USR4215N ---------------------------
+1590/*---------------------------------------------------------------------
+1600DEFINE SUBROUTINE CALL-USR4215N
+1610  /*-------------------------------------------------------------------
+1620  /* Call USR4215N to execute the function
+1630  /*-------------------------------------------------------------------
+1640  USR4215N-ADD-PARA-VERSION := 2
+1650  CALLNAT 'USR4215N'
+1660          USR4215N-PARA
+1670          USR4215N-ADDITIONAL-PARAMETERS (*)
+1680  /*-------------------------------------------------------------------
+1690  /* Display error message
+1700  /*-------------------------------------------------------------------
+1710  IF (P-RETURN-CODE <> 0)                /* Error occurred
+1720    INPUT (AD=O LS=80 IP=OFF)
+1730       / 'Return Code' P-RETURN-CODE (NL=5)
+1740         'received from USR4215N'
+1750       / 'Message:'
+1760       / P-MESSAGE-LINE
+1770  END-IF
+1780  /*-------------------------------------------------------------------
+1790END-SUBROUTINE /* Call-USR4215N
+1800/**********************************************************************
+1810END

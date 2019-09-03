@@ -1,0 +1,131 @@
+0010* Program   MLOADME
+0020* View      LOAD-MODULE
+0030*
+0040* Function  Return names of external symbols and other related info
+0050*           as they appear in the external symbol dictionary
+0060*
+0070* ----------------------------------------------------------------------
+0080DEFINE DATA GLOBAL USING TUTO
+0090            LOCAL  USING LOADMODL
+0100            LOCAL
+011001  #DISPLAY (11)
+0120    02 #CV          (C)
+0130    02 CMD          (A2)
+0140    02 ESD-NAME     (A8)
+0150    02 ESD-TYPE     (A2)
+0160    02 ESD-ADR      (A8)
+0170    02 ESD-LENGTH   (N9)
+0180    02 ESD-AMODE    (A3)
+0190    02 ESD-RMODE    (A3)
+0200    02 ESD-LR-ID    (N5)
+0210    02 ESD-ID       (N5)
+0220*
+023001  #DSNAME         (A54)
+024001  #VOLSER         (A6)
+025001  #MEMBER         (A10)
+026001  #PASSWORD       (A8)
+027001  #ESD-NAME       (A8)   INIT <'*'>
+028001  #ESD-TYPE       (A2)   INIT <'*'>
+0290*
+030001  LINE-COMMAND    (L)
+031001  #I              (P2)
+032001  #J              (P2)
+033001  #COUNT          (P8)
+034001  #CVAR           (C)
+0350END-DEFINE
+0360ASSIGN #CVAR = (AD=I)
+0370PERFORM PF-KEY
+0380PERFORM SCREEN-IO
+0390* --------------------------------------- main ------------------------
+0400REPEAT
+0410FND.
+0420FIND LOAD-MODULE
+0430     WITH NODE     =  ##NODE
+0440     AND  FUNCTION =  'ESD'
+0450     AND  DSNAME   =  #DSNAME
+0460     AND  VOLSER   =  #VOLSER
+0470     AND  MEMBER   =  #MEMBER
+0480     AND  PASSWORD =  #PASSWORD
+0490     AND  ESD-NAME =  #ESD-NAME
+0500     AND  ESD-TYPE =  #ESD-TYPE
+0510*
+0520  IF ERROR-CODE NE 0
+0530     ASSIGN ##MSG-NR = 1000
+0540     ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0550     ESCAPE BOTTOM (FND.)
+0560  END-IF
+0570*
+0580  IF #I = 11
+0590     PERFORM SCREEN-IO
+0600     IF #CVAR MODIFIED
+0610        ESCAPE BOTTOM (FND.)
+0620     END-IF
+0630  END-IF
+0640*
+0650  ADD 1 TO #I
+0660  ADD 1 TO #COUNT
+0670  MOVE BY NAME LOAD-MODULE TO #DISPLAY (#I)
+0680  MOVE EDITED ESD-ADDRESS (EM=H(4)) TO #DISPLAY.ESD-ADR (#I)
+0690  IF #DISPLAY.ESD-TYPE (#I) = 'SD'
+0700     ASSIGN #CV (#I) = (AD=I)
+0710   ELSE
+0720     ASSIGN #CV (#I) = (AD=DP)
+0730  END-IF
+0740END-FIND
+0750*
+0760DECIDE FOR FIRST CONDITION
+0770  WHEN ##MSG-NR NE 0                     /* ERROR OCCURED
+0780       IGNORE
+0790  WHEN #I > 0
+0800       ASSIGN ##MSG-NR = 1030            /* BOTTOM OF DATA
+0810  WHEN #COUNT = 0
+0820       ASSIGN ##MSG-NR = 1031            /* NOTHING FOUND
+0830  WHEN ANY
+0840       PERFORM SCREEN-IO
+0850  WHEN NONE
+0860       IGNORE
+0870END-DECIDE
+0880RESET #COUNT
+0890END-REPEAT
+0900* ------------------------------ screen io ----------------------------
+0910DEFINE SUBROUTINE SCREEN-IO
+0920IF #I < 11
+0930   ASSIGN #CV (#I + 1:11) = (AD=DP)
+0940END-IF
+0950REPEAT
+0960  ASSIGN LINE-COMMAND = FALSE
+0970  INPUT WITH TEXT *##MSG-NR,
+0980                   ##MSG-TXT1,
+0990                   ##MSG-TXT2
+1000        USING MAP 'MLOADME&'
+1010  FOR #J = 1 TO #I
+1020    IF #DISPLAY.CMD (#J) NE ' '
+1030       ASSIGN LINE-COMMAND = TRUE
+1040    END-IF
+1050    IF #DISPLAY.CMD (#J) = 'BR'
+1060       FETCH RETURN 'MLOADMB' #DSNAME
+1070                              #VOLSER
+1080                              #MEMBER
+1090                              #PASSWORD
+1100                              #DISPLAY.ESD-NAME (#J)
+1110       RESET #DISPLAY.CMD (#J)
+1120    END-IF
+1130  END-FOR
+1140WHILE LINE-COMMAND
+1150END-REPEAT
+1160DECIDE FOR EVERY CONDITION
+1170  WHEN #ESD-NAME = ' '
+1180       ASSIGN #ESD-NAME = '*'
+1190  WHEN #ESD-TYPE = ' '
+1200       ASSIGN #ESD-TYPE = '*'
+1210  WHEN NONE
+1220       IGNORE
+1230END-DECIDE
+1240*
+1250RESET ##MSG
+1260RESET #DISPLAY (*)
+1270RESET #I
+1280END-SUBROUTINE
+1290* ------------------------------ pf key -------------------------------
+1300INCLUDE C-PFKEY
+1310END

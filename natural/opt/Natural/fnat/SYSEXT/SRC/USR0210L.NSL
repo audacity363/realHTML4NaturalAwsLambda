@@ -1,0 +1,3 @@
+0010**DF          0000A  32 1TESTFIELD01
+0020**DS          0000      1TESTFIELD02
+0030**DK I1       0000A  16 2TESTFIELD03                     (1:8)

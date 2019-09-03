@@ -1,0 +1,93 @@
+0010Modify user short error message on FNAT or FUSER
+0020.
+0030Documentation ......... USR0360T    /*  Text object
+0040Interface ............. USR0360N    /*  Cataloged subprogram
+0050Example Program ....... USR0360P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR MESSAGES
+0100.
+0110Keywords .............. *ERROR-NR, ERROR, FNAT, FUSER, SYSERR
+0120.
+0130Function .............. Any user defined short error text may be
+0140                        modified or deleted.
+0150.
+0160Parameters
+0170----------
+0180Define the following parameters with the DEFINE DATA statement:
+0190.
+020001 PARM-AREA
+0210   02 LIBRARY      (A08)  /*  Library name
+0220   02 ERROR-NUMBER (N04)  /*  0001 to 9999
+0230   02 LANGUAGE     (I01)  /*  Language number (similar to *LANGUAGE)
+0240   02 RESPONSE     (N04)  /*  Error code
+0250   02 SHORT-TEXT   (A65)  /*  Short USER text
+026001 LAYOUT-CHECK    (A01) OPTIONAL /* Check LAYOUT
+0270.
+0280Interface Call
+0290--------------
+0300Use the interface with the CALLNAT statement:
+0310.
+0320CALLNAT 'USR0360N' PARM-AREA
+0330                   LAYOUT-CHECK  /* Optional parameter
+0340.
+0350.
+0360Using the Application Programming Interface:
+0370--------------------------------------------
+0380Copy the subprogram USR0360N to the library SYSTEM or the steplib
+0390library respectively, or to the required library.
+0400.
+0410.
+0420Following variables have to be filled before invoking the interface:
+0430.
+0440LIBRARY
+0450  Fill in the name of the library to which the text belongs to.
+0460.
+0470ERROR-NUMBER
+0480  May be any value from 0001 up to 9999.
+0490.
+0500LANGUAGE
+0510  Similar to *LANGUAGE. If LANGUAGE is zero, current contents
+0520  of *LANGUAGE is taken.
+0530.
+0540SHORT-TEXT
+0550  If SHORT-TEXT is <blank>, the text will be deleted, else
+0560  an existing text will be overwritten with the contents of
+0570  SHORT-TEXT.
+0580.
+0590  If SHORT-TEXT is <blank>, and a long text for this ERROR-NUMBER
+0600  and LANGUAGE exists, the deletion will be rejected.
+0610.
+0620  If SHORT-TEXT is <blank> and all other LANGUAGES for this
+0630  ERROR-NUMBER are <blank>, too, then the ERROR-NUMBER will
+0640  be deleted as well.
+0650.
+0660LAYOUT-CHECK
+0670  If LAYOUT-CHECK is <blank>, no LAYOUT check will be performed.
+0680  If a layout has been setup with SYSERR for this library, an error
+0690  message may only be modified if it is included in a layout range.
+0700.
+0710.
+0720The subprogram updates the requested error message on the
+0730Natural system file.
+0740.
+0750RESPONSE indicates the status:
+0760  0002 ........  Invalid LIBRARY
+0770  0003 ........  Invalid ERROR-NUMBER
+0780  0004 ........  Invalid LANGUAGE number
+0790  0005 ........  Function disabled by means of SYSERR LAYOUT
+0800  0008 ........  ERROR-NUMBER does not exist
+0810  0009 ........  Short text must not be deleted because of
+0820                 an existing long text
+0830  0010 ........  Short text has not been modified
+0840  0011 ........  Short text has been deleted for the given
+0850                 language number, and error number still exists.
+0860  0012 ........  Short text has been modified
+0870  0013 ........  Short text has been deleted for the given
+0880                 language number; error number does not exist any more.
+0890  any other ...  Natural internal error
+0900.
+0910Remark: USR0360N uses about 9 KByte of DATSIZE.
+0920.
+0930***** End of Description *****

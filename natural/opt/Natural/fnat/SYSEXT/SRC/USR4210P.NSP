@@ -1,0 +1,94 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR4210N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+00601 PARM-FUNCTION              (A2)
+00701 PARM-RC                    (I4)
+00801 PARM-ERRTXT                (A72)
+00901 PARM-A                     (A) DYNAMIC
+01001 PARM-B                     (B) DYNAMIC
+01101 PARM-RFC                   (B1)
+0120/*
+01301 #BACKUP-A                  (A) DYNAMIC
+01401 #BACKUP-B                  (B) DYNAMIC
+0150END-DEFINE
+0160/*
+0170/*
+0180SET KEY ALL
+0190REPEAT
+0200  RESET PARM-A PARM-B
+0210  REDUCE DYNAMIC PARM-A TO 0
+0220  REDUCE DYNAMIC PARM-B TO 0
+0230  PARM-FUNCTION := 'BA'
+0240  PARM-B := H'0123456789ABCDEF'
+0250  INPUT (AD=MIL IP=OFF CD=NE) WITH TEXT PARM-ERRTXT
+0260   // 10T 'Base64 Conversion:' (YEI)
+0270    / 10T '-' (19) (YEI) /
+0280    / 10T 'Function (BA,AB) ..' (TU) PARM-FUNCTION (AD=T)
+0290    / 10T 'Alpha In/Output ...' (TU) PARM-A (AL=30)
+0300    / 10T 'Binary In/Output ..' (TU) PARM-B (EM=HHHHHHHH)
+0310    / 10T 'Response ..........' (TU) PARM-RC (AD=OD CD=TU)
+0320    / PARM-ERRTXT (AD=OD CD=TU)
+0330  RESET PARM-ERRTXT
+0340  IF *PF-KEY NE 'ENTR'
+0350    ESCAPE BOTTOM
+0360  END-IF
+0370  /*
+0380  RESET #BACKUP-A #BACKUP-B
+0390  REDUCE DYNAMIC #BACKUP-A TO 0
+0400  REDUCE DYNAMIC #BACKUP-B TO 0
+0410  #BACKUP-A := PARM-A
+0420  #BACKUP-B := PARM-B
+0430  /*
+0440  CALLNAT 'USR4210N' PARM-FUNCTION PARM-RC PARM-ERRTXT PARM-B PARM-A
+0450    PARM-RFC
+0460  IF PARM-RC NE 0 THEN
+0470    WRITE 'Conversion' PARM-FUNCTION
+0480    WRITE NOTITLE PARM-ERRTXT
+0490  ELSE
+0500    IF PARM-FUNCTION = 'BA' THEN
+0510      WRITE 'Binary -> Alpha'
+0520      WRITE '=' PARM-B (EM=HHHHHHHHHHHHHHHHHHHHHHHHH)
+0530        / '=' PARM-A (AL=50)
+0540      RESET PARM-B
+0550      REDUCE DYNAMIC PARM-B TO 0
+0560      PARM-FUNCTION := 'AB'
+0570    ELSE
+0580      WRITE 'Alpha -> Binary'
+0590      WRITE '=' PARM-A (AL=50) /
+0600        '=' PARM-B (EM=HHHHHHHHHHHHHHHHHHHHHHHHH)
+0610      RESET PARM-A
+0620      REDUCE DYNAMIC PARM-A TO 0
+0630      PARM-FUNCTION := 'BA'
+0640    END-IF
+0650    /*
+0660    CALLNAT 'USR4210N' PARM-FUNCTION PARM-RC PARM-ERRTXT PARM-B PARM-A
+0670      PARM-RFC
+0680    IF PARM-RC NE 0 THEN
+0690      WRITE 'Conversion' PARM-FUNCTION
+0700      WRITE NOTITLE PARM-ERRTXT
+0710    ELSE
+0720      IF PARM-FUNCTION = 'BA' THEN
+0730        WRITE 'Binary -> Alpha'
+0740        WRITE '=' PARM-B (EM=HHHHHHHHHHHHHHHHHHHHHHHHH)
+0750          / '=' PARM-A (AL=50)
+0760        IF PARM-A = #BACKUP-A THEN
+0770          WRITE '******** Conversion successful ********'
+0780        ELSE
+0790          WRITE '******** Value changed by conversion ********'
+0800        END-IF
+0810      ELSE
+0820        WRITE 'Alpha -> Binary'
+0830        WRITE '=' PARM-A (AL=50) /
+0840          '=' PARM-B (EM=HHHHHHHHHHHHHHHHHHHHHHHHH)
+0850        IF PARM-B = #BACKUP-B THEN
+0860          WRITE '******** Conversion successful ********'
+0870        ELSE
+0880          WRITE '******** Value changed by conversion ********'
+0890        END-IF
+0900      END-IF
+0910    END-IF
+0920  END-IF
+0930END-REPEAT
+0940END

@@ -1,0 +1,49 @@
+0010/*  EXAM-G - GET
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  1 PGM (A08)
+0050  1 REDEFINE PGM
+0060    2 FILLER 6X
+0070    2 CMD (A01)
+0080  1 IX (I1)
+0090  1 MOD (C)
+0100END-DEFINE
+0110DEFINE WINDOW EXAM
+0120  SIZE 15 * 44
+0130  BASE IX / IX
+0140  TITLE ' (G) Action "GET" '
+0150  CONTROL SCREEN
+0160  FRAMED POSITION OFF
+0170SET KEY ALL
+0180REPEAT
+0190  MOVE *PROGRAM TO PGM
+0200  IX := *LEVEL * 2
+0210  /*************************************************
+0220  INPUT WINDOW = 'EXAM' (AD=MIT'_' IP=OFF CV=MOD ) /
+0230    08T   'Code ' (I) 'Function        ' (I) //
+0240    08T   ' A   '  'All fields         ' /
+0250    08T   ' S   '  'Small field list   ' /
+0260    08T   ' O   '  'One specific field ' /
+0270    08T   ' C   '  'Last Command       ' /
+0280    08T   ' L   '  'Location           ' /
+0290    08T   ' T   '  'Object"s timestamp ' /
+0300    08T   ' .   '  'Exit               ' //
+0310    09T    CMD
+0320  /**************************************************
+0330  IF *PF-KEY NE 'ENTR'
+0340  OR MOD NOT MODIFIED
+0350    ESCAPE ROUTINE
+0360  END-IF
+0370  /*
+0380  DECIDE ON FIRST CMD
+0390    VALUE '.'
+0400      ESCAPE ROUTINE
+0410    VALUE 'A', 'S', 'O', 'C', 'L'
+0420      FETCH RETURN PGM
+0430    VALUE 'T'
+0440      FETCH RETURN 'EXAM-GTX'
+0450    NONE
+0460      REINPUT 'Please enter valid code.'
+0470  END-DECIDE
+0480END-REPEAT
+0490END

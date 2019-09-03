@@ -1,0 +1,14 @@
+0010** Example 'FUNCCX02': Parameter changed within function (Function)
+0020************************************************************************
+0030DEFINE FUNCTION F#RETURN
+0040  RETURNS #RESULT (I2) BY VALUE
+0050  DEFINE DATA PARAMETER
+0060    1 #PARM1 (I2) BY VALUE RESULT
+0070  END-DEFINE
+0080  /*
+0090  #PARM1  := #PARM1 + 1       /* Increment parameter.
+0100  #RESULT := #PARM1           /* Set result value.
+0110  /*
+0120END-FUNCTION
+0130*
+0140END

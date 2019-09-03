@@ -1,0 +1,98 @@
+0010Get or set work file name
+0020.
+0030Documentation ......... USR1050T    /*  Text object
+0040Interface ............. USR1050N    /*  Cataloged subprogram
+0050Example Program ....... USR1050P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. WORK FILE / PRINTER
+0100.
+0110Keywords .............. +PREVIOUS-VERSION,
+0120                        GET, SET, WORK FILE
+0130.
+0140Interface Versions .... USR1050N, USR2011N
+0150.
+0160Function .............. This interface reads or modifies the work file
+0170                        settings.
+0180                        On mainframe systems it is recommended to use
+0190                        USR1007N to read the work file assignments.
+0200.
+0210Parameters
+0220----------
+0230Define the following parameters with the DEFINE DATA statement:
+0240.
+0250 1 USR1050L
+0260   2 INPUTS
+0270     3 FUNCTION        (A01)
+0280     3 WORK-NUM        (I01)
+0290   2 INPUT-OUTPUTS
+0300     3 WORK-FILE       (A52)
+0310     3 WORK-TYPE       (A01)
+0320   2 OUTPUTS
+0330     3 MAX-NUM         (I01)
+0340     3 RESPONSE        (I04)
+0350 /*
+0360 1 USR1050N
+0370   2 VERSION           (I01)     INIT <0>
+0380 1 REDEFINE USR1050N
+0390   2 EXTENDED-PARMS
+0400     3 EXTENDED-DATA   (A01/1:1)
+0410.
+0420Interface Call
+0430--------------
+0440Use the interface with the CALLNAT statement:
+0450.
+0460CALLNAT 'USR1050N' USR1050L USR1050N.EXTENDED-PARMS
+0470.
+0480.
+0490Using the Application Programming Interface:
+0500--------------------------------------------
+0510Copy the subprogram USR1050N to the library SYSTEM or the steplib
+0520library respectively, or to the required library.
+0530.
+0540.
+0550Parameter Description:
+0560----------------------
+0570Input ...... 1 FUNCTION (A01)
+0580                      Function code. Possible values are:
+0590                      'G' - Get work file name
+0600                      'S' - Set work file name
+0610                      'R' - Reset work file name to NATPARM value
+0620                      On mainframe systems, function code 'G' is
+0630                      supported only.
+0640
+0650Input ...... 1 WORK-NUM (I01)
+0660                      Number of the work file entry. WORK-NUM must
+0670                      be in the range of 1 to 32.
+0680
+0690In/Output .. 1 WORK-FILE (A52)
+0700                      Name of the work file; including the full
+0710                      path description.
+0720
+0730In/Output .. 1 WORK-TYPE (A01)
+0740                      Type of the work file. Possible values are:
+0750                      'D' - Default
+0760                      'N' - Entire Connection work file
+0770                      Other work file types are supported by USR2011N.
+0780
+0790Output ..... 1 MAX-NUM (I01)
+0800                      Maximum number of work files as specified
+0810                      in NATPARM utility.
+0820
+0830Output ..... 1 RESPONSE (I04)
+0840                      Response code. Possible values are:
+0850                         0 - Ok
+0860                         4 - Invalid value for FUNCTION entered
+0870                         8 - Invalid value for WORK-NUM entered
+0880                        12 - Invalid value for WORK-TYPE entered
+0890                        16 - Invalid value for WORK-FILE entered
+0900                        20 - work file name longer than 52 characters
+0910                             (NAT OS only)
+0920
+0930In/Output .. USR1050N.VERSION (I01)
+0940                    Version number of the subprogram.
+0950                    0 is the version number for the original
+0960                    parameter layout.
+0970.
+0980*****  End of Description  *****

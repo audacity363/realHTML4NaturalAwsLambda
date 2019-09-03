@@ -1,0 +1,17 @@
+0010/* ---------------------------------------------------------------------
+0020/* Program:        ERROR2
+0030/* Library:        SYSEXBAT (Batch mode samples)
+0040/*
+0050/* Functionality:  Error handling
+0060/*
+0070/* Description:    This program is part of the error handling in
+0080/*                 batch mode.
+0090/*
+0100/* ---------------------------------------------------------------------
+0110DEFINE DATA LOCAL
+01201 #name (A10)
+0130END-DEFINE
+0140**
+0150INPUT (IP=ON AD=M) "Name:" #name
+0160DISPLAY #name
+0170END

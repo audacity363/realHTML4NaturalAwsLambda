@@ -1,0 +1,5 @@
+0010**DF          0000A  20 1NAME
+0020**DF          0000A  30 1STREET
+0030**DF          0000A  20 1CITY
+0040**DF          0000I   4 1SUM
+0050**DF          0000I   4 1MULTI

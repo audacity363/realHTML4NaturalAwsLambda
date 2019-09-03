@@ -1,0 +1,14 @@
+0010&H View DEVICE-NAMES
+0020&L
+0030&L
+0040#Zweck@    : Anzeige von Informationen ueber verfuegbare Einheiten.
+0050&L
+0060&L
+0070#System@   : z/OS.
+0080&L
+0090&L
+0100#Anwendung@: Dieser View gibt Informationen ueber Einheiten, die momen-
+0110             tan im System verfuegbar sind.
+0120&L
+0130&L
+0140#Anmerkung@:

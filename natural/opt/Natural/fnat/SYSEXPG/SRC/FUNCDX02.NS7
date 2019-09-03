@@ -1,0 +1,15 @@
+0010** Example 'FUNCDX02': Using a function as a statement (Function)
+0020************************************************************************
+0030DEFINE FUNCTION F#PRINT-ADD
+0040  RETURNS (I4)
+0050  DEFINE DATA PARAMETER
+0060    1 #SUMMAND1 (I4) BY VALUE
+0070    1 #SUMMAND2 (I4) BY VALUE
+0080  END-DEFINE
+0090  /*
+0100  F#PRINT-ADD := #SUMMAND1 + #SUMMAND2    /* Result of function call.
+0110  WRITE 'Function call:' F#PRINT-ADD
+0120  /*
+0130END-FUNCTION
+0140*
+0150END

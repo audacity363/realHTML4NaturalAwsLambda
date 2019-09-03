@@ -1,0 +1,51 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR6002N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+00601 MADIO-CUR      (I04) /* number of DBMS calls executed since last I/O,
+0070                       /* (MADIO-CUR) gives the number of DBMS calls
+0080                       /* until NAT1009 will occur
+00901 MAXCL-CUR      (I04) /* number of programs calls executed since last
+0100                       /* I/O, (MAXCL-CUR) gives the number of program
+0110                       /* calls until NAT1029 will occur
+01201 LT-CUR         (I04) /* number of database records which have been
+0130                       /* read in processing loops so far, (LT-CUR)
+0140                       /* gives the number of database records that can
+0150                       /* be read until NAT1003 will occur
+01601 MAINPR         (I01) /* default output report number for all Natural
+0170                       /* reports. It must be set to a valid printer
+0180                       /* number (0 - 31).
+0190                       /* A physical printer corresponding to the report
+0200                       /* number specified must be defined to Natural as
+0210                       /* described in the Natural Configuration Utility
+0220                       /* documentation.
+02301 GET-ALL        (L)
+0240END-DEFINE
+0250/*
+0260SET KEY ALL
+0270/*
+0280REPEAT
+0290  IF GET-ALL THEN
+0300    CALLNAT 'USR6002N' MADIO-CUR MAXCL-CUR LT-CUR MAINPR
+0310  ELSE
+0320    CALLNAT 'USR6002N' MADIO-CUR 2X
+0330    CALLNAT 'USR6002N' 1X MAXCL-CUR 1X
+0340    CALLNAT 'USR6002N' 2X LT-CUR
+0350    CALLNAT 'USR6002N' 3X MAINPR
+0360  END-IF
+0370  INPUT (AD=OITL'_' IP=OFF)
+0380    /  10T 'Get the value of several parameters:' (I)
+0390    /  10T '-' (36) (I) /
+0400    /  10T 'MADIO ................' MADIO-CUR
+0410    /  10T 'MAXCL ................' MAXCL-CUR
+0420    /  10T 'LT ...................' LT-CUR
+0430    /  10T 'MAINPR ...............' MAINPR
+0440  ///  10T 'Press any PF-key to stop.'
+0450  /*
+0460  IF *PF-KEY NE 'ENTR'
+0470    ESCAPE BOTTOM
+0480  END-IF
+0490  /*
+0500END-REPEAT
+0510END

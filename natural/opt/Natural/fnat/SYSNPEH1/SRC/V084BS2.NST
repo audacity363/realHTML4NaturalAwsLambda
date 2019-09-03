@@ -1,0 +1,14 @@
+0010&H View HELP-INFO
+0020&L
+0030&L
+0040#Purpose@: Return message text for specific BS2000 message code.
+0050&L
+0060&L
+0070#OpSys@  : BS2000/OSD
+0080&L
+0090&L
+0100#Usage@  : This view allows the user or application to retrieve
+0110           Message texts (Short and Long) for specific BS2000
+0120           message codes (e.g. Message codes returned in the field
+0130           SYSTEM-MESSAGE-CODE).
+0140#Notes@  :

@@ -1,0 +1,54 @@
+0010* Program   MTCB
+0020* View      TCB
+0030*
+0040* Function  Display information on all tasks for a given job
+0050*
+0060* ----------------------------------------------------------------------
+0070*
+0080DEFINE DATA
+0090   GLOBAL USING TUTO
+0100   LOCAL USING TCB-L
+0110   LOCAL USING LOADM-L
+0120END-DEFINE
+0130FORMAT PS=18
+0140*
+0150REPEAT
+0160   INPUT  (AD=MI'_')
+0170      // ##TITLE (AD=OI IP=OFF)
+0180      // '  for JOB ..:' TCB.JOB-NAME
+0190*
+0200   WRITE TITLE ##TITLE (AD=I)
+0210             / 'Job.....'(I) TCB.JOB-NAME (AD=I) /
+0220*
+0230   FIND TCB WITH JOB-NAME = TCB.JOB-NAME
+0240             AND NODE     = ##NODE
+0250      IF ERROR-CODE > 0
+0260         IF ERROR-CODE = 800
+0270            REINPUT ERROR-TEXT
+0280         ELSE
+0290            ASSIGN ##MSG-NR = 1000
+0300            ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0310            STOP
+0320         END-IF
+0330      END-IF
+0340      WRITE // 'TCB'(I) 2X TCB-ADDRESS (AD=I) /
+0350            15T 'MOTHER'(I) MOTHER-TCB 2X 'SISTER'(I) SISTER-TCB 2X
+0360                'DAUGHTER'(I) DAUGHTER-TCB    /
+0370            15T 'RB    '(I) RB-CHAIN   2X 'DEB   '(I) DEB-CHAIN  2X
+0380                 'LLS     '(I) LLS-CHAIN 2X 'CMP'(I) COMPLETION-CODE
+0390      FIND LOADED-MODULES WITH JOB-NAME    = TCB.JOB-NAME
+0400                           AND NODE        = ##NODE
+0410                           AND TCB-ADDRESS = TCB-ADDRESS (0230)
+0420                           AND TYPE       NE 'LOAD'
+0430         IF ERROR-CODE NE 0
+0440            ASSIGN ##MSG-NR = 1000
+0450            ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0460            STOP
+0470         END-IF
+0480         WRITE 15T 'NAME  '(I) MODULE 2X 'EP    '(I)  ENTRY-POINT 2X
+0490                   'PSW     '(I)  PSW
+0500            /  15T 'STATE:'(I) STATE
+0510      END-FIND
+0520   END-FIND
+0530END-REPEAT
+0540END

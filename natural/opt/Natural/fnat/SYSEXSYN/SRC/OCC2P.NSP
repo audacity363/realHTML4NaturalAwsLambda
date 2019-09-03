@@ -1,0 +1,18 @@
+0010** Example 'OCC2P': *OCCURRENCE
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #N (N7/1:10)
+00501 #I (I4)
+0060END-DEFINE
+0070*
+0080FOR #I=1 TO 10
+0090  MOVE #I TO #N(#I)
+0100END-FOR
+0110*
+0120WRITE 'Passing ocurrences 1:5'
+0130CALLNAT 'OCC2N' #N(1:5)
+0140*
+0150WRITE 'Passing ocurrences 5:10'
+0160CALLNAT 'OCC2N' #N(5:10)
+0170*
+0180END

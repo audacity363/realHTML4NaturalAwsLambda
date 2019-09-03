@@ -1,0 +1,13 @@
+0010&H View UNIT-ATTRIBUTES
+0020&L
+0030&L
+0040#Purpose@: List devices and device attributes.
+0050&L
+0060#OpSys@  : z/OS, z/VSE
+0070&L
+0080&L
+0090#Usage@  : This view allows the user or application to retrieve
+0100           information relating to devices, e.g. Unit address, Device,
+0110           Device type, Online/Offline status, Free Cylinders etc.
+0120&L
+0130#Notes@  :

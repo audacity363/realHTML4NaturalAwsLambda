@@ -1,0 +1,12 @@
+0010***************************************************************
+0020* CLEARS THE ##TITLE IN TUTO FROM SYSNPE TEST
+0030*
+0040* 2000-12-08 TS  CREATED FOR SYSNPE TESTS
+0050*
+0060***************************************************************
+0070DEFINE DATA
+0080   GLOBAL USING TUTO
+0090END-DEFINE
+0100##TITLE := ' '
+0110* WRITE ##TITLE
+0120END

@@ -1,0 +1,135 @@
+0010*
+0020* show JV-attributes of specified jv
+0030*
+0040DEFINE DATA GLOBAL USING TUTO
+0050            LOCAL  USING BJV----L
+0060            LOCAL
+007001 #DISPLAY
+0080   02 SHARE              (A3)
+0090   02 LENGTH             (N3)
+0100   02 READ-PASSWORD      (A4)
+0110   02 WRITE-PASSWORD     (A4)
+0120   02 CREATION-DATE      (A8)
+0130   02 EXPIRATION-DATE    (A8)
+0140   02 ACCESS             (A5)
+0150   02 JV-TYPE            (A10)
+0160   02 #OUT-DATA          (A253)
+0170   02 REDEFINE #OUT-DATA
+0180      03  #OUT-DATA1     (A70/1:3)
+0190      03  #OUT-DATA2     (A43)
+0200*
+021001 #NAME                 (A54)
+022001 #INPUT
+0230   02 #FUNCTION          (A8)
+0240   02 #LENGTH            (N3)
+0250   02 #PASSWORD          (A8)
+0260   02 #SUBSTRING-START   (N3)
+0270   02 #SUBSTRING-LENGTH  (N3)
+0280   02 #DATA              (A253)
+0290   02 REDEFINE #DATA
+0300      03  #IN-DATA1      (A70/1:3)
+0310      03  #IN-DATA2      (A43)
+0320*
+033001  #CVAR                (C)
+034001  END-OF-PROCESSING    (L)
+035001  END-OF-DISPLAY       (L)
+0360*
+0370END-DEFINE
+0380*
+0390IF *DATA = 1
+0400   INPUT #NAME
+0410   ASSIGN #CVAR = (AD=DP)
+0420   SET KEY PF3 = PGM
+0430 ELSE
+0440   ASSIGN #CVAR = (AD=I)
+0450END-IF
+0460*
+0470PERFORM PF-KEY
+0480*
+0490* ------------------------------ MAIN LOOP ----------------------------
+0500*
+0510REP.
+0520REPEAT
+0530  PERFORM SCREEN-IO
+0540  IF END-OF-PROCESSING
+0550     ESCAPE BOTTOM (REP.)
+0560  END-IF
+0570  RESET #DISPLAY
+0580  IF #NAME NE SCAN '$SYSJV'
+0590FNDJV.
+0600     FIND JOB-VARIABLES WITH NODE           =  ##NODE
+0610                        AND  FUNCTION       =  'ATTRIB'
+0620                        AND  NAME           =  #NAME
+0630       IF ERROR-CODE NE 0 OR SYSTEM-CODE NE 0
+0640          INCLUDE BERR---C
+0650         ELSE
+0660          MOVE BY NAME JOB-VARIABLES TO #DISPLAY
+0670       END-IF
+0680     END-FIND
+0690     IF *COUNTER (FNDJV.) = 0
+0700        ASSIGN ##MSG-NR = 1031
+0710        ESCAPE TOP
+0720     END-IF
+0730  END-IF
+0740  FIND JOB-VARIABLES WITH NODE            =  ##NODE
+0750                      AND  FUNCTION       =  'READ'
+0760                      AND  NAME           =  #NAME
+0770                      AND  PASSWORD       =  #PASSWORD
+0780     IF SYSTEM-CODE = H'04B2'                   /* jv is empty
+0790        RESET ERROR-CODE SYSTEM-CODE
+0800     END-IF
+0810     IF ERROR-CODE NE 0 OR SYSTEM-CODE NE 0
+0820        INCLUDE BERR---C
+0830       ELSE
+0840        ASSIGN #OUT-DATA = JOB-VARIABLES.DATA
+0850     END-IF
+0860  END-FIND
+0870END-REPEAT
+0880*
+0890* ------------------------------ SCREEN-IO ----------------------------
+0900*
+0910DEFINE SUBROUTINE SCREEN-IO
+0920ASSIGN END-OF-DISPLAY = FALSE
+0930REPEAT
+0940UNTIL END-OF-DISPLAY
+0950   INPUT WITH TEXT *##MSG-NR,
+0960                    ##MSG-TXT1,
+0970                    ##MSG-TXT2
+0980         USING MAP 'BJVC---&'
+0990*
+1000   RESET ##MSG
+1010*
+1020   IF *PF-KEY = 'PF3'
+1030      ASSIGN END-OF-PROCESSING = TRUE
+1040      ESCAPE BOTTOM
+1050   END-IF
+1060*
+1070   DECIDE ON FIRST #FUNCTION
+1080     VALUE 'READ'   ASSIGN END-OF-DISPLAY = TRUE
+1090     VALUE 'WRITE'  PROCESS JOB-VARIABLES
+1100                        USING NODE             = ##NODE
+1110                          ,   FUNCTION         = #FUNCTION
+1120                          ,   NAME             = #NAME
+1130                          ,   PASSWORD         = #PASSWORD
+1140                          ,   SUBSTRING-START  = #SUBSTRING-START
+1150                          ,   SUBSTRING-LENGTH = #SUBSTRING-LENGTH
+1160                          ,   DATA             = #DATA
+1170                       GIVING ERROR-CODE
+1180                              ERROR-TEXT
+1190                              SYSTEM-CODE
+1200                              DATA
+1210                    IF ERROR-CODE NE 0 OR SYSTEM-CODE NE 0
+1220                       INCLUDE BERR---C
+1230                      ELSE
+1240                       ASSIGN #OUT-DATA = JOB-VARIABLES.DATA
+1250                       ASSIGN END-OF-DISPLAY = TRUE
+1260                    END-IF
+1270     NONE           ASSIGN ##MSG-NR = 1033
+1280   END-DECIDE
+1290END-REPEAT
+1300END-SUBROUTINE
+1310*
+1320* ------------------------------ PF-KEY -------------------------------
+1330*
+1340INCLUDE C-PFKEY
+1350END

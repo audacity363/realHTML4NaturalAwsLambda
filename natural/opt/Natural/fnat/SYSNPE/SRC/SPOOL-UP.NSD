@@ -1,0 +1,87 @@
+0010DB: 148 FILE: 013  - SPOOL-UPDATE                     DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:25
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:25
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to MVS and VSE
+0230*
+0240  1 A1 JOB-NUMBER                        N  7.0    D Job number assigned
+0250*      Job number assigned by JES.
+0260  1 JA JOB-ID                            A    8    D Job number or TSN of
+0270*      Job number or TSN of job.
+0280  1 FN FUNCTION                          A    8    D Command to be execut
+0290*      Command to be executed:
+0300*      RELEASE  release job
+0310*      CANCEL   cancel job
+0320*      HOLD     set in hold status
+0330*      CHANGE   change job class
+0340  1 A4 JOB-NAME                          A    8    D Name of job.
+0350*      Name of job.
+0360  1 A6 GROUP-ID                          A   20    D Identification of JE
+0370*      Identification of JES Sysout
+0380*      group.
+0390  1 A7 CLASS                             A    1    D New job class to be
+0400*      New job class to be assigned.
+0410*
+0420*      MVS fields
+0430*
+0440  1 AD NEW-DESTINATION                   A    8    D New destination for
+0450*      New destination for GROUP-ID.
+0460  1 SC JES3-CLASS                        A    1    D JES3 only:
+0470*      JES3 only:
+0480*      The output class to select the
+0490*      output to be modified.
+0500  1 SQ JES3-QUEUE                        A    4    D JES3 only:
+0510*      JES3 only:
+0520*      The output queue to select the
+0530*      output to be modified.
+0540*
+0550*      VSE fields
+0560*
+0570  1 A5 QUEUE                             A    3    D Queue in which job r
+0580*      Queue in which job resides:
+0590*      RDR  reader queue
+0600*      LST  list queue
+0610*      PUN  punch queue
+0620*      XMT  transmit queue
+0630  1 A8 SEGMENT-NUMBER                    N  3.0    D Segment number of ou
+0640*      Segment number of output to be
+0650*      deleted.
+0660  1 A9 COPIES                            N  3.0    D No of copies require
+0670*      No of copies required (1-255)
+0680*      Only valid if FUNCTION=CHANGE
+0690  1 AA DISP                              A    1    D Disposition required
+0700*      Disposition required.
+0710*      Only valid if FUNCTION=CHANGE
+0720  1 AB PRIORITY                          N  1.0    D New priority require
+0730*      New priority required (0-9).
+0740*      Only valid if FUNCTION=CHANGE
+0750  1 AC USER                              A    8    D New user required.
+0760*      New user required.
+0770*      Only valid if FUNCTION=CHANGE
+0780*
+0790*      Fields for INTERNAL USE only
+0800*
+0810  1 A3 TEXT                              A   80    D Operator command to
+0820*      Operator command to be issued.
+0830*      (For INTERNAL USE only)
+0840*
+0850*      End of SPOOL-UPDATE
+0860*
+0870******DDM OUTPUT TERMINATED******

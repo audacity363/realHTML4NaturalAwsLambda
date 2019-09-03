@@ -1,0 +1,72 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3TAG
+0050*
+0060* DESCRIPTION   Creates a universal tag (tag template) inside an
+0070*               HTML page.
+0080*
+0090* SEE           .../sysweb/t3tag
+0100*
+0110* AUTHOR        SAG   08.09.1998
+0120*
+0130* Version       8.3
+0140*
+0150* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0160*
+0170* HISTORY
+0180* USER    DATE       REASON
+0190* ------+----------+----------------------------------------------
+0200*       ! --.--.-- !
+0210* ------+----------+----------------------------------------------
+0220*
+0230* ------ PARAMETER -----------------------------------------------
+0240DEFINE DATA
+0250PARAMETER USING W3PARM
+0260LOCAL USING W3CONST
+0270LOCAL
+02801 H3VALUE            (A) DYNAMIC
+02901 H3PRE              (A) DYNAMIC
+03001 H3POST             (A) DYNAMIC
+0310END-DEFINE
+0320* --- ERROR HANDLING ---
+0330ON ERROR
+0340  PERFORM W3ERROR ##W3ERROR
+0350  PERFORM W3END ##RPC
+0360  ESCAPE ROUTINE
+0370END-ERROR
+0380*
+0390* --- INITIALIZE Web Interface ---
+0400PERFORM W3INIT ##RPC
+0410*
+0420* --- START HTML Generation ---
+0430PERFORM H3-OPEN-HTML 'HTML Generation - Universal Tag' " " ' '
+0440* --- THE LEVEL 2 HEADER ---
+0450PERFORM H3-HEADER 2 'Universal Tag'
+0460*
+0470* PERFORM H3-RULE 0
+0480*
+0490PERFORM H3-TAG "B" 'This is a bold text.' "B"
+0500PERFORM H3-LINE-BREAK
+0510*
+0520PERFORM H3-TAG "FONT COLOR='FF0000'" 'This is a red text.' "FONT"
+0530PERFORM H3-LINE-BREAK
+0540*
+0550H3PRE   := "PRE"
+0560COMPRESS  ' This' ##HTTP_NEWLINE
+0570          '    is' ##HTTP_NEWLINE
+0580          '      a' ##HTTP_NEWLINE
+0590          '       preformatted' ##HTTP_NEWLINE
+0600          '                  text.' ##HTTP_NEWLINE_END INTO H3VALUE
+0610PERFORM H3-TAG H3PRE H3VALUE H3PRE
+0620*
+0630* PERFORM H3-RULE 0
+0640*
+0650PERFORM E3-EXAMPLE-END
+0660*
+0670* --- END HTML Generation ---
+0680PERFORM H3-CLOSE-HTML
+0690* --- END Web Interface ---
+0700PERFORM W3END ##RPC
+0710*
+0720END

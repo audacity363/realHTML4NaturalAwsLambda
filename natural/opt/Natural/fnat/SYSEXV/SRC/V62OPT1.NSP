@@ -1,0 +1,47 @@
+0010* Program ...... V62OPT1
+0020* Library ...... SYSEXV
+0030* Version ...... 6.2
+0040* Machine ...... UNIX
+0050* Note ......... This program must be cataloged with DC='.'
+0060*
+0070* Functionality  New OPTIONS (continued)
+0080*                TQMARK - Translate Quotation Marks
+0090*                THSEP  - Thousands Separator
+0100*                MASKCME - MASK Compatible with MOVE EDITED
+0110************************************************************************
+0120*
+0130*
+0140DEFINE DATA
+0150LOCAL
+01601 YEAR (A4)
+0170END-DEFINE
+0180*
+0190FORMAT KD=ON
+0200SET KEY PF3  NAMED 'Exit'
+0210  PF12 NAMED 'Canc'
+0220*
+0230* Page 3
+0240* MASKCME - MASK Compatible with MOVE EDITED
+0250* The option MASKCME can be set only once in a program
+0260*
+0270WRITE 'Program' *PROGRAM
+0280  'with OPTIONS' 'MASKCME=ON' (I)
+0290OPTIONS MASKCME=ON
+0300MOVE '1234' TO YEAR
+0310IF YEAR = MASK (YYYY)
+0320  WRITE 'Result:' YEAR (AD=I) 'is a valid year'
+0330    (I) /
+0340ELSE
+0350  WRITE 'Result:' YEAR (AD=I) 'is not a valid year'
+0360    (I) /
+0370END-IF
+0380IF *PF-KEY ='PF3'
+0390  ESCAPE ROUTINE
+0400END-IF
+0410IF (*PF-KEY = 'PF12' OR= 'CLR')
+0420  CALLNAT 'UTILSTOP'
+0430END-IF
+0440*
+0450*
+0460END
+0470

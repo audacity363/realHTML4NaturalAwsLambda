@@ -1,0 +1,67 @@
+0010Get information on Natural Development Server
+0020.
+0030Documentation ......... USR4218T    /*  Text object
+0040Interface ............. USR4218N    /*  Cataloged subprogram
+0050Example Program ....... USR4218P    /*  Source program
+0060.
+0070Product Code .......... NDV
+0080.
+0090Category .............. SERVER
+0100.
+0110Keywords .............. +NEW-NAT-6.3.8,
+0120                        NDV, SERVER
+0130.
+0140Function .............. This API provides information on the context
+0150                        in which the Natural Development Server runs
+0160                        for programs executed on this Natural
+0170                        Development Server.
+0180.
+0190.
+0200Parameters
+0210----------
+0220Define the following parameters with the DEFINE DATA statement:
+0230.
+02401 P-Client-Type    (A1) (output)
+0250        Type of client:
+0260          'L'   Local call (no client active)
+0270          'S'   Natural Studio
+0280          'N'   Natural for Eclipse or NaturalONE client
+0290.
+03001 P-Client-Version (I4) (output)
+0310        Version of the client
+0320.
+03301 P-Private-Mode   (A1) (output)
+0340        'Y'   Private mode active (Natural for Eclipse or NaturalONE
+0350              client only)
+0360.
+03701 P-Return-Code        (I4) (output)
+0380        0 = OK
+0390        1 = Size of array P-Additional-Parameters too small.
+0400        2 = Version for array P-Additional-Parameters not supported.
+0410      < 0 = Natural runtime error occurred
+0420.
+04301 P-Additional-Parameters (A1/1:V)
+0440        Parameters for future use. Redefined as follows:
+0450  2 P-Add-Para-Version (N2)
+0460        0 = Initial version, V=2
+0470.
+0480.
+0490Interface Call
+0500--------------
+0510Use the interface with the CALLNAT statement:
+0520.
+0530CALLNAT 'USR4218N'
+0540        P-Client-Type
+0550        P-Client-Version
+0560        P-Private-Mode
+0570        P-Return-Code
+0580        P-Additional-Parameters (*)
+0590.
+0600.
+0610Using the Application Programming Interface:
+0620--------------------------------------------
+0630Copy the subprogram USR4218N to the library SYSTEM or the steplib
+0640library, or to the required library.
+0650.
+0660.
+0670***** End of Description *****

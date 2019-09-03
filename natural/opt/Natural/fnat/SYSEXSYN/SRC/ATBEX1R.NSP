@@ -1,0 +1,12 @@
+0010** Example 'ATBEX1R': AT BREAK (reporting mode)
+0020************************************************************************
+0030*
+0040LIMIT 10
+0050READ EMPLOYEES BY CITY
+0060  AT BREAK OF CITY DO
+0070    SKIP 1
+0080  DOEND
+0090  /*
+0100  DISPLAY NOTITLE CITY (IS=ON) COUNTRY (IS=ON) NAME
+0110LOOP
+0120END

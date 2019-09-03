@@ -1,0 +1,114 @@
+0010DB: 148 FILE: 019  - SEND-MESSAGE                     DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:25
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:25
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A1 MESSAGE                           A   79    D Text to be sent (wil
+0250*      Text to be sent (will be
+0260*      prefixed by
+0270*      'MESSAGE FROM User-ID:'
+0280*      if PREFIX is not 'NO').
+0290  1 A2 DESTINATION                       A    8    D Destination of messa
+0300*      Destination of message depend.
+0310*      on DESTINATION-TYPE.
+0320*      For COMPL, TSO and TIAM:
+0330*      user ID.
+0340*      For APPL: application name.
+0350*      If DESTINATION = '*CONSOLE',
+0360*      the message is sent to only to
+0370*      console.
+0380*      BS2000: Destination may also
+0390*      be a TRANSDATA station
+0400*      (has to be specified
+0410*      in TERMINAL-NAME and
+0420*      PROCESSOR-NAME).
+0430  1 A6 PREFIX                            A    3    D Message prefix indic
+0440*      Message prefix indicator.
+0450*      YES - Messages will be
+0460*      prefixed with
+0470*      'MESSAGE FROM USERID'
+0480*      NO  - Messages not prefixed
+0490  1 A7 DESTINATION-TYPE                  A    8    D Type of destination
+0500*      Type of destination to which
+0510*      message is to be sent :
+0520*      APPL     - To application
+0530*      'DESTINATION'
+0540*      COMPLETE - To COMPLETE only
+0550*      TSO      - To TSO only
+0560*      TIAM     - To TIAM user
+0570*      (only possible
+0580*      value for BS2000)
+0590*      Default
+0600*      MVS:    TSO and COMPLETE
+0610*      (If user is not logged
+0620*      on to COMPLETE, the
+0630*      message is sent to
+0640*      TSO.)
+0650*      BS2000: TIAM
+0660  1 A3 STATUS                            A    8      This field is return
+0670*      This field is returned:
+0680*      LOG    TSO/TIAM user is
+0690*      logged on and has
+0700*      received the message.
+0710*      NOLOG  TSO/TIAM user is NOT
+0720*      logged on.
+0730  1 A4 NOLOG                             A    8    D CONSOLE  if TSO/TIAM
+0740*      CONSOLE  if TSO/TIAM user not
+0750*      logged on, message is
+0760*      sent to master
+0770*      console.
+0780*
+0790*      MVS fields
+0800*
+0810  1 A5 URGENT                            A    3    D Urgent message indic
+0820*      Urgent message indicator :
+0830*      YES - Message class changed
+0840*      to URGENT
+0850*      NO  - Default
+0860*
+0870*      BS2000 fields
+0880*
+0890*      Function is only available
+0900*      if UCON interface task of
+0910*      ENTIRE SYSTEM SERVER is
+0920*      active.
+0930*
+0940  1 ES SYSTEM-CODE                       B    2      System error code.
+0950*      System error code.
+0960  1 B3 PROCESSOR-NAME                    A    8    D Processor name as de
+0970*      Processor name as defined in
+0980*      TRANSDATA. Together with
+0990*      TERMINAL-NAME this field is
+1000*      used to identify the station
+1010*      within  TRANSDATA, if desti-
+1020*      nation is a terminal.
+1030*      (Field DESTINATION must be
+1040*      ' ' in this case.)
+1050  1 B4 TERMINAL-NAME                     A    8    D Name of the station
+1060*      Name of the station in TRANS-
+1070*      DATA to where the message
+1080*      should be sent. The station
+1090*      must be connected to TIAM.
+1100*      (see field PROCESSOR-NAME)
+1110*
+1120*      End of SEND-MESSAGE
+1130*
+1140******DDM OUTPUT TERMINATED******

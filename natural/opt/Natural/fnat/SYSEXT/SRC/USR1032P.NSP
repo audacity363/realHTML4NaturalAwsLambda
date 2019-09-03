@@ -1,0 +1,67 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1032N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+006001 USR1032L
+0070   02 DBID        (N05)      /* DBID
+0080   02 FNR         (N05)      /* File number
+0090   02 PASSWORD    (A08)      /* Password of file
+0100   02 CIPHERCODE  (B08)      /* Ciphercode of file
+0110   02 LIBRARY     (A08)      /* Library
+0120   02 FMNAME      (A08)      /* Start value of list
+0130   02 TYPEOP      (A01)      /* Type operator
+0140   02 TYPEVA      (A24)      /* Type values used with operator
+0150   02 LENGTH      (I01)      /* Occurrences to be returned
+0160   02 RESPONSE    (I02)      /* Error code
+0170   02 NUMINC      (I04)      /* Number of included objects ba TYPEOP
+0180   02 NUMEXC      (I04)      /* Number of excluded objects by TYPEOP
+0190   02 INDEX       (I04)      /* Number of returned objects
+0200   02 LISTNAME    (A08/1:20) /* List of object names (variable)
+0210   02 LISTTYPE    (A01/1:20) /* List of object types (variable)
+0220END-DEFINE
+0230/*
+0240/* Set up some defaults:
+0250/*
+0260SET KEY ALL
+0270LENGTH := 20
+0280/*
+0290REPEAT
+0300  /*
+0310  INPUT (AD=OIL IP=OFF ZP=ON SG=ON)
+0320       'List cataloged NATURAL objects:' (I)
+0330    /  '-' (31) (I) /
+0340    /  'Library .........'  LIBRARY    (AD=MITL'_')
+0350    /  'DBID ............'  DBID       (AD=MITL'_' ZP=OFF)
+0360    /  'FNR .............'  FNR        (AD=MITL'_' ZP=OFF)
+0370    /  'Password ........'  PASSWORD   (AD=MITL'_')
+0380    /  'Ciphercode ......'  CIPHERCODE (AD=MITL'_')
+0390    /  'Start value .....'  FMNAME     (AD=MITL'_')
+0400   50T 'Response ........'  RESPONSE
+0410    /  'Occurrences .....'  LENGTH     (AD=MITL'_')
+0420   50T 'Returned ........'  INDEX
+0430    /  'Type operator ...'  TYPEOP     (AD=MITL'_')
+0440   50T 'Included obj. ...'  NUMINC
+0450    /  'Type values .....'  TYPEVA     (AD=MITL'_')
+0460   50T 'Excluded obj. ...'  NUMEXC
+0470   //  'Objects          ' (I)
+0480  / 2X LISTNAME(01)  LISTTYPE(01) 8X LISTNAME(06)  LISTTYPE(06)
+0490    8X LISTNAME(11)  LISTTYPE(11) 8X LISTNAME(16)  LISTTYPE(16)
+0500  / 2X LISTNAME(02)  LISTTYPE(02) 8X LISTNAME(07)  LISTTYPE(07)
+0510    8X LISTNAME(12)  LISTTYPE(12) 8X LISTNAME(17)  LISTTYPE(17)
+0520  / 2X LISTNAME(03)  LISTTYPE(03) 8X LISTNAME(08)  LISTTYPE(08)
+0530    8X LISTNAME(13)  LISTTYPE(13) 8X LISTNAME(18)  LISTTYPE(18)
+0540  / 2X LISTNAME(04)  LISTTYPE(04) 8X LISTNAME(09)  LISTTYPE(09)
+0550    8X LISTNAME(14)  LISTTYPE(14) 8X LISTNAME(19)  LISTTYPE(19)
+0560  / 2X LISTNAME(05)  LISTTYPE(05) 8X LISTNAME(10)  LISTTYPE(10)
+0570    8X LISTNAME(15)  LISTTYPE(15) 8X LISTNAME(20)  LISTTYPE(20)
+0580  ///  'Press any PF-Key to stop.'
+0590  /*
+0600  IF *PF-KEY NE 'ENTR'
+0610    Escape Routine
+0620  END-IF
+0630  /*
+0640  CALLNAT 'USR1032N' USR1032L
+0650  /*
+0660END-REPEAT
+0670END

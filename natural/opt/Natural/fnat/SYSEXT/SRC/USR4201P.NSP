@@ -1,0 +1,154 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR4201N'.
+0030/***********************************************************************
+0040/*---------------------------------------------------------------------
+0050/*---------------- Compiler options -----------------------------------
+0060/*---------------------------------------------------------------------
+0070OPTIONS LOWSRCE=ON
+0080/*---------------------------------------------------------------------
+0090/*---------------- Data definitions -----------------------------------
+0100/*---------------------------------------------------------------------
+0110DEFINE DATA
+0120/*---------------------------------------------------------------------
+0130/*---------------- Local data -----------------------------------------
+0140/*---------------------------------------------------------------------
+0150LOCAL
+01601 P-FUNCTION           (A1)  /* R = Read data area from the system file,
+0170                             /*     convert and write into source area
+0180                             /* W = Read data area from the source area,
+0190                             /*     convert it into internal format and
+0200                             /*     write it into the system file
+02101 P-FORMAT             (A1)  /* Target format for P-Function = 'R' and
+0220                             /* source format for P-Function = 'W':
+0230                             /* D = use DEFINE DATA format
+0240                             /* L = Use LAYOUT format
+0250                             /* For P-Function = 'W' and P-Format = 'D'
+0260                             /* the first line in the source area must
+0270                             /* start with 'DEFINE DATA'
+02801 P-OBJECT-TYPE        (A1)  /* For P-Function = 'W' only:
+0290                             /* Natural type for the internal format
+0300                             /* (L/A/G)
+03101 P-OBJECT-NAME        (A8)  /* Name of the data area
+03201 P-OBJECT-LIBRARY     (A8)  /* Library name for the data area
+03301 P-LIBRARY-DBID       (N5)  /* DBID for the library
+03401 P-LIBRARY-FNR        (N5)  /* FNR for the library
+03501 P-LIBRARY-PASSWORD   (A8)  /* Adabas password for the library
+03601 P-LIBRARY-CIPHER     (A8)  /* Adabas cipher code for the library
+03701 P-WRITE-ERROR-MODE   (A1)  /* P-Function = 'W' only:
+0380                             /* Error processing for errors during
+0390                             /* conversion into internal format:
+0400                             /* E = return an error message only
+0410                             /* T = return an error message and save
+0420                             /*     source area as a Natural Text member
+04301 P-RETURN-CODE        (I4)  /* Result:
+0440                             /*    0 = OK
+0450                             /*    1 = Invalid function code
+0460                             /*    2 = Object name missing
+0470                             /*    3 = Library name missing
+0480                             /*    4 = Invalid DBID/FNR combination
+0490                             /*    5 = Source is not a data area source
+0500                             /*    6 = Invalid object name
+0510                             /*    7 = Invalid format
+0520                             /*    8 = Invalid object type
+0530                             /* 1000 = Source not found in library
+0540                             /* 1100 = First line in source area must
+0550                             /*        start with 'DEFINE DATA'
+0560                             /* 1101 = First line in source area is
+0570                             /*        not in LAYOUT format.
+0580                             /* 2000 = Error during conversion
+0590                             /* 2001 = Error during conversion, source
+0600                             /*        area could not be saved
+0610                             /* 3000 = Error during write into source
+0620                             /*        area
+0630                             /* 3100 = Natural runtime error during
+0640                             /*        write into source area
+0650                             /* 4000 = Error during read from source
+0660                             /*        area
+0670                             /* 4100 = Natural runtime error during
+0680                             /*        read from source area
+0690                             /* 5000 = Error during save source area
+0700                             /*        as Text member
+0710                             /*   <0 = Natural runtime errors
+0720                             /*        NSC check
+0730                             /*        -0106
+0740                             /*        -0806
+0750                             /*        -0807
+0760                             /*        -0839
+0770                             /*        -0972
+0780                             /*        -4891
+07901 P-RETURN-MESSAGE     (A250) /* Filled when P-Return-Code <> 0
+08001 P-FSEC-DBID          (N05) /* OPTIONAL Fsec-dbid
+08101 P-FSEC-FNR           (N05) /* OPTIONAL Fsec-fnr
+08201 P-FSEC-PSW           (A08) /* OPTIONAL Fsec password
+08301 P-FSEC-CIP           (N08) /* OPTIONAL Fsec ciphercode
+0840END-DEFINE
+0850/**********************************************************************
+0860/**********************************************************************
+0870/*---------------------------------------------------------------------
+0880/* Inits
+0890/*---------------------------------------------------------------------
+0900SET KEY ALL
+0910P-FUNCTION         := 'R'                /* Read
+0920P-FORMAT           := 'L'                /* LAYOUT format
+0930P-OBJECT-TYPE      := 'L'                /* LDA
+0940P-OBJECT-NAME      := 'USR0210L'
+0950P-OBJECT-LIBRARY   := *LIBRARY-ID
+0960P-LIBRARY-DBID     := 0
+0970P-LIBRARY-FNR      := 0
+0980P-LIBRARY-PASSWORD := ' '
+0990P-LIBRARY-CIPHER   := ' '
+1000P-RETURN-CODE      := 0
+1010P-WRITE-ERROR-MODE := 'E'
+1020P-RETURN-MESSAGE   := ' '
+1030/*---------------------------------------------------------------------
+1040/* Main processing loop
+1050/*---------------------------------------------------------------------
+1060REPEAT
+1070  INPUT (AD=MITL'_' IP=OFF)
+1080      / 18T 'Process Data Area Sources:' (I)
+1090      / 18T '-' (26) (I)
+1100     // 18T 'Function (R/W) ........' P-FUNCTION
+1110      / 18T 'Format (D/L) ..........' P-FORMAT
+1120      / 18T 'Data Area Name ........' P-OBJECT-NAME
+1130      / 18T 'Library ...............' P-OBJECT-LIBRARY
+1140      / 18T 'DBID ..................' P-LIBRARY-DBID
+1150      / 18T 'FNR ...................' P-LIBRARY-FNR
+1160      / 18T 'Adabas Password .......' P-LIBRARY-PASSWORD
+1170      / 18T 'Adabas Cipher Code ....' P-LIBRARY-CIPHER
+1180      / 18T 'Natural Object Type ...' P-OBJECT-TYPE
+1190      / 18T 'Write-Error Mode ......' P-WRITE-ERROR-MODE
+1200      / 18T 'DBID of FSEC ..........' P-FSEC-DBID
+1210      / 18T 'FNR of FSEC ...........' P-FSEC-FNR
+1220      / 18T 'Password of FSEC ......' P-FSEC-PSW
+1230      / 18T 'Cipher Code of FSEC ...' P-FSEC-CIP
+1240  IF NOT (*PF-KEY = 'ENTR')
+1250    ESCAPE ROUTINE
+1260  END-IF
+1270  /*---------------------------------------------------------------------
+1280  /* Execute the requested function
+1290  /*---------------------------------------------------------------------
+1300  CALLNAT 'USR4201N'
+1310          P-FUNCTION         P-FORMAT
+1320          P-OBJECT-TYPE
+1330          P-OBJECT-NAME      P-OBJECT-LIBRARY
+1340          P-LIBRARY-DBID     P-LIBRARY-FNR
+1350          P-LIBRARY-PASSWORD P-LIBRARY-CIPHER
+1360          P-WRITE-ERROR-MODE
+1370          P-RETURN-CODE      P-RETURN-MESSAGE
+1380          P-FSEC-DBID        P-FSEC-FNR
+1390          P-FSEC-PSW         P-FSEC-CIP
+1400  IF (P-RETURN-CODE = 0)
+1410    PRINT // 20T 'Function completed successfully.'
+1420  ELSE
+1430    PRINT // 20T 'Error occurred:'
+1440           / 20T 'Return code' P-RETURN-CODE
+1450           / 20T 'Error message'
+1460           / P-RETURN-MESSAGE
+1470  END-IF
+1480END-REPEAT
+1490/*---------------------------------------------------------------------
+1500/*---------------- End of Main Program --------------------------------
+1510/*---------------------------------------------------------------------
+1520/**********************************************************************
+1530/**********************************************************************
+1540END

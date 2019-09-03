@@ -1,0 +1,173 @@
+0010DB: 148 FILE: 004  - VTOC                             DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:27
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:27
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A1 VOLSER                            A    6    D Volume serial number
+0250*      Volume serial number.
+0260  1 A2 DSNAME                            A   54    D Fully qualified data
+0270*      Fully qualified data set name
+0280*      when returned as output field.
+0290*      When used as input field wild-
+0300*      card is possible to further
+0310*      select datasets.
+0320  1 AF FILE-SIZE                         N 10.0    D Number of tracks
+0330*      Number of tracks
+0340*      currently allocated.
+0350*      (CYLINDERS-ALLOCATED
+0360*      in tracks +
+0370*      TRACKS-ALLOCATED).
+0380*      For BS2000, the number
+0390*      of PAM pages allocated.
+0400*
+0410*      Fields common to MVS and VSE
+0420*
+0430  1 A3 DSORG                             A    4    D Data set organizatio
+0440*      Data set organization, e.g.
+0450*      PS  - Sequential dataset
+0460*      PO  - Partioned dataset
+0470*      POE - PDSE
+0480  1 A7 CREATION-DATE                     A    8    D Creation date;
+0490*      Creation date;
+0500*      DD/MM/YY format.
+0510*      (if no creation date, field
+0520*      will contain all '*'s).
+0530  1 A8 EXPIRATION-DATE                   A    8    D Expiration date;
+0540*      Expiration date;
+0550*      DD/MM/YY format.
+0560*      (If no expiration date,
+0570*      field will contain all '*'s).
+0580  1 A9 NUMBER-OF-EXTENTS                 N  3.0    D Number of extents us
+0590*      Number of extents used.
+0600*      MVS    : 1-16
+0610*      VSE    : 1-256
+0620*      BS2000 : 1-255
+0630  1 AE EXTENTS                           A  192      Extent information.
+0640*      Extent information.
+0650*      16 entries, each 12 bytes
+0660*      long.
+0670*      Each entry contains:
+0680*      low   cchh;
+0690*      high  cchh;
+0700*      number of cylinders in
+0710*      extent;
+0720*      number of tracks
+0730*      (remainder).
+0740  1 AH CYLINDERS-ALLOCATED               N  7.0    D Number of integral c
+0750*      Number of integral cylinders
+0760*      allocated.
+0770  1 AJ UNIT                              A    4      Unit on which the da
+0780*      Unit on which the data set is
+0790*      currently mounted.
+0800  1 AK SERIES                            A    8      Device series for th
+0810*      Device series for the unit.
+0820*      (e.g. '3380')
+0830  1 D7 CREATION-DATX                     D    6    D Creation date of fil
+0840*      Creation date of file in
+0850*      NATURAL format.
+0860  1 D8 EXPIRATION-DATX                   D    6    D Expiration date of f
+0870*      Expiration date of file in
+0880*      NATURAL format.
+0890*
+0900*      MVS fields
+0910*
+0920  1 AA LAST-TTR                          B    3    D Last Track.
+0930*      Last Track.
+0940  1 A4 LRECL                             N  5.0    D Logical record lengt
+0950*      Logical record length.
+0960  1 A5 BLKSIZE                           N  5.0    D Block size.
+0970*      Block size.
+0980  1 A6 RECFM                             A    5    D Record format (e.g.
+0990*      Record format (e.g. FB).
+1000  1 AC ALLOCATION-TYPE                   A    4    D Allocation type spec
+1010*      Allocation type specified:
+1020*      TRK  track
+1030*      CYL  cylinder
+1040*      BLK  block
+1050*      ABS  abstr
+1060  1 AD SECONDARY-QTY                     N 10.0    D Secondary allocation
+1070*      Secondary allocation quantity.
+1080  1 AG PERCENT-USED                      N  3.0    D Amount of space used
+1090*      Amount of space used as a
+1100*      percentage of total space.
+1110  1 AI TRACKS-ALLOCATED                  N  3.0    D Number of remaining
+1120*      Number of remaining tracks
+1130*      allocated.
+1140  1 AL SECURITY                          A    5    D Security status:
+1150*      Security status:
+1160*      NONE   not password protected
+1170*      WRITE  password protected for
+1180*      WRITE
+1190*      READ   password protected for
+1200*      READ and WRITE.
+1210  1 AM LAST-REFERENCE                    A    8    D Last reference date;
+1220*      Last reference date;
+1230*      DD/MM/YY format.
+1240*      (If last reference date is
+1250*      null, field will contain
+1260*      all '*'s.)
+1270  1 DM LAST-REFERENCE-DATX               D    6    D Last reference date
+1280*      Last reference date in
+1290*      internal format.
+1300  1 AV UPDATED-SINCE-BACKUP              A    3    D File updated since l
+1310*      File updated since last BACKUP
+1320*      YES
+1330*      NO
+1340  1 AW SMS                               A    3    D SMS managed device/u
+1350*      SMS managed device/unit :
+1360*      YES
+1370*      NO
+1380  1 BA LAST-TTTR                         B    4    D Last used track and
+1390*      Last used track and block on
+1400*      track (TTTR).
+1410  1 BB DSNTYPE                           A    8    D Data Set Type Specif
+1420*      Data Set Type Specification
+1430  1 BC PRIMARY-QTY                       N 10.0    D Primary allocation q
+1440*      Primary allocation quantity.
+1450*
+1460*      VSE fields
+1470*
+1480  1 AR EXTENT-TYPE                       A    4    D 'USED' - This entry
+1490*      'USED' - This entry is for a
+1500*      real file.
+1510*      'FREE' - This entry describes
+1520*      a free extent.
+1530M 1 AB EXTENTS-ARRAY                     A  192      Extent information a
+1540*      Extent information array of
+1550*      16 * 16 entries, each 12 bytes
+1560*      long.
+1570*      Each entry contains:
+1580*      Low  cchh
+1590*      High cchh
+1600*      Number of cylinders in extent
+1610*      Number of tracks (remainder)
+1620*
+1630*      BS2000 fields
+1640*
+1650  1 ES SYSTEM-CODE                       B    2      System error code.
+1660*      System error code.
+1670  1 BK FILE-SIZE-LARGE                   N 10.0    D File size value supp
+1680*      File size value supporting
+1690*      large files.
+1700*
+1710*      End of VTOC
+1720*
+1730******DDM OUTPUT TERMINATED******

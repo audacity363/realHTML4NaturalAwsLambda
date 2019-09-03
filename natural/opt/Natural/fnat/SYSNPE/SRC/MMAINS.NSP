@@ -1,0 +1,243 @@
+0010*
+0020* Display MAIN STORAGE (MVS)
+0030*
+0040* ----------------------------------------------------------------------
+0050* Maintenance..:
+0060* STL 12-02-29   NPE352:   support 31-bit OR 64-bit addresses
+0070*                          (it was easier to duplicate the fields
+0080*                          than to use dynamic variables instead.)
+0090* WKK 13-01-28             make PF8 working for 64-bit addresses.
+0100* ======================================================================
+0110*
+0120DEFINE DATA GLOBAL USING TUTO
+0130LOCAL  USING ACTIVE-L
+0140LOCAL  USING MAIN-L
+0150LOCAL  USING SYSINFOL
+0160LOCAL
+0170*
+018001 #ADDRESS-NEW             (B4)
+019001 #ADDRESS                 (B4)
+020001 #ADDRESS-NEW64           (B8)                       /* as of 3.5.2
+021001 #ADDRESS64               (B8)                       /* as of 3.5.2
+022001 #JOBNAME                 (A8)
+023001 #NPR-VERSION             (A8)
+024001 #OFFSET                  (B4)
+025001 #HEX-10                  (B4)    INIT <H'00000010'>
+026001 #CV-ADDR                 (C)
+027001 #CV-JOB                  (C)
+028001 #CV-OFF                  (C)
+0290*
+030001 #DISPLAY                 (16)
+0310  02  #AREA                 (A18)
+0320  02  REDEFINE #AREA
+0330    03  #AREA-F1            (A1)
+0340    03  #AREA-CONT          (A16)
+0350    03  #AREA-F2            (A1)
+0360  02  #AREA-ADR             (B4)
+0370  02  #AREA-ADR64           (B8)                       /* as of 3.5.2
+0380  02  #AREA-HEX             (B4/1:4)
+0390*
+040001 #I                       (P2)
+0410END-DEFINE
+0420PERFORM PF-KEY
+0430SET KEY PF7=PGM NAMED '-'
+0440SET KEY PF8=PGM NAMED '+'
+0450*
+0460FIND (1) SYSTEM-INFO WITH NODE = ##NODE
+0470*
+0480   IF ERROR-CODE EQ 0
+0490      ASSIGN #NPR-VERSION = ESY-VERSION
+0500      ELSE
+0510      ASSIGN ##MSG-NR = 1000
+0520      ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0530      STOP
+0540   END-IF
+0550*
+0560END-FIND
+0570*
+0580* ------------------------------ MAIN LOOP ----------------------------
+0590*
+0600IF #NPR-VERSION GE '3.5.2'
+0610   REPEAT
+0620     ASSIGN #ADDRESS-NEW64    = #ADDRESS64
+0630*
+0640FOR64.
+0650     FOR #I = 1 TO 16
+0660FND64.
+0670       FIND MAIN-STORAGE
+0680           WITH NODE          = ##NODE
+0690            AND ADDRESS-64BIT = #ADDRESS-NEW64         /* was: ADDRESS
+0700            AND JOB-NAME      = #JOBNAME
+0710            AND OFFSET        = #OFFSET                /* H'00000000'
+0720            AND LENGTH        = 16
+0730*
+0740         IF ERROR-CODE NE 0
+0750            ASSIGN ##MSG-NR   = 1000
+0760            ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0770            RESET  #AREA-CONT (#I:16) #AREA-ADR64 (#I:16)
+0780                   #AREA-HEX (#I:16,*)
+0790            ESCAPE BOTTOM (FOR64.)
+0800         END-IF
+0810*
+0820         ASSIGN #AREA-ADR64 (#I)   = #ADDRESS-NEW64
+0830         ASSIGN #AREA-F1    (#I)   = '*'
+0840         ASSIGN #AREA-F2    (#I)   = '*'
+0850         ASSIGN #AREA-CONT  (#I)   = AREA-CONT (FND64.)
+0860         ASSIGN #AREA-HEX   (#I,*) = AREA-HEX (FND64.,*)
+0870         CALLNAT 'HEX64ADD' #ADDRESS-NEW64 #HEX-10     /* was: HEX-ADD
+0880       END-FIND
+0890     END-FOR
+0900*
+0910     ASSIGN #JOBNAME = MAIN-STORAGE.JOB-NAME
+0920*
+0930     PERFORM SCREEN-IO
+0940   END-REPEAT
+0950ELSE
+0960   REPEAT
+0970     ASSIGN #ADDRESS-NEW      = #ADDRESS
+0980*
+0990FOR.
+1000     FOR #I = 1 TO 16
+1010FND.
+1020       FIND MAIN-STORAGE
+1030           WITH NODE          = ##NODE
+1040            AND ADDRESS       = #ADDRESS-NEW
+1050            AND JOB-NAME      = #JOBNAME
+1060            AND OFFSET        = #OFFSET                /* H'00000000'
+1070            AND LENGTH        = 16
+1080*
+1090         IF ERROR-CODE NE 0
+1100            ASSIGN ##MSG-NR   = 1000
+1110            ASSIGN ##MSG-TXT1 = ERROR-TEXT
+1120            RESET  #AREA-CONT (#I:16) #AREA-ADR (#I:16)
+1130                   #AREA-HEX (#I:16,*)
+1140            ESCAPE BOTTOM (FOR.)
+1150         END-IF
+1160*
+1170         ASSIGN #AREA-ADR   (#I)   = #ADDRESS-NEW
+1180         ASSIGN #AREA-F1    (#I)   = '*'
+1190         ASSIGN #AREA-F2    (#I)   = '*'
+1200         ASSIGN #AREA-CONT  (#I)   = AREA-CONT (FND.)
+1210         ASSIGN #AREA-HEX   (#I,*) = AREA-HEX (FND.,*)
+1220         CALLNAT 'HEX-ADD'  #ADDRESS-NEW #HEX-10
+1230       END-FIND
+1240     END-FOR
+1250*
+1260     ASSIGN #JOBNAME = MAIN-STORAGE.JOB-NAME
+1270*
+1280     PERFORM SCREEN-IO
+1290   END-REPEAT
+1300END-IF
+1310*
+1320* ------------------------------ SCREEN-IO ----------------------------
+1330*
+1340DEFINE SUBROUTINE SCREEN-IO
+1350*
+1360ASSIGN #CV-ADDR = (AD=I)
+1370ASSIGN #CV-JOB  = (AD=I)
+1380ASSIGN #CV-OFF  = (AD=I)
+1390*
+1400IF #NPR-VERSION GE '3.5.2'
+1410   INPUT WITH TEXT *##MSG-NR,
+1420     ##MSG-TXT1,
+1430     ##MSG-TXT2
+1440     USING MAP 'MMAING-&'
+1450           ##TITLE
+1460           #ADDRESS64
+1470           #AREA (*)
+1480           #AREA-ADR64 (*)
+1490           #AREA-HEX (*,*)
+1500           #CV-ADDR
+1510           #CV-JOB
+1520           #CV-OFF
+1530           #JOBNAME
+1540           #OFFSET
+1550ELSE
+1560   INPUT WITH TEXT *##MSG-NR,
+1570     ##MSG-TXT1,
+1580     ##MSG-TXT2
+1590     USING MAP 'MMAINS-&'
+1600           ##TITLE
+1610           #ADDRESS
+1620           #AREA (*)
+1630           #AREA-ADR (*)
+1640           #AREA-HEX (*,*)
+1650           #CV-ADDR
+1660           #CV-JOB
+1670           #CV-OFF
+1680           #JOBNAME
+1690           #OFFSET
+1700END-IF
+1710*
+1720ACT.
+1730FIND ACTIVE-JOBS
+1740    WITH JOB-NAME = #JOBNAME
+1750    AND  NODE     = ##NODE
+1760END-FIND
+1770*
+1780IF *NUMBER (ACT.) = 0
+1790  REINPUT *1009,#JOBNAME
+1800END-IF
+1810*
+1820RESET ##MSG
+1830DECIDE FOR FIRST CONDITION
+1840  WHEN #CV-JOB MODIFIED
+1850    RESET
+1860      MAIN-STORAGE.ADDRESS
+1870      MAIN-STORAGE.OFFSET
+1880      #ADDRESS
+1890      #ADDRESS-NEW
+1900      #ADDRESS64
+1910      #ADDRESS-NEW64
+1920      #OFFSET
+1930  WHEN #CV-ADDR MODIFIED
+1940    IF #NPR-VERSION GE '3.5.2'
+1950       CALLNAT 'HEX64ADD' #ADDRESS64 #OFFSET
+1960    ELSE
+1970       CALLNAT 'HEX-ADD'  #ADDRESS   #OFFSET
+1980    END-IF
+1990    RESET #OFFSET
+2000  WHEN #CV-OFF MODIFIED
+2010    IF #NPR-VERSION GE '3.5.2'
+2020       CALLNAT 'HEX64ADD' #ADDRESS64 #OFFSET
+2030    ELSE
+2040       CALLNAT 'HEX-ADD'  #ADDRESS   #OFFSET
+2050    END-IF
+2060    RESET #OFFSET
+2070  WHEN *PF-KEY = 'PF8'
+2080   /* handle PF8 wkk start -----------------------------
+2090    IF #NPR-VERSION GE '3.5.2'
+2100         ASSIGN #HEX-10 = H'00000100'
+2110         CALLNAT 'HEX64ADD' #ADDRESS64   #HEX-10
+2120         RESET INITIAL #HEX-10
+2130    END-IF
+2140   /* handle PF8 wkk end  -----------------------------
+2150    ASSIGN #ADDRESS = #ADDRESS-NEW
+2160  WHEN *PF-KEY = 'PF7'
+2170    IF #NPR-VERSION GE '3.5.2'
+2180       IF #ADDRESS64   >= H'00000100'
+2190         ASSIGN #HEX-10 = H'00000100'
+2200         CALLNAT 'HEX64SUB' #ADDRESS64   #HEX-10
+2210         RESET INITIAL #HEX-10
+2220       ELSE
+2230         RESET #ADDRESS64 #OFFSET
+2240       END-IF
+2250    ELSE
+2260       IF #ADDRESS     >= H'00000100'
+2270         ASSIGN #HEX-10 = H'00000100'
+2280         CALLNAT 'HEX-SUB'  #ADDRESS     #HEX-10
+2290         RESET INITIAL #HEX-10
+2300       ELSE
+2310         RESET #ADDRESS #OFFSET
+2320       END-IF
+2330    END-IF
+2340  WHEN NONE
+2350    IGNORE
+2360END-DECIDE
+2370*
+2380END-SUBROUTINE
+2390*
+2400* ------------------------------ PF-KEY -------------------------------
+2410*
+2420INCLUDE C-PFKEY
+2430END

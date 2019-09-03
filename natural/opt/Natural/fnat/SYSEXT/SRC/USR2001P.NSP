@@ -1,0 +1,44 @@
+0010/* USR2001P: Read information about last error
+0020/* This program serves as example how to design a user-defined
+0030/* program to call 'USR2001N'
+0040/**********************
+0050DEFINE DATA LOCAL
+0060  01 P_PARMS
+0070    02 P_ERROR_NUM           (I4)
+0080    02 P_ERROR_LINE          (I4)
+0090    02 P_ERROR_PROGRAM       (A32)
+0100    02 P_ERROR_LIB           (A32)
+0110    02 P_ERROR_DBID          (I4)
+0120    02 P_ERROR_FNR           (I4)
+0130    02 P_ERROR_TIME          (T)
+0140    02 P_ERROR_PGM_TYPE      (A1)
+0150    02 P_ERROR_PGM_TYPE_LONG (A11)
+0160    02 P_ERROR_LANG          (I4)
+0170    02 P_ERROR_LEVEL         (I4)
+0180    02 P_ERROR_CLASS         (I1)
+0190    02 P_ERROR_TYPE          (I1)
+0200*
+0210  01 #ERROR-TIME             (A19)
+0220END-DEFINE
+0230/*
+0240/*
+0250CALLNAT 'USR2001N' P_PARMS
+0260/*
+0270MOVE EDITED P_ERROR_TIME (EM=YYYY'-'MM'-'DD' 'HH':'II':'SS)
+0280         TO #ERROR-TIME
+0290/*
+0300INPUT (AD=OIT IP=OFF CD=TU SG=OFF)
+0310  /// 5T 'Error number:' P_ERROR_NUM
+0320         'Error class:' P_ERROR_CLASS
+0330         'Error line:' P_ERROR_LINE
+0340   // 5T 'Error program:' P_ERROR_PROGRAM
+0350    / 5T 'Error program type:' P_ERROR_PGM_TYPE
+0360    / 5T 'Error program type long:' P_ERROR_PGM_TYPE_LONG
+0370    / 5T 'Error program level:' P_ERROR_LEVEL
+0380    / 5T 'Language at error time:' P_ERROR_LANG
+0390   // 5T 'Error library:' P_ERROR_LIB
+0400    / 5T 'DBID:' P_ERROR_DBID 'FNR:' P_ERROR_FNR
+0410   // 5T 'Error type:'  P_ERROR_TYPE
+0420    / 5T 'Error time:' #ERROR-TIME
+0430/*
+0440END

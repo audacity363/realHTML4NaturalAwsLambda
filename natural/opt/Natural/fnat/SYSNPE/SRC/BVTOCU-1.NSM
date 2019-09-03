@@ -1,0 +1,64 @@
+0010* MAP2: PROTOTYPE
+0020* INPUT USING MAP 'XXXXXXXX'
+0030*     ##TITLE #DSNAME #ERASE-OPTION #ERASE-RANGE #FUNCTION #NEWNAME
+0040*     #PASSWORD #VOLSER
+0050DEFINE DATA PARAMETER
+00601 ##TITLE (A078)
+00701 #DSNAME (A054)
+00801 #ERASE-OPTION (A007)
+00901 #ERASE-RANGE (A001)
+01001 #FUNCTION (A008)
+01101 #NEWNAME (A054)
+01201 #PASSWORD (A008)
+01301 #VOLSER (A006)
+0140END-DEFINE
+0150FORMAT PS=021 LS=080 ZP=OFF SG=OFF KD=ON  IP=OFF
+0160* MAP2: MAP PROFILES *****************************        410***********
+0170* .TTAAAMMOO   D I D I N D I D I        ?_)¬&:+(                       *
+0180* 023079        N0NNUCN             X        01 SYSPROF YL           1 *
+0190************************************************************************
+0200INPUT          (     IP=OFF                                           /*
+0210                                                                       )
+0220 002T ##TITLE  (AD=ODL ) /*.01D078 A078 .
+0230/
+0240/
+0250/
+0260 002T 'Function.............'
+0270 024T #FUNCTION  (AD=MILT'_' ) /*.99D008 A008 .
+0280 033T '(RENAME/SCRATCH/PURGE)'
+0290/
+0300/
+0310 002T 'Dsname...............'
+0320 024T #DSNAME  (AD=MILT'_' ) /*.99D054 A054 .
+0330/
+0340 002T 'Volser...............'
+0350 024T #VOLSER  (AD=MILT'_' ) /*.99D006 A006 .
+0360/
+0370 002T 'Password.............'
+0380 024T #PASSWORD  (AD=MILT'_' ) /*.99U008 A008 .
+0390/
+0400/
+0410 002T 'RENAME'(I)
+0420/
+0430 002T 'New name.............'
+0440 024T #NEWNAME  (AD=MILT'_' ) /*.99D054 A054 .
+0450/
+0460/
+0470 002T 'SCRATCH/PURGE'(I)
+0480/
+0490 002T 'Erase Option.........'
+0500 024T #ERASE-OPTION  (AD=MILT'_' ) /*.99D007 A007 .
+0510 033T '(DESTROY/DATA/SPACE/CATALOG)'
+0520/
+0530 002T 'Erase Range..........'
+0540 024T #ERASE-RANGE  (AD=MILT'_' ) /*.99D001 A001 .
+0550 033T '(FGG only)'
+0560/
+0570/
+0580/
+0590/
+0600/
+0610/
+0620* MAP2: VALIDATION *****************************************************
+0630* MAP2: END OF MAP *****************************************************
+0640END

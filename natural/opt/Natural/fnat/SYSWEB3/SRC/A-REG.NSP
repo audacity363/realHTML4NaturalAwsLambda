@@ -1,0 +1,37 @@
+0010*
+0020*                                                       Natural
+0030*
+0040*                       Natural Web Interface
+0050*                       =====================
+0060*
+0070*  This is the DCOM extension part of the Natural Web Interface.
+0080*
+0090*  Run this program to register the classes of the
+0100*  Natural Web Interface. Once the classes have been registered,
+0110*  they can be used via DCOM from other processes or
+0120*  machines. If they shall be used from another machine,
+0130*  they must additionally be registered on that machine
+0140*  (the client machine).
+0150*
+0160*  To register classes, you need the permission to modify
+0170*  the system registry. This will be the case if you have
+0180*  administrator rights on the machine. Otherwise you will get
+0190*  an error message when you run this register script. In this
+0200*  case ask your administrator for help.
+0210*
+0220*  Before running this script, you should start NATURAL with
+0230*  a server ID of your choice. This ensures that when a client
+0240*  uses one of the classes, a NaturalX server with that server ID
+0250*  will be started. This server will provide exactly these four classes.
+0260*  To start NATURAL with a server ID, take a string without blanks
+0270*  (e. g. 'Natweb') and pass it to NATURAL with the dynamic
+0280*  parameter COMSERVERID (e. g. NDE.EXE COMSERVERID=Natweb).
+0290*  You find more detailed information about NaturalX servers
+0300*  and server IDs in the NaturalX documentation.
+0310*
+0320*  See the NaturalX documentation for more information about
+0330*  class registration.
+0340*
+0350STACK COMMAND "REGISTER SYSWEB3 * EM"
+0360*
+0370END

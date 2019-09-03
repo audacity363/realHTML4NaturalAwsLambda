@@ -1,0 +1,111 @@
+0010DB: 148 FILE: 212  - SEND-EMAIL                       DEFAULT SEQUENCE:
+0020                              Cataloged by STL      on 2012-08-08 15:52:12
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2012-08-08 15:50:03
+0080*      by user ESY352
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 ES SYSTEM-CODE                       B    2      System error code.
+0210*      System error code.
+0220  1 SM SYSTEM-MESSAGE-CODE               A   10
+0230*
+0240*      Fields common to all Op-systems
+0250*
+0260  1 FN FUNCTION                          A    8    D Function to be perfo
+0270*      Function to be performed:
+0280*      blank   write a record
+0290*      (default)
+0300*      CLOSE   all records have
+0310*      been written
+0320  1 A1 SUBJECT                           A  128    D Subject of Email.
+0330*      Subject of Email.
+0340*      Field is required to send this
+0350*      mail.
+0360  1 A2 RECORD                            A  253    D Record to be written
+0370*      Record to be written.
+0380M 1 A4 RECIPIENT                         A  128    D Array of max. 20 rec
+0390*      Array of max. 20 recipients
+0400*      receiving this mail. At least
+0410*      one recipient is required to
+0420*      send this mail.
+0430M 1 A5 CC-RECIPIENT                      A  128    D Array of max. 20 rec
+0440*      Array of max. 20 recipients
+0450*      receiving a "carbon copy" of
+0460*      this mail. If blank, no carbon
+0470*      copy will be sent.
+0480  1 A6 FROM-NAME                         A  128    D "last_name, first_na
+0490*      "last_name, first_name" as
+0500*      additional sender information.
+0510*      Field must not contain any
+0520*      quotation marks. The required
+0530*      quotation marks in the mail
+0540*      header will be set separately.
+0550  1 A7 REPLY-TO                          A  128    D Mail address for rep
+0560*      Mail address for reply.
+0570*      If field is omitted, address
+0580*      is composed of user ID and
+0590*      local host name.
+0600  1 A8 HOST-CODE-PAGE                    A    8    D Host code page defin
+0610*      Host code page defines the
+0620*      EBCDIC character set used for
+0630*      the supplied mail data.
+0640*      If field is omitted, the
+0650*      global default value is used.
+0660M 1 A9 BCC-RECIPIENT                     A  128    D Array of max. 20 rec
+0670*      Array of max. 20 recipients
+0680*      receiving a "blind carbon
+0690*      copy" of this mail. If blank,
+0700*      no blind carbon copy will be
+0710*      sent.
+0720  1 AA DSNAME                            A   54    D Fully qualified data
+0730*      Fully qualified data set name
+0740*      that is attached to this mail.
+0750  1 AB ELEMENT                           A   64    D Name of LMS element
+0760*      Name of LMS element to be
+0770*      attached to this mail.
+0780  1 AB MEMBER                            A   10    D Member name
+0790*      Member name
+0800*      (Only if data set is PDS).
+0810  1 AC PASSWORD                          A    8    D Password for protect
+0820*      Password for protected data
+0830*      set.
+0840  1 AD ELEMENT-PASSWORD                  A    8    D Password for protect
+0850*      Password for protected LMS
+0860*      element. (LMS V2 or above)
+0870  1 AE ELEMENT-TYPE                      A    8    D Type of LMS element
+0880*      Type of LMS element to be
+0890*      attached to this mail.
+0900  1 AE MEMBER-TYPE                       A    8    D Member type.
+0910*      Member type.
+0920  1 AF ELEMENT-VERSION                   A   24    D Version of LMS eleme
+0930*      Version of LMS element to be
+0940*      attached to this mail.
+0950  1 AG VOLSER                            A    6    D Volume serial number
+0960*      Volume serial number.
+0970*      Not relevant for BS2000.
+0980  1 AH LIBRARY                           A    8    D Name of library.
+0990*      Name of library.
+1000  1 AI SUB-LIBRARY                       A    8    D Name of sublibrary.
+1010*      Name of sublibrary.
+1020  1 ID IDENTIFIER                        A    8    D Needed if multiple S
+1030*      Needed if multiple SEND-EMAIL
+1040*      calls are executing in
+1050*      parallel, as requests for the
+1060*      same mail must have the same
+1070*      identifier.
+1080*
+1090*      End of SEND-EMAIL
+1100*
+1110******DDM OUTPUT TERMINATED******

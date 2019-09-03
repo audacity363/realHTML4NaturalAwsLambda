@@ -1,0 +1,32 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Error Number Range
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180Range of error messages to be listed.
+0190
+0200The following ranges are supported:
+0210  Leading characters
+0220     Value followed by an asterisk ('*').
+0230     All objects whose names start with the characters before
+0240     the asterisk are selected.
+0250  Start value
+0260     Value followed by an '>'.
+0270     All objects starting from value are selected.
+0280  End value
+0290     Value followed by an '<'.
+0300     All objects until value are selected.
+0310
+0320<HelpTextEnd>

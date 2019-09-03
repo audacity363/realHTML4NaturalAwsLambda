@@ -1,0 +1,201 @@
+0010**   Example program for USR3005N
+0020**   This program shows, how data can be retrieved from Predict.
+0030**   It retrieves the field list of file EXAMPLE-EMP.
+0040**
+0050DEFINE DATA LOCAL
+00601 REQUEST-RESULT(A) DYNAMIC
+0070*
+0080LOCAL USING PARSER-X                /* Local Data Area is located
+0090                                    /* in Library SYSEXXT
+0100LOCAL
+01101 XML_PARSER_XPATH             (A) DYNAMIC
+01201 XML_PARSER_XPATH_TYPE        (A1)
+01301 XML_PARSER_CONTENT           (A) DYNAMIC
+01401 XML_PARSER_CONTENT_IS_EMPTY  (L)
+01501 XML_PARSER_ERROR_TEXT        (A253)
+01601 XML_PARSER_RESPONSE          (I2)
+01701 #XNAME (A) DYNAMIC
+01801 #XVALUE (A) DYNAMIC
+0190*
+02001 #MSG-NR(I4)
+02101 #MSG-TEXT(A79)
+02201 #MSG-TYPE(A8)
+0230END-DEFINE
+0240PRINT 'Example program' *PROGRAM 'for USR3005N'
+0250/     'This program shows, how data can be retrieved from Predict.'
+0260/     'It retrieves the field list of file EXAMPLE-EMP.'
+0270/
+0280COMPRESS
+0290'<Predict>'
+0300  '<Request>'
+0310    '<Select>'
+0320**
+0330** Search Adabas-File having a name which starts with EMP
+0340**
+0350      '<Search>'
+0360        '<Object-type value=''FILE-A''/>'
+0370        '<Attribute name=''ID'' value=''EMPLOYEES-FILE'' />'
+0380      '</Search>'
+0390**
+0400** Return the following attributes
+0410**
+0420      '<Return>'
+0430        '<Field name=''ELEMENT-LIST-TAB''/>'
+0440      '</Return>'
+0450    '</Select>'
+0460  '</Request>'
+0470'</Predict>'
+0480*
+0490TO REQUEST-RESULT
+0500*
+0510PRINT 'Request passed to USR3005N'
+0520PRINT REQUEST-RESULT
+0530*
+0540CALLNAT 'USR3005N' REQUEST-RESULT
+0550*
+0560PRINT 'Result returned from USR3005N'
+0570*
+0580INCLUDE PARSER_X                    /* Copy Code is located
+0590                                    /* in Library SYSEXXT
+0600                                    /*
+0610  'REQUEST-RESULT'                  /* XML FILE TO BE PARSED
+0620  'XML_PARSER_XPATH'                /* XPATH TO REPESENT ELEMENT...
+0630  'XML_PARSER_XPATH_TYPE'           /* TYPE OF CALLBACK
+0640  'XML_PARSER_CONTENT'              /* CONTENT OF FOUND ELEMENT
+0650  'XML_PARSER_CONTENT_IS_EMPTY'     /* IS TRUE IF ELEMENT IS EMPTY
+0660  'XML_PARSER_ERROR_TEXT'           /* ERROR MESSAGE
+0670  'XML_PARSER_RESPONSE'             /* ERROR NR; 0 = OK
+0680*
+0690DEFINE SUBROUTINE CALLBACK
+0700*
+0710EXAMINE XML_PARSER_XPATH TRANSLATE INTO UPPER
+0720DECIDE ON FIRST VALUE OF XML_PARSER_XPATH
+0730*
+0740  VALUE 'PREDICT/RESULT/MESSAGE/?NUMBER'
+0750    #MSG-NR := VAL(XML_PARSER_CONTENT)
+0760*
+0770  VALUE 'PREDICT/RESULT/MESSAGE/?TEXT'
+0780    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#MSG-TEXT'
+0790**
+0800** With PRCCNVCH
+0810** the coded special characters in XML_PARSER_CONTENT are translated
+0820** into the printable form
+0830**
+0840*
+0850  VALUE 'PREDICT/RESULT/MESSAGE/?TYPE'
+0860    #MSG-TYPE := XML_PARSER_CONTENT
+0870    EXAMINE #MSG-TYPE TRANSLATE INTO UPPER
+0880    IF #MSG-TYPE NE 'SUCCESS'
+0890**
+0900** Possible Values of ?TYPE are SUCCESS, ERROR and WARNING
+0910**
+0920      PRINT #MSG-NR
+0930      PRINT #MSG-TEXT
+0940    END-IF
+0950*
+0960  VALUE 'PREDICT/RESULT/ROW'
+0970**
+0980** New File Object starts here
+0990**
+1000    PRINT ' '
+1010*
+1020  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/?NAME'
+1030**
+1040** Field list starts here
+1050**
+1060    #XNAME:= XML_PARSER_CONTENT
+1070*
+1080  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/GROUP'
+1090**
+1100** New Field starts here
+1110**
+1120    PRINT ' '
+1130*
+1140  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/GROUP/ATTRIBUTE/?NAME'
+1150**
+1160** Name of Field attribute found
+1170**
+1180    #XNAME := XML_PARSER_CONTENT
+1190*
+1200  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/GROUP/ATTRIBUTE/?VALUE'
+1210**
+1220** Value of Field attribute found
+1230**
+1240    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#XVALUE'
+1250**
+1260** With PRCCNVCH
+1270** the coded special characters in XML_PARSER_CONTENT are translated
+1280** into the printable form
+1290**
+1300    PRINT #XNAME ':' #XVALUE
+1310*
+1320  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/GROUP/STRUCTURE/?NAME'
+1330**
+1340** ?Name indicates if the following
+1350** contains information about the coupled standard field
+1360** or the composition of a SB-, SP-, PH- or HY-Descriptor
+1370**
+1380    #XNAME := XML_PARSER_CONTENT
+1390    PRINT #XNAME
+1400*
+1410  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/GROUP/STRUCTURE/ATTRIBUTE/?NAME'
+1420**
+1430** Name of Attribute
+1440** containing information about the coupled standard field
+1450** or the composition of a SB-, SP-, PH- or HY-Descriptor
+1460**
+1470    #XNAME := XML_PARSER_CONTENT
+1480*
+1490  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/GROUP/STRUCTURE/ATTRIBUTE/?VALUE'
+1500**
+1510** Value of Attribute
+1520** containing information about the coupled standard field
+1530** or the composition of a SB-, SP-, PH- or HY-Descriptor
+1540**
+1550    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#XVALUE'
+1560    PRINT #XNAME ':' #XVALUE
+1570*
+1580  VALUE
+1590  'PREDICT/RESULT/ROW/STRUCTURE'-
+1600  '/GROUP/STRUCTURE/STRUCTURE/?NAME'
+1610**
+1620** Name of Attribute
+1630** containing information about
+1640** the composition of a SB-, SP-, PH- or HY-Descriptor
+1650**
+1660    #XNAME := XML_PARSER_CONTENT
+1670    PRINT #XNAME
+1680*
+1690*
+1700  VALUE
+1710  'PREDICT/RESULT/ROW/STRUCTURE'-
+1720  '/GROUP/STRUCTURE/STRUCTURE/GROUP/ATTRIBUTE/?NAME'
+1730**
+1740** Name of Attribute
+1750** containing information about
+1760** the composition of a SB-, SP-, PH- or HY-Descriptor
+1770**
+1780    #XNAME := XML_PARSER_CONTENT
+1790*
+1800  VALUE
+1810  'PREDICT/RESULT/ROW/STRUCTURE'-
+1820  '/GROUP/STRUCTURE/STRUCTURE/GROUP/ATTRIBUTE/?VALUE'
+1830**
+1840** Value of Attribute
+1850** containing information about
+1860** the composition of a SB-, SP-, PH- or HY-Descriptor
+1870**
+1880    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#XVALUE'
+1890    PRINT #XNAME ':' #XVALUE
+1900*
+1910  NONE IGNORE
+1920*
+1930END-DECIDE
+1940END-SUBROUTINE /* CALLBACK
+1950*
+1960DEFINE SUBROUTINE PARSER_ERROR
+1970   PRINT 'Parser Error'
+1980   PRINT XML_PARSER_ERROR_TEXT
+1990 END-SUBROUTINE
+2000*
+2010END

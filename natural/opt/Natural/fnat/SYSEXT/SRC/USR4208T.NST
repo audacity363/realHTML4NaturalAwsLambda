@@ -1,0 +1,158 @@
+0010Read or write a Natural resource
+0020.
+0030Documentation ......... USR4208T    /*  Text object
+0040Interface ............. USR4208N    /*  Cataloged subprogram
+0050Example Program ....... USR4208P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. RESOURCES
+0100.
+0110Keywords .............. +MOD-NAT-6.3.14,
+0120                        FSEC ENABLED, READ, RESOURCE, WRITE
+0130.
+0140Function .............. This interface reads a resource in a library
+0150                        or writes a resource into a library.
+0160                        With MF6.3.14: support for FSEC switch
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+0230Input ...... RESOURCE-FUNCTION
+0240                    'R' = Read a resource
+0250                    'W' = Write a resource
+0260                    'D' = Delete a resource
+0270Input ...... LIBRARY-NAME (A8)
+0280                    Library of the resource
+0290In/Output .. RESOURCE-NAME (A250)
+0300                    Name of the resource;
+0310                    on Open Systems only 100 bytes are used.
+0320                    Mainframe:
+0330                      Function Read: in/output value
+0340                      Function Write: input value
+0350                    Open Systems:
+0360                      Function Read: input value
+0370                      Function Write: input value
+0380Input ...... OBJECT-NAME (A8)
+0390                    Used on mainframes only;
+0400                    Name used to store the resource in the library.
+0410                    Function Read: if not specified, the resource
+0420                    containing RESOURCE-NAME is searched in the library
+0430                    Function Write: if not specified, a name (Rnnnnnnn,
+0440                    where nnnnnnn is a number starting with 0000001)
+0450                    is generated
+0460Input ...... LIBRARY-DBID (N5)
+0470                    DBID for the library.
+0480Input ...... LIBRARY-FNR  (N5)
+0490                    FNR for the library.
+0500Input ...... LIBRARY-PASSWORD (A8)
+0510                    Password for the library.
+0520Input ...... LIBRARY-CIPHER (N8)
+0530                    Cipher code for the library.
+0540Input ...... OPTION-REPLACE (A1)
+0550                    'Y' = replace existing resource;
+0560                    other values = do not replace existing resource;
+0570                    for function 'W' (Write a resource) only.
+0580                    On mainframes, both RESOURCE-NAME and the 8 byte
+0590                    long OBJECT-NAME are checked,
+0600                    on Open Systems, the 100 bytes long RESOURCE-NAME
+0610                    is checked.
+0620In/Output .. RESOURCE-DATA (A) DYNAMIC
+0630                    Contains the resource data
+0640                    Output value for RESOURCE-FUNCTION = 'R'
+0650                    Input value for RESOURCE-FUNCTION = 'W'
+0660In/Output .. RESOURCE-DIRECTORY-DATA (A389)
+0670                    Contains the resource directory data
+0680                    Output value for RESOURCE-FUNCTION = 'R'
+0690                    Input value for RESOURCE-FUNCTION = 'W'
+0700                    Redefined as follows:
+0710               RD-RESOURCE-LIBRARY (A8)
+0720                    Library of the resource
+0730               RD-RESOURCE-OBJECT-NAME (A8)
+0740                    Used on mainframes only;
+0750                    Name used to store the resource in the library;
+0760               RD-RESOURCE-NAME (A245)
+0770                    Name of the resource;
+0780               RD-RESOURCE-TYPE (A4)
+0790                    Type of the resource (extension);
+0800               RD-RESOURCE-FORMAT (A1)
+0810                    Used on Mainframe only;
+0820                    Format of the resource:
+0830                    'A' = Alphanumeric,
+0840                    'B' = Binary
+0850                    'U' = Unicode
+0860               RD-RESOURCE-DATE (A8)
+0870                    Date when the resource was saved,
+0880                    format YYYYMMDD
+0890               RD-RESOURCE-TIME (A7)
+0900                    Time when the resource was saved,
+0910                    format HHMMSST
+0920               RD-RESOURCE-USER (A8)
+0930                    ID of the user who saved the resource
+0940               RD-RESOURCE-INIT-USER (A8)
+0950                    ID of the user who initially saved the resource
+0960               RD-RESOURCE-SIZE (I4)
+0970                    Size of the resource;
+0980               RD-RESOURCE-VERSION (A8)
+0990                    Version of the resource,
+1000                    format rr.vv.ss;
+1010               RD-RESOURCE-OPSYS (A8)
+1020                    OPSYS where the resource was saved;
+1030               RD-RESOURCE-TPSYS (A8)
+1040                    TPSYS where the resource was saved;
+1050               RD-RESOURCE-CODE-PAGE (A64)
+1060                    Code page of the resource;
+1070Input ...... USR4208N.VERSION (I1)
+1080                    Version number of the subprogram;
+1090                    0 is the version number of the original
+1100                    parameter layout.
+1110                    The actual version number is 1.
+1120                    V=1 Parameter V1-FSEC-DBID has been added.
+1130                                  V1-FSEC-FNR
+1140                                  V1-FSEC-PSW
+1150                                  V1-FSEC-CIP
+1160Output ..... USR-MSG
+1170                    Data used for message exchange.
+1180                    For further information see the PDA USR-MSG.
+1190                    The following message numbers are possible:
+1200                    =  0000  OK
+1210                    <  0000  Natural runtime error
+1220                    =  0999  Function is not implemented (version not
+1230                             supported)
+1240                    =  1000  Object already exists
+1250                    =  1001  Resource already exists in a different
+1260                             object (mainframes only)
+1270                    =  1002  Parameter/internal error (invalid function)
+1280                    others, see variable NAD-MSG.MSG
+1290                             NSC check
+1300                             -0106
+1310                             -0806
+1320                             -0807
+1330                             -0839
+1340                             -0972
+1350                             -4891
+1360Output ..... USR-FLD
+1370                    Description of the field in error.
+1380                    For further information see the PDA USR-FLD.
+1390
+1400.
+1410Interface Call
+1420--------------
+1430Use the interface with the CALLNAT statement:
+1440.
+1450CALLNAT 'USR4208N'
+1460         USR4208L
+1470         USR4208N.EXTENDED-DATA (*)
+1480         NAD-MSG
+1490         NAD-FLD
+1500.
+1510.
+1520Using the Application Programming Interface:
+1530--------------------------------------------
+1540Copy the subprogram USR4208N to the library SYSTEM or the steplib
+1550library respectively, or to the required library.
+1560.
+1570.
+1580*****  End of Description  *****

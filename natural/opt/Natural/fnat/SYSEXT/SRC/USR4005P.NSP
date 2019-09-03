@@ -1,0 +1,280 @@
+0010************************************************************************
+0020/*  Read current key settings
+0030/*  This program serves as example how to design a user-defined
+0040/*  program to call 'USR4005N'
+0050/*********************
+0060DEFINE DATA LOCAL
+0070  1 P-FUNCTION                  (A1)
+0080  1 P-KEY-SETTINGS              (A39/1:29)
+0090  1 REDEFINE P-KEY-SETTINGS
+0100    2 P-KEYS                    (1:29)
+0110      3 P-KEY-ID                (A04)
+0120      3 P-KEY-TYPE              (A01)
+0130      3 P-KEY-LABEL             (A10)
+0140      3 P-KEY-CMD-LENGTH        (I02)
+0150      3 P-KEY-CMD               (A22)
+0160  1 P-COMMAND-DATA              (A250)
+0170  1 P-RETURN-CODE               (I4)
+0180  1 P-MESSAGE-LINE              (A79)
+0190  1 P-ADDITIONALS               (A1/1:2)
+0200LOCAL
+0210  1 #LEN                        (N03/1:29)
+0220  1 #PF6                        (A4)
+0230END-DEFINE
+0240/*---------------------------------------------------------------------
+0250/* Key settings to display
+0260/*
+0270#PF6 := 'PF6'
+0280SET KEY PF1  = HELP            NAMED 'PF1_Help'
+0290        PF2                    NAMED 'PF2_Sens'
+0300        PF3  = PGM             NAMED 'PF3_Pgm'
+0310        PF4  = '%W++'          NAMED 'PF4_TC'
+0320        PF5  = DATA 'PF5DATA'  NAMED 'PF5_Data'
+0330        DYNAMIC #PF6           NAMED 'PF6_Dyna'
+0340        PF7  = PGM             NAMED 'PF7_Pgm'
+0350        PF8  = 'PF8CMD'        NAMED 'PF8_Cmd'
+0360        PF9  = 'PF9CMD'        NAMED 'PF9_Cmd'
+0370        PF10 = 'PF10CMD'
+0380        PF11 = 'PF11CMD'       NAMED 'PF11_Cmd'
+0390        PF12 = 'PF12CMD'       NAMED 'PF12_Cmd'
+0400        PF14 = 'PF14CMD'       NAMED 'PF14_Cmd'
+0410        PF15 = 'PF15CMD'       NAMED 'PF15_Cmd'
+0420        PF16 = 'PF16CMD'       NAMED 'PF16_Cmd'
+0430        PF18
+0440        PF19 = 'PF19CMD'       NAMED 'PF19_Cmd'
+0450        PF20 = 'PF20CMD'       NAMED 'PF20_Cmd'
+0460        PF24
+0470        PA1  = DATA 'Long data string to test'
+0480        CLR
+0490        ENTR                   NAMED 'ENTER-Key'
+0500/*---------------------------------------------------------------------
+0510P-FUNCTION := 'A'  /* Get all settings
+0520*
+0530CALLNAT 'USR4005N' P-FUNCTION P-KEY-SETTINGS(*) P-COMMAND-DATA
+0540                   P-RETURN-CODE P-MESSAGE-LINE P-ADDITIONALS(*)
+0550/*
+0560IF P-RETURN-CODE NE 0
+0570  INPUT (AD=OI IP=OFF CD=TU)
+0580    /// 02T 'Error occurred for All Key Settings' (YEI)
+0590      / 02T '-' (35) (YEI) /
+0600     // 02T 'Return code:' (TU) P-RETURN-CODE (AD=OI CD=YE)
+0610     // 02T 'Message:' (TU) P-MESSAGE-LINE (AD=OI CD=YE AL=65)
+0620  ESCAPE ROUTINE
+0630END-IF
+0640*
+0650#LEN (*) := P-KEY-CMD-LENGTH (*)
+0660INPUT (AD=OI IP=OFF CD=TU)
+0670    / 02T 'All Key Settings:' (YEI)
+0680    / 02T '-' (17) (YEI) /
+0690    / 02T 'KeyID Type Label      CmdL Command' (YEI)
+0700      40T 'KeyID Type Label      CmdL Command' (YEI)
+0710   // 02T P-KEY-ID      (1)  (AD=OI CD=TU)
+0720      08T P-KEY-TYPE    (1)  (AD=OD CD=TU)
+0730      13T P-KEY-LABEL   (1)  (AD=OD CD=TU)
+0740      24T #LEN          (1)  (AD=ODL CD=TU)
+0750      29T P-KEY-CMD     (1)  (AD=OD CD=TU AL=10)
+0760      /*
+0770      40T P-KEY-ID      (16) (AD=OI CD=TU)
+0780      46T P-KEY-TYPE    (16) (AD=OD CD=TU)
+0790      51T P-KEY-LABEL   (16) (AD=OD CD=TU)
+0800      62T #LEN          (16) (AD=ODL CD=TU)
+0810      67T P-KEY-CMD     (16) (AD=OD CD=TU AL=10)
+0820    / 02T P-KEY-ID      (2)  (AD=OI CD=TU)
+0830      08T P-KEY-TYPE    (2)  (AD=OD CD=TU)
+0840      13T P-KEY-LABEL   (2)  (AD=OD CD=TU)
+0850      24T #LEN          (2)  (AD=ODL CD=TU)
+0860      29T P-KEY-CMD     (2)  (AD=OD CD=TU AL=10)
+0870      /*
+0880      40T P-KEY-ID      (17) (AD=OI CD=TU)
+0890      46T P-KEY-TYPE    (17) (AD=OD CD=TU)
+0900      51T P-KEY-LABEL   (17) (AD=OD CD=TU)
+0910      62T #LEN          (17) (AD=ODL CD=TU)
+0920      67T P-KEY-CMD     (17) (AD=OD CD=TU AL=10)
+0930    / 02T P-KEY-ID      (3)  (AD=OI CD=TU)
+0940      08T P-KEY-TYPE    (3)  (AD=OD CD=TU)
+0950      13T P-KEY-LABEL   (3)  (AD=OD CD=TU)
+0960      24T #LEN          (3)  (AD=ODL CD=TU)
+0970      29T P-KEY-CMD     (3)  (AD=OD CD=TU AL=10)
+0980      /*
+0990      40T P-KEY-ID      (18) (AD=OI CD=TU)
+1000      46T P-KEY-TYPE    (18) (AD=OD CD=TU)
+1010      51T P-KEY-LABEL   (18) (AD=OD CD=TU)
+1020      62T #LEN          (18) (AD=ODL CD=TU)
+1030      67T P-KEY-CMD     (18) (AD=OD CD=TU AL=10)
+1040    / 02T P-KEY-ID      (4)  (AD=OI CD=TU)
+1050      08T P-KEY-TYPE    (4)  (AD=OD CD=TU)
+1060      13T P-KEY-LABEL   (4)  (AD=OD CD=TU)
+1070      24T #LEN          (4)  (AD=ODL CD=TU)
+1080      29T P-KEY-CMD     (4)  (AD=OD CD=TU AL=10)
+1090      /*
+1100      40T P-KEY-ID      (19) (AD=OI CD=TU)
+1110      46T P-KEY-TYPE    (19) (AD=OD CD=TU)
+1120      51T P-KEY-LABEL   (19) (AD=OD CD=TU)
+1130      62T #LEN          (19) (AD=ODL CD=TU)
+1140      67T P-KEY-CMD     (19) (AD=OD CD=TU AL=10)
+1150    / 02T P-KEY-ID      (5)  (AD=OI CD=TU)
+1160      08T P-KEY-TYPE    (5)  (AD=OD CD=TU)
+1170      13T P-KEY-LABEL   (5)  (AD=OD CD=TU)
+1180      24T #LEN          (5)  (AD=ODL CD=TU)
+1190      29T P-KEY-CMD     (5)  (AD=OD CD=TU AL=10)
+1200      /*
+1210      40T P-KEY-ID      (20) (AD=OI CD=TU)
+1220      46T P-KEY-TYPE    (20) (AD=OD CD=TU)
+1230      51T P-KEY-LABEL   (20) (AD=OD CD=TU)
+1240      62T #LEN          (20) (AD=ODL CD=TU)
+1250      67T P-KEY-CMD     (20) (AD=OD CD=TU AL=10)
+1260    / 02T P-KEY-ID      (6)  (AD=OI CD=TU)
+1270      08T P-KEY-TYPE    (6)  (AD=OD CD=TU)
+1280      13T P-KEY-LABEL   (6)  (AD=OD CD=TU)
+1290      24T #LEN          (6)  (AD=ODL CD=TU)
+1300      29T P-KEY-CMD     (6)  (AD=OD CD=TU AL=10)
+1310      /*
+1320      40T P-KEY-ID      (21) (AD=OI CD=TU)
+1330      46T P-KEY-TYPE    (21) (AD=OD CD=TU)
+1340      51T P-KEY-LABEL   (21) (AD=OD CD=TU)
+1350      62T #LEN          (21) (AD=ODL CD=TU)
+1360      67T P-KEY-CMD     (21) (AD=OD CD=TU AL=10)
+1370    / 02T P-KEY-ID      (7)  (AD=OI CD=TU)
+1380      08T P-KEY-TYPE    (7)  (AD=OD CD=TU)
+1390      13T P-KEY-LABEL   (7)  (AD=OD CD=TU)
+1400      24T #LEN          (7)  (AD=ODL CD=TU)
+1410      29T P-KEY-CMD     (7)  (AD=OD CD=TU AL=10)
+1420      /*
+1430      40T P-KEY-ID      (22) (AD=OI CD=TU)
+1440      46T P-KEY-TYPE    (22) (AD=OD CD=TU)
+1450      51T P-KEY-LABEL   (22) (AD=OD CD=TU)
+1460      62T #LEN          (22) (AD=ODL CD=TU)
+1470      67T P-KEY-CMD     (22) (AD=OD CD=TU AL=10)
+1480    / 02T P-KEY-ID      (8)  (AD=OI CD=TU)
+1490      08T P-KEY-TYPE    (8)  (AD=OD CD=TU)
+1500      13T P-KEY-LABEL   (8)  (AD=OD CD=TU)
+1510      24T #LEN          (8)  (AD=ODL CD=TU)
+1520      29T P-KEY-CMD     (8)  (AD=OD CD=TU AL=10)
+1530      /*
+1540      40T P-KEY-ID      (23) (AD=OI CD=TU)
+1550      46T P-KEY-TYPE    (23) (AD=OD CD=TU)
+1560      51T P-KEY-LABEL   (23) (AD=OD CD=TU)
+1570      62T #LEN          (23) (AD=ODL CD=TU)
+1580      67T P-KEY-CMD     (23) (AD=OD CD=TU AL=10)
+1590    / 02T P-KEY-ID      (9)  (AD=OI CD=TU)
+1600      08T P-KEY-TYPE    (9)  (AD=OD CD=TU)
+1610      13T P-KEY-LABEL   (9)  (AD=OD CD=TU)
+1620      24T #LEN          (9)  (AD=ODL CD=TU)
+1630      29T P-KEY-CMD     (9)  (AD=OD CD=TU AL=10)
+1640      /*
+1650      40T P-KEY-ID      (24) (AD=OI CD=TU)
+1660      46T P-KEY-TYPE    (24) (AD=OD CD=TU)
+1670      51T P-KEY-LABEL   (24) (AD=OD CD=TU)
+1680      62T #LEN          (24) (AD=ODL CD=TU)
+1690      67T P-KEY-CMD     (24) (AD=OD CD=TU AL=10)
+1700    / 02T P-KEY-ID      (10) (AD=OI CD=TU)
+1710      08T P-KEY-TYPE    (10) (AD=OD CD=TU)
+1720      13T P-KEY-LABEL   (10) (AD=OD CD=TU)
+1730      24T #LEN          (10) (AD=ODL CD=TU)
+1740      29T P-KEY-CMD     (10) (AD=OD CD=TU AL=10)
+1750      /*
+1760      40T P-KEY-ID      (25) (AD=OI CD=TU)
+1770      46T P-KEY-TYPE    (25) (AD=OD CD=TU)
+1780      51T P-KEY-LABEL   (25) (AD=OD CD=TU)
+1790      62T #LEN          (25) (AD=ODL CD=TU)
+1800      67T P-KEY-CMD     (25) (AD=OD CD=TU AL=10)
+1810    / 02T P-KEY-ID      (11) (AD=OI CD=TU)
+1820      08T P-KEY-TYPE    (11) (AD=OD CD=TU)
+1830      13T P-KEY-LABEL   (11) (AD=OD CD=TU)
+1840      24T #LEN          (11) (AD=ODL CD=TU)
+1850      29T P-KEY-CMD     (11) (AD=OD CD=TU AL=10)
+1860      /*
+1870      40T P-KEY-ID      (26) (AD=OI CD=TU)
+1880      46T P-KEY-TYPE    (26) (AD=OD CD=TU)
+1890      51T P-KEY-LABEL   (26) (AD=OD CD=TU)
+1900      62T #LEN          (26) (AD=ODL CD=TU)
+1910      67T P-KEY-CMD     (26) (AD=OD CD=TU AL=10)
+1920    / 02T P-KEY-ID      (12) (AD=OI CD=TU)
+1930      08T P-KEY-TYPE    (12) (AD=OD CD=TU)
+1940      13T P-KEY-LABEL   (12) (AD=OD CD=TU)
+1950      24T #LEN          (12) (AD=ODL CD=TU)
+1960      29T P-KEY-CMD     (12) (AD=OD CD=TU AL=10)
+1970      /*
+1980      40T P-KEY-ID      (27) (AD=OI CD=TU)
+1990      46T P-KEY-TYPE    (27) (AD=OD CD=TU)
+2000      51T P-KEY-LABEL   (27) (AD=OD CD=TU)
+2010      62T #LEN          (27) (AD=ODL CD=TU)
+2020      67T P-KEY-CMD     (27) (AD=OD CD=TU AL=10)
+2030    / 02T P-KEY-ID      (13) (AD=OI CD=TU)
+2040      08T P-KEY-TYPE    (13) (AD=OD CD=TU)
+2050      13T P-KEY-LABEL   (13) (AD=OD CD=TU)
+2060      24T #LEN          (13) (AD=ODL CD=TU)
+2070      29T P-KEY-CMD     (13) (AD=OD CD=TU AL=10)
+2080      /*
+2090      40T P-KEY-ID      (28) (AD=OI CD=TU)
+2100      46T P-KEY-TYPE    (28) (AD=OD CD=TU)
+2110      51T P-KEY-LABEL   (28) (AD=OD CD=TU)
+2120      62T #LEN          (28) (AD=ODL CD=TU)
+2130      67T P-KEY-CMD     (28) (AD=OD CD=TU AL=10)
+2140    / 02T P-KEY-ID      (14) (AD=OI CD=TU)
+2150      08T P-KEY-TYPE    (14) (AD=OD CD=TU)
+2160      13T P-KEY-LABEL   (14) (AD=OD CD=TU)
+2170      24T #LEN          (14) (AD=ODL CD=TU)
+2180      29T P-KEY-CMD     (14) (AD=OD CD=TU AL=10)
+2190      /*
+2200      40T P-KEY-ID      (29) (AD=OI CD=TU)
+2210      46T P-KEY-TYPE    (29) (AD=OD CD=TU)
+2220      51T P-KEY-LABEL   (29) (AD=OD CD=TU)
+2230      62T #LEN          (29) (AD=ODL CD=TU)
+2240      67T P-KEY-CMD     (29) (AD=OD CD=TU AL=10)
+2250    / 02T P-KEY-ID      (15) (AD=OI CD=TU)
+2260      08T P-KEY-TYPE    (15) (AD=OD CD=TU)
+2270      13T P-KEY-LABEL   (15) (AD=OD CD=TU)
+2280      24T #LEN          (15) (AD=ODL CD=TU)
+2290      29T P-KEY-CMD     (15) (AD=OD CD=TU AL=10)
+2300/*
+2310IF *PF-KEY = 'PF3'
+2320  ESCAPE ROUTINE
+2330END-IF
+2340/*---------------------------------------------------------------------
+2350RESET P-KEY-SETTINGS (*)
+2360      P-COMMAND-DATA
+2370      P-RETURN-CODE
+2380      P-MESSAGE-LINE
+2390P-FUNCTION   := 'S'         /* Get single key setting
+2400P-KEY-ID (1) := 'PF5'
+2410*
+2420REPEAT
+2430  INPUT (AD=OI IP=OFF CD=TU)
+2440    /// 05T 'Single Key Setting' (YEI)
+2450      / 05T '-' (18) (YEI) /
+2460     // 05T 'Enter key code:'(TU) P-KEY-ID (1) (AD=MIT CD=NE)
+2470    /// 05T 'Or enter ''.'' to stop.' (TU)
+2480*
+2490  IF P-KEY-ID (1) = SCAN '.'
+2500    ESCAPE BOTTOM
+2510  END-IF
+2520*
+2530  CALLNAT 'USR4005N' P-FUNCTION P-KEY-SETTINGS(*) P-COMMAND-DATA
+2540                     P-RETURN-CODE P-MESSAGE-LINE P-ADDITIONALS(*)
+2550  /*
+2560  IF P-RETURN-CODE NE 0
+2570    INPUT (AD=OI IP=OFF CD=TU)
+2580      /// 05T 'Error occurred for Single Key Setting' (YEI)
+2590        / 05T '-' (37) (YEI) /
+2600       // 05T 'Return code:' (TU) P-RETURN-CODE (AD=OI CD=YE)
+2610       // 05T 'Message:' (TU)
+2620        / 05T P-MESSAGE-LINE (AD=OI CD=YE AL=65)
+2630    ESCAPE TOP
+2640  END-IF
+2650*
+2660  #LEN(1):= P-KEY-CMD-LENGTH (1)
+2670  INPUT (AD=OI IP=OFF CD=TU)
+2680    /// 05T 'Single Key Setting for' (YEI) P-KEY-ID (1) (AD=OI CD=YE)
+2690      / 05T '-' (27) (YEI) /
+2700     // 05T 'KeyID Type Label      CmdL Command' (YEI)
+2710     // 05T P-KEY-ID      (1) (AD=OI CD=TU)
+2720        11T P-KEY-TYPE    (1) (AD=OD CD=TU)
+2730        16T P-KEY-LABEL   (1) (AD=OD CD=TU)
+2740        27T #LEN          (1) (AD=ODL CD=TU)
+2750        32T P-COMMAND-DATA    (AD=OD CD=TU AL=40)
+2760*     / 05T P-KEY-CMD     (1) (AD=OD CD=TU)
+2770*
+2780END-REPEAT
+2790/*---------------------------------------------------------------------
+2800END

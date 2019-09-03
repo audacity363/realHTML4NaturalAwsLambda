@@ -1,0 +1,119 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Utilities
+0030*
+0040*        NAT-DOCU
+0050*
+0060* DESCRIPTION
+0070*               RETURN a NATURAL source as HTML page
+0080*
+0090*               The output is text/html
+0100*
+0110* AUTHOR        SAG   28.07.97
+0120*
+0130* Version       8.3
+0140*
+0150* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0160*
+0170* HISTORY
+0180* USER    DATE         REASON
+0190* ------+------------+----------------------------------------------
+0200* SAG   ! 13.03.2003 ! Change from reading Natural Text to Resource
+0210* SAG   ! 16.03.2016 ! Display current Natural version and year
+0220* ------+------------+----------------------------------------------
+0230*
+0240DEFINE DATA
+0250* ------------------------------------------- standard PDA for HTTP Api
+0260PARAMETER USING W3PARM
+0270* -------------------------------------------- definitions for HTTP Api
+0280LOCAL  USING W3CONST
+0290*
+0300LOCAL
+03101 #EXPIRES   (A29)
+03201 REDEFINE #EXPIRES
+0330  2 RDATE    (A17)
+0340  2 RTIME    (A8)
+0350  2 RZONE    (A4)
+0360*
+03701 ATIME      (T)
+03801 ADATE      (D)
+0390*
+04001 #START     (A) DYNAMIC
+04101 #END       (A) DYNAMIC
+04201 #VALUE     (A) DYNAMIC
+04301 #SOURCE    (A) DYNAMIC
+04401 #PICTURES  (A) DYNAMIC
+04501 LIBRARY    (A8)
+0460*
+04701 EXPIRES    (A29)
+04801 LANG       (I4)
+0490*
+05001 #DATES     (A8)          /* yyyymmdd
+05101 REDEFINE #DATES
+0520  2 #YEAR    (A4)
+05301 #NATVERS   (A8)
+05401 REDEFINE #NATVERS
+0550  2 #VV      (N2)
+0560  2 #DOT1    (A1)
+0570  2 #RR      (N2)
+0580  2 #DOT2    (A1)
+0590  2 #SM      (N2)
+06001 #VERSION   (A) DYNAMIC
+0610
+0620END-DEFINE
+0630* ---------------------------------------------------- error handling
+0640ON ERROR
+0650  PERFORM W3ERROR ##W3ERROR
+0660  PERFORM W3END ##RPC
+0670  ESCAPE ROUTINE
+0680END-ERROR
+0690* ======================================================== Main Program
+0700ADATE := *DATX + 30
+0710ATIME := *TIMX
+0720*
+0730LANG := *LANGUAGE
+0740*LANGUAGE := 1
+0750MOVE EDITED ADATE (EM=NNN', 'DD' 'LLL' 'YYYY) TO RDATE
+0760MOVE EDITED ATIME (EM=HH:II:SS) TO RTIME
+0770MOVE " GMT" TO RZONE
+0780*LANGUAGE := LANG
+0790MOVE *DATN TO #DATES
+0800MOVE *NATVERS TO #NATVERS
+0810COMPRESS #VV '.' #RR INTO #VERSION LEAVING NO
+0820* ------------------------------------------------------- init HTML API
+0830PERFORM W3INIT ##RPC
+0840PERFORM W3CONTENT-TYPE 'text/html'
+0850* ------------------------------------------------- Name of the source
+0860PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "SOURCE" " " #VALUE
+0870IF *LENGTH(#VALUE) = 0 THEN
+0880  #SOURCE  := 't3index.htm'
+0890ELSE
+0900  #SOURCE := #VALUE
+0910END-IF
+0920*
+0930* ------------------------------------------------ Name of the library
+0940PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "LIB" " " #VALUE
+0950IF *LENGTH(#VALUE) = 0 THEN
+0960  LIBRARY  := *LIBRARY-ID
+0970ELSE
+0980  LIBRARY  := #VALUE
+0990END-IF
+1000EXAMINE LIBRARY TRANSLATE INTO UPPER
+1010* ------------------------------------------------ Name of the pictures
+1020PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "PICTURES" " " #VALUE
+1030IF *LENGTH(#VALUE) = 0 THEN
+1040  #PICTURES   := '/pictures'
+1050ELSE
+1060  #PICTURES     := #VALUE
+1070END-IF
+1080*
+1090PERFORM W3LOAD-RESOURCE LIBRARY #SOURCE
+1100*
+1110PERFORM W3REPLACE "URL" "$PICTURES$"   #PICTURES
+1120PERFORM W3REPLACE 1X    "$META_DATE$"  #EXPIRES
+1130PERFORM W3REPLACE 1X    "$VERSION$"    #VERSION
+1140PERFORM W3REPLACE 1X    "$YEAR$"       #YEAR
+1150*
+1160* ------------------------------------------------------ close HTTP Api
+1170PERFORM W3END ##RPC
+1180* ================================================================= End
+1190END

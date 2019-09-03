@@ -1,0 +1,17 @@
+0010&H View CONSOLE
+0020&L
+0030&L
+0040#Purpose@: Display operator console.
+0050&L
+0060&L
+0070#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0080&L
+0090&L
+0100#Usage@  : This view may be used to return the current operator console
+0110           data and to optionally issue operator commands.
+0120&L
+0130#Notes@  :
+0140
+0150
+0160
+0170

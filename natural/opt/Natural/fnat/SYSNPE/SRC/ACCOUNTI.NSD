@@ -1,0 +1,109 @@
+0010DB: 148 FILE: 034  - ACCOUNTING                       DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:19
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:19
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150*      x
+0160  1 ET ERROR-TEXT                        A   58      Text describing mess
+0170*      Text describing message.
+0180  1 DB NODE                              N  5.0    D Node ID (DBID).
+0190*      Node ID (DBID).
+0200  1 ND NODE-NAME                         A   16    D
+0210  1 SM SYSTEM-MESSAGE-CODE               A   10
+0220*
+0230*      MVS fields
+0240*
+0250  1 A1 RECORD                            A  253    D The SMF record/segme
+0260*      The SMF record/segment.
+0270  1 A2 RECORD-LENGTH                     N  5.0    D Length of entire rec
+0280*      Length of entire record
+0290*      (not the segment length).
+0300  1 A3 SEGMENT-NUMBER                    N  5.0    D Segment number withi
+0310*      Segment number within record.
+0320  1 A4 SEGMENT-LENGTH                    B    2    D Length of segment.
+0330*      Length of segment.
+0340  1 A5 RBA                               N  9.0    D Relative byte addres
+0350*      Relative byte address of the
+0360*      record.
+0370  1 A6 FILE-ID                           A    8    D 'LIST'  Give a list
+0380*      'LIST'  Give a list of SMF
+0390*      files and other
+0400*      relevant data.
+0410*      'MANX'  Read file 'SYS1.MANX'.
+0420*      'SEQ'   Specify DSNAME to read
+0430*      SMF files copied to a
+0440*      sequential file.
+0450  1 A7 RECORD-TYPE                       N  3.0    D The type of the reco
+0460*      The type of the record (from
+0470*      the SMF record prefix).
+0480  1 A8 SYSTEM-ID                         A    4    D The system-id (from
+0490*      The system-id (from the SMF
+0500*      record prefix).
+0510  1 A9 DATE                              N  5.0    D The date in 'YYDDD'
+0520*      The date in 'YYDDD' format
+0530*      (from the SMF record prefix).
+0540  1 AA TIME                              N  6.0    D The time in 'HHMMSS'
+0550*      The time in 'HHMMSS' format
+0560*      (from the SMF record prefix).
+0570  1 AB JOB-NAME                          A    8    D This field follows t
+0580*      This field follows the SMF
+0590*      record prefix. For most record
+0600*      types, it contains the job
+0610*      name.
+0620  1 AC DIRECTION                         A    1    D Retrieval direction:
+0630*      Retrieval direction:
+0640*      F  Read forward (default).
+0650*      B  Read backward.
+0660  1 AD ACTIVE                            A    3    D This field is releva
+0670*      This field is relevant for
+0680*      FILE-ID = 'LIST'.
+0690*      YES  This is the active
+0700*      SMF file.
+0710*      NO   This is not the active
+0720*      SMF file.
+0730  1 AE TOTAL-BLOCKS                      N  7.0    D Number of blocks all
+0740*      Number of blocks allocated to
+0750*      the SMF file.
+0760*      (relevant for FILE-ID='LIST').
+0770  1 AF USED-BLOCKS                       N  7.0    D Number of blocks use
+0780*      Number of blocks used in the
+0790*      SMF file.
+0800*      (relevant for FILE-ID='LIST').
+0810  1 AG START-RBA                         N  9.0    D Specifies the relati
+0820*      Specifies the relative byte
+0830*      address of the first record
+0840*      to read. If omitted, the file
+0850*      will be read from start/end
+0860*      depending on field DIRECTION.
+0870  1 AH VOLSER                            A    6    D The volume serial nu
+0880*      The volume serial number of
+0890*      the SMF file.
+0900*      (relevant for FILE-ID='LIST').
+0910  1 AI SUB-TYPE                          N  3.0    D SMF sub-type
+0920*      SMF sub-type
+0930  1 AJ DSNAME                            A   44    D When FILE-ID='SEQ':
+0940*      When FILE-ID='SEQ':
+0950*      The dataset name of the SMF
+0960*      record copied to a sequential
+0970*      file.
+0980*      When FILE-ID='LIST':
+0990*      dataset name.
+1000  1 DN DATX                              D    6    D The date in internal
+1010*      The date in internal format.
+1020*      (From the SMF record prefix)
+1030  1 TN TIMX                              T   12    D The TIME in internal
+1040*      The TIME in internal format.
+1050*      (From the SMF record prefix)
+1060*
+1070*      End of ACCOUNTING
+1080*
+1090******DDM OUTPUT TERMINATED******

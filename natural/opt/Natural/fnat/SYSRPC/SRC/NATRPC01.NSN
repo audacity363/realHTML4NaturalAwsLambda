@@ -1,0 +1,47 @@
+0010***********************************************************************
+0020*
+0030*    This exit is called when a Natural error has occurred, actually
+0040*    after the error has been handled by the Natural RPC runtime and
+0050*    immediately before the response is send back to the client. This
+0060*    means, the exit is called at the same logical point as an error
+0070*    transaction, i.e. at the end of the Natural error handling after
+0080*    all ON ERROR blocks have been processed.
+0090*
+0100*    In contrast to an error transaction, this exit is called with a
+0110*    CALLNAT statement und must therefore be a subprogram which must
+0120*    return to its caller.
+0130*
+0140*    The interface to this exit is similar to the interface of an error
+0150*    transaction. In addition, the exit can pass back up to 10 lines of
+0160*    information, which will be traced by the Natural RPC runtime. Only
+0170*    lines which begin with a non-blank character will be traced.
+0180*
+0190*    Important notes:
+0200*    1) NATRPC01 must be located in library SYSTEM on FUSER.
+0210*       The STEPLIB concatenation of the library to which the server
+0220*       currently is logged on is NOT evaluated.
+0230*    2) The DEFINE DATA PARAMETER block must not be changed.
+0240*
+0250***********************************************************************
+0260*
+0270DEFINE DATA PARAMETER
+02801 NATERR_INFO
+0290  2 NATERR_NR    (N5)     /* error number
+0300  2 NATERR_LINE  (N4)     /* line number
+0310  2 NATERR_STAT  (A1)     /* status
+0320  2 NATERR_PNAM  (A8)     /* program name
+0330  2 NATERR_LEVEL (N2)     /* level
+03401 TRACE_LINES(1:V)
+0350  2 TRACE_LINE   (A75)    /* up to 10 lines of trace information
+0360END-DEFINE
+0370*
+0380**MOVE 'NATRPC01 has been called with following data:' TO TRACE_LINE(1)
+0390**COMPRESS FULL
+0400**  NATERR_NR
+0410**  NATERR_LINE
+0420**  NATERR_STAT
+0430**  NATERR_PNAM
+0440**  NATERR_LEVEL
+0450**                INTO TRACE_LINE(2) WITH DELIMITER '/'
+0460*
+0470END

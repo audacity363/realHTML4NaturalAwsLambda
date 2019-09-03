@@ -1,0 +1,669 @@
+0010<?xml version='1.0' ?>
+0020<PROFILE VERSION='1.2' USAGE='Profile settings for Unix SYSOBJH'>
+0030<HEADER>
+0040<TITLE1>***** Natural Object Handler *****</TITLE1>
+0050<TITLE2>- SYSOBJH Profile -</TITLE2>
+0060</HEADER>
+0070<GENERAL>
+0080<PARA>
+0090<NAME>Input-Mode</NAME>
+0100<FORMAT>A</FORMAT>
+0110<LENGTH>1</LENGTH>
+0120<VALID>W,A,C</VALID>
+0130<CURRENT>W</CURRENT>
+0140<OPTIONS>L</OPTIONS>
+0150<DESCRIPTION>The following input modes are supported:</DESCRIPTION>
+0160<DESCRIPTION>  Wizards: Object Handler wizards determine the processing
+0170sequence.</DESCRIPTION>
+0180<DESCRIPTION>  Advanced User: Unload, load and scan functions for advanc
+0190ed users.</DESCRIPTION>
+0200<DESCRIPTION>  Compact Mode: Mode to specify object parameters to execut
+0210e unload, </DESCRIPTION>
+0220<DESCRIPTION>                load or scan functions in only two steps.
+0230</DESCRIPTION>
+0240<HELP>  W = Use Wizard Mode</HELP>
+0250<HELP>  A = Use Advance Mode</HELP>
+0260<HELP>  C = Use Compact Mode</HELP>
+0270</PARA>
+0280
+0290<PARA>
+0300<NAME>Display-Cmd-in-Advanced-Mode</NAME>
+0310<FORMAT>A</FORMAT>
+0320<LENGTH>1</LENGTH>
+0330<VALID>Y,N</VALID>
+0340<CURRENT>N</CURRENT>
+0350<OPTIONS>L</OPTIONS>
+0360<DESCRIPTION>Displays the Object Handler command generated for a functio
+0370n</DESCRIPTION>
+0380<DESCRIPTION>executed in advanced-user mode.</DESCRIPTION>
+0390<HELP>  Y = The generated command is displayed</HELP>
+0400<HELP>  N = The generated command is not displayed</HELP>
+0410</PARA>
+0420
+0430<PARA>
+0440<NAME>Display-ExecutionMsg</NAME>
+0450<FORMAT>A</FORMAT>
+0460<LENGTH>1</LENGTH>
+0470<VALID>Y,N</VALID>
+0480<CURRENT>N</CURRENT>
+0490<OPTIONS>L</OPTIONS>
+0500<DESCRIPTION>Activates a window that displays the processing status.
+0510</DESCRIPTION>
+0520<HELP>  Y = The window is displayed</HELP>
+0530<HELP>  N = The window is not displayed</HELP>
+0540</PARA>
+0550
+0560<PARA>
+0570<NAME>Display-Statistics</NAME>
+0580<FORMAT>A</FORMAT>
+0590<LENGTH>1</LENGTH>
+0600<VALID>Y,N</VALID>
+0610<CURRENT>N</CURRENT>
+0620<OPTIONS>L</OPTIONS>
+0630<DESCRIPTION>Displays statistics on objects processed after the function
+0640 has been</DESCRIPTION>
+0650<DESCRIPTION>executed (equivalent to direct command SHOW STATISTICS).
+0660</DESCRIPTION>
+0670<HELP>  Y = The statistics are displayed</HELP>
+0680<HELP>  N = The statistics are not displayed</HELP>
+0690</PARA>
+0700
+0710<PARA>
+0720<NAME>Workplan-Library</NAME>
+0730<FORMAT>A</FORMAT>
+0740<LENGTH>8</LENGTH>
+0750<VALID></VALID>
+0760<CURRENT>WORKPLAN</CURRENT>
+0770<OPTIONS>L</OPTIONS>
+0780<DESCRIPTION>Name of the library where the workplans are stored.
+0790</DESCRIPTION>
+0800<HELP>  The default name for the workplan library is WORKPLAN.</HELP>
+0810</PARA>
+0820
+0830<PARA>
+0840<NAME>Workplan-Library-DBID</NAME>
+0850<FORMAT>N</FORMAT>
+0860<LENGTH>5</LENGTH>
+0870<VALID></VALID>
+0880<CURRENT>0</CURRENT>
+0890<OPTIONS>L</OPTIONS>
+0900<DESCRIPTION>Data base ID of the system file where the workplan library
+0910is located.</DESCRIPTION>
+0920<HELP>  If set to 0 the current FNAT/FUSER is used.</HELP>
+0930</PARA>
+0940
+0950<PARA>
+0960<NAME>Workplan-Library-FNR</NAME>
+0970<FORMAT>N</FORMAT>
+0980<LENGTH>5</LENGTH>
+0990<VALID></VALID>
+1000<CURRENT>0</CURRENT>
+1010<OPTIONS>L</OPTIONS>
+1020<DESCRIPTION>File number of the system file where the workplan library i
+1030s located.</DESCRIPTION>
+1040<HELP>  If set to 0 the current FNAT/FUSER is used.</HELP>
+1050</PARA>
+1060
+1070<PARA>
+1080<NAME>Trace</NAME>
+1090<FORMAT>A</FORMAT>
+1100<LENGTH>1</LENGTH>
+1110<VALID>Y,N</VALID>
+1120<CURRENT>N</CURRENT>
+1130<OPTIONS>L</OPTIONS>
+1140<DESCRIPTION>Activates or deactivates the trace function.</DESCRIPTION>
+1150<DESCRIPTION>It records internal Object Handler program flows to provide
+1160 control</DESCRIPTION>
+1170<DESCRIPTION>information for error diagnoses. The trace option is set of
+1180f by default.</DESCRIPTION>
+1190<HELP>  Y = Activate the trace function</HELP>
+1200<HELP>  N = Deactivate the trace function</HELP>
+1210</PARA>
+1220
+1230<PARA>
+1240<NAME>Trace-Target</NAME>
+1250<FORMAT>A</FORMAT>
+1260<LENGTH>1</LENGTH>
+1270<VALID>S,W</VALID>
+1280<CURRENT>S</CURRENT>
+1290<OPTIONS>L</OPTIONS>
+1300<DESCRIPTION>Specifies where the trace output is written to.
+1310</DESCRIPTION>
+1320<HELP>  S = Write trace output to screen</HELP>
+1330<HELP>  W = Write trace output to work file 10</HELP>
+1340</PARA>
+1350
+1360<PARA>
+1370<NAME>Option-Replace</NAME>
+1380<FORMAT>A</FORMAT>
+1390<LENGTH>1</LENGTH>
+1400<VALID>Y,N,O,E</VALID>
+1410<CURRENT>N</CURRENT>
+1420<OPTIONS>L</OPTIONS>
+1430<DESCRIPTION>The replace options that applies to the load function by de
+1440fault.</DESCRIPTION>
+1450<HELP>  N = Does not replace any objects. This is the default.</HELP>
+1460<HELP>  Y = Replaces all objects.</HELP>
+1470<HELP>  O = Replaces objects with a date older than the date of the obje
+1480cts</HELP>
+1490<HELP>      in the load file.</HELP>
+1500<HELP>  E = Replaces all objects except those with a date newer than the
+1510 date</HELP>
+1520<HELP>      of the objects in the load file.</HELP>
+1530</PARA>
+1540
+1550<PARA>
+1560<NAME>Option-Transfer-Format</NAME>
+1570<FORMAT>A</FORMAT>
+1580<LENGTH>1</LENGTH>
+1590<VALID>Y,N</VALID>
+1600<CURRENT>N</CURRENT>
+1610<OPTIONS>L</OPTIONS>
+1620<DESCRIPTION>The Transfer format is a general platform-independent recor
+1630d layout</DESCRIPTION>
+1640<DESCRIPTION>for work files that contain load or unload data.
+1650</DESCRIPTION>
+1660<DESCRIPTION>The internal format is an internal record layout for work f
+1670iles
+1680</DESCRIPTION>
+1690<DESCRIPTION>that are used to transfer Natural objects from one environm
+1700ent to another.
+1710</DESCRIPTION>
+1720<HELP>  Y = Use Transfer Format</HELP>
+1730<HELP>  N = Use Internal Format</HELP>
+1740</PARA>
+1750
+1760<PARA>
+1770<NAME>Option-Use-PC-Work-File</NAME>
+1780<FORMAT>A</FORMAT>
+1790<LENGTH>1</LENGTH>
+1800<VALID>Y,N</VALID>
+1810<CURRENT>N</CURRENT>
+1820<OPTIONS>L</OPTIONS>
+1830<DESCRIPTION>Only applies if Entire Connection is installed.
+1840</DESCRIPTION>
+1850<DESCRIPTION>If set to Y, the data to be processed is read from or writt
+1860en to an</DESCRIPTION>
+1870<DESCRIPTION>Entire Connection work file that must be defined for work f
+1880ile 7.</DESCRIPTION>
+1890<HELP>  Y = Use work file 7</HELP>
+1900<HELP>  N = Use work file 1</HELP>
+1910</PARA>
+1920
+1930<PARA>
+1940<NAME>Option-TR-Include-Line-Numbers</NAME>
+1950<FORMAT>A</FORMAT>
+1960<LENGTH>1</LENGTH>
+1970<VALID>Y,N</VALID>
+1980<CURRENT>N</CURRENT>
+1990<OPTIONS>L</OPTIONS>
+2000<DESCRIPTION>Only available when processing data in Transfer format.
+2010</DESCRIPTION>
+2020<DESCRIPTION>If you choose this option, the line numbers will be transfe
+2030rred.</DESCRIPTION>
+2040<DESCRIPTION>(By default, line numbers in Natural objects are not transf
+2050erred.)</DESCRIPTION>
+2060<HELP>  Y = Transfer line numbers</HELP>
+2070<HELP>  N = Do not transfer line numbers</HELP>
+2080</PARA>
+2090
+2100<PARA>
+2110<NAME>Option-TR-Line-Number-Increment</NAME>
+2120<FORMAT>A</FORMAT>
+2130<LENGTH>1</LENGTH>
+2140<VALID>Y,N</VALID>
+2150<CURRENT>N</CURRENT>
+2160<OPTIONS>L</OPTIONS>
+2170<DESCRIPTION>Only available when processing data in Transfer format.
+2180</DESCRIPTION>
+2190<DESCRIPTION>If you choose this option and the option INCLUDE-LINE-NUMBE
+2200RS is not</DESCRIPTION>
+2210<DESCRIPTION>specified, the line number increment of the source object i
+2220s processed in</DESCRIPTION>
+2230<DESCRIPTION>the following way:</DESCRIPTION>
+2240<DESCRIPTION>- during the unload function the line number increment for
+2250every object</DESCRIPTION>
+2260<DESCRIPTION>  is written to the unload file</DESCRIPTION>
+2270<DESCRIPTION>- during the load function the line number increment is use
+2280d to assign</DESCRIPTION>
+2290<DESCRIPTION>  the original line numbers to the source object.
+2300</DESCRIPTION>
+2310<DESCRIPTION>By default, the line number increment of sources object is
+2320not transferred.</DESCRIPTION>
+2330<HELP>  Y = Process the line number increment during unload or load func
+2340tion</HELP>
+2350<HELP>  N = Do not process the line number increment</HELP>
+2360</PARA>
+2370
+2380<PARA>
+2390<NAME>Option-TR-Substitute</NAME>
+2400<FORMAT>A</FORMAT>
+2410<LENGTH>1</LENGTH>
+2420<VALID>Y,N</VALID>
+2430<CURRENT>N</CURRENT>
+2440<OPTIONS>L</OPTIONS>
+2450<DESCRIPTION>Only available when processing data in Transfer format.
+2460</DESCRIPTION>
+2470<DESCRIPTION>If line numbers are used as references in the source code,
+2480the line numbers</DESCRIPTION>
+2490<DESCRIPTION>of referenced lines and the line number references are repl
+2500aced with </DESCRIPTION>
+2510<DESCRIPTION>labels. The sources are not modified in the database.
+2520</DESCRIPTION>
+2530<HELP>  Y = Replace line number references with labels</HELP>
+2540<HELP>  N = Ignore line number references</HELP>
+2550</PARA>
+2560
+2570<PARA>
+2580<NAME>Option-TR-Translate-to-upper</NAME>
+2590<FORMAT>A</FORMAT>
+2600<LENGTH>1</LENGTH>
+2610<VALID>Y,N</VALID>
+2620<CURRENT>N</CURRENT>
+2630<OPTIONS>L</OPTIONS>
+2640<DESCRIPTION>Only available when processing data in Transfer format.
+2650</DESCRIPTION>
+2660<DESCRIPTION>Translates any source code to be loaded into upper case.
+2670</DESCRIPTION>
+2680<HELP>  Y = Translate source code into upper case</HELP>
+2690<HELP>  N = Do not translate source code into upper case</HELP>
+2700</PARA>
+2710
+2720<PARA>
+2730<NAME>Option-TR-use-Conversion-Table</NAME>
+2740<FORMAT>A</FORMAT>
+2750<LENGTH>1</LENGTH>
+2760<VALID>N,S,U</VALID>
+2770<CURRENT>N</CURRENT>
+2780<OPTIONS>L</OPTIONS>
+2790<DESCRIPTION>Only available when processing data in Transfer format.
+2800</DESCRIPTION>
+2810<DESCRIPTION>Use this option only in special cases, such as when perform
+2820ing a non-FTP</DESCRIPTION>
+2830<DESCRIPTION>transfer between environments with different character sets
+2840, where no</DESCRIPTION>
+2850<DESCRIPTION>conversion is performed by the transfer tool.</DESCRIPTION>
+2860<HELP>  N = Do not use any conversion table</HELP>
+2870<HELP>  S = Use internal Natural conversion table</HELP>
+2880<HELP>  U = Use a conversion table defined by the user</HELP>
+2890</PARA>
+2900
+2910<PARA>
+2920<NAME>Option-TR-Conv-Table-Name-LOAD</NAME>
+2930<FORMAT>A</FORMAT>
+2940<LENGTH>8</LENGTH>
+2950<VALID></VALID>
+2960<CURRENT>OTNCONEA</CURRENT>
+2970<OPTIONS>L</OPTIONS>
+2980<DESCRIPTION>Only available when processing data in Transfer format.
+2990</DESCRIPTION>
+3000<DESCRIPTION>Name of a user defined conversion program that is used for
+3010the load function.</DESCRIPTION>
+3020<HELP>  Conversion table for the load function.</HELP>
+3030</PARA>
+3040
+3050<PARA>
+3060<NAME>Option-TR-Conv-Table-Name-UNLD</NAME>
+3070<FORMAT>A</FORMAT>
+3080<LENGTH>8</LENGTH>
+3090<VALID></VALID>
+3100<CURRENT>OTNCONAE</CURRENT>
+3110<OPTIONS>L</OPTIONS>
+3120<DESCRIPTION>Only available when processing data in Transfer format.
+3130</DESCRIPTION>
+3140<DESCRIPTION>Name of a user defined conversion program that is used for
+3150the unload function.</DESCRIPTION>
+3160<HELP>  Conversion table for the unload function.</HELP>
+3170</PARA>
+3180
+3190<PARA>
+3200<NAME>Option-TR-DA-Format</NAME>
+3210<FORMAT>A</FORMAT>
+3220<LENGTH>1</LENGTH>
+3230<VALID>*,N,O</VALID>
+3240<CURRENT>*</CURRENT>
+3250<OPTIONS>L</OPTIONS>
+3260<DESCRIPTION>Only available when processing data in Transfer format.
+3270</DESCRIPTION>
+3280<DESCRIPTION>Only applies to data areas. </DESCRIPTION>
+3290<DESCRIPTION>Specifies the format in which to unload or load data area s
+3300ources.</DESCRIPTION>
+3310<HELP>  * = Does not convert data areas. This is the default.</HELP>
+3320<HELP>  N = Converts data areas to the new internal data area format.
+3330</HELP>
+3340<HELP>  O = Converts data areas to the old internal data area format.
+3350</HELP>
+3360</PARA>
+3370
+3380<PARA>
+3390<NAME>Option-TR-Unicode-Work-File</NAME>
+3400<FORMAT>A</FORMAT>
+3410<LENGTH>1</LENGTH>
+3420<VALID>Y,N</VALID>
+3430<CURRENT>N</CURRENT>
+3440<OPTIONS>L</OPTIONS>
+3450<DESCRIPTION>Only available when processing data in Transfer format.
+3460</DESCRIPTION>
+3470<DESCRIPTION>Only applies to the unload function.</DESCRIPTION>
+3480<DESCRIPTION>Specify if you want to use a Unicode/UTF-F8 encoded binary
+3490work file.</DESCRIPTION>
+3500<HELP>  Y = Use Unicode work file</HELP>
+3510<HELP>  N = Use default work file</HELP>
+3520</PARA>
+3530
+3540<PARA>
+3550<NAME>Option-TR-LOAD-Code-Page</NAME>
+3560<FORMAT>A</FORMAT>
+3570<LENGTH>64</LENGTH>
+3580<VALID></VALID>
+3590<CURRENT> </CURRENT>
+3600<OPTIONS>LE</OPTIONS>
+3610<DESCRIPTION>Only available when processing data in Transfer format.
+3620</DESCRIPTION>
+3630<DESCRIPTION>Only applies to the load function when a Unicode work file
+3640is processed.</DESCRIPTION>
+3650<DESCRIPTION>Name of the code page to be used.
+3660</DESCRIPTION>
+3670<HELP>If you enter *CODEPAGE as the code page name, the value assigned t
+3680o the </HELP>
+3690<HELP>system variable *CODEPAGE is used.</HELP>
+3700<HELP>Leave this parameter empty if you don't use Unicode work files.
+3710</HELP>
+3720</PARA>
+3730
+3740<PARA>
+3750<NAME>Option-Write-Report</NAME>
+3760<FORMAT>A</FORMAT>
+3770<LENGTH>1</LENGTH>
+3780<VALID>Y,N</VALID>
+3790<CURRENT>Y</CURRENT>
+3800<OPTIONS>L</OPTIONS>
+3810<DESCRIPTION>Write a report of the objects processed to the report text
+3820 member.</DESCRIPTION>
+3830<DESCRIPTION>The Write report option is selected by default.
+3840</DESCRIPTION>
+3850<HELP>  Y = Write report data</HELP>
+3860<HELP>  N = Do not write report data</HELP>
+3870</PARA>
+3880
+3890<PARA>
+3900<NAME>Option-Fixed-Length</NAME>
+3910<FORMAT>A</FORMAT>
+3920<LENGTH>1</LENGTH>
+3930<VALID>Y,N</VALID>
+3940<CURRENT>N</CURRENT>
+3950<OPTIONS>L</OPTIONS>
+3960<DESCRIPTION>Sets the format of the unload work file to a maximum record
+3970 length </DESCRIPTION>
+3980<DESCRIPTION>of fixed size. </DESCRIPTION>
+3990<DESCRIPTION>Every data record contains 256 bytes if written in internal
+4000 format, </DESCRIPTION>
+4010<DESCRIPTION>or 100 bytes in Transfer format. </DESCRIPTION>
+4020<HELP>  Y = Use fixed length work file records</HELP>
+4030<HELP>  N = Use variable length work file recordsdata (default setting)
+4040</HELP>
+4050</PARA>
+4060
+4070<PARA>
+4080<NAME>Default-Report-Direct-Command</NAME>
+4090<FORMAT>A</FORMAT>
+4100<LENGTH>1</LENGTH>
+4110<VALID>B,Y,N</VALID>
+4120<CURRENT>Y</CURRENT>
+4130<OPTIONS>L</OPTIONS>
+4140<DESCRIPTION>Defines the kind of report to be used when a direct command
+4150 is executed</DESCRIPTION>
+4160<DESCRIPTION>and no report option is specified in the Object Handler com
+4170mand.</DESCRIPTION>
+4180<DESCRIPTION>The option 'Y' (Write report using a text member) is select
+4190ed by default.</DESCRIPTION>
+4200<HELP>  B = Write a batch report </HELP>
+4210<HELP>      (report data is written directly to the output device)
+4220</HELP>
+4230<HELP>  Y = Write report using a text member</HELP>
+4240<HELP>  N = Do not write a report</HELP>
+4250</PARA>
+4260
+4270<PARA>
+4280<NAME>Default-Report-Option-1</NAME>
+4290<FORMAT>A</FORMAT>
+4300<LENGTH>1</LENGTH>
+4310<VALID>A,E,S</VALID>
+4320<CURRENT>A</CURRENT>
+4330<OPTIONS>L</OPTIONS>
+4340<DESCRIPTION>Set default value for the option 'REPORT-OPTION-1' for dire
+4350ct commands.</DESCRIPTION>
+4360<DESCRIPTION>The value 'A Write report data and error messages' is selec
+4370ted by default.</DESCRIPTION>
+4380<DESCRIPTION>The option is evaluated when a report is written, i.e. when
+4390 REPORT or </DESCRIPTION>
+4400<DESCRIPTION>NEWREPORT is specified in the Object Handler command.
+4410</DESCRIPTION>
+4420<HELP>  A = Write report data and error messages</HELP>
+4430<HELP>  E = Write only error messages (including NSC errors) and LOAD me
+4440ssages</HELP>
+4450<HELP>      (e.g. 'not replaced')</HELP>
+4460<HELP>  S = Split report data and error messages (batch mode only).
+4470</HELP>
+4480<HELP>      Report data are written to Primary Report Output (CMPRINT).
+4490</HELP>
+4500<HELP>      Error messages (including NSC errors) and LOAD messages
+4510</HELP>
+4520<HELP>      are written to Report 1 (CMPRT01).</HELP>
+4530</PARA>
+4540
+4550<PARA>
+4560<NAME>Default-Report-Format</NAME>
+4570<FORMAT>A</FORMAT>
+4580<LENGTH>1</LENGTH>
+4590<VALID>S,T</VALID>
+4600<CURRENT>S</CURRENT>
+4610<OPTIONS>L</OPTIONS>
+4620<DESCRIPTION>Set the default value for the option 'REPORT-FORMAT' for di
+4630rect commands.</DESCRIPTION>
+4640<DESCRIPTION>The value 'S = Display the source data' is selected by defa
+4650ult.</DESCRIPTION>
+4660<DESCRIPTION>The option is evaluated during the unload function when a r
+4670eport </DESCRIPTION>
+4680<DESCRIPTION>is written, i.e. when REPORT or NEWREPORT is specified in
+4690</DESCRIPTION>
+4700<DESCRIPTION>the Object Handler command.</DESCRIPTION>
+4710<HELP>  S = Display the source data in the unload report, i.e. the data
+4720of the</HELP>
+4730<HELP>      unloaded object before parameters (e.g. the library name) ar
+4740e changed</HELP>
+4750<HELP>  T = Display the target data in the unload report, i.e. the data
+4760after</HELP>
+4770<HELP>      parameters (e.g. the library name) are changed.
+4780</HELP>
+4790</PARA>
+4800
+4810<PARA>
+4820<NAME>Default-Report-Mode</NAME>
+4830<FORMAT>A</FORMAT>
+4840<LENGTH>1</LENGTH>
+4850<VALID>S,L</VALID>
+4860<CURRENT>L</CURRENT>
+4870<OPTIONS>L</OPTIONS>
+4880<DESCRIPTION>Set the default value for the option 'REPORT-MODE' for dire
+4890ct commands.</DESCRIPTION>
+4900<DESCRIPTION>The value 'L = Write large report' is selected by default.
+4910</DESCRIPTION>
+4920<DESCRIPTION>The option is evaluated during all functions when a report
+4930is written,</DESCRIPTION>
+4940<DESCRIPTION>i.e. when REPORT or NEWREPORT is specified in the Object Ha
+4950ndler command.</DESCRIPTION>
+4960<HELP>  S = Write a small report, i.e. the relevant data of the report a
+4970re </HELP>
+4980<HELP>      positioned into the first 80 columns of the report line
+4990</HELP>
+5000<HELP>  L = Write a large report (default value)</HELP>
+5010</PARA>
+5020
+5030<PARA>
+5040<NAME>Default-Type-Natural-Objects</NAME>
+5050<FORMAT>A</FORMAT>
+5060<LENGTH>3</LENGTH>
+5070<VALID>*,N,NE,NR,NER,NRE,E,ER,EN,ERN,ENR,R,RN,RE,RNE,REN</VALID>
+5080<CURRENT>NER</CURRENT>
+5090<OPTIONS>TL</OPTIONS>
+5100<DESCRIPTION>Set the default value for the Types of Natural Library Obje
+5110cts (OBJTYPE).</DESCRIPTION>
+5120<DESCRIPTION>Any combination of the valid values is allowed.
+5130</DESCRIPTION>
+5140<DESCRIPTION>The value is evaluated when the Object Handler is started.
+5150</DESCRIPTION>
+5160<HELP>Types of object are:</HELP>
+5170<HELP>  N = Natural programming objects</HELP>
+5180<HELP>  E = User-defined error messages</HELP>
+5190<HELP>  R = Shared resources</HELP>
+5200<HELP>  * = all</HELP>
+5210<HELP>or a valid combination of N, E and R.</HELP>
+5220</PARA>
+5230
+5240<PARA>
+5250<NAME>Option-Write-Restart-Info</NAME>
+5260<FORMAT>A</FORMAT>
+5270<LENGTH>1</LENGTH>
+5280<VALID>Y,N</VALID>
+5290<CURRENT>N</CURRENT>
+5300<OPTIONS>L</OPTIONS>
+5310<DESCRIPTION>Only applies to the load function. </DESCRIPTION>
+5320<DESCRIPTION>When this option is set, restart information is provided
+5330</DESCRIPTION>
+5340<DESCRIPTION>for the restart load function. </DESCRIPTION>
+5350<HELP>  Y = Write restart information</HELP>
+5360<HELP>  N = Do not write restart information</HELP>
+5370</PARA>
+5380
+5390<PARA>
+5400<NAME>Use-Option-Workplan</NAME>
+5410<FORMAT>A</FORMAT>
+5420<LENGTH>1</LENGTH>
+5430<VALID>Y,N</VALID>
+5440<CURRENT>N</CURRENT>
+5450<OPTIONS>L</OPTIONS>
+5460<DESCRIPTION>Use a workplan that contains options for the unload or load
+5470 function,</DESCRIPTION>
+5480<DESCRIPTION>for example, report settings.</DESCRIPTION>
+5490<HELP>  Y = Use an option workplan</HELP>
+5500<HELP>  N = Do not use an option workplan</HELP>
+5510</PARA>
+5520
+5530<PARA>
+5540<NAME>Option-Workplan-Name</NAME>
+5550<FORMAT>A</FORMAT>
+5560<LENGTH>8</LENGTH>
+5570<VALID></VALID>
+5580<CURRENT> </CURRENT>
+5590<OPTIONS>LE</OPTIONS>
+5600<DESCRIPTION>Name of the option workplan to be used.</DESCRIPTION>
+5610<HELP>E.g. OPTIONWP or any other Workplan of the type OPTION. </HELP>
+5620</PARA>
+5630
+5640<PARA>
+5650<NAME>Use-Parameter-Workplan</NAME>
+5660<FORMAT>A</FORMAT>
+5670<LENGTH>1</LENGTH>
+5680<VALID>Y,N</VALID>
+5690<CURRENT>N</CURRENT>
+5700<OPTIONS>L</OPTIONS>
+5710<DESCRIPTION>Use a workplan that contains attributes to be changed such
+5720as the name</DESCRIPTION>
+5730<DESCRIPTION>of a new target library where objects are loaded.
+5740</DESCRIPTION>
+5750<HELP>  Y = Use a parameter workplan</HELP>
+5760<HELP>  N = Do not use a parameter workplan</HELP>
+5770</PARA>
+5780
+5790<PARA>
+5800<NAME>Parameter-Workplan-Name</NAME>
+5810<FORMAT>A</FORMAT>
+5820<LENGTH>8</LENGTH>
+5830<VALID></VALID>
+5840<CURRENT> </CURRENT>
+5850<OPTIONS>LE</OPTIONS>
+5860<DESCRIPTION>Name of the parameter workplan to be used.</DESCRIPTION>
+5870<HELP>E.g. PARAWPLN or any other Workplan of the type PARAMETER. </HELP>
+5880</PARA>
+5890
+5900<PARA>
+5910<NAME>Work-File-1-Name</NAME>
+5920<FORMAT>A</FORMAT>
+5930<LENGTH>253</LENGTH>
+5940<VALID></VALID>
+5950<CURRENT></CURRENT>
+5960<OPTIONS>LEW</OPTIONS>
+5970<DESCRIPTION>The work file to be used by the unload, load and scan funct
+5980ions (not</DESCRIPTION>
+5990<DESCRIPTION>on mainframes) or the work file used for the PC file (Work
+6000File 7) when</DESCRIPTION>
+6010<DESCRIPTION>Use PC File is selected on the Options. Work File 7 must be
+6020 defined as</DESCRIPTION>
+6030<DESCRIPTION>Entire Connection work file to be used for the unload, load
+6040 and scan</DESCRIPTION>
+6050<DESCRIPTION>functions with Entire Connection.</DESCRIPTION>
+6060<HELP>The complete path name assigned to the work file or the Entire Con
+6070nection</HELP>
+6080<HELP>work file. </HELP>
+6090<HELP>If your system environment does not accept a backslash (\) separat
+6100or,</HELP>
+6110<HELP>use a slash (/) instead.</HELP>
+6120</PARA>
+6130
+6140<PARA>
+6150<NAME>Report-File-Name</NAME>
+6160<FORMAT>A</FORMAT>
+6170<LENGTH>253</LENGTH>
+6180<VALID></VALID>
+6190<CURRENT></CURRENT>
+6200<OPTIONS>LEW</OPTIONS>
+6210<DESCRIPTION>Name assigned to Work File 4 that is used to write the repo
+6220rt of the</DESCRIPTION>
+6230<DESCRIPTION>objects processed when option Write report is selected.
+6240</DESCRIPTION>
+6250<DESCRIPTION>Write report is the default setting for object processing.
+6260</DESCRIPTION>
+6270<HELP>Enter the complete path name assigned to Work File 4.</HELP>
+6280<HELP>If your system environment does not accept a backslash (\) separat
+6290or,</HELP>
+6300<HELP>use a slash (/) instead.</HELP>
+6310</PARA>
+6320
+6330<PARA>
+6340<NAME>Restart-File-Name</NAME>
+6350<FORMAT>A</FORMAT>
+6360<LENGTH>253</LENGTH>
+6370<VALID></VALID>
+6380<CURRENT></CURRENT>
+6390<OPTIONS>LEW</OPTIONS>
+6400<DESCRIPTION>Name assigned to Work File 6 that is used for the restart d
+6410ata.</DESCRIPTION>
+6420<DESCRIPTION>Only applies to the load function and if option Write resta
+6430rt information</DESCRIPTION>
+6440<DESCRIPTION>has been selected.</DESCRIPTION>
+6450<HELP>Enter the complete path name assigned to Work File 6.</HELP>
+6460<HELP>If your system environment does not accept a backslash (\) separat
+6470or,</HELP>
+6480<HELP>use a slash (/) instead.</HELP>
+6490</PARA>
+6500
+6510<PARA>
+6520<NAME>Trace-File-Name</NAME>
+6530<FORMAT>A</FORMAT>
+6540<LENGTH>253</LENGTH>
+6550<VALID></VALID>
+6560<CURRENT></CURRENT>
+6570<OPTIONS>LEW</OPTIONS>
+6580<DESCRIPTION>Name assigned to Work File 10 that is used for the trace da
+6590ta when the</DESCRIPTION>
+6600<DESCRIPTION>Trace workfile function has been activated.</DESCRIPTION>
+6610<HELP>The trace option is set off by default.</HELP>
+6620<HELP>Enter the complete path name assigned to Work File 10.</HELP>
+6630<HELP>If your system environment does not accept a backslash (\) separat
+6640or,</HELP>
+6650<HELP>use a slash (/) instead.</HELP>
+6660</PARA>
+6670
+6680</GENERAL>
+6690</PROFILE>

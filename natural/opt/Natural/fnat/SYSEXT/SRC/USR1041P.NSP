@@ -1,0 +1,52 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  ERROR-TA (for example 'USR1041N').
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060  1 ERR-TA (A08)
+0070  1 ERR-NO (N04)
+0080  1 #MSG   (A72)
+0090  1 #MARK  (N4)
+0100END-DEFINE
+0110/***********************************************************************
+0120SET KEY ALL
+0130REPEAT
+0140  /*
+0150  MOVE 'USR1041N' TO ERR-TA  /*  set field to default
+0160  ERR-NO := 1                /*  produce an artifical error NATnnnn
+0170  /*
+0180  INPUT (AD=MITL IP=OFF) WITH TEXT #MSG MARK #MARK
+0190    /  'Install ERROR-TA' (I)
+0200    /  '-' (65) (I) /
+0210    /  'Current contents of *ERROR-TA' '.' (27) *ERROR-TA (AD=OIL)
+0220    /  'Overwrite *ERROR-TA with'      '.' (32) ERR-TA
+0230    /  'Produce an artificial error for'
+0240       'test purposes'                 '.' (11) ERR-NO
+0250  ///  'Press any PF-key to stop.'
+0260  /*
+0270  IF *PF-KEY NE 'ENTR'
+0280    ESCAPE BOTTOM
+0290  END-IF
+0300  RESET #MSG #MARK
+0310  /*
+0320  IF ERR-TA NE ' '
+0330    MOVE LEFT ERR-TA TO ERR-TA
+0340    IF ERR-TA NE MASK (U)          /* Upper case character
+0350      #MSG := 'Value must start with an upper case character.'
+0360      #MARK := 1
+0370    END-IF
+0380  END-IF
+0390  MOVE ERR-TA TO *ERROR-TA
+0400  /*
+0410  IF ERR-NO = 1 THRU 9999
+0420    MOVE ERR-NO TO *ERROR-NR
+0430  ELSE
+0440    IF ERR-NO NE 0
+0450      #MSG := 'Error number can be any value between "0" and "9999".'
+0460      #MARK := 2
+0470    END-IF
+0480  END-IF
+0490  /*
+0500END-REPEAT
+0510/*****************************************************************
+0520END

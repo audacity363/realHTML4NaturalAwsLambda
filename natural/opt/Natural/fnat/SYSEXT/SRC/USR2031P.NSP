@@ -1,0 +1,90 @@
+0010/* Get SYSPROD Information
+0020/**********************
+0030DEFINE DATA
+0040LOCAL
+00501 FIRST-CALL           (L)   /* Must be 'TRUE' for the first call and
+0060                             /* must not be changed for the subsequent
+0070                             /* calls.
+00801 SEARCH-PRODUCT       (A3)  /* Must not be changed between consecutive
+0090                             /* calls.
+01001 P-TABLE         (15)
+0110  2 PN                 (A27) /* Product Name
+0120  2 VS                 (A05) /* Version
+0130  2 SM                 (A02) /* SM Level
+0140  2 DT                 (A10) /* Date
+0150  2 IU                 (A02) /* Update Level
+01601 RESPONSE             (I4)  /* 0 product(s) read, more follow
+0170                             /* 4 end of product table, prod not found
+0180/*
+01901 #MSG                 (A50)
+0200END-DEFINE
+0210/*
+0220/*
+0230/*
+0240DEFINE SUBROUTINE ANZEIGEN
+0250  INPUT WINDOW = 'PRODUCTS'
+0260    (AD=OD CD=TU IP=OFF ZP=OFF SG=OFF)
+0270     WITH TEXT #MSG (CD=NE)
+0280    'Product Name                  V/R  SM  Date       Iupd' (YEI) /
+0290    1T PN (01) 29T VS(01) SM(01) 40T
+0300    DT(01) IU(01) /
+0310    1T PN (02) 29T VS(02) SM(02) 40T
+0320    DT(02) IU(02) /
+0330    1T PN (03) 29T VS(03) SM(03) 40T
+0340    DT(03) IU(03) /
+0350    1T PN (04) 29T VS(04) SM(04) 40T
+0360    DT(04) IU(04) /
+0370    1T PN (05) 29T VS(05) SM(05) 40T
+0380    DT(05) IU(05) /
+0390    1T PN (06) 29T VS(06) SM(06) 40T
+0400    DT(06) IU(06) /
+0410    1T PN (07) 29T VS(07) SM(07) 40T
+0420    DT(07) IU(07) /
+0430    1T PN (08) 29T VS(08) SM(08) 40T
+0440    DT(08) IU(08) /
+0450    1T PN (09) 29T VS(09) SM(09) 40T
+0460    DT(09) IU(09) /
+0470    1T PN (10) 29T VS(10) SM(10) 40T
+0480    DT(10) IU(10) /
+0490    1T PN (11) 29T VS(11) SM(11) 40T
+0500    DT(11) IU(11) /
+0510    1T PN (12) 29T VS(12) SM(12) 40T
+0520    DT(12) IU(12) /
+0530    1T PN (13) 29T VS(13) SM(13) 40T
+0540    DT(13) IU(13) /
+0550    1T PN (14) 29T VS(14) SM(14) 40T
+0560    DT(14) IU(14) /
+0570    1T PN (15) 29T VS(15) SM(15) 40T
+0580    DT(15) IU(15) //
+0590    'Press ''Enter'' to continue or any PF-Key to stop.'
+0600  /*
+0610END-SUBROUTINE
+0620/*
+0630/*
+0640/*
+0650DEFINE WINDOW PRODUCTS
+0660  SIZE 21 * 62
+0670  BASE 02 / 10
+0680  TITLE ' Product Information '
+0690  FRAMED POSITION OFF
+0700/*
+0710/*
+0720SET KEY ALL
+0730FIRST-CALL := TRUE
+0740SEARCH-PRODUCT := ' '
+0750REPEAT
+0760  RESET P-TABLE(*)
+0770  CALLNAT 'USR2031N' FIRST-CALL SEARCH-PRODUCT
+0780    P-TABLE(*) RESPONSE
+0790  IF RESPONSE = 4 THEN
+0800    #MSG := 'End of list reached.'
+0810  ELSE
+0820    RESET #MSG
+0830  END-IF
+0840  PERFORM ANZEIGEN
+0850  IF *PF-KEY NE 'ENTR'
+0860    ESCAPE BOTTOM
+0870  END-IF
+0880END-REPEAT
+0890/*
+0900END

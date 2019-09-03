@@ -1,0 +1,96 @@
+0010/* RPC: Support of EntireX Security on Client side
+0020/*
+0030/* Function ... Logon/Logoff to/from EntireX Broker on Client side.
+0040/*
+0050/* This program serves as example how to design a user-defined
+0060/* program call 'USR2071N'.
+0070/*
+0080/*
+0090/* Change with NAT414:
+0100/*   The parameter BROKER_ID is increased from (A8) to (A32).
+0110/* Change with NAT42:
+0120/*   The parameter BROKER_ID is increased from (A32) to (A192).
+0130/*   The parameters USER_ID, PASSWORD, and NEWPASSW are increased
+0140/*   from (A08) to (A32).
+0150/*   Since these parameters are transferred 'BY VALUE', the
+0160/*   former version of USR2071P is still compatible for use.
+0170/*
+0180/*   The parameters PASSWORD and NEWPASSW are optionally accepted in
+0190/*   upper and lower case letters.
+0200/*
+0210/* Parameter ..
+0220/*     INPUT   FUNCTION  (A08)  - Function code
+0230/*                                value 'LOGON'  logon  to   broker
+0240/*                                value 'LOGOFF' logoff from broker
+0250/*             BROKER_ID (A192) - Broker ID
+0260/*             USER_ID   (A32)  - User ID
+0270/*             PASSWORD  (A32)  - User ID's password
+0280/*             NEWPASSW  (A32)  - User ID's new password
+0290/*
+0300/*     OUTPUT
+0310/*             RC        (N04)  - return value
+0320/*                                0     ok
+0330/*                                1     invalid function
+0340/*                                9999  broker error     (see MESSAGE)
+0350/*             MESSAGE   (A80)  - message text
+0360/*                                returned by broker
+0370/*
+0380/* Program Option ..
+0390/*            #MIXED_CASE(A01)  - Accept User ID's password
+0400/*                                in upper and lower case letters.
+0410/*                                Note:
+0420/*                                All other input parameters are
+0430/*                                unconditionally translated to
+0440/*                                upper case by the INPUT statement.
+0450/*
+0460/***********************************************************************
+0470DEFINE DATA LOCAL
+04801 PARM-INPUT
+0490  2 I-FUNCTION  (A08)
+0500  2 I-BROKER-ID (A32)
+0510  2 I-USER-ID   (A08)
+0520  2 I-PASSW     (A08)
+0530  2 I-NEWPASSW  (A08)
+05401 PARM-OUTPUT
+0550  2 O-RC        (N04)
+0560  2 O-ERRTEXT   (A80)
+0570LOCAL
+05801  #MIXED_CASE  (A01) INIT<'N'>
+0590END-DEFINE
+0600*
+0610DEFINE WINDOW RPC-LOGON     SIZE 13*60 BASE 8/16
+0620  TITLE ' Logon/Logoff to/from EntireX Broker' CONTROL SCREEN
+0630*
+0640SET KEY PF3
+0650MOVE *USER TO I-USER-ID
+0660*
+0670SET CONTROL 'L'
+0680*
+0690O-RC := -1
+0700REPEAT
+0710  RESET I-PASSW I-NEWPASSW
+0720  INPUT WINDOW='RPC-LOGON'   /
+0730        'Please enter data:' //
+0740        'Function         :' I-FUNCTION (AD=IMT)  '(LOGON/LOGOFF)' /
+0750        'Broker ID        :' I-BROKER-ID(AD=IMT) /
+0760        'User ID          :' I-USER-ID  (AD=IMT) /
+0770        'Password         :' I-PASSW    (AD=NM ) /
+0780        'New password     :' I-NEWPASSW (AD=NM ) /
+0790        'Mixed case       :' #MIXED_CASE (AD=IMT)
+0800                             O-ERRTEXT  (AD=IOT IP=OFF AL=79) /
+0810        '(press PF3 to terminate):' //
+0820*
+0830  IF O-RC = 0 OR *PF-KEY = 'PF3'
+0840    ESCAPE BOTTOM
+0850  END-IF
+0860*
+0870  IF NOT (#MIXED_CASE = 'Y' OR = 'y')
+0880     EXAMINE I-PASSW     TRANSLATE INTO UPPER
+0890     EXAMINE I-NEWPASSW  TRANSLATE INTO UPPER
+0900  END-IF
+0910*
+0920  CALLNAT 'USR2071N' USING PARM-INPUT PARM-OUTPUT
+0930*
+0940END-REPEAT
+0950*
+0960END

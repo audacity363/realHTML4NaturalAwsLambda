@@ -1,0 +1,75 @@
+0010/*  EXAM-QO - 'CLOSE' old and 'OPEN' new Processor explicitely
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (1:8)
+0070     02 NATURAL-ERROR
+0080     02 RETURN-CODE
+0090     02 RESULT-FIELD (1:9)
+0100     02 GETSET-FIELD-NAME
+0110     02 GETSET-FIELD-VALUE
+0120  01 PROC-NAME (A08)
+0130  01 MSG       (A72)
+0140  01 MOD       (C)
+0150  01 IX        (I01)
+0160END-DEFINE
+0170DEFINE WINDOW CL-OPEN-PROC
+0180  SIZE 14 * 70
+0190  BASE IX / IX
+0200  TITLE ' Close Old & Open New Processor '
+0210  CONTROL SCREEN
+0220  FRAMED POSITION OFF
+0230SET KEY ALL
+0240IX := *LEVEL * 2
+0250/**********************************************************************
+0260/* Close old Processor:
+0270PROCESS COMMAND ACTION CLOSE
+0280/*
+0290DECIDE ON FIRST NATURAL-ERROR
+0300  VALUE 0000    MSG := 'NCPWORK is released now.'
+0310  VALUE 6945    MSG := 'NCPWORK was not allocated.'
+0320  NONE          COMPRESS 'ERROR:' NATURAL-ERROR TO MSG LEAVING NO
+0330END-DECIDE
+0340/**********************************************************************
+0350REPEAT
+0360  /****************************************************************
+0370  INPUT WINDOW = 'CL-OPEN-PROC' (AD=MIT IP=F CV=MOD ) WITH TEXT MSG
+0380    /  'Processor Name ...' PROC-NAME
+0390  /****************************************************************
+0400  SET WINDOW OFF
+0410  IF *PF-KEY NE 'ENTR'
+0420  OR MOD NOT MODIFIED
+0430    ESCAPE ROUTINE
+0440  END-IF
+0450  RESET MSG
+0460  /****************************************************************
+0470  PROCESS COMMAND ACTION TEXT USING
+0480    PROCESSOR-NAME = PROC-NAME
+0490    COMMAND-LINE (*) = COMMAND-LINE (*)
+0500  /****************************************************************
+0510  IF NATURAL-ERROR NE 0
+0520    CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0530    ESCAPE TOP
+0540  ELSE
+0550    COMPRESS 'Processor ' PROC-NAME 'is open now.' TO MSG
+0560  END-IF
+0570  /****************************************************************
+0580  INPUT WINDOW = 'CL-OPEN-PROC' (AD=OIT IP=F) WITH TEXT MSG
+0590    /  'Processor Name ........' PROC-NAME
+0600    /  '(1) Header 1 ..........' RESULT-FIELD (01) (AL=40)
+0610    /  '(2) Header 2 ..........' RESULT-FIELD (02) (AL=40)
+0620    /  '(3) Keyword Type 1 ....' RESULT-FIELD (03) (AL=16)
+0630    /  '(4) Keyword Type 2 ....' RESULT-FIELD (04) (AL=16)
+0640    /  '(5) Keyword Type 3 ....' RESULT-FIELD (05) (AL=16)
+0650    /  '(6) No. Keyw Type 1 ...' RESULT-FIELD (06) (AL=10)
+0660    /  '(7) No. Keyw Type 2 ...' RESULT-FIELD (07) (AL=10)
+0670    /  '(8) No. Keyw Type 3 ...' RESULT-FIELD (08) (AL=10)
+0680    /  '(9) No. of Function ...' RESULT-FIELD (09) (AL=10)
+0690  /****************************************************************
+0700  SET WINDOW OFF
+0710  ESCAPE ROUTINE
+0720  /****************************************************************
+0730END-REPEAT
+0740/********************************************************************
+0750END

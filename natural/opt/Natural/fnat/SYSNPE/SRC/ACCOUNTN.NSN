@@ -1,0 +1,38 @@
+0010* ACCOUNTN Convert time and date to NATURAL time format
+0020*
+0030* Maintenance..:
+0040* hka 97-12-03   NPE213:   make it y2000 compliant
+0050* ======================================================================
+0060DEFINE DATA
+0070   PARAMETER 1 #TIME-B4    (B4)
+0080             1 #DATE-P7    (P7)
+0090             1 REDEFINE #DATE-P7
+0100                2 #DATE-B1 (B1)   /* 00 => LE y2k ; 01 => GE y2K
+0110                2 #DATE-P5 (P5)   /* format <YYDDD>F
+0120             1 #TIME       (T)
+0130   LOCAL     1 #I          (I4)
+0140             1 #A7         (A7)
+0150             1 REDEFINE #A7
+0160                2 #A7-1-2  (A2)
+0170                2 #A7-3-7  (A5)
+0180                2 REDEFINE #A7-3-7
+0190                  3 #A7-N5 (N5)
+0200END-DEFINE
+0210*
+0220IF #DATE-P7 NE 0
+0230   DECIDE ON FIRST VALUE OF #DATE-B1
+0240      VALUE 0     #A7-1-2 := '19'
+0250      VALUE 1     #A7-1-2 := '20'
+0260      NONE VALUE  #A7-1-2 := '20'
+0270   END-DECIDE
+0280   #A7-N5 := #DATE-P5
+0290   MOVE EDITED #A7 TO #TIME (EM=YYYYJJJ)
+0300ELSE
+0310   RESET #TIME
+0320END-IF
+0330*
+0340ASSIGN #I = #TIME-B4
+0350COMPUTE #I = #I / 10
+0360ADD #I TO #TIME
+0370*
+0380END

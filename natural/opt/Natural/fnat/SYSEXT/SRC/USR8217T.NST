@@ -1,0 +1,50 @@
+0010Search execution library for a Natural object
+0020.
+0030Documentation ......... USR8217T    /*  Text object
+0040Interface ............. USR8217N    /*  Cataloged subprogram
+0050Example Program ....... USR8217P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL ENVIRONMENT
+0100.
+0110Keywords .............. +NEW-NAT-8.3.6, EXECUTING, LIBRARY, STEPLIB
+0120.
+0130Function .............. Search in the Natural search path for a given
+0140                        object the execution library.
+0150                        When the object name is not filled the name
+0160                        of the calling program is used.
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+02301 USR8217-Parameters
+0240  2 P-Object-Name     (A8)   /* In:  Name of the object or blank
+0250  2 P-Object-Library  (A8)   /* Out: Library of the Natural search
+0260                             /*      path where the object was found
+0270  2 P-Library-DBID    (I4)   /* Out: DBID for P-Object-Library
+0280  2 P-Library-FNR     (I4)   /* Out: FNR for P-Object-Library
+0290  2 P-Return-Code     (I4)   /* Out:    0 OK, object found
+0300                             /*        <0 Natural runtime error
+0310                             /*         1 Object name is blank
+0320                             /*       999 RC from NAT23003
+0330                             /*      1000 Object not found in path
+0340  2 P-Return-Message  (A250) /* Out: filled when P-Return-Code <> 0
+0350.
+0360.
+0370Interface Call
+0380--------------
+0390Use the interface with the CALLNAT statement:
+0400.
+0410CALLNAT 'USR8217N'
+0420        USR8217-Parameters
+0430.
+0440.
+0450Using the Application Programming Interface:
+0460--------------------------------------------
+0470Copy the subprogram USR8217N to the library SYSTEM, to the appropriate
+0480steplib library, or to the required library.
+0490.
+0500***** End of Description *****

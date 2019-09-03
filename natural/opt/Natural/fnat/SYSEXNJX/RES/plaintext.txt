@@ -1,0 +1,21 @@
+What is a Rich Internet Application? 
+
+Classical HTML- and browser-based applications suffer from known disadvantages.
+The server responds to each user interaction with a new page. This may lead to
+long response times and new rendering in the browser and thus to a discontinuous
+workflow for the user. The possibilities offered by DHTML overcome these
+disadvantages, but they are complicated to use and make it hard to build a
+comfortable user interface. The user interface is therefore often simpler and
+less comfortable than users are accustomed to from their experience with desktop
+applications. Although it is possible to provide complex controls and features
+like drag-and-drop, this is hard to implement - especially if compatibility with
+all commonly used browsers is required. Classical GUI applications also have the
+disadvantage that a client component of the application must be installed on each
+client machine. 
+
+Rich internet applications that use the Ajax technology overcome these
+disadvantages by combining the reachability of browser-based applications with
+the rich user interface of GUI applications. Software AG provides support for the
+development of rich internet applications with Application Designer. Natural for
+Ajax combines the user interface capabilities of Application Designer with the
+application development capabilities of Natural. 

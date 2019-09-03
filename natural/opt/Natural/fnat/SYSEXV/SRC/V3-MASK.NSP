@@ -1,0 +1,82 @@
+0010*
+0020* Program .. V3-MASK
+0030* Library .. SYSEXV
+0040* Version .. 3.1
+0050*
+0060* Functionality: Show new character '/' in MASK option
+0070************************************************************************
+0080*
+0090DEFINE DATA
+0100LOCAL
+01101 #FIELD    (A06)
+01201 #MESSAGE1 (A32)
+01301 #MESSAGE2 (A32)
+01401 #MESSAGE3 (A32)
+01501 #TEXT1    (A32) INIT<'String ends with ''E''.'>
+01601 #TEXT2    (A32) INIT<'String does not end with ''E''.'>
+01701 #TEXT3    (A32) INIT<'String contains ''E''.'>
+01801 #TEXT4    (A32) INIT<'String does not contain ''E''.'>
+01901 #TEXT5    (A32) INIT<'String starts with ''E''.'>
+02001 #TEXT6    (A32) INIT<'String does not start with ''E''.'>
+0210END-DEFINE
+0220*
+0230FORMAT KD=ON
+0240SET KEY PF3  NAMED 'Exit'
+0250  PF12 NAMED 'Canc'
+0260*
+0270#FIELD := 'ABCDE'
+0280*
+0290*
+0300REPEAT
+0310*
+0320  IF #FIELD = MASK (*'E'/)
+0330    MOVE #TEXT1 TO #MESSAGE1
+0340  ELSE
+0350    MOVE #TEXT2 TO #MESSAGE1
+0360  END-IF
+0370  IF #FIELD = MASK (*'E')
+0380    MOVE #TEXT3 TO #MESSAGE2
+0390  ELSE
+0400    MOVE #TEXT4 TO #MESSAGE2
+0410  END-IF
+0420  IF #FIELD = MASK ('E')
+0430    MOVE #TEXT5 TO #MESSAGE3
+0440  ELSE
+0450    MOVE #TEXT6 TO #MESSAGE3
+0460  END-IF
+0470*
+0480*
+0490  INPUT (IP=OFF)
+0500    01T *TIMX  (AD=OTD)
+0510    21T '***** NATURAL 3.1 ENHANCEMENTS *****'
+0520    70T *DATX  (AD=OTD DF=L)
+0530    /
+0540    01T 'User'
+0550    06T *USER  (AD=OILT)
+0560    26T '- Statement Enhancements -'(I)
+0570    64T 'Program'
+0580    72T *PROGRAM (AD=OI)
+0590    ///
+0600    02T 'New character ''/'' for MASK option'(I)
+0610    ///
+0620    15T 'Enter any text with ''E'':'  #FIELD  (AD=MIT CD=NE)
+0630    ////
+0640    02T 'Check text string'  #FIELD (AD=OI) 'with'
+0650    'MASK(*''E''/)' ':' #MESSAGE1 (AD=OD)
+0660    ///
+0670    02T 'Check text string'  #FIELD (AD=OI) 'with'
+0680    'MASK(*''E'') ' ':'  #MESSAGE2 (AD=OD)
+0690    ///
+0700    02T 'Check text string' #FIELD (AD=OI) 'with'
+0710    'MASK(''E'')  ' ':' #MESSAGE3 (AD=OD)
+0720    / / / /
+0730*
+0740  IF *PF-KEY ='PF3'
+0750    ESCAPE BOTTOM
+0760  END-IF
+0770  IF (*PF-KEY = 'PF12' OR= 'CLR')
+0780    CALLNAT 'UTILSTOP'
+0790  END-IF
+0800END-REPEAT
+0810*
+0820END

@@ -1,0 +1,12 @@
+0010** Example 'DFUEX1': DEFINE FUNCTION
+0020************************************************************************
+0030DEFINE FUNCTION F#FIRST-CHAR
+0040  RETURNS #RESULT (A1)
+0050  DEFINE DATA PARAMETER
+0060    1 #PARM (A10)
+0070  END-DEFINE
+0080  /*
+0090  #RESULT := #PARM        /* First character as return value.
+0100END-FUNCTION
+0110*
+0120END

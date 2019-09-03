@@ -1,0 +1,89 @@
+0010/* EXAM-HLL - HELP Local List
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (1:8)
+0070     02 NATURAL-ERROR
+0080     02 RETURN-CODE
+0090     02 RESULT-FIELD (01:12)
+0100     02 GETSET-FIELD-NAME
+0110     02 GETSET-FIELD-VALUE
+0120     /*********************
+0130  01 MAX-OCC         (I01) CONST <12>
+0140  01 IY              (I01)
+0150  01 NO              (P02)
+0160  01 PROC-NAME       (A08)
+0170  01 MSG             (A72)
+0180  01 CURR-LOC-NAME   (A50)
+0190  01 CURR-LOC-NB     (A10)
+0200END-DEFINE
+0210/**********************************************************************
+0220/* Ask for currently used name:
+0230/*
+0240PROCESS COMMAND ACTION GET USING
+0250    PROCESSOR-NAME = ' '
+0260    GETSET-FIELD-NAME = 'NAME&'
+0270IF NATURAL-ERROR NE 0
+0280  CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0290  WRITE MSG
+0300  ESCAPE ROUTINE
+0310END-IF
+0320/*
+0330MOVE GETSET-FIELD-VALUE TO PROC-NAME
+0340/**********************************************************************
+0350CALLNAT 'EXAM-GLN' CURR-LOC-NAME CURR-LOC-NB
+0360/**********************************************************************
+0370/* Options for HELP:
+0380/*
+0390COMPRESS /*  Create a command
+0400  'L'    /*  Local Functions
+0410  'C'    /*  Take current loc. instead of CMD-LINE (3)
+0420  'I'    /*  Return IFN, too
+0430  '+'    /*  Start BEHIND given value
+0440  'S'    /*  Separate the keywords (use tabs)
+0450  'T'    /*  Translate abbreviated keywords to upper case
+0460         /*
+0470TO COMMAND-LINE (1) LEAVING NO
+0480/*
+0490/**********************************************************************
+0500REP. REPEAT
+0510  /*************************************
+0520  RESET MSG RESULT-FIELD (*)
+0530  /*
+0540  PROCESS COMMAND ACTION HELP USING
+0550    PROCESSOR-NAME = PROC-NAME
+0560    COMMAND-LINE (*) = COMMAND-LINE (*)
+0570  /*
+0580  IF NATURAL-ERROR NE 0
+0590    CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0600    WRITE MSG
+0610    ESCAPE ROUTINE
+0620  END-IF
+0630  /*
+0640  MOVE ALL RESULT-FIELD (12)  /*  Take the last line
+0650    TO COMMAND-LINE (2)       /*  Make it the start value
+0660    UNTIL 51                  /*  Do not take the IFN
+0670  EXAMINE COMMAND-LINE (2)    /*  New start value ...
+0680    TRANSLATE INTO UPPER      /*  ... must be given in upper case
+0690  /*
+0700  FOR IY 1 MAX-OCC
+0710    IF RESULT-FIELD (IY) = ' '
+0720      ESCAPE BOTTOM (REP.)
+0730    END-IF
+0740    ADD 1 TO NO
+0750    WRITE NO RESULT-FIELD (IY) (AL=72)
+0760  END-FOR
+0770  /*
+0780END-REPEAT
+0790WRITE '*** End of list ***' (I)
+0800/**********************************************************************
+0810WRITE TITLE LEFT
+0820    'List Local Functions in Processor' PROCESSOR-NAME (AD=I)
+0830    'with options =' COMMAND-LINE (1) (AD=I AL=8)
+0840  / 'Current Location:' CURR-LOC-NB (AD=I) CURR-LOC-NAME
+0850  / ' '
+0860  / 'No. Function'  56T 'IFN'
+0870  / '---' '-' (50) 56T '----------'
+0880/**********************************************************************
+0890END

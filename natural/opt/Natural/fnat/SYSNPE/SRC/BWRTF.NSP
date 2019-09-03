@@ -1,0 +1,80 @@
+0010*
+0020* Write File
+0030*
+0040DEFINE DATA GLOBAL USING TUTO
+0050            LOCAL  USING BWRTF--L
+0060            LOCAL
+0070*
+008001 #DSNAME                  (A54)
+009001 #PASSWORD                (A8)
+010001 #DISP                    (A3)
+011001 #DATA                    (A60/1:10)
+012001 #RECLEN                  (N5/1:10)
+013001 #FUNCTION                (A8)
+014001 #RECORD                  (A253)
+015001 #RECORD-LENGTH           (N5)
+0160*
+017001 #I                       (P2)
+018001 #J                       (P2)
+019001 #T                       (P2)
+020001 RECORD-WRITTEN           (L)
+0210END-DEFINE
+0220PERFORM PF-KEY
+0230*
+0240* ------------------------------ MAIN LOOP ----------------------------
+0250*
+0260REPEAT
+0270  PERFORM SCREEN-IO
+0280  ASSIGN #T = 11
+0290  ASSIGN RECORD-WRITTEN = FALSE
+0300FOR.
+0310  FOR #J = 1 TO #T
+0320    IF #J > 10
+0330       IF RECORD-WRITTEN
+0340          ASSIGN #FUNCTION = 'CLOSE'
+0350          RESET  #RECORD
+0360         ELSE
+0370          ESCAPE BOTTOM (FOR.)
+0380       END-IF
+0390      ELSE
+0400       IF #RECLEN (#J) = 0 AND #DATA (#J) = ' '
+0410          ESCAPE TOP
+0420       END-IF
+0430       ASSIGN RECORD-WRITTEN = TRUE
+0440       ASSIGN #RECORD        = #DATA (#J)
+0450       ASSIGN #RECORD-LENGTH = #RECLEN (#J)
+0460       RESET #FUNCTION
+0470    END-IF
+0480    PROCESS WRITE-FILE
+0490            USING NODE                  = ##NODE
+0500              ,   DSNAME                = #DSNAME
+0510              ,   RECORD                = #RECORD
+0520              ,   FUNCTION              = #FUNCTION
+0530              ,   DISP                  = #DISP
+0540              ,   RECORD-LENGTH         = #RECORD-LENGTH
+0550         GIVING ERROR-CODE
+0560                ERROR-TEXT
+0570                SYSTEM-CODE
+0580    IF ERROR-CODE NE 0
+0590       INCLUDE BERR---C
+0600       ESCAPE BOTTOM (FOR.)
+0610      ELSE
+0620       ASSIGN ##MSG-NR = 1007
+0630    END-IF
+0640  END-FOR
+0650END-REPEAT
+0660*
+0670* ------------------------------ SCREEN-IO ----------------------------
+0680*
+0690DEFINE SUBROUTINE SCREEN-IO
+0700  INPUT WITH TEXT *##MSG-NR,
+0710                   ##MSG-TXT1,
+0720                   ##MSG-TXT2
+0730        USING MAP 'BWRTF--&'
+0740RESET ##MSG
+0750END-SUBROUTINE
+0760*
+0770* ------------------------------ PF-KEY -------------------------------
+0780*
+0790INCLUDE C-PFKEY
+0800END

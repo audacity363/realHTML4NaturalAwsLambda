@@ -1,0 +1,51 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1009N'.
+0030/*
+0040/*  Function: Convert store clock into microseconds.
+0050/*
+0060/*  Note: The Natural system variable *TIMESTMP provides the
+0070/*        machine-internal store clock value as (B8) binary value.
+0080/*        Bit position 51 of the store clock value represents
+0090/*        exactly one microsecond.
+0100/*        For better precision use interface USR2036N instead of
+0110/*        USR1009N.
+0120/*
+0130/***********************************************************************
+0140DEFINE DATA LOCAL
+01501 P-STORECLOCK1   (B08)
+01601 P-STORECLOCK2   (B08)
+01701 P-MICROSECONDS1 (P19)
+01801 P-MICROSECONDS2 (P19)
+01901 DELTA           (P19)
+02001 TEST-VAR        (I04)
+0210END-DEFINE
+0220/***********************************************************************
+0230/*
+0240/*  Test: Determine start and end time
+0250/*
+0260MOVE *TIMESTMP TO  P-STORECLOCK1       /*  Start the stop watch
+0270TEST-VAR := 450 * TEST-VAR             /*  Statement under test
+0280MOVE *TIMESTMP TO  P-STORECLOCK2       /*  Stop  the stop watch
+0290/*
+0300/*  End of test
+0310/*
+0320/***********************************************************************
+0330/*
+0340/* Convert store clock values into microseconds
+0350/*
+0360CALLNAT 'USR1009N' P-STORECLOCK1 P-MICROSECONDS1  /* Convert start time
+0370CALLNAT 'USR1009N' P-STORECLOCK2 P-MICROSECONDS2  /* Convert stop time
+0380/*
+0390/* Calculate the delta
+0400/*
+0410DELTA := P-MICROSECONDS2 - P-MICROSECONDS1    /*  compute elapsed time
+0420/*
+0430/* Write result
+0440/*
+0450WRITE 'Timestmp1 (store clock) .....' P-STORECLOCK1
+0460  /   'Timestmp2 (store clock) .....' P-STORECLOCK2
+0470  //  'Timestmp1 in microseconds ...' P-MICROSECONDS1
+0480  /   'Timestmp2 in microseconds ...' P-MICROSECONDS2
+0490  /   'Duration in microseconds ....' DELTA
+0500/*
+0510END

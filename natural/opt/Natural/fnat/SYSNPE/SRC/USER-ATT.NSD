@@ -1,0 +1,179 @@
+0010DB: 148 FILE: 086  - USER-ATTRIBUTES                  DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:27
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:27
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      BS2000 fields
+0230*
+0240  1 ES SYSTEM-CODE                       B    2      System error code.
+0250*      System error code.
+0260  1 B1 USER-ID                           A    8    D User identification.
+0270*      User identification.
+0280  1 FN FUNCTION                          A    8    D READ      Read infor
+0290*      READ      Read information for
+0300*      USER-ID (default).
+0310*      READNEXT  Read information for
+0320*      user following entry
+0330*      for USER-ID in
+0340*      TSOSJOIN. (Only
+0350*      allowed for TSOS.)
+0360  1 B2 SEVER                             A    3    D YES   user id severe
+0370*      YES   user id severed
+0380*      NO    not severed
+0390  1 B3 PASSWORD                          A    8    D YES  User id is pass
+0400*      YES  User id is password
+0410*      protected.
+0420*      NO   No password.
+0430  1 B4 PASSWORD-MODS                     A    3    D YES  User may modifi
+0440*      YES  User may modifiy password
+0450*      of user id.
+0460*      NO   User may not modify the
+0470*      password.
+0480  1 B5 MAX-ACC-REC                       A    5    D Maximum number of ac
+0490*      Maximum number of accounting
+0500*      records which may be written
+0510*      per task / program.
+0520  1 B6 CSTMP-MACRO                       A    3    D YES  CSTMP macro may
+0530*      YES  CSTMP macro may be used
+0540*      (define memory pool as
+0550*      read only).
+0560*      NO   CSTMP macro not allowed.
+0570  1 B7 PUBLIC-SPACE                      N  8.0    D Number of PAM pages
+0580*      Number of PAM pages used on
+0590*      public space for this user id.
+0600  1 B8 RESIDENT-PAGES                    N  5.0    D Number of resident p
+0610*      Number of resident pages of
+0620*      real memory which may be used.
+0630  1 B9 MAX-PUBLIC-SPACE                  N  8.0    D Maximum number of PA
+0640*      Maximum number of PAM pages
+0650*      of public space which may be
+0660*      occupied by this user.
+0670  1 BA ENFORCE                           A    3    D YES  User may force
+0680*      YES  User may force usage of
+0690*      PAM pages although he has
+0700*      already reached the limit
+0710*      in MAX-PUBLIC-SPACE.
+0720*      NO   User is not authorized.
+0730  1 BB AUDIT                             A    3    D YES  User may specif
+0740*      YES  User may specify for his
+0750*      files that access to them
+0760*      has to be supervised by
+0770*      the system.
+0780*      NO   User is not authorized.
+0790  1 BC TP-IGNORE                         A    4    D Ignore of error mess
+0800*      Ignore of error messages due
+0810*      to tape label checks allowed
+0820*      for the user:
+0830*      NO    error messages may not
+0840*      be ignored (default)
+0850*      YES   may only be ignored by
+0860*      the tape owner or TSOS
+0870*      READ  messages for input files
+0880*      may be ignored
+0890*      BLP   for tapes processed in
+0900*      INPUT or REVERSE mode
+0910*      no label checking will
+0920*      be performed
+0930*      ALL   All error messages may
+0940*      be ignored
+0950  1 BD DEFAULT-PUBSET                    A    4    D Default pubset assig
+0960*      Default pubset assigned for
+0970*      user. (Used for allocation
+0980*      of files when no pubset is
+0990*      specified.)
+1000  1 BE TEST-PRIVILEGE                    A    3    D NO   User is allowed
+1010*      NO   User is allowed to change
+1020*      his privilege level (used
+1030*      with software product AID
+1040*      and for user id SERVICE).
+1050*      YES  User needs confirmation
+1060*      from operator to change
+1070*      his privilege level.
+1080  1 BF COMMANDS-FILE-NAME                A   54    D Name of group syntax
+1090*      Name of group syntax file or
+1100*      profile for SDF.
+1110  1 BG MAIL-ADDRESS                      A   64    D Mail address for out
+1120*      Mail address for output
+1130*      listings.
+1140  1 BH ACCOUNT-NUMBER                    A    8    D Account number for u
+1150*      Account number for user-id.
+1160*      If more than one account
+1170*      number exist it is necessary
+1180*      to have a processing loop in
+1190*      NATURAL to get them all.
+1200  1 BI MAX-CPU-TIME                      N  5.0    D Maximum CPU time in
+1210*      Maximum CPU time in seconds
+1220*      available for this account
+1230*      number (1-65535).
+1240*      Default is 65535.
+1250  1 BJ NO-TIME-LIMIT                     A    3    D YES  User may specif
+1260*      YES  User may specify NTL (no
+1270*      time limit) for jobs for
+1280*      this account number.
+1290*      NO   User is not authorized.
+1300  1 BK EXPRESS                           A    3    D YES  User may start
+1310*      YES  User may start jobs for
+1320*      this account number
+1330*      immediately, even though
+1340*      the limit of the desired
+1350*      job class has already
+1360*      been reached.
+1370*      NO   User is not authorized.
+1380  1 BL PRIORITY                          N  3.0    D Default job priority
+1390*      Default job priority for this
+1400*      account number.
+1410  1 BM TTYPL                             A    3    D STD   Tasks with typ
+1420*      STD   Tasks with type BATCH or
+1430*      DIALOG allowed for this
+1440*      account number.
+1450*      TP    Type BATCH, DAILOG and
+1460*      TP allowed.
+1470*      SYS   All task types allowed.
+1480  1 BN INHIBIT-DEACTIVATION              A    3    D YES  Prohibition to
+1490*      YES  Prohibition to deactivate
+1500*      tasks of this account
+1510*      number defined.
+1520*      NO   Tasks may be deactivated.
+1530  1 BO CLASS                             N  3.0    D SPOOLOUT-class (0-25
+1540*      SPOOLOUT-class (0-255) for the
+1550*      user's account number.
+1560  1 BP USER-PRIVILEGE                    A    4    D USER  normal user
+1570*      USER  normal user
+1580*      TSOS  privileged user (with
+1590*      TSOS authorization)
+1600  1 BQ MAX-OUTPUT-LINES                  A    8    D Maximum number of SY
+1610*      Maximum number of SYSLST
+1620*      lines allowed for tasks of
+1630*      this user or 'NO LIMIT', if
+1640*      not restricted.
+1650  1 BR MAX-INPUT-CARDS                   A    8    D Maximum number of SY
+1660*      Maximum number of SYSOPT
+1670*      cards allowed for tasks of
+1680*      this user or 'NO LIMIT', if
+1690*      not restricted.
+1700  1 BU USER-ADDRESS-SPACE                N  5.0    D Size of address spac
+1710*      Size of address space for
+1720*      tasks of this user in MB.
+1730  1 BV USERID-PUBSET                     A    4    D ID of pubset from wh
+1740*      ID of pubset from where user
+1750*      attributes are to be read.
+1760*
+1770*      End of USER-ATTRIBUTES
+1780*
+1790******DDM OUTPUT TERMINATED******

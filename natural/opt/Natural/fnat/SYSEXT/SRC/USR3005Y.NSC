@@ -1,0 +1,27 @@
+0010* Program.......: USR3005Y
+0020* Content.......: Program coding
+0030* Responsible...: User
+0040* Description...: Convert special character
+0050*                 &1& - '1' character to transportable
+0060*                       else transportable to character
+0070*                 &2& - in value
+0080*                 &3& - out value
+0090*
+0100************************************************************************
+0110*
+0120&3& := &2&
+0130IF &1& = '1'
+0140  EXAMINE &3& FOR '&' REPLACE WITH '&amp;'
+0150  EXAMINE &3& FOR '''' REPLACE WITH '&apos;'
+0160**EXAMINE &3& FOR H'22' REPLACE WITH '&quot;'  /**ASCII
+0170  EXAMINE &3& FOR H'7F' REPLACE WITH '&quot;'  /**EBCDIC
+0180  EXAMINE &3& FOR '<' REPLACE WITH '&lt;'
+0190  EXAMINE &3& FOR '>' REPLACE WITH '&gt;'
+0200ELSE
+0210  EXAMINE &3& FOR '&apos;' REPLACE WITH ''''
+0220**EXAMINE &3& FOR '&quot;' REPLACE WITH H'22' /**ASCII
+0230  EXAMINE &3& FOR '&quot;' REPLACE WITH H'7F' /**EBCDIC
+0240  EXAMINE &3& FOR '&lt;' REPLACE WITH '<'
+0250  EXAMINE &3& FOR '&gt;' REPLACE WITH '>'
+0260  EXAMINE &3& FOR '&amp;' REPLACE WITH '&'
+0270END-IF

@@ -1,0 +1,227 @@
+0010DB: 148 FILE: 009  - FILE-ALLOCATE                    DEFAULT SEQUENCE:
+0020                              Cataloged by STL      on 2013-08-28 10:31:31
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2013-08-28 10:10:02
+0080*      by user ESY353
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A1 DSNAME                            A   54    D Fully qualified data
+0250*      Fully qualified data set name.
+0260*      For BS2000, fully qualified
+0270*      file name.
+0280  1 A2 VOLSER                            A    6    D Volume serial number
+0290*      Volume serial number where
+0300*      file should be allocated.
+0310*      BS2000: For multi-volume-tape
+0320*      files please use field
+0330*      VOLSER-ARRAY.
+0340  1 A5 DSORG                             A    4    D Data set organisatio
+0350*      Data set organisation
+0360*      (default PS).
+0370*      BS2000: default = ISAM
+0380  1 AH UNIT                              A    8    D Generic unit name on
+0390*      Generic unit name on which
+0400*      to allocate (e.g. 'SYSDA').
+0410*      (Under BS2000 only relevant
+0420*      for TAPES)
+0430*      Not required in VSE.
+0440*
+0450*      Fields common to MVS and VSE
+0460*
+0470  1 DG EXPIRATION-DATX                   D    6    D Expiration date in i
+0480*      Expiration date in internal
+0490*      format.
+0500  1 AG EXPIRATION-DATE                   A    8    D Expiration date in Y
+0510*      Expiration date in YYDDD
+0520*      format, default=00000.
+0530*
+0540*      Fields common to MVS and BS2000
+0550*
+0560  1 A4 RECFM                             A    4    D Record format (defau
+0570*      Record format (default FB).
+0580*      BS2000: Default = V,N
+0590  1 A6 LRECL                             N  5.0    D Logical record lengt
+0600*      Logical record length
+0610*      (default 0).
+0620  1 A7 BLKSIZE                           N  5.0    D Block size (default
+0630*      Block size (default 0).
+0640*      BS2000: No. of pam pages for a
+0650*      block (default 1), if
+0660*      field ALLOCATION-TYPE
+0670*      is PAM (default).
+0680*      Block size in bytes
+0690*      for non STD blocks.
+0700*      (Only allowed for tape
+0710*      files.)
+0720  1 A8 ALLOCATION-TYPE                   A    4    D Space allocation typ
+0730*      Space allocation type:
+0740*      CYL  cylinder
+0750*      TRK  track  (default MVS,VSE)
+0760*      BLK  block
+0770*      Possible values for BS2000:
+0780*      PAM  PAM pages (default)
+0790*      NSTD non standard blocks
+0800*      (tape files)
+0810  1 A9 PRIMARY-ALLOCATION                N 10.0    D Primary space alloca
+0820*      Primary space allocation
+0830*      (default 0).
+0840*      BS2000: number of PAM pages.
+0850*      (default = system default)
+0860  1 AA SECONDARY-ALLOCATION              N 10.0    D Secondary space allo
+0870*      Secondary space allocation
+0880*      (default 0).
+0890*      BS2000: number of PAM pages
+0900*      (default = system default)
+0910  1 C4 LABEL                             A    4    D Type of label proces
+0920*      Type of label processing.
+0930*
+0940*      MVS fields
+0950*
+0960  1 C7 DISP                              A    3    D Disposition of the d
+0970*      Disposition of the data set
+0980*      (OLD/NEW/SHR/MOD).
+0990  1 AB DIRECTORY-BLOCKS                  N  7.0    D Number of directory
+1000*      Number of directory blocks
+1010*      (PDS only).
+1020  1 AC CATALOG                           A    3    D YES  data set will b
+1030*      YES  data set will be
+1040*      cataloged.
+1050*      If generation data set
+1060*      is specified
+1070*      (DSNAME(+1)), data set
+1080*      will always be
+1090*      cataloged.
+1100*      NO   default
+1110  1 AD RLSE                              A    3    D YES  unused space wi
+1120*      YES  unused space will be
+1130*      released after data set
+1140*      is closed.
+1150*      NO   default
+1160  1 AE CONTIG                            A    3    D YES  space allocated
+1170*      YES  space allocated must be
+1180*      contiguous.
+1190*      NO   default
+1200  1 AF ROUND                             A    3    D YES  space is equal
+1210*      YES  space is equal to one or
+1220*      more whole cylinders.
+1230*      NO   default
+1240M 1 AX EXTENDED-TEXT                     A  250    D
+1250  1 C0 VOLUME-COUNT                      N  2.0    D Maximum number of ou
+1260*      Maximum number of output
+1270*      volumes to allocate.
+1280*      Needed if writing multiple
+1290*      reels.
+1300  1 C1 VOLUME-SEQUENCE                   N  2.0    D When a tape data set
+1310*      When a tape data set is
+1320*      catalogued on multiple reels,
+1330*      you may supply a value > 1
+1340*      if you don't want to start
+1350*      processing with the 1st reel.
+1360  1 C2 DENSITY                           A    1    D Tape density:
+1370*      Tape density:
+1380*      3 - 1600 BPI
+1390*      4 - 6250 BPI
+1400  1 C5 DDNAME                            A    8    D This field will cont
+1410*      This field will contain the
+1420*      DDname of the tape drive.
+1430*      It must be specified on calls
+1440*      to READ-FILE/WRITE-FILE.
+1450  1 C6 FREE                              A    3    D If 'YES' is specifie
+1460*      If 'YES' is specified, the
+1470*      allocation for DDNAME will
+1480*      be freed.
+1490  1 C8 WAIT                              A    3    D
+1500  1 C9 SMS-STORAGE-CLASS                 A    8    D Storage class of SMS
+1510*      Storage class of SMS managed
+1520*      file.
+1530  1 CA SMS-MANAGEMENT-CLASS              A    8    D Management class of
+1540*      Management class of SMS
+1550*      managed file.
+1560  1 CB SMS-DATA-CLASS                    A    8    D Data class of SMS ma
+1570*      Data class of SMS managed
+1580*      file.
+1590  1 BB DSNTYPE                           A    8    D Data Set Type Specif
+1600*      Data Set Type Specification
+1610*
+1620*      VSE fields
+1630*
+1640  1 AI EXTENT-START                      N 10.0    D FBA: Block number
+1650*      FBA: Block number
+1660*      CKD: Track number
+1670  1 AJ EXTENT-SIZE                       N 10.0    D Extent size.
+1680*      Extent size.
+1690*
+1700*      BS2000 fields
+1710*
+1720  1 ES SYSTEM-CODE                       B    2      System error code.
+1730*      System error code.
+1740  1 B1 SHARE                             A    3    D Defines whether file
+1750*      Defines whether file may be
+1760*      accessed by other users.
+1770*      Possible values:
+1780*      YES, NO (default)
+1790  1 B2 PRODUCT                           A    1    D 'M' if access method
+1800*      'M' if access method is
+1810*      LMS (BS2000).
+1820  1 B7 ISAM-KEY-POSITION                 N  5.0    D Gives the position o
+1830*      Gives the position of the
+1840*      first byte of the key within
+1850*      the record.( Default is 5
+1860*      for RECFM=V, 1 for RECFM=F)
+1870  1 B8 ISAM-KEY-LENGTH                   N  5.0    D Gives the Key length
+1880*      Gives the Key length. (default
+1890*      = 8, max 253).
+1900  1 BJ REPLACE                           A    3    D YES: Ignore file exi
+1910*      YES: Ignore file existance.
+1920*      NO:  Allocate file only if it
+1930*      does not exist yet.
+1940*      (default).
+1950  1 BL STANDARD-BLOCKS                   A    3    D YES: Blocksize is mu
+1960*      YES: Blocksize is multiple of
+1970*      a pam page (STD,n).
+1980*      NO:  Non standard blocks (only
+1990*      allowed for tape files).
+2000*      See field BKLSIZE.
+2010*      ******************************
+2020*      Field will be deleted in next
+2030*      version| Please use field
+2040*      ALLOCATION-TYPE.
+2050*      ******************************
+2060  1 BM PRIMARY-ALLOCATION-LARGE          N 10.0    D Primary space alloca
+2070*      Primary space allocation
+2080*      supporting large files.
+2090  1 BN SECONDARY-ALLOCATION-LARGE        N 10.0    D Secondary space allo
+2100*      Secondary space allocation
+2110*      supporting large files.
+2120  1 BX BLOCK-CONTROL                     A    6    D Block control type f
+2130*      Block control type for this
+2140*      file (depending disc-type k or
+2150*      NK). Possible values:
+2160*      PAMKEY (default), DATA, NO.
+2170  1 BY PASSWORD                          A    8    D Password for write a
+2180*      Password for write access, if
+2190*      existing file has to be
+2200*      replaced.
+2210M 1 BZ VOLSER-ARRAY                      A    6    D For multi-volume-tap
+2220*      For multi-volume-tape-file:
+2230*      list of max. 5 volumes.
+2240*
+2250*      End of FILE-ALLOCATE
+2260*
+2270******DDM OUTPUT TERMINATED******

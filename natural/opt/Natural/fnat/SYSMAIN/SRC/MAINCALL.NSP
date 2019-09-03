@@ -1,0 +1,178 @@
+0010********************************************************************
+0020*  NOTE: This is an internal TEST program
+0030*        how to use SYSMAIN functions
+0040*        using the subprogram MAINUSER
+0050********************************************************************
+0060DEFINE DATA LOCAL
+00701 SYSMAIN-Command                     (A250)
+00801 Redefine SYSMAIN-Command
+0090  2 SYSMAIN-Command-1                 (A65)
+0100  2 SYSMAIN-Command-2                 (A65)
+0110  2 SYSMAIN-Command-3                 (A65)
+0120  2 SYSMAIN-Command-4                 (A55)
+01301 SYSMAIN-Return-Code                 (N4)
+01401 SYSMAIN-Message                     (A72)
+01501 Source-Library                      (A8)
+01601 Source-Name                         (A32)
+01701 Target-Library                      (A8)
+01801 Target-Name                         (A32)
+01901 Import-Source-Path                  (A40)
+02001 SYSMAIN-Library                     (A8)
+02101 SM-Function                         (A1)
+02201 Input-MSG                           (A79)
+02301 Input-Replace                       (A1)
+02401 Object-Type                         (A9)
+02501 Show-Command                        (L)
+0260END-DEFINE
+0270/*---------------------------------------------------------------------
+0280Set Key All
+0290Show-Command   := True
+0300SM-Function    := 'L'                    /* LIST
+0310Source-Library := *Library-ID
+0320Source-Name    := '*'
+0330Target-Library := *Library-ID
+0340Input-Replace  := 'N'
+0350Object-Type    := 'ALL'
+0360/*
+0370REPEAT
+0380  INPUT (AD=MIL' ' IP=F) with Text Input-MSG
+0390        *TIMX 8X
+0400        'EXAMPLE TO USE SYSMAIN''S CALLABLE ROUTINE' (I) 72T *DATX
+0410     // 5X 'ENTER INFORMATION BELOW (type ''.'' for end) : '
+0420     // 5X 'Function      :' SM-Function (AD=T)  40T '(L,F,C,M,D,R,I)'
+0430     // 5X 'Type          :' Object-Type (AD=T)  40T '(ALL,SA,C,ST,V, RES)'
+0440     // 5X 'Source Name   :' Source-Name
+0450      / 5X 'Source Library:' Source-Library (AD=T)
+0460      / 5X 'Source Path   :' Import-Source-Path 65T '(for Import)'
+0470     // 5X 'Target Library:' Target-Library (AD=T)
+0480      / 5X 'Target Name   :' Target-Name (AD=T)
+0490      / 5X 'Replace (Y/N) :' Input-Replace (AD=T) 32T
+0500  /*
+0510  If (*Pf-KEY <> 'ENTR') or (SM-Function = '.')
+0520    Escape Bottom
+0530  End-If
+0540  Input-MSG := ' '
+0550  /*-------------------------------------------------------------------
+0560  /* Check the object type
+0570  /*-------------------------------------------------------------------
+0580  If not (Object-Type
+0590              = 'ALL'                    /* any saved and/or cataloged
+0600           or = 'C'   or = 'CAT'         /* cataloged objects only
+0610           or = 'SA'  or = 'SAVED'       /* Saved objects only
+0620           or = 'ST'  or = 'STOWED'      /* Stowed objects only
+0630           or = 'V'   or = 'VIEW'        /* DDMs only
+0640           or = 'RES' or = 'RESOURCE')   /* shared Resources only
+0650    Input-MSG := 'Enter a valid type.'
+0660    Escape Top
+0670  End-If
+0680  /*-------------------------------------------------------------------
+0690  /* Buid the SYSMAIN command
+0700  /*-------------------------------------------------------------------
+0710  Decide on first value of SM-Function
+0720    Value 'L'                            /* LIST function
+0730          Compress 'LIST' Object-Type  Source-Name
+0740                   'IN LIB' Source-Library
+0750                   into SYSMAIN-Command
+0760    Value 'F'                            /* FIND function
+0770          Compress 'FIND' Object-Type  Source-Name
+0780                   'IN LIB' Source-Library
+0790                   into SYSMAIN-Command
+0800    Value 'C'                            /* COPY function
+0810          Compress 'COPY' Object-Type  Source-Name
+0820                   'FROM LIB' Source-Library
+0830                   'TO LIB' Target-Library
+0840                   into SYSMAIN-Command
+0850    Value 'M'                            /* MOVE function
+0860          Compress 'MOVE' Object-Type  Source-Name
+0870                   'FROM LIB' Source-Library
+0880                   'TO LIB' Target-Library
+0890                   into SYSMAIN-Command
+0900    Value 'D'                            /* DELETE function
+0910          Compress 'DELETE' Object-Type  Source-Name
+0920                   'IN LIB' Source-Library
+0930                   into SYSMAIN-Command
+0940    Value 'R'                            /* RENAME function
+0950          Compress 'RENAME' Object-Type  Source-Name 'AS' Target-Name
+0960                   'IN LIB' Source-Library 'TO LIB' Target-Library
+0970                   into SYSMAIN-Command
+0980    Value 'I'                            /* IMPORT function
+0990          Compress 'IMPORT' Object-Type  Source-Name
+1000                   'FM PATH' Import-Source-Path
+1010                   'TO LIB' Target-Library
+1020                   into SYSMAIN-Command
+1030    None Value
+1040          Input-MSG := 'Enter a valid function (L,F,C,M,D,R,I) or '-
+1050                       '''.'' to exit.'
+1060          Escape Top
+1070  End-Decide
+1080  If (SM-Function = 'C' or = 'M' or = 'R' or = 'I')
+1090    If (Input-Replace = 'Y')
+1100      Compress SYSMAIN-Command 'WITH REPLACE' into SYSMAIN-Command
+1110    End-If
+1120  End-If
+1130  If (SM-Function = 'R')
+1140    If (Input-Replace = 'Y')
+1150      Then Compress SYSMAIN-Command 'RCOP'      into SYSMAIN-Command
+1160      Else Compress SYSMAIN-Command 'WITH RCOP' into SYSMAIN-Command
+1170    End-If
+1180  End-If
+1190  /*-------------------------------------------------------------------
+1200  /* Display the SYSMAIN command if requested
+1210  /*-------------------------------------------------------------------
+1220  If Show-Command
+1230    INPUT (AD=MIL' ' IP=F) with Text Input-MSG
+1240      / 5X 'Generated SYSMAIN command:'
+1250      / 'Part 1:' SYSMAIN-Command-1
+1260      / 'Part 1:' SYSMAIN-Command-2
+1270      / 'Part 1:' SYSMAIN-Command-3
+1280      / 'Part 1:' SYSMAIN-Command-4
+1290     // 'Press ENTER to continue or any PF-Key to STOP.'
+1300    If (*Pf-KEY <> 'ENTR')
+1310      Escape Bottom
+1320    End-If
+1330  End-If
+1340  /*-------------------------------------------------------------------
+1350  /* Execute the SYSMAIN command
+1360  /*-------------------------------------------------------------------
+1370  CALLNAT 'MAINUSER'
+1380          SYSMAIN-Command
+1390          SYSMAIN-Return-Code
+1400          SYSMAIN-Message
+1410          SYSMAIN-Library
+1420  Print / 'Command' SYSMAIN-Command
+1430        / 'Return Code =' SYSMAIN-Return-Code
+1440        / 'Message =' SYSMAIN-Message
+1450  /*
+1460END-REPEAT
+1470/*---------------------------------------------------------------------
+1480* Examples for SYSMAIN commands (as used in a COMPRESS statement):
+1490*   'import SA' Source-Name 'FM PATH' Import-Source-Path
+1500*          'TO' Target-Library 'WITH SM struct REPLACE'
+1510*   'imp ALL' Source-Name 'FROM PATH' Import-Source-Path
+1520*        'TO' Target-Library 'TYPE hpm' 'SM report'
+1530*   'i' Source-Name 'IN' Import-Source-Path  'TO LIB' Target-Library
+1540*
+1550*   'copy' Source-Name 'FM' Source-Library 'DBID 99 FNR 42'
+1560*                      'TO' Target-Library
+1570*   'copy all' Source-Name 'FM' Source-Library 'TO' Target-Library
+1580*        'WHERE DBID 99 FNR 42 WITH FMDD 90-12-31'
+1590*   'c sa' Source-Name 'FM LIB' Source-Library
+1600*          'TO' 'LIBRARY' Target-Library 'TYPE P FMDD 90-12-31'
+1610*
+1620*   'rename ALL' Source-Name 'AS' Target-Name
+1630*           'IN' Source-Library 'TO' Target-Library
+1640*   'ren' Source-Name 'AS' Target-Name 'TYPE PS' 'FM' Source-Library
+1650*   'R' Source-Name 'AS' Target-Name 'RCOP'
+1660*       'IN' Source-Library  'TO' Target-Library
+1670*   'R C' Source-Name 'AS' Target-Name 'IN' Source-Library
+1680*
+1690*   'delete' Source-Name 'IN' Source-Library
+1700*   'del SA' Source-Name 'IN' Source-Library 'TYPE P'
+1710*   'd' Source-Name
+1720*
+1730*   'list' Source-Name 'IN LIB' Source-Library
+1740*   'LIST VIEW' Source-Name 'IN LIB' Source-Library 'DBID 62 FNR 100'
+1750*
+1760*   'find' 'SAVED' Source-Name 'IN' Source-Library 'TYPE P'
+1770/*---------------------------------------------------------------------
+1780END

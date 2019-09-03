@@ -1,0 +1,196 @@
+0010DB: 148 FILE: 037  - COPY-FILE                        DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:21
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:21
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 AA FROM-DSNAME                       A   54    D Fully qualified inpu
+0250*      Fully qualified input data set
+0260*      name.
+0270  1 AI FROM-PRODUCT                      A    1    D Specify access metho
+0280*      Specify access method for
+0290*      FROM-LIBRARY:
+0300*      'P'  PANVALET
+0310*      'L'  CA-LIBRARIAN
+0320*      'M'  LMS (BS2000)
+0330  1 AC FROM-PASSWORD                     A    8    D Password for input d
+0340*      Password for input data set.
+0350  1 AO TO-DSNAME                         A   54    D Fully qualified outp
+0360*      Fully qualified output data
+0370*      set name.
+0380  1 AW TO-PRODUCT                        A    1    D Specify access metho
+0390*      Specify access method for
+0400*      TO-LIBRARY:
+0410*      'P'  PANVALET
+0420*      'L'  CA-LIBRARIAN
+0430*      'M'  LMS (BS2000)
+0440  1 AQ TO-PASSWORD                       A    8    D Password for output
+0450*      Password for output data set.
+0460  1 A7 REPLACE                           A    3    D 'YES' - Add/replace
+0470*      'YES' - Add/replace object
+0480*      'NO'  - Add object. If it
+0490*      exists, error.
+0500*      'REP' - Replace object. If it
+0510*      does not exist, error.
+0520  1 EN ERROR-NODE                        N  5.0      Node that generated
+0530*      Node that generated
+0540*      ERROR-CODE.
+0550  1 EV ERROR-VIEW                        N  3.0      Called view that ret
+0560*      Called view that returned
+0570*      ERROR-CODE, if applicable.
+0580*
+0590*      Fields common to MVS and VSE
+0600*
+0610  1 AD FROM-VOLSER                       A    6    D Volume serial of the
+0620*      Volume serial of the input
+0630*      data set.
+0640  1 AM FROM-USERID                       A    8    D User-Id in the 'FROM
+0650*      User-Id in the 'FROM-NODE',
+0660*      if it is different from local
+0670*      User-Id.
+0680  1 AN FROM-USER-PASSWORD                A    8    D Password in the 'FRO
+0690*      Password in the 'FROM-NODE',
+0700*      if 'FROM-USERID' is different
+0710*      from local User-Id.
+0720  1 AB FROM-MEMBER                       A    8    D Name of member to be
+0730*      Name of member to be copied.
+0740  1 AJ FROM-NODE                         N  5.0    D NODE-id of ENTIRE SY
+0750*      NODE-id of ENTIRE SYSTEM
+0760*      SERVER from which to copy.
+0770  1 AR TO-VOLSER                         A    6    D Volume serial of the
+0780*      Volume serial of the output
+0790*      data set.
+0800  1 A2 TO-USERID                         A    8    D User-Id in the 'TO-N
+0810*      User-Id in the 'TO-NODE', if
+0820*      different from local User-Id.
+0830  1 A3 TO-USER-PASSWORD                  A    8    D Password in the 'TO-
+0840*      Password in the 'TO-NODE', if
+0850*      'TO-USERID' is different from
+0860*      local User-Id.
+0870  1 AP TO-MEMBER                         A    8    D Name to be assigned
+0880*      Name to be assigned to member
+0890*      in the output data set
+0900*      (if omitted, input member name
+0910*      is used).
+0920  1 AX TO-NODE                           N  5.0    D NODE-id of ENTIRE SY
+0930*      NODE-id of ENTIRE SYSTEM
+0940*      SERVER to which to copy.
+0950*
+0960*      MVS fields
+0970*
+0980*
+0990*      VSE fields
+1000*
+1010  1 AE FROM-LIBRARY                      A    8    D Library where to cop
+1020*      Library where to copy from.
+1030  1 AF FROM-SUB-LIBRARY                  A    8    D Sublibrary where to
+1040*      Sublibrary where to copy from.
+1050  1 AG FROM-MEMBER-TYPE                  A    8    D Type of member which
+1060*      Type of member which is to be
+1070*      copied.
+1080  1 AH FROM-VSAM-CATALOG                 A    7    D Name of the VSAM cat
+1090*      Name of the VSAM catalog
+1100*      where the IN-LIBRARY is kept.
+1110  1 C0 FROM-LRECL                        B    2    D Record length of fil
+1120*      Record length of file to be
+1130*      copied.
+1140  1 C1 FROM-BLKSIZE                      B    2    D Block size of file t
+1150*      Block size of file to be
+1160*      copied.
+1170  1 C2 FROM-RECFM                        A    2    D Record format of fil
+1180*      Record format of file to be
+1190*      copied.
+1200  1 AS TO-LIBRARY                        A    8    D Target library for c
+1210*      Target library for copy.
+1220  1 AT TO-SUB-LIBRARY                    A    8    D Target sublibrary fo
+1230*      Target sublibrary for copy.
+1240  1 AU TO-MEMBER-TYPE                    A    8    D Target member type f
+1250*      Target member type for copy.
+1260  1 AV TO-VSAM-CATALOG                   A    7    D Name of the VSAM cat
+1270*      Name of the VSAM catalog
+1280*      where the OUT-LIBRARY is kept.
+1290  1 A4 TO-INLINE-DATA                    A    3    D For catalogued proce
+1300*      For catalogued procedures :
+1310*      (See LIBR CATALOG,DATA=YES|NO)
+1320*      YES - Input contains SYSIPT
+1330*      data.
+1340*      NO  - Input contains no SYSIPT
+1350*      data (DEFAULT).
+1360  1 A5 TO-MSHP                           A    3    D As EXEC LIBR,PARM='M
+1370*      As EXEC LIBR,PARM='MSHP'
+1380*      YES - MSHP protection will be
+1390*      bypassed.
+1400*      NO  - MSHP protection will not
+1410*      be bypassed (DEFAULT).
+1420*
+1430*      BS2000 fields
+1440*
+1450  1 ES SYSTEM-CODE                       B    2      System error code.
+1460*      System error code.
+1470  1 B1 SAME                              A    3    D YES specifies the ou
+1480*      YES specifies the out-file
+1490*      must have the same security
+1500*      and save options as the
+1510*      in-file.
+1520  1 BM DSORG                             A    4    D For copy of LMS elem
+1530*      For copy of LMS element to
+1540*      file: DSORG of target file.
+1550*      Possible values:
+1560*      CAT   DSORG as defined wihtin
+1570*      catalog entry of file
+1580*      SAM   DSORG = SAM
+1590*      ISAM  DSORG = ISAM
+1600*      Default = default of LMS.
+1610  1 AB FROM-ELEMENT                      A   64    D Name of LMS element
+1620*      Name of LMS element to be
+1630*      copied.
+1640  1 B6 FROM-ELEMENT-VERSION              A   24    D Version of LMS eleme
+1650*      Version of LMS element to be
+1660*      copied.
+1670  1 AG FROM-ELEMENT-TYPE                 A    8    D Type of LMS element
+1680*      Type of LMS element to be
+1690*      copied.
+1700  1 BO FROM-ELEMENT-PASSWORD             A    8    D Password for protect
+1710*      Password for protected input
+1720*      element.
+1730  1 AP TO-ELEMENT                        A   64    D Name of LMS element
+1740*      Name of LMS element to which
+1750*      file is to be copied.
+1760  1 B7 TO-ELEMENT-VERSION                A   24    D Version of LMS eleme
+1770*      Version of LMS element to
+1780*      which file is to be copied.
+1790  1 AU TO-ELEMENT-TYPE                   A    8    D Type of LMS element
+1800*      Type of LMS element to which
+1810*      file is to be copied.
+1820  1 BP TO-ELEMENT-PASSWORD               A    8    D Password for protect
+1830*      Password for protected output
+1840*      element.
+1850  1 BQ TO-ELEMENT-USER-DATE              A   14    D User date for output
+1860*      User date for output element.
+1870*      Format: YYYY-MM-DDaaaa
+1880*      where 'aaaa' can be
+1890*      any 4 character string
+1900  1 BR TO-ELEMENT-USER-TIME              A    8    D User time for output
+1910*      User time for output element.
+1920*      Format: hh:mm:ss
+1930*
+1940*      End of COPY-FILE
+1950*
+1960******DDM OUTPUT TERMINATED******

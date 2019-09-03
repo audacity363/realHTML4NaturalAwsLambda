@@ -1,0 +1,24 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Programming Mode
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180Type of programming mode of the Natural programming objects
+0190to be processed:
+0200  'R'   Report mode objects only
+0210  'S'   Structured mode objects only
+0220  'A'   Any (no check)
+0230
+0240<HelpTextEnd>

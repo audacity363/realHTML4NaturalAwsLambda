@@ -1,0 +1,173 @@
+0010Shut down a server on an EntireX Broker node
+0020.
+0030Documentation ......... USR8213T    /*  Text object
+0040Interface ............. USR8213N    /*  Cataloged subprogram
+0050Example Program ....... USR8213P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC
+0100.
+0110Keywords .............. +NEW-NAT-8.3.4, BROKER SERVER, ENTIREX, RPC,
+0120                        SERVER, SHUTDOWN-SERVER, TERMINATE
+0130.
+0140Function .............. Shut down a server on an EntireX Broker node.
+0150                        Get a list of Natural RPC servers of a given
+0160                        EntireX Broker in order to identify the right
+0170                        sequence number to shut down a specific server.
+0180.
+0190Prerequisites ......... EntireX Broker version 9.0 or above which
+0200                        corresponds to a minimum version 8 of the
+0210                        Command and Information Service.
+0220.
+0230Parameters
+0240----------
+0250Define the following parameters with the DEFINE DATA statement:
+0260.
+0270 1 USR8213-P
+0280   2 P-FUNCTION             (A32)  /* In : INFO-SERVER, LOGON, LOGOFF
+0290                                   /*      SHUTDOWN-SERVER
+0300   2 P-BROKER-ID            (A32)  /* In
+0310   2 P-USER-ID              (A32)  /* In
+0320   2 P-PASSWORD             (A32)  /* In
+0330   2 P-SERVER-CLASS         (A32)  /* In (INFO-SERVER) usually RPC
+0340   2 P-SERVER-NAME          (A32)  /* In (INFO-SERVER)
+0350   2 P-SERVICE              (A32)  /* In (INFO-SERVER) Service type,
+0360                                   /*    CALLNAT for Natural RPC servers
+0370   2 P-HOSTNAME             (A256) /* In (INFO-SERVER) LPAR
+0380   2 P-APPLICATIONNAME      (A64)  /* In (INFO-SERVER)
+0390   2 P-SEQUENCE-NUMBER      (I4)   /* In (SHUTDOWN-SERVER)
+0400   2 P-IMMEDIATE            (A1)   /* In (SHUTDOWN-SERVER)
+0410                              /* TRUE: immediately terminate all con-
+0420                              /*   versations for the specified server.
+0430                              /* FALSE: Existing conversations are
+0440                              /*   allowed to end normally; no new con-
+0450                              /*   versations are accepted.
+0460   2 P-INFO-CS              (1:*)  /* Out (Parts of INFO_CS)
+0470     3 UID                  (A32)
+0480     3 PUID                 (B28)
+0490     3 TOKEN                (A32)
+0500     3 SERVERCLASS          (A32)
+0510     3 SERVERNAME           (A32)
+0520     3 SERVICENAME          (A32)
+0530     3 HOSTNAME             (A256)
+0540     3 IPADDRESS            (A16)
+0550     3 IPV6ADDRESS          (A46)
+0560     3 APPLICATIONNAME      (A64)
+0570     3 NSEQUENCENUMBER      (I4)
+0580     3 CHARSET              (I2)
+0590     3 FHIGHORDERFIRST      (I2)
+0600     3 CREATE-TIME          (T)
+0610   2 P-MESSAGE              (A) DYNAMIC /* OUT
+0620   2 P-RC                   (I4)        /* OUT 0=O.K., 1=Error Broker
+0630.
+064001 BROKER-INFO                              /* OUT, EntireX Broker
+0650   2 P-CIS-VERSION          (I2)            /* Version of Command and
+0660                                            /*   Information Service
+0670   2 P-CB-KERNELSECURITY    (A1)            /* Status of kernel security
+0680   2 P-Logon-Done           (A1)            /* Logon to Broker done
+0690   2 P-Logon-Required       (A1)            /* Broker requires Logon
+0700   2 P-ETB-API-VERSION      (I2)            /* Highest supported API
+0710   2 BROKER-VERSIONSTRING   (A)     DYNAMIC /* Broker version string
+0720   2 BRKSTUB-VERSIONSTRING  (A)     DYNAMIC /* Broker stub version str.
+0730   2 ADD-BRK-INFO           (A/1:*) DYNAMIC /* not used
+0740.
+0750.
+0760Interface Call
+0770--------------
+0780Use the interface with the CALLNAT statement:
+0790.
+0800CALLNAT 'USR8213N' USR8213-P
+0810                   BROKER-INFO
+0820.
+0830.
+0840Using the Application Programming Interface:
+0850--------------------------------------------
+0860Copy the subprogram USR8213N to the library SYSTEM or to the appropriate
+0870steplib library, or to the required library.
+0880.
+0890Following variables have to be filled before invoking the interface:
+0900.
+0910P-FUNCTION
+0920  INFO-SERVER returns information about the server(s) such as host name,
+0930      application name, or creation time which may help you identifying
+0940      the server you want to shutdown (see below).
+0950      Selection criteria are server name as well as host name or, if not
+0960      applied, application name.
+0970.
+0980  SHUTDOWN-SERVER sends a shutdown request to a EntireX Broker specified
+0990      by sequence number.
+1000.
+1010  LOGON/LOGOFF to/from EntireX Broker for SHUTDOWN command.
+1020      If LOGON/LOGOFF from/to Broker is not used, it will be
+1030      done internally for command SHUTDOWN-SERVER.
+1040.
+1050P-BROKER-ID
+1060  EntireX Broker name.
+1070.
+1080P-USER-ID
+1090  The user ID to log on to the EntireX Broker.
+1100.
+1110P-PASSWORD
+1120  The password to logon to the EntireX Broker if EntireX Broker security
+1130  is active.
+1140  If EntireX Broker security is active, a password must be specified.
+1150  If EntireX Broker security uses the trusted user ID mechanism, the
+1160  reserved password *TRUSTED can be used instead of a user password.
+1170.
+1180P-SERVER-CLASS
+1190  Selection criterion. Server class is usually RPC.
+1200.
+1210P-SERVER-NAME
+1220  Selection criterion. Server name, wildcard is asterisk ('*').
+1230.
+1240P-SERVICE
+1250  Selection criterion. Service type is CALLNAT for Natural RPC servers.
+1260.
+1270P-HOSTNAME
+1280  Selection criterion. Wildcard is either asterisk or the syntax of the
+1290  MASK option (-> Natural for Mainframes Documentation>Programming Guide
+1300    >Other programming aspects: Logical condition criteria>MASK Option -
+1310     Check Selected Positions>Characters in a Mask)
+1320.
+1330P-APPLICATIONNAME
+1340  Selection criterion. Wildcard is either asterisk or the syntax of the
+1350  MASK option.
+1360.
+1370P-SEQUENCE-NUMBER
+1380  Unique sequence number of client/server.
+1390.
+1400.
+1410Information returned with function INFO-SERVER:
+1420------------------------------------------------
+1430The following fields from the INFO_CS structure are returned:
+1440   UID              USER-ID in the ACI
+1450   PUID             physical internal unique ID
+1460   TOKEN            Corresponds to TOKEN in the ACI
+1470   SERVERCLASS      When waiting for ANY, NEW or OLD, the class name ...
+1480   SERVERNAME       - " -                                server name ...
+1490   SERVICENAME      - " -                               service name ...
+1500                              ...of the service to wait for is returned.
+1510   HOSTNAME         Host name of server.
+1520   IPADDRESS        IPv4 address of server.
+1530   IPV6ADDRESS      IPv6 address of server.
+1540   APPLICATIONNAME  The name of the executable that called the broker.
+1550                    On mainframe it is the job name.
+1560   NSEQUENCENUMBER  Unique sequence number of client/server.
+1570   CHARSET          Character set of platform:  34  EBCDIC IBM
+1580                                                66  EBCDIC SNI
+1590                                                 1  ASCII PC 386
+1600                                                16  ASCII PC OS/2
+1610                                               128  ASCII 8859-1
+1620   FHIGHORDERFIRST   Endian type of platform:    1  Big endian
+1630                                                 0  Little endian
+1640   CREATE-TIME       Creation time in Natural (T) format.
+1650.
+1660For a detailed description, see webMethods EntireX documentation
+1670  > Components and Features of EntireX > ACI Programming
+1680  > Broker CIS Data Structures > Information Reply Structures
+1690  > Client-Server-Participant-Object (Struct INFO_CS).
+1700.
+1710***** End of Description *****
+1720
+1730

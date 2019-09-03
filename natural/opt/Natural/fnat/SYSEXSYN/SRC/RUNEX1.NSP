@@ -1,0 +1,33 @@
+0010** Example 'RUNEX1': RUN (with dynamic source program creation)
+0020************************************************************************
+0030DEFINE DATA
+0040GLOBAL
+0050  USING RUNEXGDA
+0060LOCAL
+00701 #NAME (A20)
+00801 #CITY (A20)
+0090END-DEFINE
+0100*
+0110INPUT 'Please specify the search values:' //
+0120      'Name:' #NAME /
+0130      'City:' #CITY
+0140*
+0150RESET +CRITERIA     /* defined in GDA 'RUNEXGDA'
+0160*
+0170IF #NAME = ' ' AND #CITY = ' '
+0180  REINPUT 'Enter at least 1 value'
+0190END-IF
+0200*
+0210IF #NAME NE ' '
+0220  COMPRESS 'NAME' ' =''' #NAME '''' INTO +CRITERIA LEAVING NO
+0230END-IF
+0240IF #CITY NE ' '
+0250  IF +CRITERIA NE ' '
+0260    COMPRESS +CRITERIA 'AND' INTO +CRITERIA
+0270  END-IF
+0280  COMPRESS +CRITERIA ' CITY =''' #CITY '''' INTO +CRITERIA LEAVING NO
+0290END-IF
+0300*
+0310RUN 'RUNEXFND'
+0320*
+0330END

@@ -1,0 +1,373 @@
+0010** Example 'CODEPGX1': List IANA character sets
+0020**                     Perform 'Help' for more info.
+0030************************************************************************
+0040*
+0050DEFINE DATA
+0060LOCAL USING CODEPL01
+0070LOCAL
+0080*
+0090* Constants
+010001 #PAGE_SIZE_MAX  (N3) CONST <15>  /* max lines in array
+011001 #HEAD-LINE      (P3) CONST <4>   /* nbr of head lines
+0120*
+0130*  Screen data
+014001 #PF-KEY         (A8)             /* ==> *PF-KEY
+015001 #PAGE_SIZE      (N3)             /* actual used lines on the page
+016001 #HEAD_LINE      (A3)             /* for overwrite
+017001 #HEAD_CHARSET   (A50)            /* for overwrite
+018001 #HEAD1          (A68)
+0190  INIT
+0200  <'                    - Character Set Names and Aliases -'>
+021001 #HEAD           (A73)            /* initial value
+0220  INIT
+0230  <'Mk Nbr Character Set                                      MIBenum'-
+0240  ' Nat Enc'>
+025001 #SEQ            (I4)             /* SEQ-NUM OF LINE
+026001 #SEQ1           (I4)             /* SEQ-NUM OF LINE (calculate)
+027001 #SEQ-A          (A3)
+028001 #SUP            (A3)
+029001 #ENC            (A3)
+030001 #P-LINE         (N6)             /* CURRENT LINE ON PAGE
+031001 #LINE           (A76)            /* actual screen line
+032001 #CURS-LINE      (P3)             /* CURRENT cursor line
+033001 #CURS-LINE-L    (P3)             /* line calculation
+034001 #FILL-PAGE      (L)              /* fill page requested
+035001 #RSP            (I4)             /* response code
+036001 G_MSG           (A79)            /* MESSAGE TEXT
+0370*
+0380* Screen arrays
+039001 #MARK           (A2/1:#PAGE_SIZE_MAX)   /* mark column
+040001 #CV             (C/1:#PAGE_SIZE_MAX)  INIT<(AD=D)>  /* contr variable
+041001 #SC_LINE_SEQ    (I4/1:#PAGE_SIZE_MAX)   /* seq nbr of lines
+042001 #SC_LINE        (A72/1:#PAGE_SIZE_MAX)  /* actual screen lines
+0430*
+0440* other
+045001 #I              (I4)
+046001 #ALIAS          (A64)            /* code page name upper
+047001 #MIBENUM        (A6)             /* MIBenum
+048001 G_TEST          (L)              /* test function
+0490END-DEFINE
+0500*
+0510* MOVE TRUE TO G_TEST               /* for test
+0520*
+0530FORMAT KD=ON
+0540RESET  #P-LINE
+0550MOVE #PAGE_SIZE_MAX TO #PAGE_SIZE
+0560SET KEY PF1 NAMED 'Help'
+0570  PF3 NAMED 'Exit'
+0580  PF4 NAMED 'List'
+0590  PF5 NAMED 'Conv'
+0600  PF7 NAMED '-'
+0610  PF8 NAMED '+'
+0620  PF9 NAMED '--'
+0630  PF10 NAMED '++'
+0640SET KEY PA1 = OFF
+0650  PA2 = OFF
+0660  PA3 = OFF
+0670*
+0680CALLNAT 'CODEPN01' #IANA-SUPPORTED(*) #IANA-ENCODING(*)
+0690  G_MSG #RSP                        /* get the info
+0700*
+0710MOVE 1 TO #SEQ                      /* start from here
+0720PERFORM FILL-PAGE
+0730*
+0740REPEAT                              /* input loop
+0750  RESET #FILL-PAGE
+0760  RESET INITIAL #HEAD_LINE /* #HEAD_CHARSET  /* Fill with '----'
+0770*
+0780* Read the map
+0790*
+0800  INPUT (IP=OFF) WITH TEXT G_MSG (AD=I CD=RE)
+0810    #HEAD1  (AD=O)   //
+0820    2T #HEAD  (AD=O)/
+0830    2T '--' #HEAD_LINE (AD='-')
+0840    #HEAD_CHARSET (AD='-') '------- --- ---' /
+0850    2T #MARK(01) (AD=MT) #SC_LINE(01) (AD=O) /
+0860    2T #MARK(02) (AD=MT) #SC_LINE(02) (AD=O) /
+0870    2T #MARK(03) (AD=MT) #SC_LINE(03) (AD=O) /
+0880    2T #MARK(04) (AD=MT) #SC_LINE(04) (AD=O) /
+0890    2T #MARK(05) (AD=MT) #SC_LINE(05) (AD=O) /
+0900    2T #MARK(06) (AD=MT) #SC_LINE(06) (AD=O) /
+0910    2T #MARK(07) (AD=MT) #SC_LINE(07) (AD=O) /
+0920    2T #MARK(08) (AD=MT) #SC_LINE(08) (AD=O) /
+0930    2T #MARK(09) (AD=MT) #SC_LINE(09) (AD=O) /
+0940    2T #MARK(10) (AD=MT) #SC_LINE(10) (AD=O) /
+0950    2T #MARK(11) (AD=MT) #SC_LINE(11) (AD=O) /
+0960    2T #MARK(12) (AD=MT) #SC_LINE(12) (AD=O) /
+0970    2T #MARK(13) (AD=MT) #SC_LINE(13) (AD=O) /
+0980    2T #MARK(14) (AD=MT) #SC_LINE(14) (AD=O) /
+0990    2T #MARK(15) (AD=MT) #SC_LINE(15) (AD=O)
+1000
+1010  RESET G_MSG
+1020  MOVE *PF-KEY TO #PF-KEY           /* use this
+1030*
+1040* Check for end
+1050*
+1060  IF #PF-KEY = 'PF3' OR = 'CLR'
+1070      OR #HEAD_LINE = '.'          /* also possible
+1080    ESCAPE BOTTOM
+1090  END-IF
+1100*
+1110  #CURS-LINE := *CURS-LINE         /* line with cursor on
+1120  IF *CURS-LINE <= #HEAD-LINE      /* outside
+1130    #CURS-LINE-L := -1             /* set to first line on page
+1140  ELSE
+1150    #CURS-LINE-L := *CURS-LINE - #HEAD-LINE /* line with cursor on
+1160  END-IF
+1170  IF #CURS-LINE-L > #PAGE_SIZE     /* outside
+1180    #CURS-LINE-L := -1
+1190  END-IF
+1200*
+1210* Check Mark column
+1220*
+1230  FOR #P-LINE = 1 TO #PAGE_SIZE
+1240    DECIDE ON FIRST VALUE OF #MARK (#P-LINE)
+1250      VALUE ' '
+1260        ESCAPE TOP
+1270      VALUE '.'
+1280        MOVE 'PF3' TO #PF-KEY
+1290        ESCAPE BOTTOM
+1300      VALUE 'L ', ' L'
+1310        IF #SC_LINE_SEQ(#P-LINE) = 0
+1320          MOVE 'Empty line marked.' TO G_MSG
+1330        ELSE
+1340          MOVE #SC_LINE_SEQ(#P-LINE) TO #I
+1350          STACK TOP #IANA-ALIAS(#I)
+1360          IF #IANA-ENCODING (#I) = '2'
+1370            FETCH RETURN 'CODEPXL2'
+1380          ELSE
+1390            FETCH RETURN 'CODEPXL1'
+1400          END-IF
+1410          MOVE #SC_LINE_SEQ(1) TO #SEQ
+1420        END-IF
+1430      VALUE 'C ', ' C'
+1440        IF #SC_LINE_SEQ(#P-LINE) = 0
+1450          MOVE 'Empty line marked.' TO G_MSG
+1460        ELSE
+1470          MOVE #SC_LINE_SEQ(#P-LINE) TO #I
+1480          STACK TOP #IANA-ALIAS(#I)
+1490          FETCH RETURN 'CODEPXC1'
+1500          MOVE #SC_LINE_SEQ(1) TO #SEQ
+1510        END-IF
+1520      ANY
+1530        RESET #MARK (#P-LINE)
+1540      NONE VALUE
+1550        COMPRESS 'Invalid line command ''' #MARK (#P-LINE)
+1560          '''. Use ''L'' for List and ''C'' for Convert.'
+1570          INTO G_MSG LEAVING NO
+1580        RESET #MARK (#P-LINE)
+1590    END-DECIDE
+1600  END-FOR
+1610*
+1620  DECIDE ON FIRST VALUE OF #PF-KEY
+1630    VALUE 'ENTR'
+1640      MOVE #SC_LINE_SEQ(1) TO #SEQ1 /* remember
+1650      IF #HEAD_LINE IS (N3)         /* line nbr specified
+1660        #SEQ := VAL(#HEAD_LINE)     /* start from here
+1670        IF #SEQ <= 0
+1680          MOVE 1 TO #SEQ
+1690        END-IF
+1700        IF #SEQ > #IANA-MAX
+1710          PERFORM LAST-PAGE
+1720        ELSE
+1730          MOVE TRUE TO #FILL-PAGE
+1740        END-IF
+1750      END-IF
+1760*
+1770      IF #HEAD_CHARSET NE ' '      /* char set specified
+1780        MOVE #HEAD_CHARSET TO #ALIAS
+1790        EXAMINE #ALIAS TRANSLATE INTO UPPER
+1800        MOVE ENCODED #ALIAS TO #ALIAS IN CODEPAGE 'US-ASCII'
+1810        RESET #SEQ
+1820        FOR #I = 1 TO #IANA-MAX
+1830          MOVE #IANA-ALIAS (#I) TO #IANA-UPPER
+1840          EXAMINE #IANA-UPPER TRANSLATE INTO UPPER
+1850          MOVE ENCODED #IANA-UPPER TO #IANA-UPPER IN CODEPAGE 'US-ASCII'
+1860          IF  #IANA-UPPER  < #ALIAS
+1870            ESCAPE TOP
+1880          END-IF
+1890          IF  #IANA-UPPER >= #ALIAS
+1900            MOVE #I TO #SEQ
+1910            ESCAPE BOTTOM
+1920          END-IF
+1930        END-FOR
+1940        IF #SEQ = 0                /* not found
+1950          PERFORM LAST-PAGE
+1960        ELSE
+1970          MOVE TRUE TO #FILL-PAGE
+1980        END-IF
+1990      END-IF
+2000    VALUE 'PF1'                    /* Help
+2010      WRITE NOTITLE
+2020        '                                 - Help -' //
+2030        'This program lists all character set names and aliases.'
+2040        'For each character' /
+2050        'set, it displays whether the corresponding code page is'
+2060        'available in Natural,' /
+2070        'which encoding it uses (1 byte, 2 byte, etc.) and the'
+2080        'MIBenum. The MIBenum'
+2090        'value is a unique value for use in MIBs (management'
+2100        'information bases) to' /
+2110        'identify coded character sets.' //
+2120        'If you overwrite the hyphens in the header line, the'
+2130        'list starts from the' /
+2140        'corresponding number or character set.' //
+2150        'You can mark a line (column Mk) with' /
+2160        ' L - list all characters of the character set' /
+2170        ' C - convert a string from the character set into'
+2180        'its hexadecimal' /
+2190        '     representation and vice versa.' //
+2200        'If you set the cursor into a line and press PF4 (list)'
+2210        'or PF5 (convert), the' /
+2220        'service is performed for the corresponding character set.'
+2230    VALUE 'PF3'                    /* Exit
+2240      ESCAPE BOTTOM
+2250    VALUE 'PF4'                    /*  list all chars
+2260      IF #CURS-LINE-L = -1
+2270        MOVE #SC_LINE_SEQ(1) TO #I /* use first
+2280      ELSE
+2290        IF #SC_LINE_SEQ(#CURS-LINE-L) = 0  /* behind last
+2300          MOVE #IANA-MAX TO #I     /* use last
+2310        ELSE
+2320          MOVE #CURS-LINE-L TO #P-LINE
+2330          MOVE #SC_LINE_SEQ(#CURS-LINE-L) TO #I
+2340        END-IF
+2350      END-IF
+2360      STACK TOP #IANA-ALIAS(#I)
+2370      IF #IANA-ENCODING (#I) = '2'
+2380        FETCH RETURN 'CODEPXL2'
+2390      ELSE
+2400        FETCH RETURN 'CODEPXL1'
+2410      END-IF
+2420      MOVE #SC_LINE_SEQ(1) TO #SEQ
+2430      MOVE TRUE TO #FILL-PAGE
+2440    VALUE 'PF5'   /*  convert
+2450      IF #CURS-LINE-L = -1
+2460        MOVE #SC_LINE_SEQ(1) TO #I  /* use first
+2470      ELSE
+2480        IF #SC_LINE_SEQ(#CURS-LINE-L) = 0
+2490          MOVE #IANA-MAX TO #I     /* use last
+2500        ELSE
+2510          MOVE #CURS-LINE-L TO #P-LINE
+2520          MOVE #SC_LINE_SEQ(#CURS-LINE-L) TO #I
+2530        END-IF
+2540      END-IF
+2550      STACK TOP #IANA-ALIAS(#I)
+2560      FETCH RETURN 'CODEPXC1'
+2570      MOVE #SC_LINE_SEQ(1) TO #SEQ
+2580      MOVE TRUE TO #FILL-PAGE
+2590    VALUE 'PF7'                  /* '-' = previous page
+2600      RESET INITIAL #HEAD_LINE #HEAD_CHARSET
+2610      PERFORM PREV-PAGE
+2620    VALUE 'PF8'   /* '+' = next page
+2630      RESET INITIAL #HEAD_LINE #HEAD_CHARSET
+2640      IF #CURS-LINE-L <= 1   /* cursor not on a line or on first line
+2650        PERFORM NEXT-PAGE
+2660      ELSE
+2670        MOVE #SC_LINE_SEQ(#CURS-LINE-L) TO #SEQ
+2680*         #P-LINE-1 := #CURS-LINE-L - 1
+2690        MOVE TRUE TO #FILL-PAGE
+2700      END-IF
+2710    VALUE 'PF9'                 /* '--' = first page
+2720      RESET INITIAL #HEAD_LINE #HEAD_CHARSET
+2730      PERFORM FIRST-PAGE
+2740    VALUE 'PF10'                /* '++' = last page
+2750      RESET INITIAL #HEAD_LINE #HEAD_CHARSET
+2760      PERFORM LAST-PAGE
+2770    NONE VALUE
+2780      COMPRESS 'Function key' *PF-KEY 'not allowed.'
+2790        INTO G_MSG
+2800  END-DECIDE
+2810  IF #FILL-PAGE
+2820    PERFORM FILL-PAGE
+2830  END-IF
+2840END-REPEAT
+2850*
+2860*********************************************************************
+2870*********************************************************************
+2880DEFINE SUBROUTINE FIRST-PAGE
+2890IF G_TEST
+2900  WRITE 'SUBROUTINE FIRST-PAGE'
+2910END-IF
+2920MOVE 1 TO #SEQ                  /* SEQ-NUM OF LINE
+2930MOVE 'This is the first page' TO G_MSG
+2940PERFORM FILL-PAGE
+2950END-SUBROUTINE
+2960*********************************************************************
+2970DEFINE SUBROUTINE PREV-PAGE
+2980IF G_TEST
+2990  WRITE 'SUBROUTINE PREV-PAGE'
+3000END-IF
+3010#SEQ := #SC_LINE_SEQ(1) - #PAGE_SIZE
+3020IF #SEQ <= 0
+3030  MOVE 1 TO #SEQ
+3040  MOVE 'This is the first page' TO G_MSG
+3050END-IF
+3060PERFORM FILL-PAGE              /* start from #seq
+3070END-SUBROUTINE
+3080*********************************************************************
+3090DEFINE SUBROUTINE NEXT-PAGE
+3100IF G_TEST
+3110  WRITE 'SUBROUTINE NEXT-PAGE' '=' #PAGE_SIZE /
+3120    'Last #SEQ on page =' #SC_LINE_SEQ(#PAGE_SIZE)
+3130END-IF
+3140#SEQ1 := #SEQ                   /* save line nbr of last line
+3150#SEQ := #SC_LINE_SEQ(1) + #PAGE_SIZE
+3160IF #SEQ > #IANA-MAX
+3170  MOVE #SEQ1 TO #SEQ            /* restore it
+3180  MOVE 'This is the last page' TO G_MSG
+3190  ESCAPE ROUTINE
+3200END-IF
+3210PERFORM FILL-PAGE               /* start from #seq
+3220END-SUBROUTINE
+3230*********************************************************************
+3240DEFINE SUBROUTINE LAST-PAGE
+3250IF G_TEST
+3260  WRITE 'SUBROUTINE LAST-PAGE'
+3270END-IF
+3280#SEQ := #IANA-MAX - #PAGE_SIZE +1
+3290MOVE 'This is the last page' TO G_MSG
+3300PERFORM FILL-PAGE              /* start from #seq
+3310END-SUBROUTINE
+3320*********************************************************************
+3330DEFINE SUBROUTINE FILL-PAGE
+3340IF G_TEST
+3350  WRITE 'SUBROUTINE FILL-PAGE' '=' #SEQ
+3360END-IF
+3370RESET  INITIAL #CV (1:#PAGE_SIZE_MAX)
+3380RESET #SC_LINE (1:#PAGE_SIZE)
+3390RESET #MARK (1:#PAGE_SIZE)
+3400RESET #SC_LINE_SEQ(*)
+3410
+3420* #seq -> first line
+3430FOR #P-LINE = 1 TO #PAGE_SIZE
+3440  IF #SEQ <= #IANA-MAX
+3450    MOVE #SEQ TO #SC_LINE_SEQ (#P-LINE)    /*  line array
+3460    MOVE EDITED #SEQ (EM=999) TO #SEQ-A
+3470    MOVE #SEQ-A TO SUBSTRING(#SC_LINE(#P-LINE),1,3)
+3480    MOVE #IANA-ALIAS (#SEQ) TO SUBSTRING(#SC_LINE(#P-LINE),5,50)
+3490    MOVE RIGHT JUSTIFIED #IANA-MIBENUM (#SEQ) TO #MIBENUM
+3500    MOVE  #MIBENUM TO SUBSTRING(#SC_LINE(#P-LINE),56,6)
+3510    MOVE EDITED #IANA-SUPPORTED (#SEQ) (EM=' N '/' Y ') TO #SUP
+3520    MOVE #SUP TO SUBSTRING(#SC_LINE(#P-LINE),64,3)
+3530    DECIDE ON FIRST VALUE OF #IANA-ENCODING (#SEQ)
+3540      VALUE '1'
+3550        MOVE ' 1 ' TO #ENC
+3560      VALUE '2'
+3570        MOVE ' 2 ' TO #ENC
+3580      VALUE '4'
+3590        MOVE ' 4 ' TO #ENC
+3600      VALUE '8'
+3610        MOVE '1-4' TO #ENC
+3620      VALUE 'X'
+3630        MOVE ' X ' TO #ENC
+3640      NONE
+3650        MOVE ' ' TO #ENC
+3660    END-DECIDE
+3670    MOVE #ENC TO SUBSTRING(#SC_LINE(#P-LINE),68,3)
+3680  END-IF
+3690  ADD 1 TO #SEQ
+3700END-FOR
+3710END-SUBROUTINE
+3720*********************************************************************
+3730END

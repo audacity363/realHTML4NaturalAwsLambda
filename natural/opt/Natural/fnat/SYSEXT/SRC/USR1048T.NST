@@ -1,0 +1,95 @@
+0010Modify PF-key labels
+0020.
+0030Documentation ......... USR1048T    /*  Text object
+0040Interface ............. USR1048N    /*  Cataloged subprogram
+0050Example Program ....... USR1048P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL ENVIRONMENT
+0100.
+0110Keywords .............. PF-KEY
+0120.
+0130Function .............. This interface modifies the PF-key labels.
+0140                        You can adapt the labels to the names of the
+0150                        keys on your keyboard, e.g. the label 'PF3'
+0160                        can be changed to 'F3'or to 'Alt-3'.
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+0230 1 USR1048L
+0240   2 INPUTS
+0250     3 FUNCTION        (A01)
+0260     3 AMOUNT          (I02)
+0270     3 LABEL-DEFAULT   (A04/1:nn)
+0280     3 LABEL-NEW       (A10/1:nn)
+0290   2 OUTPUTS
+0300     3 RESPONSE        (I04)
+0310 /*
+0320 1 USR1048N
+0330   2 VERSION          (I01)     INIT <0>
+0340 1 REDEFINE USR1048N
+0350   2 EXTENDED-PARMS
+0360     3 EXTENDED-DATA  (A01/1:1)
+0370.
+0380Interface Call
+0390--------------
+0400Use the interface with the CALLNAT statement:
+0410.
+0420CALLNAT 'USR1048N' USR1048L USR1048N.EXTENDED-PARMS
+0430.
+0440.
+0450Using the Application Programming Interface:
+0460--------------------------------------------
+0470Copy the subprogram USR1048N to the library SYSTEM or the steplib
+0480library respectively, or to the required library.
+0490.
+0500.
+0510Description of parameters:
+0520.
+0530Input ...... FUNCTION (A01)
+0540                      Function code; possible values are:
+0550                      'S' - Modify PF-key labels
+0560                      'R' - Reset PF-key labels to the default labels
+0570
+0580Input ...... AMOUNT (I02)
+0590                      Amount of labels to be modified.
+0600
+0610Input ...... LABEL-DEFAULT (A04/1:nn)
+0620                      Default strings of the PF-key labels;
+0630                      e.g. 'PF1', 'PF2', ..., 'PF10', 'PF11', ...
+0640                      nn must be greater or equal AMOUNT.
+0650
+0660Input ...... LABEL-NEW (A10/1:nn)
+0670                      Modified strings of the PF-key labels;
+0680                      nn must be greater or equal AMOUNT.
+0690
+0700Output ..... RESPONSE (I04)
+0710                      Response code, possible values are:
+0720                       0 - No error occurred
+0730                       4 - FUNCTION not in format A1
+0740                       8 - AMOUNT not of format I2
+0750                      12 - wrong number of parameters
+0760                      16 - LABEL-DEFAULT is not a valid string.
+0770                           All valid occurrences will be processed,
+0780                           all invalid occurrences will be filled
+0790                           with blanks.
+0800                      20 - FUNCTION is not 'R' or 'S'
+0810.
+0820                      3410 - ICU handler is not available
+0830                      3411 - Codepage not available
+0840                      3412 - Internal error from ICU
+0850                      3413 - Conversion error (code point translation)
+0860                      3415 - Conversion result truncated
+0870
+0880.
+0890In/Output .. USR1048N.VERSION (I01)
+0900                    Version number of the subprogram.
+0910                    0 is the version number for the original
+0920                    parameter layout.
+0930.
+0940.
+0950*****  End of Description  *****

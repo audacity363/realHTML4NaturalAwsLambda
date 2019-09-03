@@ -1,0 +1,173 @@
+0010/*  Read Natural Error Information
+0020/*  This program serves as example how to design a user-defined
+0030/*  program to call 'USR2006N'.
+0040/***********************************************************************
+0050/*
+0060DEFINE DATA LOCAL
+007001 CONTROL                            /*control block*/
+0080  02 INDEX                 (I4)       /*NUMBER OF MESSAGE TO READ*/
+0090  02 RESPONSE              (I4)       /*RESPONSE CODE*/
+0100                                      /*    0 ok
+0110                                      /* 4131 read: message does not exist */
+0120/*
+013001 ERROR                              /*error information*/
+0140  02 NUMBER                (I4)       /*ERROR NUMBER*/
+0150  02 LINE                  (I4)       /*PROGRAM LINE WHERE ERROR OCCURED
+0160  02 PROGRAM               (A32)      /*PROGRAM WITH ERROR*/
+0170  02 LIBRARY               (A32)      /*LIBRARY OF PROGRAM WITH ERROR*/
+0180  02 DBID                  (I4)       /*DBID*/
+0190  02 FNR                   (I4)       /*AND FILE NUMBER*/
+0200  02 TIME                  (T)        /*TIME OF ERROR*/
+0210  02 OBJTYPE               (A11)      /*OBJECT TYPE*/
+0220  02 LANGUAGE              (I4)       /*LANGUAGE CODE*/
+0230  02 LEVEL                 (I4)       /*OBJECT LEVEL*/
+0240  02 FILLER                (B1)       /*FILLER BYTE*/
+0250  02 MC                    (B1)       /*MESSAGE CLASS:
+0260                                      /*00 - ERROR
+0270                                      /*01 - WARNING
+0280                                      /*02 - MESSAGE
+0290  02 EC                    (B1)       /*ERROR CLASS:
+0300                                      /*00 - SYSTEM
+0310                                      /*00 - USER
+0320  02 ET                    (B1)       /*ERROR TYPE*/
+0330                                      /*00 - RUNTIME
+0340                                      /*01 - SYNTAX
+0350                                      /*02 - COMMAND TIME
+0360                                      /*03 - TERMINATION
+0370                                      /*04 - PROGRAM TERMINATION
+0380                                      /*05 - REMOTE
+0390/*
+040001 TEXT                    (A253)     /*message text
+0410/*
+0420/*
+043001 #TYPE                   (A20)
+044001 #CLASS                  (A20)
+045001 #MSG-CLASS              (A20)
+046001 #DATE                   (A20)
+047001 #TIME                   (A20)
+048001 #FCT                    (A3)
+049001 #TEXT                   (A50)
+0500END-DEFINE
+0510/*
+0520/*
+0530DEFINE SUBROUTINE OUTPUT-MESSAGE
+0540RESET #CLASS
+0550DECIDE ON FIRST VALUE OF EC
+0560  VALUE 0    MOVE 'System'            TO #CLASS
+0570  VALUE 1    MOVE 'User'              TO #CLASS
+0580  NONE       MOVE 'Unknown'           TO #CLASS
+0590END-DECIDE
+0600/*
+0610RESET #MSG-CLASS
+0620DECIDE ON FIRST VALUE OF MC
+0630  VALUE 0    MOVE 'Error'             TO #MSG-CLASS
+0640  VALUE 1    MOVE 'Warning'           TO #MSG-CLASS
+0650  VALUE 2    MOVE 'Message'           TO #MSG-CLASS
+0660  NONE       MOVE 'Unknown'           TO #MSG-CLASS
+0670END-DECIDE
+0680/*
+0690RESET #TYPE
+0700DECIDE ON FIRST VALUE OF ET
+0710  VALUE 0    MOVE 'Runtime'             TO #TYPE
+0720  VALUE 1    MOVE 'Syntax'              TO #TYPE
+0730  VALUE 2    MOVE 'Command Execution'   TO #TYPE
+0740  VALUE 3    MOVE 'Termination'         TO #TYPE
+0750  VALUE 4    MOVE 'Program Termination' TO #TYPE
+0760  VALUE 5    MOVE 'Remote'              TO #TYPE
+0770  NONE       MOVE 'Unknown'             TO #TYPE
+0780END-DECIDE
+0790/*
+0800MOVE EDITED TIME   (EM=YYYY'-'MM'-'DD) TO #DATE
+0810MOVE EDITED TIME   (EM=HH':'II':'SS)   TO #TIME
+0820/*
+0830IF INDEX EQ 0
+0840  WRITE 'last message'
+0850ELSE
+0860  WRITE INDEX '.message'
+0870END-IF
+0880/*
+0890WRITE
+0900  'Date of message...' '-' #DATE          (AD=O) /
+0910  'Time of message...' '-' #TIME          (AD=O) /
+0920  '-----------------------------------'          /
+0930  'Message Number....' '-' NUMBER         (AD=O) /
+0940  'Message Type......' '-' #TYPE          (AD=O) /
+0950  'Message Class.....' '-' #MSG-CLASS     (AD=O) /
+0960  'Error Class.......' '-' #CLASS         (AD=O) /
+0970  '-----------------------------------'          /
+0980  'Object Name.......' '-' PROGRAM        (AD=O) /
+0990  'Line..............' '-' LINE           (AD=O) /
+1000  'Object Type.......' '-' OBJTYPE        (AD=O) /
+1010  'Subroutine Level..' '-' LEVEL          (AD=O) /
+1020  'Library...........' '-' LIBRARY        (AD=O) /
+1030  'Database..........' '-' DBID           (AD=O) /
+1040  'File Number.......' '-' FNR            (AD=O) /
+1050  'Text..............'                    (AD=O) /
+1060TEXT (AL=79)
+1070END-SUBROUTINE
+1080/*
+1090/*
+1100SET KEY ALL
+1110#FCT := '4'
+1120/*
+1130REPEAT
+1140  /*
+1150  INPUT (AD=MIT'_'L IP=OFF CD=TU SG=OFF) WITH TEXT #TEXT
+1160      10T 'Call Error Message Collector' (YEI)
+1170    / 10T '-' (28) (YEI) /
+1180    / 10T 'Function .........' (TU) #FCT (CD=NE)
+1190    / 10T ' 1: Set clear flag to message table.' (TU)
+1200    / 10T '    Table will be cleared when next error occurs.' (TU)
+1210    / 10T ' 2: Set last message to 0.' (TU)
+1220    / 10T ' 3: Read very last message.' (TU)
+1230    / 10T ' 4: Read all messages by index.' (TU)
+1240  /// 10T 'Response Code:' RESPONSE (AD=OIT' ' CD=NE)
+1250   // 10T 'Press any PF-key to stop.' (TU)
+1260  IF *PF-KEY NE 'ENTR' OR #FCT = '.'
+1270    ESCAPE ROUTINE
+1280  END-IF
+1290    /*
+1300  RESET #TEXT
+1310  MOVE LEFT #FCT TO #FCT
+1320  DECIDE ON FIRST VALUE OF #FCT
+1330    VALUE '1'
+1340      INDEX := -1               /* Set clear flag to message table */
+1350      CALLNAT 'USR2006N' CONTROL ERROR TEXT
+1360    VALUE '2'
+1370      INDEX := -2               /* Set last message to 0 */
+1380      CALLNAT 'USR2006N' CONTROL ERROR TEXT
+1390    VALUE '3'
+1400      RESET INDEX               /* Read last message */
+1410      CALLNAT 'USR2006N' CONTROL ERROR TEXT
+1420      PERFORM OUTPUT-MESSAGE
+1430    VALUE '4'                   /* READ ALL MESSAGES */
+1440      MOVE 1 TO INDEX           /* Start with first message */
+1450      REPEAT
+1460        /********************************
+1470        /**  read message information  **
+1480        /********************************
+1490        CALLNAT 'USR2006N' CONTROL ERROR TEXT
+1500        IF RESPONSE NE 0        /* First message does not exits
+1510          IF INDEX GT 1
+1520            ESCAPE BOTTOM
+1530          END-IF
+1540          RESET INDEX           /* Read last message */
+1550          CALLNAT 'USR2006N' CONTROL ERROR TEXT
+1560        END-IF
+1570        /**********************************
+1580        /**  DISPLAY MESSAGE INFORMATION **
+1590        /**********************************
+1600        PERFORM OUTPUT-MESSAGE
+1610        NEWPAGE
+1620        /*
+1630        IF INDEX = 0
+1640          ESCAPE BOTTOM
+1650        ELSE
+1660          ADD 1 TO INDEX
+1670        END-IF
+1680      END-REPEAT
+1690    NONE #TEXT := 'Invalid function code.'
+1700  END-DECIDE
+1710END-REPEAT
+1720/*
+1730END

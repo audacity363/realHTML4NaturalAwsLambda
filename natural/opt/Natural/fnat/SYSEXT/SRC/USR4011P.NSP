@@ -1,0 +1,109 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR4011N'.
+0030/***********************************************************************
+0040/*
+0050DEFINE DATA
+0060LOCAL
+00701 FUNC      (I4)            /* 0-3
+00801 CTX       (B156)          /* Work area (Do not modify)
+00901 H-TEXT    (A) DYNAMIC     /* Input data
+0100/* 1 H-TEXT    (B) DYNAMIC     /* H-TEXT may also be (B) DYNAMIC,
+0110                               /* because callnat is done by value
+01201 HASH      (B20)           /* Hash value
+0130/*
+01401 TLEN      (I2)            /* Length of string
+01501 DTEXT     (A) DYNAMIC     /* Display text
+01601 HASH-SOLL (B20)           /* Predetermined desired value
+0170END-DEFINE
+0180/*
+0190/*  Compare Hash Values
+0200/*
+0210DEFINE SUBROUTINE COMPARE
+0220WRITE 'Text:' *LENGTH(DTEXT) DTEXT (AL=61)
+0230WRITE 'Expected value:  ' HASH-SOLL
+0240WRITE 'Calculated value:' HASH
+0250IF HASH = HASH-SOLL THEN
+0260  WRITE 'SHA-1 validation: test passed.' /
+0270ELSE
+0280  WRITE 'SHA-1 validation: test failed.' /
+0290END-IF
+0300END-SUBROUTINE
+0310/*
+0320/*  Perform test case: Call combined function
+0330/*
+0340DEFINE SUBROUTINE TEST-A
+0350CALLNAT 'USR4011N' 0 CTX H-TEXT HASH     /* Calculate hash value
+0360PERFORM COMPARE                          /* Compare hash value
+0370END-SUBROUTINE
+0380/*
+0390/*  Perform test case: Call each function separately
+0400/*
+0410DEFINE SUBROUTINE TEST-B
+0420CALLNAT 'USR4011N' 1 CTX H-TEXT HASH     /* Init call: Init work area
+0430CALLNAT 'USR4011N' 2 CTX H-TEXT HASH     /* Update call: Calc hash value
+0440CALLNAT 'USR4011N' 3 CTX H-TEXT HASH     /* Final call: Get hash value
+0450PERFORM COMPARE                          /* Compare hash value
+0460END-SUBROUTINE
+0470/*
+0480/*
+0490/*
+0500/*
+0510/*  Test Case 1
+0520/*
+0530H-TEXT    := 'abc'
+0540DTEXT     := H-TEXT
+0550HASH-SOLL := H'A9993E364706816ABA3E25717850C26C9CD0D89D'
+0560TLEN      := *LENGTH(H-TEXT)
+0570CALL 'CMULT' 'E' H-TEXT TLEN             /* Translate to ascii
+0580PERFORM TEST-A
+0590RESET HASH
+0600PERFORM TEST-B
+0610/*
+0620/*  Test Case 2
+0630/*
+0640H-TEXT    := 'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq'
+0650DTEXT     := H-TEXT
+0660HASH-SOLL := H'84983E441C3BD26EBAAE4AA1F95129E5E54670F1'
+0670TLEN      := *LENGTH(H-TEXT)
+0680CALL 'CMULT' 'E' H-TEXT TLEN             /* Translate to ascii
+0690PERFORM TEST-A
+0700RESET HASH
+0710PERFORM TEST-B
+0720/*
+0730/*  Test Case 3
+0740/*
+0750MOVE ALL H'61' TO H-TEXT UNTIL 10000   /* 10000 times "a" in ascii
+0760MOVE ALL  'a'  TO DTEXT UNTIL 10000    /* 10000 times "a" in ascii
+0770HASH-SOLL := H'A080CBDA64850ABB7B7F67EE875BA068074FF6FE'
+0780PERFORM TEST-A
+0790RESET HASH
+0800PERFORM TEST-B
+0810/*
+0820/*
+0830/*
+0840/*
+0850/* Online test
+0860/*
+0870SET KEY ALL
+0880FUNC := 0
+0890H-TEXT := 'Test string for hash algorithm'
+0900RESET HASH
+0910/*
+0920REPEAT
+0930  /*
+0940  INPUT (AD=MI'_' IP=OFF CD=NE)
+0950  /// 01T 'Hash text input:' (YEI)
+0960    / 01T '-' (16) (YEI) /
+0970    / 01T 'Function ..........' (TU) FUNC (AD=MIL' ')
+0980    / 01T 'Text ..............' (TU) H-TEXT (AL=50)
+0990    / 01T 'Hash value ........' (TU) HASH (AD=OI CD=TU)
+1000  /// 01T 'Press any PF-key to stop.' (TU)
+1010  /*
+1020  IF *PF-KEY NE 'ENTR'
+1030    ESCAPE ROUTINE
+1040  END-IF
+1050  /*
+1060  CALLNAT 'USR4011N' FUNC CTX H-TEXT HASH
+1070  /*
+1080END-REPEAT
+1090END

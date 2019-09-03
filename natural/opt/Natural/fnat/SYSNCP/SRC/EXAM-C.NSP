@@ -1,0 +1,107 @@
+0010/*  EXAM-C - CHECK
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (1)
+0070     02 NATURAL-ERROR
+0080     02 RETURN-CODE
+0090     02 RESULT-FIELD (1:9)
+0100     02 GETSET-FIELD-NAME
+0110     02 GETSET-FIELD-VALUE
+0120  01 HT              (I01)
+0130  01 MSG             (A72)
+0140  01 PROC-NAME       (A08)
+0150  01 LOC-NUMBER      (A10)
+0160  01 LOC-NAME        (A50)
+0170END-DEFINE
+0180SET KEY ALL
+0190DEFINE WINDOW BEFORE-CMD
+0200  SIZE HT * 78
+0210  BASE 02 / 02
+0220  TITLE ' (C) Check a Command '
+0230  CONTROL SCREEN
+0240  FRAMED POSITION OFF
+0250/*******************************************************************
+0260/* Ask for currently used name:
+0270/*
+0280PROCESS COMMAND ACTION GET USING
+0290  PROCESSOR-NAME = ' '
+0300  GETSET-FIELD-NAME = 'NAME&'
+0310IF NATURAL-ERROR NE 0
+0320  CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0330  WRITE MSG
+0340  ESCAPE ROUTINE
+0350END-IF
+0360/*
+0370MOVE GETSET-FIELD-VALUE TO PROC-NAME
+0380/*******************************************************************
+0390REPEAT
+0400  HT := 09
+0410  /**********************************************************
+0420  CALLNAT 'EXAM-GLN' LOC-NAME LOC-NUMBER
+0430  /**********************************************************
+0440  INPUT WINDOW = 'BEFORE-CMD' (AD=MILT' ' IP=OFF)
+0450  WITH TEXT MSG
+0460    / 'Processor Name ..' PROC-NAME (AD=OIL)
+0470    / 'Location No. ....' LOC-NUMBER (AD=OIL)
+0480    / 'Location Name ...' LOC-NAME (AD=OIL)
+0490    / ' '
+0500    / 'Command .........' COMMAND-LINE (1) (AL=52)
+0510  /**********************************************************
+0520  SET WINDOW OFF
+0530  IF *PF-KEY NE 'ENTR'
+0540    IF *PF-KEY = 'PF1'
+0550      FETCH RETURN 'EXAM-H'
+0560      ESCAPE TOP
+0570    END-IF
+0580    ESCAPE ROUTINE
+0590  END-IF
+0600  RESET MSG
+0610  /**********************************************************
+0620  IF COMMAND-LINE (1) = ' '
+0630    MOVE 'Please enter a command.' TO MSG
+0640    ESCAPE TOP
+0650  END-IF
+0660  /**********************************************************
+0670  PROCESS COMMAND ACTION CHECK USING
+0680    PROCESSOR-NAME = PROC-NAME
+0690    COMMAND-LINE (*) = COMMAND-LINE (*)
+0700  /**********************************************************
+0710  IF NATURAL-ERROR NE 0
+0720    CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0730    ESCAPE TOP
+0740  END-IF
+0750  /**********************************************************
+0760  HT := 19
+0770  /**********************************************************
+0780  CALLNAT 'EXAM-GLN' LOC-NAME LOC-NUMBER
+0790  /**********************************************************
+0800  INPUT WINDOW = 'BEFORE-CMD' (AD=OILT' ' IP=OFF)
+0810  WITH TEXT MSG
+0820    / 'Processor Name ..' PROC-NAME (AD=OIL)
+0830    / 'Location No. ....' LOC-NUMBER (AD=OIL)
+0840    / 'Location Name ...' LOC-NAME (AD=OIL)
+0850    / ' '
+0860    / 'Command .........' COMMAND-LINE (1) (AL=52)
+0870    / ' '
+0880    / 'Result (1) ......' RESULT-FIELD (1) (AL=52)
+0890    / 'Result (2) ......' RESULT-FIELD (2) (AL=52)
+0900    / 'Result (3) ......' RESULT-FIELD (3) (AL=52)
+0910    / 'Result (4) ......' RESULT-FIELD (4) (AL=52)
+0920    / 'Result (5) ......' RESULT-FIELD (5) (AL=52)
+0930    / 'Result (6) ......' RESULT-FIELD (6) (AL=52)
+0940    / 'Result (7) ......' RESULT-FIELD (7) (AL=52)
+0950    / 'Result (8) ......' RESULT-FIELD (8) (AL=52)
+0960    / 'Result (9) ......' RESULT-FIELD (9) (AL=52)
+0970    / 'Return Code .....' RETURN-CODE
+0980  /**********************************************************
+0990  SET WINDOW OFF
+1000  IF *PF-KEY NE 'ENTR'
+1010    ESCAPE ROUTINE
+1020  END-IF
+1030  RESET MSG
+1040  /**********************************************************
+1050END-REPEAT
+1060/********************************************************************
+1070END

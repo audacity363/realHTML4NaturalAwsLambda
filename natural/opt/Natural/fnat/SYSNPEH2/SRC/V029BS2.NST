@@ -1,0 +1,14 @@
+0010&H View ACTIVE-JOBS
+0020&L
+0030&L
+0040#Zweck@    : Informationen ueber die Aktivitaeten auf einem Rechner.
+0050&L
+0060&L
+0070#System@   : z/OS, z/VSE, BS2000/OSD.
+0080&L
+0090&L
+0100#Anwendung@: Die Informationen, die dieser View liefert, entsprechen
+0110             denen, die das BS2000 Kommando '/STA P' bzw.
+0120             '/SHOW-USER-STATUS JOB-TYPE=JOBS' ausgibt.
+0130&L
+0140#Anmerkung@:

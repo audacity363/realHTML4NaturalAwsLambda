@@ -1,0 +1,51 @@
+0010/*  Get Natural long error text from system file.
+0020/*  This program serves as example how to design a user-defined
+0030/*  program to call 'USR0220N'
+0040/*********************************************************************
+0050DEFINE DATA LOCAL
+0060  01 PARM-AREA
+0070     02 ERROR-NUMBER (N04)     /* 1 thru 9999
+0080     02 RESPONSE     (N04)     /* Error during execution of USR0220N
+0090     02 LONG-TEXT    (A78/1:20)
+0100  01 INFO (A64)
+0110  01 #MSG (A72)
+0120END-DEFINE
+0130/*
+0140SET KEY ALL
+0150/*
+0160REPEAT
+0170  /*
+0180  RESET RESPONSE
+0190  RESET LONG-TEXT (*)
+0200  /*
+0210  INPUT (AD=MITL'_' IP=OFF SG=OFF) WITH TEXT #MSG ///
+0220    15T  'Read NATURAL long error message' /
+0230    15T  'from FNAT System File:' /
+0240    15T  '-' (36) //
+0250    15T  'Error number ....' ERROR-NUMBER ///
+0260    15T  'Press ENTER to receive the text.' /
+0270    15T  'Press any PF-Key to stop.'
+0280    /*
+0290  RESET #MSG
+0300  IF *PF-KEY NE 'ENTR'
+0310    ESCAPE BOTTOM
+0320  END-IF
+0330  /*
+0340  CALLNAT 'USR0220N' PARM-AREA
+0350  /*
+0360  IF RESPONSE NE 0
+0370    DECIDE ON FIRST VALUE OF RESPONSE
+0380      VALUE 3    #MSG := 'Invalid Error Number.'
+0390      VALUE 8    #MSG := 'Record found, but text is empty.'
+0400      VALUE 9    #MSG := 'Record not found.'
+0410      NONE
+0420        INPUT 'Response code from USR0220N:' (I) RESPONSE (AD=OIL)
+0430    END-DECIDE
+0440  ELSE
+0450    /* Build a header line:
+0460    WRITE NOTITLE
+0470      'NATURAL long error text' (I) ERROR-NUMBER (EM=9999 AD=I)
+0480      // LONG-TEXT (*)
+0490  END-IF
+0500END-REPEAT
+0510END

@@ -1,0 +1,60 @@
+0010Get information on RETURN data
+0020.
+0030Documentation ......... USR1026T    /*  Text object
+0040Interface ............. USR1026N    /*  Cataloged subprogram
+0050Example Program ....... USR1026P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. RUNTIME
+0100.
+0110Keywords .............. RETURN, SETUP
+0120.
+0130Function .............. Reads the information which is defined
+0140                        via the SETUP command
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+0210 1 RETURN-OCC      (P3)       /* Number of occurences to be returned
+0220 1 RETURN-LIBRARY  (A08/1:nn) /* Library ID of return point
+0230                              /* nn must be a value between 1 and 60
+0240 1 RETURN-COMMAND  (A60/1:nn) /* Command which is to be executed
+0250 1 RETURN-NUMBER   (P3)       /* Number of return points
+0260.
+0270Interface Call
+0280--------------
+0290Use the interface with the CALLNAT statement:
+0300.
+0310CALLNAT 'USR1026N'
+0320        RETURN-OCC  RETURN-LIBRARY(1:RETURN-OCC)
+0330        RETURN-COMMAND(1:RETURN-OCC)  RETURN-NUMBER
+0340.
+0350.
+0360Using the Application Programming Interface:
+0370--------------------------------------------
+0380Copy the subprogram USR1026N to the library SYSTEM or the steplib
+0390library respectively, or to the required library.
+0400.
+0410Description of the parameters:
+0420.
+0430RETURN-OCC (Input)
+0440  Has to be filled before invoking the interface.
+0450  RETURN-OCC contains the number of return points requested.
+0460  It must be a value between 1 and 60.
+0470.
+0480RETURN-LIBRARY(*), RETURN-COMMAND(*) (Output)
+0490  A list of return points which are currently set up.
+0500  Each occurence of RETURN-LIBRARY(*) contains the name of a
+0510  library to which control is to be returned.
+0520  Each occurence of RETURN-COMMAND(*) contains the name of a
+0530  command which will be issued when control is returned to the
+0540  respective library.
+0550.
+0560RETURN-NUMBER (Output)
+0570  Number of available return points.
+0580.
+0590.
+0600**** End of Description *****

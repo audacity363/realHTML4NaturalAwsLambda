@@ -1,0 +1,101 @@
+0010/*  MODIFY / DELETE USER SHORT ERROR MESSAGE ON NATURAL SYSTEM FILE
+0020/*  ATTENTION:   NATURAL SECURITY CHECK INTENTIONALLY BYPASSED
+0030/*  This program serves as an example how to design a user-defined
+0040/*  program to call 'USR0360N'
+0050/**********************
+0060DEFINE DATA LOCAL
+0070  01 PARAM
+0080     02 LIBRARY      (A08)   /* Must not be blank
+0090     02 ERROR-NUMB   (N04)   /* 1 thru 9999
+0100     02 LANG-NUMB    (I01)   /* 1 thru 60
+0110     02 RESPONSE     (N04)   /* Status code
+0120     02 SHORT-TEXT   (A65)   /* Text to be modified / deleted.
+0130  01 LAYOUT-CHECK    (A01)   /* Check SYSERR LAYOUT for LIBRARY
+0140  01 MSG-1           (A78)   /* Reinput Text
+0150  01 MSG-2           (A78)   /* Reinput Text
+0160  01 OLD-LIBRARY     (A08)
+0170  01 OLD-ERROR-NUMB  (N04)
+0180  01 OLD-LANG-NUMB   (I01)
+0190  01 OLD-SHORT-TEXT  (A65)
+0200END-DEFINE
+0210/*
+0220/* Set up some defaults:
+0230/*
+0240SET KEY ALL
+0250MOVE 'SYSTEM'   TO LIBRARY         /* Any valid library
+0260MOVE 1          TO ERROR-NUMB      /* For this error number
+0270MOVE *LANGUAGE  TO LANG-NUMB       /* For current language number
+0280MOVE 'X'        TO LAYOUT-CHECK
+0290/*
+0300REPEAT
+0310  /*
+0320  /* Read current contents of short text:
+0330  /*
+0340  RESET SHORT-TEXT
+0350  /***********************
+0360  CALLNAT 'USR0320N' PARAM
+0370  /***********************
+0380  IF RESPONSE NE 0
+0390    DECIDE ON FIRST RESPONSE
+0400      VALUE 2 MOVE '"Application missing."' TO MSG-1
+0410      VALUE 3 MOVE '"Invalid error number."' TO MSG-1
+0420      VALUE 4 MOVE '"Invalid language code."' TO MSG-1
+0430      VALUE 9 MOVE '"Error Number not found."' TO MSG-1
+0440      VALUE 8 MOVE '"Text not found."' TO MSG-1
+0450      NONE    MOVE  RESPONSE TO MSG-1
+0460    END-DECIDE
+0470    IF MSG-1 NE ' '
+0480      COMPRESS 'USR0320N Response was:' MSG-1 TO MSG-1
+0490    END-IF
+0500  ELSE
+0510    RESET INITIAL  MSG-1
+0520  END-IF
+0530  /*
+0540  MOVE LIBRARY TO OLD-LIBRARY
+0550  MOVE ERROR-NUMB TO OLD-ERROR-NUMB
+0560  MOVE LANG-NUMB  TO OLD-LANG-NUMB
+0570  MOVE SHORT-TEXT TO OLD-SHORT-TEXT
+0580  /*
+0590  INPUT (AD=MITL'_' IP=OFF ZP=ON SG=OFF) WITH TEXT MSG-1
+0600    MSG-2 (AD=OIL) //
+0610    'Maintenance for Short Error Message on Natural System File' (I) /
+0620    '-' (58) (I) //
+0630    'Library .......' LIBRARY        /
+0640    'Error no. .....' ERROR-NUMB     /
+0650    'Language ......' LANG-NUMB      /
+0660    'Layout check ..' LAYOUT-CHECK   /
+0670    'Short text ....' SHORT-TEXT (AD=MIW )     ///
+0680    'Press any PF-Key to stop.'
+0690    /*
+0700  IF *PF-KEY NE 'ENTR'
+0710    ESCAPE BOTTOM
+0720  END-IF
+0730  /*
+0740  IF  LIBRARY = OLD-LIBRARY
+0750  AND ERROR-NUMB = OLD-ERROR-NUMB
+0760  AND LANG-NUMB  = OLD-LANG-NUMB
+0770    /*
+0780    CALLNAT 'USR0360N' PARAM LAYOUT-CHECK
+0790    /*
+0800    RESET MSG-2
+0810    DECIDE ON FIRST VALUE OF RESPONSE
+0820      VALUE 2  MOVE 'Invalid Library.' TO MSG-2
+0830      VALUE 3  MOVE 'Invalid Error Number.' TO MSG-2
+0840      VALUE 4  MOVE 'Invalid Language Number.' TO MSG-2
+0850      VALUE 5  MOVE '"Function disabled by layout definition."' TO MSG-2
+0860      VALUE 8  MOVE 'Error Number does not exist.' TO MSG-2
+0870      VALUE 9  MOVE 'Short text cannot be deleted '
+0880               - 'because of an existing long text.' TO MSG-2
+0890      VALUE 10 MOVE 'Short text has NOT been modified.' TO MSG-2
+0900      VALUE 11 MOVE 'Short text has been deleted.' TO MSG-2
+0910      VALUE 12 MOVE 'Short text has been modified.' TO MSG-2
+0920      VALUE 13
+0930        MOVE 'Short text and Error No. have been deleted.' TO MSG-2
+0940      NONE     COMPRESS 'Unexpected response code:' RESPONSE TO MSG-2
+0950    END-DECIDE
+0960  ELSE
+0970    MOVE 'Parameter have been modified.' TO MSG-2
+0980  END-IF
+0990  RESET RESPONSE
+1000END-REPEAT
+1010END

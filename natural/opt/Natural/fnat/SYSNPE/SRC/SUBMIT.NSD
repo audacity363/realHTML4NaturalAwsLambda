@@ -1,0 +1,229 @@
+0010DB: 148 FILE: 200  - SUBMIT                           DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:25
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:25
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10      System message code.
+0210*      System message code.
+0220*
+0230*      Fields common to all Op-systems
+0240*
+0250  1 A1 CARD                              A   80    D JCL record to be sen
+0260*      JCL record to be sent from
+0270*      NATURAL to the internal
+0280*      reader.
+0290*      BS2000: When job is submitted
+0300*      using card images a
+0310*      temporary file is
+0320*      created for the JCL
+0330*      to be submitted.
+0340  1 A2 JOB-NUMBER                        N  7.0      Internal job number
+0350*      Internal job number assigned
+0360*      by JES.
+0370*      (If JOB-NUMBER = 0, no valid
+0380*      job card was sent.)
+0390*      Field is returned after call
+0400*      with function CLOSE has been
+0410*      performed. (BS2000 also valid)
+0420*      For BS2000 this field returns
+0430*      the TSN of the submitted job,
+0440*      if it is numeric.
+0450  1 JA JOB-ID                            A    8      Same as job number i
+0460*      Same as job number in alpha
+0470*      format.
+0480*      This field must be used for
+0490*      BS2000 V10 and above with
+0500*      alpha format TSNs.
+0510  1 AA DSNAME                            A   54    D Fully qualified data
+0520*      Fully qualified dataset name
+0530*      wich contains the JCL to be
+0540*      submitted.
+0550  1 AC PASSWORD                          A    8    D Password for protect
+0560*      Password for protected data
+0570*      set.
+0580  1 FN FUNCTION                          A    8    D Function to be perfo
+0590*      Function to be performed.
+0600*      blank   Default. Pass jcl card
+0610*      or name of dataset or
+0620*      member/element to be
+0630*      submitted to ENTIRE
+0640*      SYSTEM SERVER.
+0650*      CLOSE   Perform submit. Must
+0660*      be specified with last
+0670*      SUBMIT request for the
+0680*      job.
+0690  1 ID IDENTIFIER                        A    8    D Needed if multiple s
+0700*      Needed if multiple submit
+0710*      calls are executing in
+0720*      parallel, as requests for the
+0730*      same job to be submitted must
+0740*      have the same identifier.
+0750  1 AK JOB-NAME                          A    8    D Name of job to be su
+0760*      Name of job to be submitted.
+0770*
+0780*      Fields common MVS and BS2000
+0790*
+0800  1 AI PRODUCT                           A    1    D 'P' if access method
+0810*      'P' if access method is
+0820*      PANVALET.
+0830*
+0840*      Fields common MVS and VSE
+0850*
+0860  1 AJ FROM-NODE                         N  5.0    D ENTIRE SYSTEM SERVER
+0870*      ENTIRE SYSTEM SERVER node from
+0880*      which the JCL for the job is
+0890*      to be read.
+0900  1 AB MEMBER                            A   10    D Member which contain
+0910*      Member which contains the JCL
+0920*      for the job to be submitted.
+0930  1 AD VOLSER                            A    6    D Volume serial number
+0940*      Volume serial number, if the
+0950*      dataset is not catalog.
+0960*
+0970*      MVS fields
+0980*
+0990  1 AN PRODUCT-OPTIONS                   A   80    D Specification of 'X'
+1000*      Specification of 'X' will
+1010*      cause expansion of ++INCLUDE.
+1020  1 AL FROM-USERID                       A    8    D The User-Id in the '
+1030*      The User-Id in the 'FROM-NODE'
+1040  1 AM FROM-USER-PASSWORD                A    8    D User password in the
+1050*      User password in the
+1060*      'FROM-NODE'.
+1070*
+1080*      VSE fields
+1090*
+1100  1 AE LIBRARY                           A    8    D Name of library.
+1110*      Name of library.
+1120  1 AF SUB-LIBRARY                       A    8    D Name of sublibrary.
+1130*      Name of sublibrary.
+1140  1 AG MEMBER-TYPE                       A    8    D Member type.
+1150*      Member type.
+1160  1 AH VSAM-CATALOG                      A    8    D Name of the VSAM cat
+1170*      Name of the VSAM catalog where
+1180*      the library is kept.
+1190  1 AO TARGET-NODE-NAME                  A    8    D Name of the node to
+1200*      Name of the node to which the
+1210*      POWER output is to be spooled.
+1220*      (VSE only)
+1230  1 AP TARGET-USER-REMOTE-ID             A    8    D Name of the user/rem
+1240*      Name of the user/remote to
+1250*      which the POWER output is to
+1260*      be spooled.
+1270*      (VSE only)
+1280*
+1290*      BS2000 fields
+1300*
+1310  1 AB ELEMENT                           A   64    D Element from which t
+1320*      Element from which the cards
+1330*      are to be submitted.
+1340  1 BM ELEMENT-PASSWORD                  A    8    D Password for protect
+1350*      Password for protected LMS
+1360*      element. (LMS V2 or above)
+1370  1 ES SYSTEM-CODE                       B    2      System error code.
+1380*      System error code.
+1390  1 B1 USERID                            A    8    D Specifies USERID und
+1400*      Specifies USERID under which
+1410*      the job is to be submitted.
+1420  1 B2 ACCOUNT-NUMBER                    A    8    D Gives the account nu
+1430*      Gives the account number for
+1440*      the job.
+1450  1 B5 TIME                              A    5    D Maximum CPU time for
+1460*      Maximum CPU time for the job
+1470*      in seconds or
+1480*      NTL (no time limit) or
+1490*      STD (job class default).
+1500*      STD is default.
+1510  1 B6 ERASE-AFTER-RUN                   A    3    D States whether the E
+1520*      States whether the ENTER file
+1530*      should be erased after the
+1540*      run or not. Options:
+1550*      YES  erase file
+1560*      NO   do not erase (default)
+1570  1 B9 MONITOR-JOB-VARIABLE              A   54    D Name of a monitoring
+1580*      Name of a monitoring job
+1590*      variable which shows status:
+1600*      $S = job in input queue,
+1610*      $R = job is running,
+1620*      $T = job terminated normally,
+1630*      $A = job abended.
+1640  1 BA JOB-VARIABLE-PASSWORD             A    4    D Password for protect
+1650*      Password for protected
+1660*      monitoring job variable.
+1670  1 BD USER-PASSWORD                     A    8    D Password of user id
+1680*      Password of user id for which
+1690*      the job is to be started.
+1700  1 BE JOB-CLASS                         A    8    D Name of he job class
+1710*      Name of he job class where
+1720*      job is to be submitted.
+1730  1 BF JOB-PRIORITY                      A    3    D Scheduling priority
+1740*      Scheduling priority for job or
+1750*      STD (job class default).
+1760*      STD is default.
+1770  1 BG RUN-PRIORITY                      A    3    D Job priority during
+1780*      Job priority during execution
+1790*      of the job or
+1800*      STD (job class default).
+1810*      STD is default and also used
+1820*      when specified RUN-PRIORITY
+1830*      is invalid.
+1840  1 BH START-OPTION                      A   17    D Specifies start time
+1850*      Specifies start time of job.
+1860*      STD : take job class default
+1870*      SOON : as soon as possible
+1880*      IMMEDIATELY: start now
+1890*      WITHIN : given time
+1900*      AT : at given date and/or time
+1910*      EARLIEST : no start before
+1920*      given date and/or time
+1930*      LATEST : no start after given
+1940*      date and/or time
+1950*      AT-STREAM-STARTUP: job starts
+1960*      at start of scheduler.
+1970*      Date and/or time are given in
+1980*      START-DATE and START-TIME.
+1990  1 BI START-DATE                        A    8    D Value for start date
+2000*      Value for start date:
+2010*      yy-mm-dd  yy = year
+2020*      mm = month
+2030*      dd = day
+2040  1 BJ START-TIME                        A    5    D Value for start time
+2050*      Value for start time:
+2060*      hh:mm    hh = hours
+2070*      mm = minutes
+2080  1 DI START-DATX                        D    6    D Start date in NATURA
+2090*      Start date in NATURAL format.
+2100  1 TJ START-TIMX                        T   12    D Start time in NATURA
+2110*      Start time in NATURAL format.
+2120  1 BK REPEAT-OPTION                     A   17    D STD : take job class
+2130*      STD : take job class default
+2140*      NO : job not to be repeated
+2150*      DAILY : job to be run daily
+2160*      WEEKLY : job to be run weekly
+2170*      PERIOD : job to be repeated
+2180*      after given time
+2190*      AT-STREAM-STARTUP : job to be
+2200*      repeated at every scheduler
+2210*      startup
+2220*      Time given in REPEAT-TIME.
+2230  1 BL REPEAT-TIME                       A    5    D Specifies time for R
+2240*      Specifies time for REPEAT-
+2250*      OPTION.
+2260*
+2270*      End of SUBMIT
+2280*
+2290******DDM OUTPUT TERMINATED******

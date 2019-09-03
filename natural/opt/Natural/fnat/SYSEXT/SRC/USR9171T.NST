@@ -1,0 +1,75 @@
+0010Set user ID abd pass phrases for RPC server
+0020.
+0030Documentation ......... USR9171T    /*  Text object
+0040Interface ............. USR9171N    /*  Cataloged subprogram
+0050Example Program ....... USR9171P    /*  Source program
+0060                                    /*  to set user ID and password.
+0070                        USR9171X    /*  Source program
+0080                                    /*  to set ticket criteria.
+0090.
+0100Product Code .......... RPC
+0110.
+0120Category .............. RPC - SECURITY
+0130.
+0140Keywords .............. +PREVIOUS-VERSION,
+0150                        PASSWORD, RPC, SECURITY, TICKET, USER ID
+0160.
+0170Interface Versions .... USR1071N, USR4371N
+0180.
+0190Function .............. On RPC client, this API sets user ID and
+0200                        password for RPC servers.
+0210                        This text member contains the description of
+0220                        USR9171P.
+0230.
+0240.
+0250Parameters
+0260----------
+0270Define the following parameters with the DEFINE DATA statement:
+0280.
+02901 PARM-USR9171N
+0300  2 FUNCTION (A02)         /* - Function code to maintain RPC save area
+0310                           /*   USR9171P:
+0320                           /*   value 'SP' - set user ID and/or
+0330                           /*                password phrase.
+0340                           /* If NSC is installed on client, *USER
+0350                           /* and password are set by NSC logon.
+0360                           /* However, the interface may be used to set
+0370                           /* another user ID and password.
+0380                           /*
+0390  2 PPARM    (A20)         /* Reserved for future use.
+0400.
+0410  2 USERID   (A32)         /* User ID (A8)  to be used.
+0420  2 PASSWORD (A128)        /* Password phrase to validate user ID. This
+0430                           /* pass phrase is not validated on client.
+0440  2 MSG-TEXT (A79)         /* If PRC is greater 0, a message text is
+0450                           /* returned.
+0460  2 PRC     (N04)          /* - return value
+0470                           /*   0     OK
+0480                           /*   4     Internal error
+0490                           /*   2x     Error in write handling
+0500                           /*   3x     Error in read handling
+0510                           /*   9999   Invalid function code
+0520.
+0530Interface Call
+0540--------------
+0550Use the interface with the CALLNAT statement:
+0560.
+0570CALLNAT 'USR9171N'  PARM-USR9171N
+0580.
+0590.
+0600Using the Application Programming Interface:
+0610--------------------------------------------
+0620Copy the subprogram USR9171N to the library SYSTEM or the steplib
+0630library respectively, or to the required library.
+0640.
+0650Steps:
+0660 1.) Initialize phase:
+0670   - Set user ID and password ; please note there is no validation
+0680     on client. The password will be validated on the RPC server.
+0690 2.) Runtime phase:
+0700   - No action.
+0710 3.) End phase:
+0720     The contents of the area are only available until the end of
+0730     Natural session.
+0740.
+0750***** End of Description *****

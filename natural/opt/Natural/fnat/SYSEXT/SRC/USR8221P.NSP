@@ -1,0 +1,221 @@
+0010/*  Generate codepage translation table.
+0020/*  This program serves as example how to design a user-defined
+0030/*  program to call 'USR8221N'.
+0040/*
+0050/*  The program expects as input the name of an ASCII and of an EBCIDC
+0060/*  codepage. For these two codepages it generates translation tables in
+0070/*  the UNIX/Windows and in the mainframe format.
+0080/*  Copy each generated table and paste it into the following
+0090/*  members on mainframe and/or UNIX/Windows:
+0100/*
+0110/*  Platform              Table             Member
+0120/*  ------------  --------------------  ---------------
+0130/*  Mainframe            CMTABT            NATTABA1
+0140/*  Mainframe            CMTABT            NATTABA2
+0150/*  UNIX/Windows    EBCDIC->ISO8859_1     natconv.ini
+0160/*  UNIX/Windows    ISO8859_1->EBCDIC     natconv.ini
+0170/*
+0180/*  Hint: If you execute this program under Windows, use batchmode and
+0190/*  copy the generated translation tables from the batch output.
+0200/*
+0210/*  The API USR0620N converts a text from an ASCII codepage into an
+0220/*  EBCDIC codepage and vice versa according to the translation
+0230/*  tables in NATTABA1/2 or natconv.ini.
+0240/**********************************************************************
+0250DEFINE DATA LOCAL
+0260/*
+0270/* Call USR8221N
+0280/*
+02901 P_TABLE           (A2/0:255)    /* translation table
+03001 P_SUBSTITUTE      (A2)          /* substitution character
+03101 P_RETURN          (I4)          /* conversion return code
+0320/*
+0330/* Generate translation tables
+0340/*
+03501 CODEPAGE      (A64/2)           /* ASCII/EBCDIC  code page name/alias
+03601 MAX-COLS      (I4) CONST <15>   /* number of columns - 1
+03701 MAX-LINES     (I4) CONST <15>   /* number of lines - 1
+03801 LINE          (I4)
+03901 COL           (I4)
+04001 C1            (I2)              /* source nbr
+04101 C2            (I2)              /* target nbr
+04201 CP            (I4)              /* codepoint
+04301 CP-N          (N3)
+04401 CODEPOINT1    (B1)
+04501 CODEPOINT2    (B1)
+04601 HEX           (A2)
+04701 CONV-TEXT-LUW (A/2) DYNAMIC INIT
+0480  (1) <'ISO8859_1->EBCDIC'>
+0490  (2) <'EBCDIC->ISO8859_1'>
+05001 CONV-TEXT-MF (A/2) DYNAMIC INIT
+0510  (1) <'NTTABA2'>
+0520  (2) <'NTTABA1'>
+05301 TEXT          (A) DYNAMIC
+05401 H-LINE (A74)
+0550END-DEFINE
+0560/**********************************************************************
+0570SET GLOBALS CPCVERR=OFF           /* avoid conversion error
+0580SET KEY ALL
+0590
+0600MOVE ALL '-' TO H-LINE
+0610/*
+0620/* Read codepage names
+0630/*
+0640CODEPAGE (1) := 'ISO-8859-1'
+0650CODEPAGE (2) := 'IBM01140'
+0660/*
+0670INPUT 'Generate Translation Tables' //
+0680  'ASCII Codepage ...' CODEPAGE (1) (AD=M) /
+0690  'EBCDIC Codepage ..' CODEPAGE (2) (AD=M) //
+0700  'Press any PF-Key to stop.'
+0710/*
+0720IF *PF-KEY NE 'ENTR'
+0730    OR CODEPAGE (1) = ' '
+0740    OR CODEPAGE (2) = ' '
+0750  ESCAPE ROUTINE
+0760END-IF
+0770/**********************************************************************
+0780/* UNIX/Windows
+0790/**********************************************************************
+0800FOR C1 = 1 TO 2                   /* source nbr
+0810  C2 := 3 - C1                    /* target nbr
+0820  /*
+0830  /* Generate translation table
+0840  /*
+0850  CALLNAT 'USR8221N'
+0860    CODEPAGE (C1)                 /* source codepage
+0870    CODEPAGE (C2)                 /* target codepage
+0880    P_TABLE (*)                   /* translation table
+0890    P_SUBSTITUTE                  /* substitution character
+0900    P_RETURN                      /* conversion return code
+0910  /*
+0920  IF P_RETURN <> 0
+0930    COMPRESS 'Unexpected Response' P_RETURN
+0940      'at the generation of the translation tables.'
+0950      INTO TEXT
+0960    PRINT NOTITLE TEXT
+0970    ESCAPE ROUTINE
+0980  END-IF
+0990  /*
+1000  /* Platform specific format
+1010  /*
+1020  NEWPAGE
+1030  PRINT NOTITLE / H-LINE
+1040  PRINT NOTITLE 'Translation table' CONV-TEXT-LUW(C1)
+1050    'in natconv.ini (UNIX/Windows)'
+1060  PRINT NOTITLE H-LINE /
+1070  COMPRESS
+1080    '#translate' CODEPAGE (C1) 'to' CODEPAGE (C2)
+1090    INTO TEXT
+1100  PRINT NOTITLE TEXT
+1110  COMPRESS
+1120    '#characters which cannot be translated properly are'-
+1130    ' replaced by x' P_SUBSTITUTE
+1140    INTO TEXT LEAVING NO
+1150  PRINT NOTITLE TEXT /
+1160  FOR LINE = 0 TO MAX-LINES
+1170    RESET TEXT
+1180    /* First hex
+1190    CP := (MAX-COLS + 1) * LINE
+1200    MOVE CP TO CODEPOINT1
+1210    MOVE EDITED CODEPOINT1 (EM=H) TO HEX
+1220    COMPRESS 'x' HEX INTO TEXT LEAVING NO
+1230    /* Last hex
+1240    CP := (MAX-COLS + 1) * LINE + MAX-COLS
+1250    MOVE CP TO CODEPOINT1
+1260    MOVE EDITED CODEPOINT1 (EM=H) TO HEX
+1270    COMPRESS FULL TEXT '-x' HEX ' = ' INTO TEXT LEAVING NO
+1280    /* Fill line
+1290    FOR COL = 0 TO MAX-COLS
+1300      CP := (MAX-COLS + 1) * LINE + COL
+1310      COMPRESS FULL TEXT 'x' P_TABLE(CP) INTO TEXT LEAVING NO
+1320      IF COL <> MAX-COLS
+1330        COMPRESS FULL TEXT ',' INTO TEXT LEAVING NO
+1340      END-IF
+1350    END-FOR
+1360    /* Print line
+1370    PRINT NOTITLE TEXT
+1380  END-FOR
+1390  PRINT NOTITLE H-LINE
+1400END-FOR
+1410/**********************************************************************
+1420/* Mainframe
+1430/**********************************************************************
+1440FOR C1 = 1 TO 2                   /* source nbr
+1450  C2 := 3 - C1                    /* target nbr
+1460  /*
+1470  /* Generate translation table
+1480  /*
+1490  CALLNAT 'USR8221N'
+1500    CODEPAGE (C1)                 /* source codepage
+1510    CODEPAGE (C2)                 /* target codepage
+1520    P_TABLE (*)                   /* translation table
+1530    P_SUBSTITUTE                  /* substitution character
+1540    P_RETURN                      /* conversion return code
+1550  /*
+1560  IF P_RETURN <> 0
+1570    COMPRESS 'Unexpected Response' P_RETURN
+1580      'at the generation of the translation tables.'
+1590      INTO TEXT
+1600    PRINT NOTITLE TEXT
+1610    ESCAPE ROUTINE
+1620  END-IF
+1630  /*
+1640  /* Platform specific format
+1650  /*
+1660  NEWPAGE
+1670  PRINT NOTITLE / H-LINE
+1680  PRINT NOTITLE 'Translation table in' CONV-TEXT-MF(C1) '(mainframe)'
+1690  PRINT NOTITLE H-LINE /
+1700  PRINT NOTITLE
+1710    '****************************************************************'-
+1720    '*******'
+1730  COMPRESS FULL
+1740    '*        ' CODEPAGE (C1)
+1750    INTO TEXT
+1760  COMPRESS TEXT
+1770    'to' CODEPAGE (C2)
+1780    'translation table'
+1790    INTO TEXT
+1800  PRINT NOTITLE TEXT
+1810  COMPRESS
+1820    '*         Illegal characters are translated into x' P_SUBSTITUTE
+1830    INTO TEXT LEAVING NO
+1840  PRINT NOTITLE TEXT
+1850  PRINT NOTITLE
+1860    '****************************************************************'-
+1870    '*******'
+1880  PRINT NOTITLE
+1890    '*                0 1 2 3 4 5 6 7 8 9 A B C D E F'
+1900  /* Fill line
+1910  FOR LINE = 0 TO MAX-LINES
+1920    MOVE '         DC    X''' TO TEXT
+1930    FOR COL = 0 TO MAX-COLS
+1940      CP := (MAX-COLS + 1) * LINE + COL
+1950      COMPRESS FULL TEXT P_TABLE(CP) INTO TEXT LEAVING NO
+1960    END-FOR
+1970    COMPRESS FULL TEXT '''' INTO TEXT LEAVING NO
+1980    /* First hex
+1990    CP := (MAX-COLS + 1) * LINE
+2000    MOVE CP TO CODEPOINT1
+2010    MOVE EDITED CODEPOINT1 (EM=H) TO HEX
+2020    COMPRESS TEXT HEX INTO TEXT
+2030    /* Last hex
+2040    CP := (MAX-COLS + 1) * LINE + MAX-COLS
+2050    MOVE CP TO CODEPOINT1
+2060    MOVE EDITED CODEPOINT1 (EM=H) TO HEX
+2070    COMPRESS FULL TEXT '-' HEX INTO TEXT LEAVING NO
+2080    /* First decimal
+2090    CP-N := (MAX-COLS + 1) * LINE
+2100    COMPRESS FULL TEXT CP-N INTO TEXT
+2110    /* Last decimal
+2120    CP-N := (MAX-COLS + 1) * LINE + MAX-COLS
+2130    COMPRESS FULL TEXT '-' CP-N INTO TEXT LEAVING NO
+2140    /* Print line
+2150    PRINT NOTITLE TEXT
+2160  END-FOR
+2170  PRINT NOTITLE H-LINE
+2180END-FOR
+2190/**********************************************************************
+2200/**********************************************************************
+2210END

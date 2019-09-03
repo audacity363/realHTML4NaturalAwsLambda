@@ -1,0 +1,66 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3HTML
+0050*
+0060* DESCRIPTION   Writes a character string to the document.
+0070*
+0080* AUTHOR        SAG   08.09.1998
+0090*
+0100* Version       8.3
+0110*
+0120* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0130*
+0140* HISTORY
+0150* USER    DATE       REASON
+0160* ------+----------+----------------------------------------------
+0170*       ! --.--.-- !
+0180* ------+----------+----------------------------------------------
+0190*
+0200* ------ PARAMETER -----------------------------------------------
+0210DEFINE DATA
+0220PARAMETER USING W3PARM
+0230LOCAL USING W3CONST
+0240LOCAL
+02501 H3VALUE            (A) DYNAMIC
+02601 H3URL              (A) DYNAMIC
+0270*
+02801 GIF                (A) DYNAMIC
+0290END-DEFINE
+0300* --- ERROR HANDLING ---
+0310ON ERROR
+0320  PERFORM W3ERROR ##W3ERROR
+0330  PERFORM W3END ##RPC
+0340  ESCAPE ROUTINE
+0350END-ERROR
+0360*
+0370* --- INITIALIZE Web Interface ---
+0380PERFORM W3INIT ##RPC
+0390*
+0400* --- Name of pictues path
+0410PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "PICTURES" ' ' H3VALUE
+0420IF *LENGTH(H3VALUE) EQ 0 THEN
+0430  GIF  := "/pictures"
+0440ELSE
+0450  GIF  := H3VALUE
+0460END-IF
+0470*
+0480* --- START HTML Generation ---
+0490COMPRESS GIF '/natw_gre.gif' INTO H3URL LEAVING NO
+0500PERFORM H3-OPEN-HTML 'HTML Generation - HTML Document' "#ffffcc" H3URL
+0510* --- THE LEVEL 2 HEADER ---
+0520PERFORM W3TEXT '<TABLE CELLPADDING="20" WIDTH="100%"><TR><TD>'
+0530PERFORM H3-HEADER 2 'HTML Document'
+0540*
+0550PERFORM H3-PARAGRAPH "L" 'A transparent picture is used '-
+0560                         'with a yellow background color.'
+0570*
+0580PERFORM E3-EXAMPLE-END
+0590*
+0600PERFORM W3TEXT '</TD></TR></TABLE>'
+0610* --- END HTML Generation ---
+0620PERFORM H3-CLOSE-HTML
+0630* --- END Web Interface ---
+0640PERFORM W3END ##RPC
+0650*
+0660END

@@ -1,0 +1,200 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR4208N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+00601 USR4208L
+0070  2 RESOURCE-FUNCTION                 (A1)  /* 'R'ead, 'W'rite
+0080  2 OBJECT-KEY
+0090    3 LIBRARY-NAME                    (A8)
+0100    3 RESOURCE-NAME                   (A250)
+0110    3 OBJECT-NAME                     (A8)  /* Mainframe only
+0120  2 OBJECT-LOCATION
+0130    3 LIBRARY-DBID                    (N5)
+0140    3 LIBRARY-FNR                     (N5)
+0150    3 LIBRARY-PASSWORD                (A8)
+0160    3 LIBRARY-CIPHER                  (N8)
+0170  2 WRITE-OPTIONS
+0180    3 OPTION-REPLACE                  (A1)
+0190  2 INPUT-OUTPUTS
+0200    3 RESOURCE-DATA                   (A) DYNAMIC
+0210    3 RESOURCE-DIRECTORY-DATA         (A389)
+0220    3 REDEFINE RESOURCE-DIRECTORY-DATA
+0230      4 RD-RESOURCE-LIBRARY           (A8)
+0240      4 RD-RESOURCE-OBJECT-NAME       (A8)
+0250      4 RD-RESOURCE-NAME              (A245)
+0260      4 RD-RESOURCE-TYPE              (A4)
+0270      4 RD-RESOURCE-FORMAT            (A1)
+0280      4 RD-RESOURCE-DATE              (A8)  /* (YYYYMMDD)
+0290      4 RD-RESOURCE-TIME              (A7)  /* (HHMMSST)
+0300      4 RD-RESOURCE-USER              (A8)
+0310      4 RD-RESOURCE-INIT-USER         (A8)
+0320      4 RD-RESOURCE-SIZE              (I4)
+0330      4 RD-RESOURCE-VERSION           (A8)  /* rr.vv.ss
+0340      4 RD-RESOURCE-OPSYS             (A8)
+0350      4 RD-RESOURCE-TPSYS             (A8)
+0360      4 RD-RESOURCE-CODE-PAGE         (A64)
+0370      /*
+03801 USR4208N
+0390  2 VERSION                           (I1)     INIT <1>
+0400  2 V1-FSEC-DBID                      (N05)    /* Fsec-dbid
+0410  2 V1-FSEC-FNR                       (N05)    /* Fsec-fnr
+0420  2 V1-FSEC-PSW                       (A08)    /* Fsec password
+0430  2 V1-FSEC-CIP                       (N08)    /* Fsec cip
+04401 REDEFINE USR4208N
+0450  2 EXTENDED-PARMS
+0460    3 EXTENDED-DATA                   (A1/1:27)
+0470/*
+0480LOCAL USING USR-MSG   /* Data for message exchange
+0490LOCAL USING USR-FLD   /* Description of the field in error
+0500END-DEFINE
+0510/**********************************************************************
+0520SET KEY ALL
+0530FORMAT LS=200
+0540/*
+0550RESOURCE-FUNCTION := 'R'
+0560LIBRARY-NAME      := 'SYSEXEVT'
+0570OBJECT-NAME       := 'GREETING'
+0580RESOURCE-NAME     := 'greeting.bmp'
+0590OPTION-REPLACE    := 'N'
+0600/*
+0610REPEAT
+0620  INPUT (AD=MITL'_' IP=OFF)
+0630    TEXT NAD-MSG.MSG, MSG-DATA (1), MSG-DATA (2), MSG-DATA (3)
+0640    MARK NAD-FLD.FIELD-POSITION
+0650    / 18T 'Read a Natural resource:' (I)
+0660    / 18T '-' (24) (I) /
+0670    / 18T 'Object name ...........' OBJECT-NAME
+0680    / 18T 'Resource name .........' / 3X RESOURCE-NAME (AD=W AL=75)
+0690    / 18T 'Library ...............' LIBRARY-NAME
+0700    / 18T 'DBID of library .......' LIBRARY-DBID
+0710    / 18T 'FNR of library ........' LIBRARY-FNR
+0720    / 18T 'PSW of library ........' LIBRARY-PASSWORD (AD=N)
+0730    / 18T 'CIPERCODE of library ..' LIBRARY-CIPHER
+0740    / 18T 'DBID of FSEC ..........' V1-FSEC-DBID
+0750    / 18T 'FNR of FSEC ...........' V1-FSEC-FNR
+0760    / 18T 'PSW of FSEC ...........' V1-FSEC-PSW (AD=N)
+0770    / 18T 'CIPERCODE of FSEC .....' V1-FSEC-CIP
+0780    /// 18T 'Press any PF-key to stop.'
+0790  /*
+0800  IF *PF-KEY NE 'ENTR'
+0810    ESCAPE ROUTINE
+0820  END-IF
+0830  /*
+0840  RESOURCE-FUNCTION := 'R'         /* Read the resource
+0850  CALLNAT 'USR4208N'
+0860          USR4208L    USR4208N.EXTENDED-DATA (*)
+0870          NAD-MSG     NAD-FLD
+0880  /*
+0890  IF MSG-NR <> 0
+0900    WRITE (AD=LI)
+0910        / 'Message number ....' NAD-MSG.MSG-NR
+0920        / 'Message ...........' NAD-MSG.MSG (AL=59)
+0930        / 'Message type ......' NAD-MSG.MSG-TYPE
+0940        / 'Message data ......' NAD-MSG.MSG-DATA (1:3)
+0950       // 'Field structure ...' NAD-FLD.FIELD-STRUCTURE
+0960        / 'Field name ........' NAD-FLD.FIELD-NAME
+0970        / 'Field position ....' NAD-FLD.FIELD-POSITION
+0980        / 'Field index .......' NAD-FLD.FIELD-INDEX1
+0990        NAD-FLD.FIELD-INDEX2
+1000        NAD-FLD.FIELD-INDEX3
+1010      ESCAPE BOTTOM
+1020  END-IF
+1030  /*
+1040  INPUT (AD=MITL'_' IP=OFF)
+1050    TEXT NAD-MSG.MSG, MSG-DATA (1), MSG-DATA (2), MSG-DATA (3)
+1060    MARK NAD-FLD.FIELD-POSITION
+1070    / 18T 'Write a Natural resource:' (I)
+1080    / 18T '-' (25) (I) /
+1090    / 18T 'Object name ...........' OBJECT-NAME
+1100    / 18T 'Resource name .........' / 3X RESOURCE-NAME (AD=W AL=75)
+1110    / 18T 'Library ...............' LIBRARY-NAME
+1120    / 18T 'DBID of library .......' LIBRARY-DBID
+1130    / 18T 'FNR of library ........' LIBRARY-FNR
+1140    / 18T 'PSW of library ........' LIBRARY-PASSWORD (AD=N)
+1150    / 18T 'CIPERCODE of library ..' LIBRARY-CIPHER
+1160    / 18T 'DBID of FSEC ..........' V1-FSEC-DBID
+1170    / 18T 'FNR of FSEC ...........' V1-FSEC-FNR
+1180    / 18T 'PSW of FSEC ...........' V1-FSEC-PSW (AD=N)
+1190    / 18T 'CIPERCODE of FSEC .....' V1-FSEC-CIP
+1200    / 18T 'Replace existing (Y/N) ' OPTION-REPLACE
+1210    /// 18T 'Press any PF-key to stop.'
+1220  /*
+1230  IF *PF-KEY NE 'ENTR'
+1240    ESCAPE ROUTINE
+1250  END-IF
+1260  /*
+1270  RD-RESOURCE-LIBRARY     := LIBRARY-NAME
+1280  RD-RESOURCE-OBJECT-NAME := OBJECT-NAME
+1290  RD-RESOURCE-NAME        := RESOURCE-NAME
+1300  RESOURCE-FUNCTION := 'W'         /* Write the resource
+1310  CALLNAT 'USR4208N'
+1320          USR4208L    USR4208N.EXTENDED-DATA (*)
+1330          NAD-MSG     NAD-FLD
+1340  /*
+1350  IF MSG-NR <> 0
+1360    WRITE (AD=LI)
+1370        / 'Message number ....' NAD-MSG.MSG-NR
+1380        / 'Message ...........' NAD-MSG.MSG (AL=59)
+1390        / 'Message type ......' NAD-MSG.MSG-TYPE
+1400        / 'Message data ......' NAD-MSG.MSG-DATA (1:3)
+1410       // 'Field structure ...' NAD-FLD.FIELD-STRUCTURE
+1420        / 'Field name ........' NAD-FLD.FIELD-NAME
+1430        / 'Field position ....' NAD-FLD.FIELD-POSITION
+1440        / 'Field index .......' NAD-FLD.FIELD-INDEX1
+1450        NAD-FLD.FIELD-INDEX2
+1460        NAD-FLD.FIELD-INDEX3
+1470      ESCAPE BOTTOM
+1480  END-IF
+1490  /*
+1500  INPUT (AD=MITL'_' IP=OFF)
+1510    TEXT NAD-MSG.MSG, MSG-DATA (1), MSG-DATA (2), MSG-DATA (3)
+1520    MARK NAD-FLD.FIELD-POSITION
+1530    / 18T 'Delete a Natural resource:' (I)
+1540    / 18T '-' (26) (I) /
+1550    / 18T 'Object name ...........' OBJECT-NAME
+1560    / 18T 'Resource name .........' / 3X RESOURCE-NAME (AD=W AL=75)
+1570    / 18T 'Library ...............' LIBRARY-NAME
+1580    / 18T 'DBID of library .......' LIBRARY-DBID
+1590    / 18T 'FNR of library ........' LIBRARY-FNR
+1600    / 18T 'PSW of library ........' LIBRARY-PASSWORD (AD=N)
+1610    / 18T 'CIPERCODE of library ..' LIBRARY-CIPHER
+1620    / 18T 'DBID of FSEC ..........' V1-FSEC-DBID
+1630    / 18T 'FNR of FSEC ...........' V1-FSEC-FNR
+1640    / 18T 'PSW of FSEC ...........' V1-FSEC-PSW (AD=N)
+1650    / 18T 'CIPERCODE of FSEC .....' V1-FSEC-CIP
+1660    /// 18T 'Press any PF-key to stop.'
+1670  /*
+1680  IF *PF-KEY NE 'ENTR'
+1690    ESCAPE ROUTINE
+1700  END-IF
+1710  /*
+1720  RD-RESOURCE-LIBRARY     := LIBRARY-NAME
+1730  RD-RESOURCE-OBJECT-NAME := OBJECT-NAME
+1740  RD-RESOURCE-NAME        := RESOURCE-NAME
+1750  RESOURCE-FUNCTION := 'D'         /* Delete the resource
+1760  CALLNAT 'USR4208N'
+1770          USR4208L    USR4208N.EXTENDED-DATA (*)
+1780          NAD-MSG     NAD-FLD
+1790  /*
+1800  IF MSG-NR <> 0
+1810    WRITE (AD=LI)
+1820        / 'Message number ....' NAD-MSG.MSG-NR
+1830        / 'Message ...........' NAD-MSG.MSG (AL=59)
+1840        / 'Message type ......' NAD-MSG.MSG-TYPE
+1850        / 'Message data ......' NAD-MSG.MSG-DATA (1:3)
+1860       // 'Field structure ...' NAD-FLD.FIELD-STRUCTURE
+1870        / 'Field name ........' NAD-FLD.FIELD-NAME
+1880        / 'Field position ....' NAD-FLD.FIELD-POSITION
+1890        / 'Field index .......' NAD-FLD.FIELD-INDEX1
+1900        NAD-FLD.FIELD-INDEX2
+1910        NAD-FLD.FIELD-INDEX3
+1920      ESCAPE BOTTOM
+1930  END-IF
+1940  /*
+1950  PRINT (AD=LI) 'Function completed successfully.'
+1960  ESCAPE BOTTOM
+1970  /*
+1980END-REPEAT
+1990/*---------------------------------------------------------------------
+2000END

@@ -1,0 +1,61 @@
+0010* Program   MAUTH
+0020* View      AUTHORIZED-LIBRARIES
+0030*
+0040* Function  List authorized Libraries
+0050*
+0060*
+0070* ----------------------------------------------------------------------
+0080*
+0090DEFINE DATA
+0100GLOBAL USING TUTO
+0110LOCAL  USING AUTHL
+0120LOCAL
+013001 AUTH-LIB    VIEW OF AUTHORIZED-LIBRARIES
+0140  02 ERROR-CODE
+0150  02 ERROR-TEXT
+0160  02 DSNAME
+0170  02 VOLSER
+018001  SYS-INF    VIEW OF SYSTEM-INFO
+0190  02  ERROR-CODE
+0200  02  ESY-VERSION
+021001 #DSNAME                    (A44)
+022001 #VOLSER                    (A6)
+0230END-DEFINE
+0240*
+0250REPEAT
+0260  INPUT  (AD=MIT'_')
+0270*           ##TITLE (AD=OI IP=OFF)
+0280    // 'Dsname/Prefix :' (I) #DSNAME
+0290*   / 'Volser .......:' (I) #VOLSER
+0300  IF #VOLSER = ' '
+0310    ASSIGN #VOLSER = '*'
+0320  END-IF
+0330*
+0340  WRITE TITLE ##TITLE (AD=OI) /
+0350*
+0360  FIND SYS-INF WITH NODE = ##NODE
+0370    IF ESY-VERSION < '3.5.3'
+0380      IF *LANGUAGE = 2
+0390        PRINT   'View AUTHORIZED-LIBRARIES  nicht unterstuetzt'
+0400        PRINT   'Node ' ##NODE ' laeuft mit  ESY Version ' ESY-VERSION
+0410        PRINT   'Entire System Server Version 3.5.3 wird benoetigt'
+0420      ELSE
+0430        PRINT   'View AUTHORIZED-LIBRARIES  not supported'
+0440        PRINT   'Node ' ##NODE ' is running ESY Version ' ESY-VERSION
+0450        PRINT   'Entire System Server Version 3.5.3 is required'
+0460      END-IF
+0470    ELSE
+0480      FIND AUTH-LIB WITH DSNAME = #DSNAME
+0490          AND  VOLSER  = #VOLSER
+0500          AND NODE    = ##NODE
+0510        IF ERROR-CODE > 0
+0520          REINPUT ERROR-TEXT
+0530        END-IF
+0540*
+0550        DISPLAY DSNAME VOLSER
+0560*
+0570      END-FIND
+0580    END-IF
+0590  END-FIND
+0600END-REPEAT
+0610END

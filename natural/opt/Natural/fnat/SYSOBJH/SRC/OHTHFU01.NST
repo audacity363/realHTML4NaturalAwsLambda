@@ -1,0 +1,32 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> UNLOAD/LOAD/SCAN Function
+0080<Header2> Settings and Options
+0090/* <Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110<InputValues>
+0120<InputNames>
+0130<Predecessor>
+0140<Successor>OHTHFU02
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170Settings
+0180  If you start the Unload, Load or Scan function of the Object Handler,
+0190  you are asked for the option and parameter settings.
+0200
+0210Options
+0220  The options consist of the 'Work File Options', 'XREF Options' (for
+0230  unload or load function when processing data in internal format) or
+0240  'Transfer Options' (when processing data in TRANSFER format),
+0250  'Replace Options' (for load function only), 'Number to process'
+0260  (for load and scan function only), 'FDIC Setting' and 'FSEC Setting'.
+0270
+0280  With the 'FDIC Setting' the Predict file (FDIC) to be used for processing
+0290  XREF data can be specified (only when Predict is installed).
+0300  With the 'FSEC Setting' the FSEC file to be used for the function can be
+0310  specified (only when Natural Security is installed).
+0320<HelpTextEnd>

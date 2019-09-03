@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<SoftwareAG_License>
+<Component Id="SalesInfo">
+<SerialNumber>0000032808</SerialNumber>
+<LicenseKey>6D092089B802D4FA5F810925D40E3ED2</LicenseKey>
+<CustomerID>000001</CustomerID>
+<CustomerName>Natural Community Edition License - for private usage - no support</CustomerName>
+<ContractDetails>00001</ContractDetails>
+<ContractPosNumber>000001</ContractPosNumber>
+<LicenseTypeDetails>External</LicenseTypeDetails>
+</Component>
+<Component Id="ProductInfo">
+<ExpirationDate>2019/12/31</ExpirationDate>
+<OS>Linux</OS>
+<ProductCode>NDV</ProductCode>
+<ProductName>Natural Development Server</ProductName>
+<ProductVersion>9.1</ProductVersion>
+<Usage/>
+<RenewalDate/>
+</Component>
+<Component Id="LicenseInfo">
+<PriceUnit>CU</PriceUnit>
+<PriceQuantity>1</PriceQuantity>
+<LicenseType/>
+<ExtendedRights/>
+<LicenseVersion>1.2</LicenseVersion>
+<Metering>MNO</Metering>
+</Component>
+</SoftwareAG_License>

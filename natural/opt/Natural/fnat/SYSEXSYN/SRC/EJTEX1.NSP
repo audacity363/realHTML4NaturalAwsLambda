@@ -1,0 +1,30 @@
+0010** Example 'EJTEX1': EJECT
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 EMPLOY-VIEW VIEW OF EMPLOYEES
+0050  2 CITY
+0060  2 NAME
+0070  2 JOB-TITLE
+0080END-DEFINE
+0090*
+0100FORMAT PS=15
+0110LIMIT 9
+0120READ EMPLOY-VIEW BY CITY
+0130  /*
+0140  AT START OF DATA
+0150    EJECT
+0160    WRITE /// 20T '%' (29) /
+0170              20T '%%'                          47T '%%' /
+0180              20T '%%' 3X 'REPORT OF EMPLOYEES' 47T '%%' /
+0190              20T '%%' 3X '  SORTED BY CITY   ' 47T '%%' /
+0200              20T '%%'                          47T '%%' /
+0210              20T '%' (29) /
+0220    EJECT
+0230  END-START
+0240  EJECT WHEN LESS THAN 3 LINES LEFT
+0250  /*
+0260  WRITE '*' (64)
+0270  DISPLAY NOTITLE NOHDR CITY NAME JOB-TITLE 5X *LINE-COUNT
+0280  WRITE '*' (64)
+0290END-READ
+0300END

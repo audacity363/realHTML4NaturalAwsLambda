@@ -1,0 +1,30 @@
+0010**DV          0031     V1CONSOLE                         CONSOLE
+0020**DD          0034N 3.0 2ERROR-CODE
+0030**DD          0035A  58 2ERROR-TEXT
+0040**DD          0036N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0037A  10 2SYSTEM-MESSAGE-CODE
+0060**DD          0038A   8 2JOB-NAME
+0070**DD          0039N 3.0 2TEXT-LENGTH
+0080**DD          0040A 253 2TEXT                            /* The text line.
+0090**DD          0041A   8 2TIME-STAMP
+0100**DD          0042A   8 2REPLY-ID
+0110**DD          0043A  80 2REPLY
+0120**DD          0044A   8 2FUNCTION
+0130**DD          0045T     2TIMX
+0140**DD          0046B   2 2SYSTEM-CODE
+0150**DD          0047N 9.0 2RECORD-NUMBER
+0160**DD          0048A   1 2READ-DIRECTION
+0170**DD          0049A   1 2REPLY-FLAG
+0180**DD          0050A   6 2JOB-TYPE
+0190**DD          0051A 253 2NETTO-TEXT                      /* Only relevant for 'DISPLAY',
+0200**DRR         0052     R2NETTO-TEXT                      /* REDEF. BEGIN : NETTO-TEXT
+0210**DFRI1       0053A  60 3NETTO-TXT                       (1:4)
+0220**DD          0054B   4 2WAIT-TIME
+0230**DD          0055A   5 2JOB-ID
+0240**C               *
+0250**DF          0056A   8 1#FUNCTION
+0260**DF          0058A  65 1#COMMAND-LINE
+0270**DF I1       0059C     1#CV-LINE                        (1:20)
+0280**DF I1       0060T     1#TIME                           (1:20)
+0290**DF          0061I   1 1#I
+0300**DF          0062I   1 1#J

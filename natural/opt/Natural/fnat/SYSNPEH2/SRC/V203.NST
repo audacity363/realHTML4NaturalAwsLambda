@@ -1,0 +1,13 @@
+0010&H View WRITE-SPOOL
+0020&L
+0030&L
+0040#Zweck@    : Direktes Schreiben von Daten ins SPOOL oder Ausfuehrung
+0050             von PRINT.
+0060&L
+0070&L
+0080#System@   : z/OS, z/VSE, BS2000/OSD.
+0090&L
+0100&L
+0110#Anwendung@: siehe betriebssystemspezifische Informationen.
+0120&L
+0130#Anmerkung@:

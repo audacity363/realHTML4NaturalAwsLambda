@@ -1,0 +1,72 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3HTTP2
+0050*
+0060* DESCRIPTION   Set headers, and do the same as w3location
+0070*
+0080* SEE           ../sysweb/e3http3
+0090*
+0100* AUTHOR        SAG   27.01.2003
+0110*
+0120* Version       8.3
+0130*
+0140* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0150*
+0160* HISTORY
+0170* USER    DATE       REASON
+0180* ------+----------+----------------------------------------------
+0190*       ! --.--.-- !
+0200* ------+----------+----------------------------------------------
+0210*
+0220* ------ PARAMETER -----------------------------------------------
+0230DEFINE DATA
+0240PARAMETER USING W3PARM
+0250LOCAL USING W3CONST
+0260LOCAL
+02701 W3VALUE  (A) DYNAMIC
+0280END-DEFINE
+0290* --- ERROR HANDLING ---
+0300ON ERROR
+0310  PERFORM W3ERROR ##W3ERROR
+0320  PERFORM W3END ##RPC
+0330  ESCAPE ROUTINE
+0340END-ERROR
+0350*
+0360* --- INITIALIZE Web Interface ---
+0370PERFORM W3INIT ##RPC
+0380*
+0390* --- SET TYPE OF RETURN-PAGE ---
+0400PERFORM W3CONTENT-TYPE 'text/html'
+0410* --- WRITE THE HEAD OF THE DOCUMENT ---
+0420PERFORM W3TEXTLINE '<HTML><HEAD><META HTTP-EQUIV="Content-Type" '-
+0430  'CONTENT="text/html; charset=iso-8859-1"><TITLE>'
+0440* --- THE TITLE OF THE PAGE ---
+0450PERFORM W3TEXTLINE 'Basic Routines -'-
+0460  ' Write HTTP Settings to The Document'
+0470PERFORM W3TEXTLINE  "</TITLE><BODY>"
+0480*
+0490PERFORM W3TEXTLINE '<H2>Write HTTP Settings to The Document</H2><HR>'
+0500*
+0510  PERFORM W3TEXTLINE 'Set Status <br><b>STATUS CONFLICT</b> 409 User should resubmit with more info.'
+0520*
+0530PERFORM W3HTTP-HEADER 'Status' '409'
+0540*
+0550* --- END THE HTML PAGE ---
+0560COMPRESS "<TABLE BORDER='0' WIDTH='100%' CELLSPACING='0' "-
+0570  "CELLPADDING='5'>"
+0580  '<TR BGCOLOR="#00cc66"><TD>' *PROGRAM '&#32;-&#32;' *DATE '&#32;' *TIME
+0590  "</TD><TD ALIGN='RIGHT'>" 'Natural'
+0600  "</TD></TR></TABLE>"
+0610  '</BODY></HTML>' INTO W3VALUE LEAVING NO
+0620PERFORM W3TEXTDYNAMIC W3VALUE
+0630*
+0640* --- now with HTTPDYNAMIC
+0650COMPRESS  'Date: Thu, 28 AUG 1994 00:55:00 GMT'
+0660  ##HTTP_NEWLINE INTO W3VALUE
+0670PERFORM W3HTTPDYNAMIC W3VALUE
+0680*
+0690* --- END Web Interface ---
+0700PERFORM W3END ##RPC
+0710*
+0720END

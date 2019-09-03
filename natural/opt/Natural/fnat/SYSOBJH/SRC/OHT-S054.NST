@@ -1,0 +1,29 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Change Report Library
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180Mark this field to specify a Report Library.
+0190
+0200This library is used to save the text members containing
+0210the report of the executed Object Handler function.
+0220
+0230In the Object Handler profile general or user-specific
+0240values can be specified for the Report Library.
+0250
+0260If no Report Library is specified the Workplan Library
+0270is used.
+0280
+0290<HelpTextEnd>

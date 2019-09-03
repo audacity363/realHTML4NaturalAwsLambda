@@ -1,0 +1,41 @@
+0010* Program   DALLOC
+0020* View      FILE-ALLOCATE
+0030*
+0040* Function  Data Set Allocation
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* hka 97-12-03   NPE213:   make it y2000 compliant
+0090* ======================================================================
+0100*
+0110DEFINE DATA
+0120   GLOBAL USING TUTO
+0130   LOCAL USING DALLOCL
+0140END-DEFINE
+0150*
+0160INPUT (AD=MI'_' ZP=OFF)
+0170   //  ##TITLE (AD=OI IP=OFF)
+0180   //  '  Dsname.........:' FILE-ALLOCATE.DSNAME
+0190    /  '  Volume.........:' FILE-ALLOCATE.VOLSER
+0200   //  '  Dsorg..........:' FILE-ALLOCATE.DSORG
+0210   //  '  Extent start...:' FILE-ALLOCATE.EXTENT-START
+0220    /  '  Extent size....:' FILE-ALLOCATE.EXTENT-SIZE
+0230   //  '  Expiration date:' FILE-ALLOCATE.EXPIRATION-DATX
+0240                            (EM=YYYY-MM-DD) '(format yyyy-mm-dd)'
+0250*
+0260PROCESS FILE-ALLOCATE
+0270   USING NODE                 = ##NODE
+0280     ,   VOLSER               = FILE-ALLOCATE.VOLSER
+0290     ,   DSNAME               = FILE-ALLOCATE.DSNAME
+0300     ,   DSORG                = FILE-ALLOCATE.DSORG
+0310     ,   EXTENT-START         = FILE-ALLOCATE.EXTENT-START
+0320     ,   EXTENT-SIZE          = FILE-ALLOCATE.EXTENT-SIZE
+0330     ,   EXPIRATION-DATX      = FILE-ALLOCATE.EXPIRATION-DATX
+0340  GIVING ERROR-CODE
+0350         ERROR-TEXT
+0360IF ERROR-CODE > 0
+0370   REINPUT ERROR-TEXT
+0380ELSE
+0390   REINPUT *1024
+0400END-IF
+0410END

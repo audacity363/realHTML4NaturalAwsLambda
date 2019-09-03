@@ -1,0 +1,30 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> SYSOBJH Objects
+0080<Header2> Page 1 of 3
+0090/* <Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110<InputValues>
+0120<InputNames>
+0130<Predecessor>
+0140<Successor>OHTHO002
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170With the Object Handler, objects can be loaded and unloaded 'on-the-fly'.
+0180You can also automate the load/unload function if the Object Handler
+0190procedures have been created and saved.
+0200
+0210To achieve a flexible usage of these procedures, there are different kinds of
+0220Object Handler objects, called 'Workplans'. These Workplans are stored in a
+0230Natural library as Natural objects of type TEXT. If no library is specified
+0240when a Workplan is referenced, the library 'WORKPLAN' on the Natural FUSER
+0250system file is used.
+0260
+0270A Workplan consists of a header and the corresponding information. In
+0280addition, comments and comment lines (identified by '/*') can be inserted.
+0290The type of a Workplan is identified by a Workplan header.
+0300<HelpTextEnd>

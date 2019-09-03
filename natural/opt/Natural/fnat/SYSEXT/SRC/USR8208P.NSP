@@ -1,0 +1,155 @@
+0010/* Function ... 1. Terminate EntireX Broker services.
+0020/*              2. Get information about EntireX Broker services,
+0030/*              version information about the EntireX Broker, and the
+0040/*              Command and Information Service of the EntireX Broker.
+0050/*
+0060/*
+0070/* This program serves as an example of how to design a user-defined
+0080/* program to call USR8208N.
+0090/***********************************************************************
+0100*
+0110DEFINE DATA
+0120 LOCAL
+0130 1 USR8208-PARMS
+0140    2 FUNCTION (A17)         /* IN : TERMINATE-SERVICE
+0150    2 SRVNODE  (A192)        /* IN
+0160    2 SRVCLASS (A32)         /* IN
+0170    2 SRVNAME  (A192)        /* IN
+0180    2 SERVICE  (A32)         /* IN
+0190    2 IMMEDIATE (L)          /* IN : immediate shutdown
+0200    2 USER-ID  (A32)         /* IN
+0210    2 PASSWORD (A32)         /* IN
+0220    2 MESSAGE  (A)   DYNAMIC /* OUT
+0230    2 RC       (I2)          /* OUT  0=O.K., 1=Error Broker
+0240*
+0250LOCAL
+0260 1 BROKER-INFO
+0270   2 P-CIS-VERSION         (I2)                    /* OUT
+0280   2 P-CB-KERNELSECURITY   (A1)                    /* OUT
+0290   2 P-ETB-API-VERSION     (I2)                    /* OUT
+0300   2 BROKER-VERSIONSTRING  (A)     DYNAMIC         /* OUT
+0310   2 BRKSTUB-VERSIONSTRING (A)     DYNAMIC         /* OUT
+0320   2 ADD-BRK-INFO          (A/1:*) DYNAMIC         /* OUT
+0330*
+0340 1 L_WITHO                 (A)  DYNAMIC
+0350 1 A2_MESSAGE              (A64/1:2)
+0360 1 I_PL                    (I4)
+0370 1 L_OCC                   (I4)
+0380*
+0390 1 YN_IMMED                (A1) INIT <'N'>
+0400 1 YN_MIXED                (A1) INIT <'N'>
+0410END-DEFINE
+0420*
+0430FUNCTION  := 'TERMINATE-SERVICE'
+0440SRVNODE   := 'localhost:1971' /* default value for EntireX Broker on OpenSystems
+0450SRVCLASS  := 'RPC'
+0460COMPRESS *USER 'SRV1' INTO SRVNAME LEAVING NO SPACE
+0470SERVICE   := 'CALLNAT'
+0480USER-ID   := *USER
+0490*
+0500SET KEY ALL
+0510/*
+0520REPEAT
+0530  /*
+0540  INPUT (AD=MI'_' IP=OFF CD=NE)
+0550      5T 'Terminate an EntireX Broker service' (YEI)
+0560   // 5T 'Command ..................' (TU) FUNCTION (AD=T)
+0570     55T '(TERMINATE-SERVICE,' (TU)
+0580   / 55T ' INFO-SERVICE,PING)' (TU)
+0590    / 5T 'EntireX Broker name ......' (TU) SRVNODE   (AL=40)
+0600    / 5T 'Server class .............' (TU) SRVCLASS
+0610    / 5T 'Server name ..............' (TU) SRVNAME   (AL=40)
+0620    / 5T 'Service type .............' (TU) SERVICE
+0630    / 5T 'Terminate immediately ....' (TU) YN_IMMED  (AD=T) '(Y/N)' (TU)
+0640    / 5T 'User ID ..................' (TU) USER-ID
+0650    / 5T 'Password .................' (TU) PASSWORD  (AD=N)
+0660    / 5T 'Mixed case for password ..' (TU) YN_MIXED  (AD=T) '(Y/N)' (TU)
+0670   // 5T 'Response: '            (TU) RC        (AD=OL ZP=ON CD=TU)
+0680      23T  '0 -  success message from RPC server or Broker' (TU)
+0690    / 23T  '1 -  error message from EntireX Broker' (TU)
+0700    / 23T  '3 -  Natural Security error on client' (TU)
+0710
+0720    / 5T 'Message:' (TU)
+0730    / 14T A2_MESSAGE(1) (AD=OL CD=TU)
+0740    / 14T A2_MESSAGE(2) (AD=OL CD=TU)
+0750   // 5T 'Press any PF-key to stop.' (TU)
+0760  /*
+0770  IF *PF-KEY NE 'ENTR'
+0780    ESCAPE ROUTINE
+0790  END-IF
+0800  /*
+0810  IF YN_IMMED NE 'Y'
+0820  THEN
+0830    IMMEDIATE := FALSE
+0840  ELSE
+0850    IMMEDIATE := TRUE
+0860  END-IF
+0870  /*
+0880  IF YN_MIXED NE 'Y'
+0890  THEN
+0900    EXAMINE PASSWORD AND TRANSLATE INTO UPPER
+0910  END-IF
+0920  /*
+0930  MOVE LEFT JUSTIFIED SRVNODE TO SRVNODE
+0940  MOVE LEFT JUSTIFIED SRVNAME TO SRVNAME
+0950  /*
+0960  RESET MESSAGE A2_MESSAGE(*) RC BROKER-INFO
+0970  /*
+0980  CALLNAT 'USR8208N' USR8208-PARMS BROKER-INFO
+0990  /*
+1000  /* Wrap a longer message at a blank
+1010  /*
+1020  IF *LENGTH(USR8208-PARMS.MESSAGE) > 64
+1030  THEN
+1040    EXAMINE DIRECTION BACKWARD
+1050            SUBSTRING(USR8208-PARMS.MESSAGE,1,64) FOR ' '
+1060            GIVING POSITION IN I_PL
+1070    A2_MESSAGE(1) := SUBSTRING(USR8208-PARMS.MESSAGE,1,I_PL)
+1080    ADD 1 TO I_PL
+1090    A2_MESSAGE(2) := SUBSTRING(USR8208-PARMS.MESSAGE,I_PL)
+1100  ELSE
+1110    A2_MESSAGE(1) := USR8208-PARMS.MESSAGE
+1120    A2_MESSAGE(2) := ' '
+1130  END-IF
+1140  /*
+1150  /* If an CIS-Version is returned show information.
+1160  /*
+1170  IF P-CIS-VERSION > 0
+1180  THEN
+1190    DECIDE ON FIRST VALUE OF P-CB-KERNELSECURITY
+1200      VALUE 'Y'  L_WITHO := 'with'
+1210      VALUE 'N'  L_WITHO := 'without'
+1220      NONE VALUE COMPRESS '?  Unknown status:' P-CB-KERNELSECURITY 'for'
+1230                      INTO L_WITHO
+1240    END-DECIDE
+1250    PRINT
+1260        'EntireX Broker Information:' (TU)
+1270     // 'Broker runs'(TU) L_WITHO 'kernel security.' (TU)
+1280      / 'Broker version string ....:' (TU)  BROKER-VERSIONSTRING
+1290      / 'Broker stub version string:' (TU)  BRKSTUB-VERSIONSTRING
+1300      / 'CIS version number ...... :' (TU)  P-CIS-VERSION
+1310  END-IF
+1320  /*
+1330  /* For INFO-SERVICE OR TERMINATE-SERVICE
+1340  /*
+1350  IF FUNCTION = 'INFO-SERVICE' OR= 'TERMINATE-SERVICE'
+1360  THEN
+1370    L_OCC := *OCC(ADD-BRK-INFO)
+1380    IF L_OCC > 0
+1390    THEN
+1400      IF L_OCC = 1
+1410      THEN
+1420        PRINT / L_OCC 'Service matches the specified criteria.' /
+1430      ELSE
+1440        PRINT / L_OCC 'Services match the specified criteria.' /
+1450      END-IF
+1460      FOR I_PL 1 L_OCC
+1470        PRINT  ADD-BRK-INFO(I_PL)
+1480        SKIP 1
+1490      END-FOR
+1500    END-IF
+1510  END-IF
+1520END-REPEAT
+1530*
+1540END
+1550

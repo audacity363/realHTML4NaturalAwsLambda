@@ -1,0 +1,183 @@
+0010**  Example program for USR3005N
+0020**  This program shows, how data can be retrieved from Predict.
+0030**  It searches all programs linked to an system
+0040**  and it searches all systems a program is linked to.
+0050**
+0060DEFINE DATA LOCAL
+00701 REQUEST-RESULT(A) DYNAMIC
+0080*
+0090LOCAL USING PARSER-X                /* Local Data Area is located
+0100                                    /* in Library SYSEXXT
+0110LOCAL
+01201 XML_PARSER_XPATH             (A) DYNAMIC
+01301 XML_PARSER_XPATH_TYPE        (A1)
+01401 XML_PARSER_CONTENT           (A) DYNAMIC
+01501 XML_PARSER_CONTENT_IS_EMPTY  (L)
+01601 XML_PARSER_ERROR_TEXT        (A253)
+01701 XML_PARSER_RESPONSE          (I2)
+01801 #XNAME (A) DYNAMIC
+01901 #XVALUE (A) DYNAMIC
+02001 #OLD-XNAME (A) DYNAMIC
+02101 #STRUCT-XNAME (A) DYNAMIC
+02201 #MSG-NR(I4)
+02301 #MSG-TEXT(A79)
+02401 #MSG-TYPE(A8)
+02501 #I (I1)
+0260END-DEFINE
+0270PRINT 'Example program' *PROGRAM 'for USR3005N'
+0280/     'This program shows, how data can be retrieved from Predict.'
+0290/     'It searches all programs linked to an system'
+0300/     'and it searches all systems a program is linked to.'
+0310/
+0320FOR #I = 1 2
+0330COMPRESS
+0340'<Predict>'
+0350  '<Request>'
+0360    '<Select>'
+0370      '<Search>' TO REQUEST-RESULT
+0380      IF #I = 1
+0390        PRINT 'First search all programs linked to systems S*'  /
+0400        COMPRESS REQUEST-RESULT
+0410        '<Link Source-object-type=''SYSTEM''  '
+0420          'association=''PROGRAM'' direction=''ACTIVE''/>'
+0430        '<Attribute name=''SOURCE-OBJECT'' value=''S*''/>'
+0440        TO REQUEST-RESULT
+0450      ELSE
+0460        PRINT / 'Second search all systems S* a specific'
+0470              / 'program is linked to.' /
+0480        COMPRESS REQUEST-RESULT
+0490        '<Link Source-object-type=''PROGRAM''  '
+0500          'association=''SYSTEM'' direction=''PASSIVE''/>'
+0510        '<Attribute name=''SOURCE-OBJECT'''
+0520        'value=''SAG-PRD-ACMDAEX''/>'
+0530        '<Attribute name=''TARGET-OBJECT'' value=''S*''/>'
+0540        TO REQUEST-RESULT
+0550      END-IF
+0560COMPRESS REQUEST-RESULT
+0570      '</Search>'
+0580      '<Return>'
+0590        '<Field name=''SOURCE-OBJECT''/>'
+0600        '<Field name=''SOURCE-OBJECT-TYPE''/>'
+0610        '<Field name=''SOURCE-TYPE-TITLE''/>'
+0620        '<Field name=''TARGET-OBJECT''/>'
+0630        '<Field name=''TARGET-OBJECT-TYPE''/>'
+0640        '<Field name=''TARGET-TYPE-TITLE''/>'
+0650      '</Return>'
+0660    '</Select>'
+0670  '</Request>'
+0680'</Predict>'
+0690*
+0700TO REQUEST-RESULT
+0710*
+0720PRINT 'Request passed to USR3005N' /
+0730PRINT REQUEST-RESULT
+0740*
+0750CALLNAT 'USR3005N' REQUEST-RESULT
+0760*
+0770PRINT / 'Result returned from USR3005N' /
+0780*
+0790INCLUDE PARSER_X                    /* Copy Code is located
+0800                                    /* in Library SYSEXXT
+0810                                    /*
+0820  'REQUEST-RESULT'                  /* XML FILE TO BE PARSED
+0830  'XML_PARSER_XPATH'                /* XPATH TO REPESENT ELEMENT...
+0840  'XML_PARSER_XPATH_TYPE'           /* TYPE OF CALLBACK
+0850  'XML_PARSER_CONTENT'              /* CONTENT OF FOUND ELEMENT
+0860  'XML_PARSER_CONTENT_IS_EMPTY'     /* IS TRUE IF ELEMENT IS EMPTY
+0870  'XML_PARSER_ERROR_TEXT'           /* ERROR MESSAGE
+0880  'XML_PARSER_RESPONSE'             /* ERROR NR; 0 = OK
+0890*
+0900END-FOR
+0910*
+0920DEFINE SUBROUTINE CALLBACK
+0930*
+0940EXAMINE XML_PARSER_XPATH TRANSLATE INTO UPPER
+0950IF XML_PARSER_XPATH_TYPE = '/'
+0960AND #STRUCT-XNAME NE ' '
+0970**
+0980** Last Structure is closed
+0990**
+1000  RESET #STRUCT-XNAME
+1010END-IF
+1020DECIDE ON FIRST VALUE OF XML_PARSER_XPATH
+1030*
+1040  VALUE 'PREDICT/RESULT/MESSAGE/?NUMBER'
+1050    #MSG-NR := VAL(XML_PARSER_CONTENT)
+1060*
+1070  VALUE 'PREDICT/RESULT/MESSAGE/?TEXT'
+1080    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#MSG-TEXT'
+1090**
+1100** With PRCCNVCH
+1110** the coded special characters in XML_PARSER_CONTENT are translated
+1120** into the printable form
+1130**
+1140*
+1150  VALUE 'PREDICT/RESULT/MESSAGE/?TYPE'
+1160    #MSG-TYPE := XML_PARSER_CONTENT
+1170    EXAMINE #MSG-TYPE TRANSLATE INTO UPPER
+1180    IF #MSG-TYPE NE 'SUCCESS'
+1190**
+1200** Possible Values of ?TYPE are SUCCESS, ERROR and WARNING
+1210**
+1220      PRINT #MSG-NR
+1230      PRINT #MSG-TEXT
+1240    END-IF
+1250*
+1260*
+1270  VALUE 'PREDICT/RESULT/ROW'
+1280**
+1290** New Object starts here
+1300**
+1310    RESET #STRUCT-XNAME  #OLD-XNAME
+1320    PRINT ' '
+1330*
+1340  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/?NAME'
+1350**
+1360** New Structure name found
+1370**
+1380    #STRUCT-XNAME := XML_PARSER_CONTENT
+1390    PRINT #STRUCT-XNAME
+1400*
+1410  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/ATTRIBUTE/?NAME'
+1420**
+1430** Attribute name within a Structure found
+1440**
+1450    #XNAME := XML_PARSER_CONTENT
+1460    IF #OLD-XNAME NE #XNAME
+1470      IF #STRUCT-XNAME = ' '
+1480        PRINT #XNAME
+1490      END-IF
+1500      #OLD-XNAME := #XNAME
+1510    END-IF
+1520*
+1530  VALUE 'PREDICT/RESULT/ROW/STRUCTURE/ATTRIBUTE/?VALUE'
+1540**
+1550** Attribute value within a Structure found
+1560**
+1570    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#XVALUE'
+1580    PRINT #XVALUE
+1590*
+1600  VALUE 'PREDICT/RESULT/ROW/ATTRIBUTE/?NAME'
+1610**
+1620** Attribute name outside of Structure found
+1630**
+1640    #XNAME := XML_PARSER_CONTENT
+1650*
+1660  VALUE 'PREDICT/RESULT/ROW/ATTRIBUTE/?VALUE'
+1670**
+1680** Attribute value outside a Structure found
+1690**
+1700    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#XVALUE'
+1710    PRINT #XNAME ':' #XVALUE
+1720*
+1730  NONE IGNORE
+1740*
+1750END-DECIDE
+1760END-SUBROUTINE /* CALLBACK
+1770*
+1780DEFINE SUBROUTINE PARSER_ERROR
+1790   PRINT 'Parser Error'
+1800   PRINT XML_PARSER_ERROR_TEXT
+1810 END-SUBROUTINE
+1820*
+1830END

@@ -1,0 +1,11 @@
+0010&H View WRITE-SPOOL
+0020&L
+0030&L
+0040#Purpose@: Perform PRINT on some data.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD.
+0070&L
+0080&L
+0090#Usage@  : In BS2000 this view performs a PRINT.
+0100&L
+0110#Notes@  :

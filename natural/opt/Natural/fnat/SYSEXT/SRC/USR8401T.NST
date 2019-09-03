@@ -1,0 +1,72 @@
+0010Read/Write dynamic error message parts
+0020.
+0030Documentation ......... USR8401T    /*  Text object
+0040Interface ............. USR8401N    /*  Cataloged subprogram
+0050Example Program ....... USR8401P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR MESSAGES
+0100.
+0110Keywords .............. +NEW-NAT-8.4.1,
+0120                        *ERROR-NR, DYNAMIC, ERROR, SYSERR
+0130.
+0140Function .............. Read or write the dynamic parts (:1:,:2:, ...)
+0150                        of a Natural system or user-defined error
+0160                        message.
+0170                        Up to seven occurrences can be maintained.
+0180                        On UNIX and Windows, the total length of all
+0190                        dynamic parts is restricted to 263 Bytes.
+0200                        You can read the dynamic parts of the error
+0210                        that occcured last or the dynamic parts
+0220                        defined with USR8401N.
+0230.
+0240.
+0250Parameters
+0260----------
+0270Define the following parameters with the DEFINE DATA statement:
+0280.
+02901 USR8401-Parameters
+0300  2 P-Function        (A1)     /* Input:
+0310                               /* Function code; possible values are:
+0320                               /*   'R' - Read dynamic parts
+0330                               /*   'W' - Write dynamic parts
+0340  2 P-Number-Fields   (N1)     /* Input (P-Function = 'W') and
+0350                               /* output (P-Function = 'R'):
+0360                               /* indicates, how many occurrences of
+0370                               /* P-Fields-A72 are filled.
+0380  2 P-Fields-A72      (A72/7)  /* Input for P-Function = 'W' and
+0390                               /* output P-Function = 'R':
+0400                               /* Table of the dynamic parts of the
+0410                               /* messages. Each occurrence contains
+0420                               /* one dynamic element.
+0430                               /* On LUW the total length of all
+0440                               /* dynamic parts is restricted to
+0450                               /* 263 Bytes.
+0460  2 P-Return-Code     (I4)     /* Out:
+0470                               /* Possible values:
+0480                               /*   1 = Invalid value for parameter
+0490                               /*       "Function"
+0500                               /*   2 = No value specified (Function
+0510                               /*       Write)
+0520                               /*   3 = Total length exceeds buffer
+0530                               /*       length of 263 bytes
+0540                               /*       (Function Write on LUW)
+0550                               /*  99 = No dynamic error message parts
+0560                               /*       available (Function Read)
+0570.
+0580.
+0590Interface Call
+0600--------------
+0610Use the interface with the CALLNAT statement:
+0620.
+0630CALLNAT 'USR8401N'
+0640        USR8401-Parameters
+0650.
+0660.
+0670Using the Application Programming Interface:
+0680--------------------------------------------
+0690Copy the subprogram USR8401N to the library SYSTEM, to the appropriate
+0700steplib library, or to the required library.
+0710.
+0720***** End of Description *****

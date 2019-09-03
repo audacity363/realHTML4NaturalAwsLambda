@@ -1,0 +1,85 @@
+0010/*  Translate string.
+0020/*  This program serves as example how to design a user-defined
+0030/*  program to call 'USR0620N'.
+0040/**********************************************************************
+0050
+0060DEFINE DATA LOCAL
+00701 FUNCTION (A01)
+0080  /* 'U' -> from upper to lower case
+0090  /* 'L' -> from lower to upper case
+0100  /* 'E' -> from EBCDIC to ASCII char. set
+0110  /* 'A' -> from ASCII to EBCDIC char. set
+0120  /* '1' -> from EBCDIC to ASCII char. set
+0130  /* '2' -> from ASCII to EBCDIC char. set
+01401 STRING   (A250)     /* String to be translated
+0150  INIT <' 129ABCabcdefgh+'>
+0160END-DEFINE
+0170/**********************************************************************
+0180PRINT
+0190  'Function      String                 String (Hex)' /
+0200  '-------- ---------------- --------------------------------'
+0210*
+0220RESET INITIAL STRING
+0230PERFORM DISP
+0240/**********************************************************************
+0250RESET INITIAL STRING
+0260MOVE 'L' TO FUNCTION  /*  From lower case to upper case
+0270CALLNAT 'USR0620N' FUNCTION STRING
+0280PERFORM DISP
+0290/**********************************************************************
+0300RESET INITIAL STRING
+0310MOVE 'U' TO FUNCTION  /*  From upper case to lower case
+0320CALLNAT 'USR0620N' FUNCTION STRING
+0330PERFORM DISP
+0340/**********************************************************************
+0350IF *MACHINE-CLASS = 'MAINFRAME'   /* Start with EBCDIC
+0360/**********************************************************************
+0370  RESET INITIAL STRING
+0380  MOVE 'E' TO FUNCTION  /*  From EBCDIC to ASCII
+0390  CALLNAT 'USR0620N' FUNCTION STRING
+0400  PERFORM DISP
+0410/**********************************************************************
+0420  MOVE 'A' TO FUNCTION  /*  From ASCII to EBCDIC
+0430  CALLNAT 'USR0620N' FUNCTION STRING
+0440  PERFORM DISP
+0450/**********************************************************************
+0460  RESET INITIAL STRING
+0470  MOVE '1' TO FUNCTION  /*  From EBCDIC to ASCII
+0480  CALLNAT 'USR0620N' FUNCTION STRING
+0490  PERFORM DISP
+0500/**********************************************************************
+0510  MOVE '2' TO FUNCTION  /*  From ASCII to EBCDIC
+0520  CALLNAT 'USR0620N' FUNCTION STRING
+0530  PERFORM DISP
+0540/**********************************************************************
+0550ELSE          /* UNIX/Windows        Start with ASCII
+0560/**********************************************************************
+0570  RESET INITIAL STRING
+0580  MOVE 'A' TO FUNCTION  /*  From ASCII to EBCDIC (internal table)
+0590  CALLNAT 'USR0620N' FUNCTION STRING
+0600  PERFORM DISP
+0610/**********************************************************************
+0620  MOVE 'E' TO FUNCTION  /*  From EBCDIC to ASCII (internal table)
+0630  CALLNAT 'USR0620N' FUNCTION STRING
+0640  PERFORM DISP
+0650/**********************************************************************
+0660  RESET INITIAL STRING
+0670  MOVE '2' TO FUNCTION  /*  From ASCII to EBCDIC (natconv.ini)
+0680  CALLNAT 'USR0620N' FUNCTION STRING
+0690  PERFORM DISP
+0700/**********************************************************************
+0710  MOVE '1' TO FUNCTION  /*  From EBCDIC to ASCII (natconv.ini)
+0720  CALLNAT 'USR0620N' FUNCTION STRING
+0730  PERFORM DISP
+0740/**********************************************************************
+0750END-IF   /* *MACHINE-CLASS
+0760/**********************************************************************
+0770/**********************************************************************
+0780DEFINE SUBROUTINE DISP
+0790PRINT
+0800  FUNCTION
+0810  10T STRING (AL=16)
+0820  STRING (EM=H(16))
+0830END-SUBROUTINE
+0840/**********************************************************************
+0850END

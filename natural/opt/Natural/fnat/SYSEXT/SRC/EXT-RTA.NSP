@@ -1,0 +1,279 @@
+0010*
+0020*  Member ......... EXT-RTA
+0030*  Type ........... Program
+0040*  Library ........ SYSEXTC
+0050*
+0060*  Function ....... ERROR TRANSACTION for SYSEXT
+0070*
+0080*
+0090/***********************************************************************
+0100/*
+0110/* It gives an idea how to design a global error handling routine
+0120/* instead of using local ON ERROR blocks.
+0130/*
+0140/* This program may also be FETCHed in order to
+0150/* display user error messages.
+0160/*
+0170/* Please feel free to modify this program according to your needs.
+0180/*
+0190/* Please see Natural System Variables documentation,
+0200/* system variables "*ERROR-TA" and "*ERROR-NR", and see also
+0210/* Natural Programming Guide, Processing of Application Errors.
+0220/*
+0230/***********************************************************************
+0240*
+0250DEFINE DATA
+0260LOCAL
+0270  01 S-ERROR-NR         (N05)        /* Natural error parameters
+0280  01 S-LINE-NUM         (N04)
+0290  01 S-STATUS           (A01)
+0300  01 S-PROGRAM          (A08)
+0310  01 S-LEVEL            (N02)
+0320  01 S-LEVEL-I4         (I04)        /* if level > 99
+0330  01 S-POSITION-IN-LINE (N03)
+0340  01 S-LENGTH-OF-ITEM   (N03)
+0350  01 #LEVEL             (I04)
+0360LOCAL
+0370                                     /* Parameters for USR0120N/USR0320N
+0380  01 APPLICATION        (A08)
+0390  01 ERROR-NUMBER       (N04)        /* 0001 thru 9999
+0400  01 LANG-CODE          (I01)        /* 1 - 60
+0410  01 RESPONSE           (N04)        /* Error response code
+0420  01 SHORT-TEXT-L       (A250) INIT <'<<< Short text not found >>>'>
+0430  01 REDEFINE SHORT-TEXT-L
+0440     02 SHORT-TEXT      (A65)
+0450  01 REDEFINE SHORT-TEXT-L
+0460     02 SHORT-TEXT-M    (A79)
+0470LOCAL
+0480  01 P-DYN-TEXT         (A253/9)     /* Parameters for USR2030N
+0490  01 P-NUMBER           (N01)
+0500  01 P-RESP             (N04)
+0510LOCAL
+0520  01 STATUSTEXT         (A32)
+0530  01 IX                 (I02)
+0540  01 #PART              (A03)
+0550  01 SYNERRON           (L)
+0560  01 #TITLE             (A64)
+0570END-DEFINE
+0580*
+0590DEFINE WINDOW NAT3009
+0600  SIZE 05 * 40
+0610  BASE 04 / 08
+0620  TITLE ' NAT3009 '
+0630DEFINE WINDOW USER-WINDOW
+0640  SIZE 11 * 60
+0650  BASE 04 / 08
+0660  TITLE #TITLE
+0670DEFINE WINDOW NAT-WINDOW
+0680  SIZE 16 * 80
+0690  BASE 05 / 01
+0700  TITLE #TITLE
+0710*
+0720BACKOUT TRANSACTION       /*  Attention ...
+0730SET CONTROL 'WB'          /*  Close window
+0740SET KEY ALL               /*
+0750SET CONTROL 'K00'         /*  Activate ENTR
+0760RESET SYNERRON
+0770*
+0780*
+0790*
+0800IF *DATA < 3              /*  Stack not filled correctly
+0810  MOVE 9999 TO *ERROR-NR  /*  Internal error, go to local ON ERROR
+0820ELSE
+0830                          /*  Read Error Parameter from STACK
+0840  IF *DATA > 6            /*  SYNERR = ON and a syntax error occurred
+0850    INPUT
+0860      S-ERROR-NR
+0870      S-LINE-NUM
+0880      S-STATUS
+0890      S-PROGRAM
+0900      S-LEVEL
+0910      S-POSITION-IN-LINE
+0920      S-LENGTH-OF-ITEM
+0930    #LEVEL   := S-LEVEL
+0940    SYNERRON := TRUE
+0950  ELSE
+0960    INPUT                 /*  other error occurred
+0970      S-ERROR-NR
+0980      S-LINE-NUM
+0990      S-STATUS
+1000      S-PROGRAM
+1010      S-LEVEL
+1020      S-LEVEL-I4
+1030    IF S-LEVEL-I4 NE 0
+1040      #LEVEL := S-LEVEL-I4
+1050    ELSE
+1060      #LEVEL := S-LEVEL
+1070    END-IF
+1080  END-IF
+1090END-IF
+1100/*
+1110DECIDE ON FIRST S-STATUS                  /*  Translate flag to text
+1120  VALUE 'U' MOVE 'User Error'          TO STATUSTEXT
+1130  VALUE 'C' MOVE 'Command Error'       TO STATUSTEXT
+1140  VALUE 'L' MOVE 'Logon Error'         TO STATUSTEXT
+1150  VALUE 'O' MOVE 'Object Time Error'   TO STATUSTEXT
+1160  VALUE 'S' MOVE 'Syntax Error'        TO STATUSTEXT
+1170  VALUE 'R' MOVE 'Remote Server Error' TO STATUSTEXT
+1180  NONE      COMPRESS 'Unknown Status:' S-STATUS INTO STATUSTEXT
+1190END-DECIDE
+1200/***********************************************************************
+1210MOVE *LIBRARY-ID TO APPLICATION
+1220MOVE *LANGUAGE   TO LANG-CODE
+1230MOVE S-ERROR-NR  TO ERROR-NUMBER
+1240RESET RESPONSE
+1250*
+1260*
+1270IF S-STATUS = 'U' /* Special Processing for User Error Messages
+1280  /*
+1290  /* In case this program has been FETCHed in order to
+1300  /* display user error messages, give an example:
+1310  /*
+1320  /* FETCH 'EXT-RTA' #USER-ERR '0' 'U' '*' '0'
+1330  /*
+1340  /* Here you may add your special source code to read
+1350  /* User Error Messages from System File
+1360  /* by means of subprogram 'USR0320N'.
+1370  /* The following source lines serve as an example.
+1380  /*
+1390  CALLNAT 'USR0320N'
+1400      APPLICATION ERROR-NUMBER LANG-CODE RESPONSE SHORT-TEXT
+1410  /*
+1420  IF SHORT-TEXT = ' '
+1430    MOVE '(Text not found)' TO SHORT-TEXT
+1440  END-IF
+1450  /*
+1460  SET CONTROL 'MB'          /*  Close window
+1470  MOVE EDITED ERROR-NUMBER (EM=9999) TO #TITLE
+1480  COMPRESS *LIBRARY-ID #TITLE INTO #TITLE LEAVING NO
+1490  COMPRESS ' SYSEXT - User Error Message' #TITLE INTO #TITLE
+1500  /*
+1510  INPUT WINDOW = 'USER-WINDOW' (AD=OIL CD=YE IP=OFF SG=OFF)
+1520    / SHORT-TEXT
+1530    / ' '
+1540    / 'Error Number ...'(TU) S-ERROR-NR (EM=9999)
+1550    / 'Line ...........'(TU) S-LINE-NUM (EM=9999)
+1560    / 'Program ........'(TU) S-PROGRAM
+1570    / 'Level ..........'(TU) #LEVEL
+1580  /*
+1590  SET WINDOW OFF
+1600  IF *PF-KEY NE 'ENTR'
+1610    STOP
+1620  END-IF
+1630ELSE            /* Natural System error message
+1640  /*
+1650  CALLNAT 'USR0120N'                 /* Get Natural error text
+1660    ERROR-NUMBER LANG-CODE RESPONSE SHORT-TEXT
+1670  /*
+1680  IF SHORT-TEXT = ' '    /*  Short text in this language was not found
+1690  AND LANG-CODE NE 1
+1700    MOVE 1 TO LANG-CODE  /*  Retry with language = 1
+1710    RESET INITIAL SHORT-TEXT-L
+1720    CALLNAT 'USR0120N'
+1730      ERROR-NUMBER LANG-CODE RESPONSE SHORT-TEXT
+1740  END-IF
+1750  /*
+1760  IF SHORT-TEXT = ' '
+1770    MOVE '(Text not found)' TO SHORT-TEXT
+1780  END-IF
+1790  /*
+1800  IF S-ERROR-NR = 3009
+1810    SET CONTROL 'MB'
+1820    INPUT WINDOW = 'NAT3009'
+1830      /  '  Please press ENTER to continue.' (I)
+1840    SET CONTROL 'WB'
+1850  ELSE
+1860    IF SHORT-TEXT = SCAN ':1:'
+1870      CALLNAT 'USR2030N'             /* Get dynamic parts of error msg
+1880        P-DYN-TEXT(*) P-NUMBER P-RESP
+1890      IF P-RESP = 0
+1900        FOR IX 1 TO P-NUMBER
+1910          COMPRESS ':' IX ':' INTO #PART LEAVING NO
+1920          EXAMINE SHORT-TEXT-L FOR #PART REPLACE P-DYN-TEXT(IX)
+1930        END-FOR
+1940      END-IF
+1950    END-IF
+1960    SET CONTROL 'MB'
+1970    MOVE EDITED ERROR-NUMBER (EM=9999) TO #TITLE
+1980    COMPRESS 'NAT' #TITLE INTO #TITLE LEAVING NO
+1990    COMPRESS ' SYSEXT - System Error Message' #TITLE INTO #TITLE
+2000    /*
+2010    IF SYNERRON
+2020      INPUT WINDOW = 'NAT-WINDOW' (AD=OIL CD=YE IP=OFF SG=OFF)
+2030        /     SHORT-TEXT-M
+2040        /     ' '
+2050        /     'Error Number ..'(TU)    S-ERROR-NR (EM=9999)
+2060          28T 'Reason Text ......'(TU) STATUSTEXT
+2070        /     'Line ..........'(TU)    S-LINE-NUM (EM=9999)
+2080        /     'Program .......'(TU)    S-PROGRAM
+2090          28T 'Level ............'(TU) #LEVEL
+2100        /     'Language ......'(TU)    LANG-CODE
+2110          28T '*LANGUAGE ........'(TU) *LANGUAGE
+2120        /     '*STARTUP ......'(TU)    *STARTUP
+2130          28T '*LIBRARY-ID ......'(TU) *LIBRARY-ID
+2140        /     '*USER .........'(TU)    *USER
+2150          28T '*USER-NAME .......'(TU) *USER-NAME
+2160        /     '*OPSYS ........'(TU)    *OPSYS
+2170          28T '*DEVICE ..........'(TU) *DEVICE
+2180        /     '*TIMX .........'(TU)    *TIMX
+2190          28T '*DATX ............'(TU) *DATX (EM=YYYY-MM-DD)
+2200        //    'Pos in Line ...'(TU)    S-POSITION-IN-LINE
+2210          28T 'Length of Item ...'(TU) S-LENGTH-OF-ITEM
+2220    ELSE
+2230      INPUT WINDOW = 'NAT-WINDOW' (AD=OIL CD=YE IP=OFF SG=OFF)
+2240        /     SHORT-TEXT-M
+2250        /     ' '
+2260        /     'Error Number ..'(TU)    S-ERROR-NR (EM=9999)
+2270          28T 'Reason Text ......'(TU) STATUSTEXT
+2280        /     'Line ..........'(TU)    S-LINE-NUM (EM=9999)
+2290          28T '*ERROR-LINE ......'(TU) *ERROR-LINE (EM=9999)
+2300        /     'Program .......'(TU)    S-PROGRAM
+2310          28T 'Level ............'(TU) #LEVEL
+2320        /     'Language ......'(TU)    LANG-CODE
+2330          28T '*LANGUAGE ........'(TU) *LANGUAGE
+2340        /     '*STARTUP ......'(TU)    *STARTUP
+2350          28T '*LIBRARY-ID ......'(TU) *LIBRARY-ID
+2360        /     '*USER .........'(TU)    *USER
+2370          28T '*USER-NAME .......'(TU) *USER-NAME
+2380        /     '*OPSYS ........'(TU)    *OPSYS
+2390          28T '*DEVICE ..........'(TU) *DEVICE
+2400        /     '*TIMX .........'(TU)    *TIMX
+2410          28T '*DATX ............'(TU) *DATX (EM=YYYY-MM-DD)
+2420    END-IF
+2430    SET WINDOW OFF
+2440    IF *PF-KEY NE 'ENTR'
+2450      STOP
+2460    END-IF
+2470  END-IF
+2480  /*
+2490  SET CONTROL 'MB'
+2500  SET CONTROL 'WB'   /*  Close window
+2510  IF S-ERROR-NR = 1124
+2520    /*  Important for Batch: Handle CMSYNIN Error
+2530    WRITE 'NAT1124:  END OF FILE IN INPUT AFTER CONTINUATION.'
+2540    //    '          NO DATA FOUND ON STACK (CMSYNIN).'
+2550    /     '          NATURAL NOW WILL TERMINATE ABNORMALLY...'
+2560    ////  'GOOD BYE.'
+2570    TERMINATE 201    /* See Statements documentation, "TERMINATE".
+2580  END-IF
+2590  /*
+2600END-IF
+2610*
+2620IF (*DEVICE = 'BATCH')
+2630  RELEASE STACK
+2640  STOP
+2650END-IF
+2660*
+2670FETCH 'EXT-MENU'
+2680*
+2690/*******************************************************************
+2700ON ERROR           /* Error within Error Handler
+2710  WRITE
+2720    'ERROR NUMBER' (I) *ERROR-NR (AD=I SG=F NL=4)
+2730    'IN ERROR-TA' (I) *ERROR-TA (AD=I)
+2740    'CANNOT BE HANDLED.' (I)
+2750  RELEASE STACK
+2760  STOP
+2770END-ERROR
+2780/***********************************************************************
+2790END

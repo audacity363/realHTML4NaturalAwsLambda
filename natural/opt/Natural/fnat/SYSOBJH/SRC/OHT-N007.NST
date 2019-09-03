@@ -1,0 +1,31 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> S/C-Kind
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180Kind of Natural programming objects to be processed:
+0190  'S'   source object
+0200  'C'   cataloged object
+0210  'A'   all saved and/or cataloged objects
+0220  'W'   source and cataloged object
+0230        if both have the same date and time (stowed)
+0240  'B'   source and cataloged object, if both exist
+0250
+0260Note:
+0270  'W' (stowed) and 'B' (both) are valid for the unload
+0280  or find function only, for the load or scan function
+0290  they are handled in the same way as 'A' (all objects).
+0300
+0310<HelpTextEnd>

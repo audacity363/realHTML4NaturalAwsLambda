@@ -1,0 +1,68 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR8222N'
+0030/*  Retrieve Natural stack information (in Unicode format)
+0040/***********************************************************************
+0050DEFINE DATA LOCAL
+006001 P-FUNCTION (A1)
+007001 P-NUMBER   (I4)
+008001 P-DATA     (U/1:*) DYNAMIC
+0090*
+010001 STACK-TYPE (A8)
+011001 I-ENT      (I4)
+012001 I-OCC      (I4)
+013001 ENTRIES    (I4)
+014001 #ALPHA     (A40)
+015001 #ALPHA2    (A) DYNAMIC
+016001 #UNI       (U50)
+017001 #UNI2      (U50)
+0180END-DEFINE
+0190*
+0200* Release the stack after this program ends
+0210*
+0220STACK TOP COMMAND 'USR8222Q'
+0230*
+0240* Write test data to Stack
+0250*
+0260#ALPHA := 'Hello World'
+0270COMPRESS
+0280        'A traditional code page is a list of selected character codes,'
+0290        'arranged in a certain order, that support specific languages'
+0300        'or groups of languages that share common scripts.'
+0310    INTO #ALPHA2
+0320#UNI   := 'Unicode 1'
+0330#UNI2  := 'Unicode 2'
+0340*
+0350STACK TOP DATA #ALPHA
+0360STACK TOP DATA #UNI
+0370STACK TOP COMMAND 'SYSPROF'
+0380STACK TOP DATA FORMATTED #ALPHA #ALPHA2
+0390STACK TOP DATA FORMATTED #UNI #UNI2 #UNI
+0400*
+0410* Read test data from Stack
+0420*
+0430/* Get the number of stack entries
+0440P-FUNCTION := 'N'
+0450CALLNAT 'USR8222N' P-FUNCTION P-NUMBER P-DATA(*)
+0460ENTRIES := P-NUMBER
+0470*
+0480FOR I-ENT = 1 TO ENTRIES
+0490  /* Get the type of the ith entry
+0500  P-FUNCTION := 'T'
+0510  P-NUMBER := I-ENT
+0520  CALLNAT  'USR8222N' P-FUNCTION P-NUMBER P-DATA(*)
+0530  STACK-TYPE := P-DATA(1)
+0540  /*
+0550  /* Get the ith entry
+0560  P-FUNCTION := 'R'
+0570  P-NUMBER := I-ENT
+0580  CALLNAT  'USR8222N' P-FUNCTION P-NUMBER P-DATA(*)
+0590  /*
+0600  I-OCC := *OCC(P-DATA)
+0610  IF I-OCC > 10
+0620    DISPLAY I-ENT STACK-TYPE P-DATA(1) (AL=30)  *LENGTH(P-DATA(1))
+0630  ELSE
+0640    DISPLAY I-ENT STACK-TYPE P-DATA(*) (AL=30)  *LENGTH(P-DATA(*))
+0650  END-IF
+0660  /*
+0670END-FOR
+0680END

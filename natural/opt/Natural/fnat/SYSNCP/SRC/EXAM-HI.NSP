@@ -1,0 +1,114 @@
+0010/* EXAM-HI - HELP IKN
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (01:12)
+0070     02 NATURAL-ERROR
+0080     02 RETURN-CODE
+0090     02 RESULT-FIELD (01:12)
+0100     02 GETSET-FIELD-NAME
+0110     02 GETSET-FIELD-VALUE
+0120     /*********************
+0130  01 PROC-NAME   (A08)
+0140  01 MSG         (A72)
+0150  01 LONG-IKN    (A10)
+0160  01 REDEFINE LONG-IKN
+0170     02 L-IKN    (A06)
+0180     02 W-IKN    (A04)
+0190  01 IX          (I01)
+0200  01 INTERNAL    (A01) INIT <'A'>
+0210END-DEFINE
+0220/**********************************************************************
+0230DEFINE WINDOW HELP-IKN
+0240  SIZE 08 * 50
+0250  BASE IX / IX
+0260  TITLE ' (HI) Translate IKN to Keyword '
+0270  CONTROL SCREEN
+0280  FRAMED POSITION OFF
+0290SET KEY ALL
+0300IX := *LEVEL * 2
+0310/**********************************************************************
+0320/* Current processor name:
+0330/*
+0340PROCESS COMMAND ACTION GET USING
+0350  PROCESSOR-NAME = ' '
+0360  GETSET-FIELD-NAME = 'NAME&'
+0370IF NATURAL-ERROR NE 0
+0380  CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0390  WRITE MSG
+0400  ESCAPE ROUTINE
+0410END-IF
+0420/*
+0430MOVE GETSET-FIELD-VALUE TO PROC-NAME
+0440/**********************************************************************
+0450/* Ask for current IKN #1:
+0460/*
+0470PROCESS COMMAND ACTION GET USING
+0480  PROCESSOR-NAME = PROC-NAME
+0490  GETSET-FIELD-NAME = 'CURR-IKN1'
+0500IF NATURAL-ERROR NE 0
+0510  CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0520  WRITE MSG
+0530  ESCAPE ROUTINE
+0540END-IF
+0550/*
+0560MOVE GETSET-FIELD-VALUE TO LONG-IKN
+0570IF W-IKN = '0000'
+0580  MOVE '1001' TO W-IKN
+0590END-IF
+0600/*********************************************************************
+0610REPEAT
+0620  /**************************************************************
+0630  INPUT WINDOW = 'HELP-IKN' (AD=MIL' ' IP=OFF  )
+0640  WITH TEXT MSG
+0650    / 'Processor Name .........' PROC-NAME (AD=OI)
+0660    / 'IKN to be translated ...' W-IKN
+0670    / 'Internal IKN, too ......' INTERNAL
+0680    / 'Keyword ................' RESULT-FIELD (1) (AD=OI AL=16)
+0690  /**************************************************************
+0700  IF *PF-KEY NE 'ENTR'
+0710    ESCAPE ROUTINE
+0720  END-IF
+0730  RESET MSG RESULT-FIELD (*)
+0740  /******************************************************************
+0750  IF W-IKN NE MASK (NNNN)
+0760    MOVE 'Invalid IKN.' TO MSG
+0770    ESCAPE TOP
+0780  END-IF
+0790  IF W-IKN = '1001' THRU '1999'
+0800  OR W-IKN = '2001' THRU '2999'
+0810  OR W-IKN = '3001' THRU '3999'
+0820  OR W-IKN = '4001' THRU '4999'
+0830    IGNORE
+0840  ELSE
+0850    MOVE 'Invalid IKN.' TO MSG
+0860    ESCAPE TOP
+0870  END-IF
+0880  /******************************************************************
+0890  IF INTERNAL NE ' '
+0900    RESET INITIAL INTERNAL
+0910  END-IF
+0920  /*
+0930  COMPRESS
+0940    'IKN'       /*  Type of help
+0950    'T'         /*  Translate keyword
+0960    INTERNAL    /*  Internal keywords, too.
+0970    TO COMMAND-LINE (1)
+0980  MOVE W-IKN TO COMMAND-LINE (2)
+0990  /*
+1000  PROCESS COMMAND ACTION HELP USING
+1010      PROCESSOR-NAME = PROC-NAME
+1020      COMMAND-LINE (*) = COMMAND-LINE (*)
+1030  /*
+1040  IF NATURAL-ERROR > 0
+1050    CALLNAT 'EXAM-ERR' NATURAL-ERROR  MSG
+1060  END-IF
+1070  /*
+1080  IF RESULT-FIELD (1) = ' '
+1090    COMPRESS 'IKN' COMMAND-LINE (2) 'does not exist.' TO  MSG
+1100  END-IF
+1110  /*
+1120END-REPEAT
+1130/**********
+1140END

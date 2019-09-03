@@ -1,0 +1,63 @@
+0010* Text-Member fuer den Aufbau des ENTIRE SYSTEM SERVER Tutorial Menu
+0020*                        PFKEY PFKEY PFKEY PFKEY PFKEY PFKEY
+0030* PF1-PF6                            Ende        Benu  Sys
+0040* PF7-PF12                -     +          Sprac       Node
+0050*
+0060* Sie sollten Ihre eigenen Beispiele im Member TUTO0002
+0070* definieren.
+0080* Aenderungen in diesem Member sollten Sie nicht durchfuehren,
+0090* da sie mit der naechsten Auslieferungen des Tutorials
+0100* ueberschrieben wuerden.
+0110* Aufbau des Tutorials:
+0120*    View Name             (a16)
+0130*    Programm Name         (a8)
+0140*    Markierung (Flag)     (a1) E=EBCDIC-Maschine, I=PC, *nixen, VAXen
+0150*    Programm Beschreibung (a47)
+0160*
+0170ACCOUNTING      MACCOUNTEAnzeige von Accounting Informationen
+0180ACTIVE-JOBS     MACTIVE  'Aktive Tasks' und zugehoerige JES Informatione
+0190ADDRESS-SPACE   MASCB    Informationen zum Adressraum
+0200ALLOCATIONS     MALLOCS  DD allocations fuer einen Job anzeigen
+0210AUTHORIZED-LIBS MAUTH    Zeige authorisierte Dateien/Libraries
+0220CATALOG         MCATLG   Katalog Information anzeigen
+0230CATALOG-UPDATE  MCATUPD  Katalog Verwaltung
+0240CHECK-SECURITY  MCHKSEC  Ueberprueft das Zugriffsrecht auf Betriebsmitte
+0250COMMON-DATA     MCOMDTA  gemeinsam benutzbarer Arbeitsspeicher
+0260CONSOLE         MCONSOL  Anzeige der Konsole
+0270CONSOLE-LOG     MCONSLG  Anzeige des Konsolprotokolls
+0280COPY-FILE       MCOPYFI  Dateien von einem Knoten zum anderen kopieren
+0290DEVICE-NAMES    MDEVNAM  Uebersicht ueber die 'Generic Device' Namen
+0300EVENTING        MEVENT   Programm zu Programm Kommunikation
+0310FILE-ALLOCATE   MALLOC   Datei anlegen
+0320FILE-ATTRIBUTES MFATTR   Anzeige von Attributen einer angegebenen Datei
+0330FILE-MAINTENANCEMCOMP    Komprimieren von PDS Dateien
+0340IDCAMS          MIDCAMS  IDCAMS Utility
+0350IEBCOPY         MIEBCPY  IEBCOPY Utility
+0360LIB-DIRECTORY   MLIBDIR  Inhaltsverzeichnis einer Bibliothek anzeigen
+0370LIB-UPDATE      MLIBUPD  Aktionen auf dem Bibliotheks-Inhaltsverzeichnis
+0380LIB-ZAP         MZAP     AMASPZAP Utility
+0390LOAD-MODULE     MLOADMI  Information zu eingespielten Zaps
+0400LOAD-MODULE     MLOADME  Namen der externen Symbole und Informationen
+0410LOADED-MODULES  MLOADM   Anzeige der geladenen Module eines Prozesses
+0420MAIN-STORAGE    MMAINS  EAnzeige des durch einen Job belegten Speichers
+0430NATPROC-LOGON   MNPLOG   Logon an ENTIRE SYSTEM SERVER
+0440NATPROC-USERS   MNPUSER  Anzeige der ENTIRE SYSTEM SERVER Benutzer/Tasks
+0450NET-OPER        MNETOPR  VTAM Kommandos
+0460READ-FILE       MREADSC  Lesen von Dateien (Stringsuche)
+0470READ-SPOOL      MRSPOOL  Lesen einer 'Spool'-Datei (Stringsuche)
+0480RESOURCE-CONTROLMENQDEQ  Resourcen Kontrolle durch ENQ/DEQ
+0490SEND-EMAIL      MSEML    Senden einer E-Mail ueber das Internet
+0500SEND-MESSAGE    MSMSG    Nachricht an COM-PLETE/TSO Nutzer oder Konsole
+0510SPOOL-FILES     MSPOOLF  Anzeige der 'Spool'-Dateien eines 'Jobs'
+0520SPOOL-QUEUE     MSPOOLQ  Liste der Jobs im Spooling-System
+0530SPOOL-UPDATE    MSPOOLU  Statusaenderung eines Spool Jobs
+0540SUBMIT          MSUBMIT  Batch Job zum INTERNAL READER abschicken
+0550SYSTEM-COMMAND  MCOMMAND TSO Kommandos ausfuehren
+0560SYSTEM-INFO     MSYSINF  System Information anzeigen
+0570TCB             MTCB     Task Information fuer einen Prozess anzeigen
+0580UNIT-ATTRIBUTES MUNIT    DASD Einheiten und Datentraegerkennung anzeigen
+0590VTOC            MVTOC    VTOC fuer eine gegebene Datentraegerkennung
+0600VTOC-UPDATE     MVTOCU   VTOC aendern
+0610WRITE-FILE      MWRTF    Schreiben auf sequentielle Datei oder LIB membe
+0620WRITE-SPOOL     MPRINTS  Verwenden des Infoprint Servers
+0630WRITE-SPOOL     MWRTS    Schreiben direkt ins Spooling System

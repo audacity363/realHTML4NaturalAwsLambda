@@ -1,0 +1,44 @@
+0010* Text member for building NATURAL PROCESS's tutorial menu
+0020*                        PFKEY PFKEY PFKEY PFKEY PFKEY PFKEY
+0030* PF1-PF6                            Exit        User  Sys
+0040* PF7-PF12               Up    Down        Lang        Node
+0050*
+0060* The user site may make its own entries to the tutorial
+0070* in any other member 'TUTOnnnn'.
+0080* Changes should not be made in member 'TUTO0000' because
+0090* they will be gone with subsequent releases.
+0100* The format is fixed:
+0110*    View name           (a16)
+0120*    Program name        (a8)
+0130*    Flag                (a1)                       .NPR321.
+0140*    Program description (a47)           (was a48)  .NPR321.
+0150*
+0160ACTIVE-JOBS     DACTIVE  Display active Tasks
+0170CATALOG         DCATLG   List ESY internal file table or VSAM catalog
+0180COMMON-DATA     DCOMDTA  Shared Main Storage Data
+0190CONSOLE         DCONSOL  Operator Console
+0200CONSOLE-LOG     DCONSLG  Display Console Log
+0210COPY-FILE       DCOPYFI  Copy files from node to node
+0220EVENTING        DEVENT   Program to Program Communication
+0230FILE-ALLOCATE   DALLOC   Data set allocation
+0240FILE-ATTRIBUTES DFATTR   Display attributes for a given file
+0250IDCAMS          DIDCAMS  IDCAMS utility
+0260LIB-DIRECTORY   DLIBDIR  Display LIB-directory and list members
+0270LIB-UPDATE      DLIBUPD  Perform various operations on LIB directory
+0280MAIN-STORAGE    DMAINS  EDisplay main storage
+0290NATPROC-LOGON   DNPLOG   Logon to ENTIRE SYSTEM SERVER
+0300NATPROC-USERS   DNPUSER  Display ENTIRE SYSTEM SERVER Users/Tasks
+0310NET-OPER        DNETOPR  Issue net commands and display response
+0320READ-FILE       DREADSC  scan OS-file or library member
+0330READ-SPOOL      DRSPOOL  Read sysout from spool
+0340SEND-EMAIL      DSEML    Send e-mail via Internet
+0350SEND-MESSAGE    DSMSG    Send message to COM-PLETE/TSO user or console
+0360SPOOL-QUEUE     DSPOOLQ  Display spool queue
+0370SPOOL-UPDATE    DSPOOLU  Alter status of a spool job
+0380SUBMIT          DSUBMIT  Submit batch job via INTERNAL READER
+0390SYSTEM-INFO     DSYSINF  Display system information
+0400UNIT-ATTRIBUTES DUNIT    List DASD Units and mounted Volume
+0410VTOC            DVTOC    List VTOC of a specific volume
+0420VTOC-UPDATE     DVTOCU   VTOC maintenance
+0430WRITE-FILE      DCSPOOL  Copy spool output to library member
+0440WRITE-SPOOL     DWSPOOL  Write directly to spool

@@ -1,0 +1,89 @@
+0010Find user short error message (including steplibs search)
+0020.
+0030Documentation ......... USR3320T    /*  Text object
+0040Interface ............. USR3320N    /*  Cataloged subprogram
+0050Example Program ....... USR3320P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR MESSAGES
+0100.
+0110Keywords .............. *ERROR-NR, *LANGUAGE, ERROR, FNAT, FUSER,
+0120                        STEPLIB, SYSERR
+0130.
+0140Function .............. Any user defined short error text may be read
+0150                        from Natural system file. Steplibs will also
+0160                        be considered.
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+023001 PARM-AREA
+0240   02 ERROR-NUMBER (N04)  /*  1 thru 9999
+0250   02 LANGUAGE     (I01)  /*  similar to *LANGUAGE (1 thru 60)
+0260   02 RESPONSE     (N04)  /*  Error code
+0270   02 S-TEXT       (A65)  /*  Contains the short error message
+0280   02 ERR-APPLIC   (A32)  /*  Applic of short usr msg (may be steplib)
+0290   02 ERR-NO       (N04)  /*  No. of short usr msg (may be x000)
+0300   02 ERR-LANG     (I01)  /*  Lang of short usr msg (may be 1)
+0310.
+0320Interface Call
+0330--------------
+0340Use the interface with the CALLNAT statement:
+0350.
+0360CALLNAT 'USR3320N' PARM-AREA
+0370.
+0380.
+0390Using the Application Programming Interface:
+0400--------------------------------------------
+0410.
+0420####################################################################
+0430The Subprogram 'USR3320N' must be copied to the current application.
+0440####################################################################
+0450.
+0460USR3320N returns the error message, which would also be output
+0470by the 'INPUT WITH TEXT *error-number' statement.
+0480So the returned error message depends on the current application and
+0490on steplibs, which may be defined in Natural Security for this
+0500application.
+0510.
+0520Following variables have to be filled before invoking the interface:
+0530.
+0540ERROR-NUMBER ...
+0550  May be any value from 0001 up to 9999
+0560.
+0570LANGUAGE ...
+0580  Language code, similar to *LANGUAGE. If LANGUAGE is zero, current
+0590  contents of *LANGUAGE is taken.
+0600.
+0610Following variables will be returned:
+0620.
+0630RESPONSE
+0640  0000 ...  Error Message found.
+0650  0002 ...  Invalid parameters in internal call.
+0660  0003 ...  Internal error in USR3320N.
+0670  0009 ...  No Error Message found.
+0680  0010 ...  Invalid Error Number.
+0690  0011 ...  Invalid Language Code.
+0700  none ...  Response code from USR3320N, no further info
+0710.
+0720S-TEXT
+0730  Contains the short error message
+0740.
+0750ERR-APPLIC
+0760  Contains the library, where the error message was found.
+0770  This may be the current library or any steplib.
+0780.
+0790ERR-NO
+0800  Contains the error number, which was returned. On MF this
+0810  may be x000, where x is the first digit of the requested
+0820  error message (e.g. 1000 for 1005, if number 1005 does not exist).
+0830.
+0840ERR-LANG
+0850  Contains the language of the returned error message. This may
+0860  be English, if the requested language does not exist.
+0870.
+0880.
+0890***** End of Description *****

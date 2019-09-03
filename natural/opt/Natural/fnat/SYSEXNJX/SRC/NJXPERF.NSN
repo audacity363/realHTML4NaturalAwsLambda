@@ -1,0 +1,144 @@
+0010* >Natural Source Header 000000
+0020* :Mode S
+0030* :CP
+0040* <Natural Source Header
+0050DEFINE DATA PARAMETER
+00601 CT (1:*)
+0070  2 LEVEL (I4)
+0080  2 OPENED (I4)
+0090  2 SELECTED (L)
+0100  2 TEXT (U) DYNAMIC
+01101 PRG (A/1:*) DYNAMIC
+01201 HTML(A/1:*) DYNAMIC
+0130LOCAL
+01401 I (I2) INIT <0>
+01501 IMAX (I2) INIT <22>
+0160END-DEFINE
+0170/*
+0180RESIZE ARRAY CT  TO (1:IMAX)
+0190RESIZE ARRAY PRG TO (1:IMAX)
+0200RESIZE ARRAY HTML TO (1:IMAX)
+0210/*
+0220ADD 1 TO I
+0230TEXT(I)  := 'Hint 1: Browser Cache'
+0240LEVEL(I) := 1
+0250HTML(I) := '../njxperformance/html/hint1_browsercaching.html'
+0260/*
+0270ADD 1 TO I
+0280TEXT(I)  := 'Hint 2: Container Sizing'
+0290LEVEL(I) := 1
+0300HTML(I) := '../njxperformance/html/hint2_container_sizing.html'
+0310/*
+0320ADD 1 TO I
+0330TEXT(I)  := 'Rowarea Example'
+0340PRG(I)   := "RAREAS-P"
+0350LEVEL(I) := 2
+0360OPENED(I):= 2
+0370/*
+0380ADD 1 TO I
+0390TEXT(I)  := ':o(  ITRs with superfluous % sizing - 1'
+0400PRG(I)   := "BAREAS-P"
+0410LEVEL(I) := 2
+0420OPENED(I):= 2
+0430/*
+0440ADD 1 TO I
+0450TEXT(I)  := ':o(  ITRs with superfluous % sizing - 2'
+0460PRG(I)   := "BHRARS-P"
+0470LEVEL(I) := 2
+0480OPENED(I):= 2
+0490/*
+0500ADD 1 TO I
+0510TEXT(I)  := 'Hint 3: Grids'
+0520LEVEL(I) := 1
+0530HTML(I) := '../njxperformance/html/hint3_grids.html'
+0540/*
+0550ADD 1 TO I
+0560TEXT(I)  := 'TEXTGRIDSSS2 - % width'
+0570PRG(I)   := "GRDDSP-P"
+0580LEVEL(I) := 2
+0590OPENED(I):= 2
+0600/*
+0610ADD 1 TO I
+0620TEXT(I)  := 'ROWTABLEAREA2 - % width'
+0630PRG(I)   := "GDDSP2-P"
+0640LEVEL(I) := 2
+0650OPENED(I):= 2
+0660/*
+0670ADD 1 TO I
+0680TEXT(I)  := 'ROWTABLEARE2 - px width - movable columns'
+0690PRG(I)   := "GDDSP3-P"
+0700LEVEL(I) := 2
+0710OPENED(I):= 2
+0720/*
+0730ADD 1 TO I
+0740TEXT(I)  := 'TEXTGRIDSSS2 - px width - ROWCOUNT 100'
+0750PRG(I)   := "GDDSP4-P"
+0760LEVEL(I) := 2
+0770OPENED(I):= 2
+0780/*
+0790ADD 1 TO I
+0800TEXT(I)  := ':o(  Huge ROWTABLEAREA2'
+0810PRG(I)   := "BGDSP2-P"
+0820LEVEL(I) := 2
+0830OPENED(I):= 2
+0840/*
+0850ADD 1 TO I
+0860TEXT(I)  := 'Hint 4: Page Size - Modular Design'
+0870LEVEL(I) := 1
+0880HTML(I) := '../njxperformance/html/hint4_pagesize.html'
+0890/*
+0900ADD 1 TO I
+0910TEXT(I)  := 'ROWTABAREA: Single Controls'
+0920PRG(I)   := "TABARS-P"
+0930LEVEL(I) := 2
+0940OPENED(I):= 2
+0950/*
+0960ADD 1 TO I
+0970TEXT(I)  := 'ROWTABAREA: Grids (ROWTABLEAREA2)'
+0980PRG(I)   := "TABARG-P"
+0990LEVEL(I) := 2
+1000OPENED(I):= 2
+1010/*
+1020ADD 1 TO I
+1030TEXT(I)  := 'ROWTABAREA: Grids (TEXTGRIDSSS2)'
+1040PRG(I)   := "TABAGD-P"
+1050LEVEL(I) := 2
+1060OPENED(I):= 2
+1070/*
+1080ADD 1 TO I
+1090TEXT(I)  := 'TABSEL with page navigation'
+1100PRG(I)   := "TABPG1-P"
+1110LEVEL(I) := 2
+1120OPENED(I):= 2
+1130/*
+1140ADD 1 TO I
+1150TEXT(I)  := 'ROWTABSUBPAGES: multiple Natural sessions'
+1160PRG(I)   := "RTBSUB-P"
+1170LEVEL(I) := 2
+1180OPENED(I):= 2
+1190/*
+1200ADD 1 TO I
+1210TEXT(I)  := 'Workplace Applications'
+1220LEVEL(I) := 2
+1230OPENED(I):= 2
+1240HTML(I) := '../njxperformance/html/hint4_workplace.html'
+1250/*
+1260ADD 1 TO I
+1270TEXT(I)  := 'Hint 5: Server-Round-Trips'
+1280LEVEL(I) := 1
+1290HTML(I) := '../njxperformance/html/hint5_serverroundtrip.html'
+1300/*
+1310ADD 1 TO I
+1320TEXT(I)  := 'Toggle Visibility without Server-Round-Trip'
+1330PRG(I)   := "VISBLO-P"
+1340LEVEL(I) := 2
+1350OPENED(I):= 2
+1360/*
+1370ADD 1 TO I
+1380TEXT(I)  := 'Client Side Validation'
+1390LEVEL(I) := 2
+1400OPENED(I):= 2
+1410HTML(I) := '../njxperformance/html/hint5_clientsidevalidation.html'
+1420/*
+1430
+1440END

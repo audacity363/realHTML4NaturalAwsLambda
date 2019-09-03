@@ -1,0 +1,155 @@
+0010* Program ...... V62OPT
+0020* Library ...... SYSEXV
+0030* Version ...... 6.2
+0040* Machine ...... UNIX
+0050* Note ......... This program must be cataloged with DC='.'
+0060*
+0070* Functionality  New OPTIONS
+0080*                TQMARK - Translate Quotation Marks
+0090*                THSEP  - Thousands Separator
+0100*                MASKCME - MASK Compatible with MOVE EDITED
+0110************************************************************************
+0120*
+0130DEFINE DATA
+0140LOCAL
+01501 YEAR (A4)
+01601 THSEP-ON-NUMBER  (A13)
+01701 THSEP-OFF-NUMBER (A13)
+01801 #THSEPCH         (A1)
+01901 #THSEPCH-OLD     (A1)
+0200END-DEFINE
+0210*
+0220*
+0230FORMAT KD=ON
+0240SET KEY PF3  NAMED 'Exit'
+0250  PF12 NAMED 'Canc'
+0260*
+0270WRITE TITLE LEFT JUSTIFIED
+0280  01T *TIMX  (AD=OTD)
+0290  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0300  70T *DATX  (AD=OTD DF=L)
+0310  /
+0320  01T 'User'
+0330  06T *USER  (AD=OLTI)
+0340  18T '- New OPTIONS TQMARK, THSEP and MASKCME  -' (I)
+0350  64T 'Program'
+0360  72T *PROGRAM   (AD=OI)
+0370*
+0380* Page 1
+0390* TQMARK - Translate Quotation Marks
+0400* The option TQMARK can be set more than once in a program
+0410*
+0420OPTIONS TQMARK=OFF
+0430WRITE 16T '    - TQMARK - Translate Quotation Marks -' (I) /
+0440WRITE 'The option' 'TQMARK' (I)
+0450  'controls the translation of a quotation mark (") within a'/
+0460  'Natural text constant.' /
+0470WRITE 'OPTIONS' 'TQMARK=ON  ' (I)
+0480  '/* translate to single apostrophe'
+0490WRITE 'WRITE ''There"s a quotation mark.'''
+0500OPTIONS TQMARK=ON
+0510WRITE 'Result:' '  There"s a quotation mark.'  (I) /
+0520*
+0530OPTIONS TQMARK=OFF
+0540WRITE 'OPTIONS' 'TQMARK=OFF ' (I)
+0550  '/* do not translate quotation marks'
+0560WRITE 'WRITE ''There"s a quotation mark.'''
+0570* WRITE 'Result:'
+0580OPTIONS TQMARK=OFF
+0590WRITE 'Result:' 'There"s a quotation mark.' (I)
+0600NEWPAGE
+0610*
+0620* Page 2
+0630* THSEP  - Thousands Separator
+0640* The option THSEP can be set more than once in a program
+0650*
+0660MOVE '/' TO #THSEPCH
+0670REPEAT
+0680  MOVE #THSEPCH TO #THSEPCH-OLD
+0690  SET GLOBALS THSEPCH=#THSEPCH
+0700  OPTIONS THSEP=OFF
+0710  MOVE EDITED 1234567.89 (EM=ZZ,ZZZ,ZZ9.99) TO THSEP-OFF-NUMBER
+0720  OPTIONS THSEP=ON
+0730  MOVE EDITED 1234567.89 (EM=ZZ,ZZZ,ZZ9.99) TO THSEP-ON-NUMBER
+0740
+0750  INPUT  (IP=OFF)
+0760    01T *TIMX  (AD=OTD)
+0770    21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0780    70T *DATX  (AD=OTD DF=L)
+0790    /
+0800    01T 'User'
+0810    06T *USER  (AD=OLTI)
+0820    18T '- New OPTIONS TQMARK, THSEP and MASKCME  -' (I)
+0830    64T 'Program'
+0840    72T *PROGRAM   (AD=OI) /
+0850    16T '   - THSEP - Dynamic Thousands Separator  -' (I) /
+0860    /
+0870    'The option' 'THSEP' (I)
+0880    'is used to enable or disable the interpretation of commas' /
+0890    '(or periods) in the edit mask as dynamic thousands separator. In'-
+0900    'general the' /
+0910    'dynamic thousands separator is a comma, the period is used if the'-
+0920    'comma is' /
+0930    'already used as decimal character (DC). At runtime the dynamic'-
+0940    'thousands' /
+0950    'separators are replaced by the value of the parameter'
+0960    'THSEPCH' (I) '(thousands' /
+0970    'separator character).' /
+0980    /
+0990    'Compile time: DC=''.''' /
+1000    'OPTIONS' 'THSEP=OFF' (I)
+1010    '    /* comma treated as literal' /
+1020    'MOVE EDITED 1234567.89 (EM=ZZ,ZZZ,ZZ9.99) TO THSEP-OFF-NUMBER' /
+1030    'OPTIONS' 'THSEP=ON' (I)
+1040    '     /* comma treated as dynamic thousands separator' /
+1050    'MOVE EDITED 1234567.89 (EM=ZZ,ZZZ,ZZ9.99) TO THSEP-ON-NUMBER' /
+1060    /
+1070    'Run time:' (I)
+1080    'Thousands separator character' 'THSEPCH =' (I)
+1090    #THSEPCH (AD=MI) /
+1100    'THSEP-OFF-NUMBER:' THSEP-OFF-NUMBER (AD=OI) /
+1110    'THSEP-ON-NUMBER: ' THSEP-ON-NUMBER (AD=OI)
+1120*
+1130  IF *PF-KEY = 'PF3'
+1140      OR #THSEPCH = #THSEPCH-OLD
+1150    ESCAPE BOTTOM
+1160  END-IF
+1170  IF (*PF-KEY = 'PF12' OR= 'CLR')
+1180  CALLNAT 'UTILSTOP'
+1190  END-IF
+1200END-REPEAT
+1210NEWPAGE
+1220*
+1230* Page 3
+1240* MASKCME - MASK Compatible with MOVE EDITED
+1250* The option MASKCME can be set only once in a program
+1260*
+1270WRITE 14T '- MASKCME - MASK Compatible with MOVE EDITED -' (I) /
+1280  /
+1290  'The option' 'MASKCME' (I)
+1300  'is used to make the MASK option compatible to MOVE EDITED.' /
+1310  'The range of valid year values that matches the YYYY mask'-
+1320  'characters' /
+1330  '  is  1582 - 2699 for' 'MASKCME=ON' (I) /
+1340  '  and 0000 - 2699 for' 'MASKCME=OFF.' (I) /
+1350WRITE 'MOVE ''1234'' TO YEAR      /* YEAR defined as (A4)' /
+1360  'IF YEAR = MASK (YYYY)  WRITE YEAR ''is a valid year''' /
+1370  'ELSE                   WRITE YEAR ''is not a valid year''' /
+1380  'END-IF' /
+1390WRITE 'Program' *PROGRAM
+1400 'with OPTIONS' 'MASKCME=OFF' (I)
+1410OPTIONS MASKCME=OFF
+1420MOVE '1234' TO YEAR
+1430IF YEAR = MASK (YYYY)
+1440  WRITE 'Result:'YEAR (AD=I) 'is a valid year'
+1450     (I) /
+1460ELSE
+1470  WRITE 'Result:' YEAR (AD=I) 'is not a valid year'
+1480     (I) /
+1490END-IF
+1500*
+1510FETCH RETURN 'V62OPT1'  /* continue there to show MASKCME=ON
+1520*
+1530*
+1540END
+1550

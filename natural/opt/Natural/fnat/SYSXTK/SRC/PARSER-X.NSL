@@ -1,0 +1,56 @@
+0010**C           0   * ---------------------------------------------------------------------
+0020**C           0   * CLASS  NATURAL XML TOOLKIT - UTILITIES
+0030**C           0   *
+0040**C           0   *         PARSER-X
+0050**C           0   *
+0060**C           0   *DESCRIPTION   Internal used savearea for xml parser
+0070**C           0   *
+0080**C           0   *AUTHOR        SAG   12.2001
+0090**C           0   *
+0100**C           0   *VERSION       6.3.
+0110**C           0   *
+0120**C           0   *(c) Copyright Software AG 2001-2006. All rights reserved.
+0130**C           0   *
+0140**C           0   * HISTORY
+0150**C           0   * USER    DATE       REASON
+0160**C           0   * ------+------------+------------------------------------------------
+0170**C           0   *       ! --.--.---- !
+0180**C           0   * ------+------------+------------------------------------------------
+0190**C           0   *
+0200**DF          0   I   4 1XML_PARSER_XPATH_NAMES_MAX
+0210**DF          0   I   4 1XML_PARSER_INPUT_LENGTH
+0220**DF          0   A   1 1XML_PARSER_APOSTROPHE
+0230**DF          0   A   1 1XML_PARSER_ATSIGN
+0240**DF          0   A   1 1XML_PARSER_QUOT_MARK
+0250**DF          0   I   4 1XML_PARSER_II
+0260**DF          0   I   4 1XML_PARSER_IJ
+0270**DF          0   I   4 1XML_PARSER_IK
+0280**DF          0   I   4 1XML_PARSER_IL
+0290**DF          0   I   4 1XML_PARSER_NEXT
+0300**DF I1       0   A  64 1XML_PARSER_XPATH_NAMES          (1:99)
+0310**DF          0   L     1XML_PARSER_HAS_ATTRIBUTE
+0320**DF          0   A   1 1XML_PARSER_ATTRIBUTE_DELIMITER
+0330**DF          0   L     1XML_PARSER_IS_INLINE_DEFINED
+0340**DF          0   I   4 1XML_PARSER_NEXT_ATTRIBUTE
+0350**DF          0   A   2 1XML_PARSER_XML_2CHARS
+0360**DR          0        R1XML_PARSER_XML_2CHARS           /* BEGIN REDEFINE: XML_PARSER
+0370**DFR         0   A   1 2XML_PARSER_XML_1ST_CHAR
+0380**DFR         0   A   1 2XML_PARSER_XML_2ND_CHAR
+0390**DF          0   A   1 1XML_PARSER_TAG_1CHAR2
+0400**DF          0   A   1 1XML_PARSER_TAG_1CHAR
+0410**DF          0   A   2 1XML_PARSER_TAG_2CHAR
+0420**DF          0   A   3 1XML_PARSER_TAG_3CHAR
+0430**DF          0   A   7 1XML_PARSER_TAG_7CHAR
+0440**DF          0   A   1 1XML_PARSER_CDATA_1CHAR
+0450**DF          0   A   3 1XML_PARSER_CDATA_3CHAR
+0460**DF          0   A   9 1XML_PARSER_CDATA_9CHAR
+0470**DF   F      2   A   4 1XML_PARSER_WHITESPACE
+0480**HF1
+0490**I                      init <H'090A0D'>
+0500**DF          0   A   1 1XML_PARSER_WHITETEST
+0510**DF   F      2   A   1 1XML_PARSER_CR
+0520**HF1
+0530**I                      init <H'0D'>
+0540**DF   F      2   A   1 1XML_PARSER_LF
+0550**HF1
+0560**I                      const <H'0A'>

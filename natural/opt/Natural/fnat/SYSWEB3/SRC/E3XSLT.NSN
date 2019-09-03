@@ -1,0 +1,73 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3XSLT
+0050*
+0060* DESCRIPTION   Call XSLT processor to convert already written output.
+0070*
+0080* SEE
+0090*
+0100* AUTHOR        SAG   03.06.2002
+0110*
+0120* Version       8.3
+0130*
+0140* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0150*
+0160* HISTORY
+0170* USER    DATE       REASON
+0180* ------+----------+----------------------------------------------
+0190*       ! --.--.-- !
+0200* ------+----------+----------------------------------------------
+0210*
+0220* ------ PARAMETER -----------------------------------------------
+0230DEFINE DATA
+0240PARAMETER USING W3PARM
+0250LOCAL USING W3CONST
+0260LOCAL
+02701 #XSL (A) DYNAMIC
+02801 #XML (A) DYNAMIC
+0290END-DEFINE
+0300* --- ERROR HANDLING ---
+0310ON ERROR
+0320  PERFORM W3ERROR ##W3ERROR
+0330  PERFORM W3END ##RPC
+0340  ESCAPE ROUTINE
+0350END-ERROR
+0360*
+0370* --- INITIALIZE Web Interface ---
+0380PERFORM W3INIT ##RPC
+0390*
+0400* --- SET TYPE OF RETURN-PAGE ---
+0410PERFORM W3CONTENT-TYPE 'text/html'
+0420*
+0430* --- WRITE XML ---
+0440* --- XSL ---
+0450COMPRESS
+0460'<?xml version="1.0"?>'-
+0470'<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">'-
+0480'<xsl:template match="/">'-
+0490'<html><body>'-
+0500'<table>'
+0510'<tr><th>First-Name</th>'-
+0520'<th>Name</th></tr>'-
+0530'<xsl:for-each select="/Result/Document">'-
+0540'<tr><td><xsl:value-of select="@First-Name"/></td>'-
+0550'<td><xsl:value-of select="@Name"/></td></tr>'
+0560'</xsl:for-each>'-
+0570'</table>'-
+0580'</body></html>'-
+0590'</xsl:template>'-
+0600'</xsl:stylesheet>'
+0610INTO #XSL LEAVING NO
+0620*
+0630#XML := '<?xml version="1.0" encoding="ISO-8859-1" ?>'
+0640-'<Result>'
+0650-'<Document Name="ABELLAN" First-Name="KEPA" />'
+0660-'<Document Name="ACHIESON" First-Name="ROBERT" />'
+0670-'</Result>'
+0680
+0690PERFORM W3APPLY-XSLT-XML #XSL #XML
+0700*
+0710PERFORM W3END ##RPC
+0720END
+0730

@@ -1,0 +1,11 @@
+0010***********************************************************************
+0020* Activate Profiler utility evaluations.
+0030***********************************************************************
+0040* (C) COPYRIGHT 2015 by SOFTWARE AG, Darmstadt (Germany)
+0050***********************************************************************
+0060* Profile this program from NaturalONE if you plan to process event
+0070* data from a Profiler resource file with the Profiler utility.
+0080*
+0090CALLNAT 'ACTSUB'
+0100*
+0110END

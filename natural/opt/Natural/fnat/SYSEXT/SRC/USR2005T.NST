@@ -1,0 +1,93 @@
+0010Read internal file translation table
+0020.
+0030Documentation ......... USR2005T    /*  Text object
+0040Interface ............. USR2005N    /*  Cataloged subprogram
+0050Example Program ....... USR2005P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. PROFILE PARAMETERS
+0100.
+0110Keywords .............. NTTF
+0120.
+0130Function .............. Access to the internal file translation table
+0140                        NTTF/TF (init,clear,add,retrieve,delete,
+0150                        modify,trans.)
+0160                        With this interface you can maintain the
+0170                        internal file translation table defined via
+0180                        NTTF macro or the Natural parameter TF.
+0190.
+0200                        Attention:
+0210                        Please do not use this interface within an
+0220                        active database loop, since changing the
+0230                        database just accessed could lead to
+0240                        unpredictable results.
+0250.
+0260.
+0270Parameters
+0280----------
+0290Define the following parameters with the DEFINE DATA statement:
+0300.
+0310Input ...... 1 FUNCTION (I04)
+0320                   Function code; possible values are:
+0330                    4 - Clear the table
+0340                    8 - Add a NTTF specification to the internal
+0350                        table for translated files
+0360                   12 - Retrieve one NTTF entry
+0370                   16 - Delete a NTTF entry out of the table
+0380                   20 - Modify one NTTF entry
+0390                   24 - Translate
+0400.
+0410In/Output .. 1 INDEX (I04)
+0420                   FUNCTION = 12: Index of entry to be retrieved
+0430                   FUNCTION = 16: Index of entry to be deleted
+0440.
+0450In/Output .. 1 OLD-DBID (I04), OLD-FNR (I04),
+0460               NEW-DBID (I04), NEW-FNR (I04)
+0470                   These fields define an entry in the file
+0480                   translation table. The "old" values will be
+0490                   translated into the "new" values during runtime.
+0500                   -1 is the equivalent value for "*". It is allowed
+0510                   for old and new fnr. For OLD-FNR -1 stands for
+0520                   all fnrs. For NEW-FNR -1 means that the fnr remains
+0530                   unchanged.
+0540                   Open systems only: If there is more than one setting
+0550                   for an old dbid, a -1 in the old fnr overwrites a
+0560                   single value. E.g. if there are the settings
+0570                   (12,-1,13,10) and (12,11,13,11) then dbid 12 fnr 11
+0580                   goes to dbid 13 fnr 10.
+0590.
+0600Output ..... 1 RESPONSE (I04)
+0610                   Response code; possible values are:
+0620                   = 0  Ok
+0630                     NAT22 (NATNIM)
+0640                   = 4  Entry does not exist
+0650                     NAT23 (NATSNTC)
+0660                   > 0 Natural error number
+0670                   < 0 internal error
+0680                   - 4096 Entry does not exist
+0690                   - 4097 Duplicate entry
+0700                   - 4098 Value of TF number invalid, < 1
+0710                   - 4100 Invalid function code
+0720.
+0730.
+0740Interface Call
+0750--------------
+0760Use the interface with the CALLNAT statement:
+0770.
+0780CALLNAT 'USR2005N'
+0790         FUNCTION INDEX OLD-DBID OLD-FNR NEW-DBID NEW-FNR RESPONSE
+0800.
+0810.
+0820Using the Application Programming Interface:
+0830--------------------------------------------
+0840Copy the subprogram USR2005N to the library SYSTEM or the steplib
+0850library respectively, or to the required library.
+0860.
+0870.
+0880Attention:
+0890  Please do not use this interface within an active database loop,
+0900  since changing the database just accessed could lead to
+0910  unpredictable results.
+0920.
+0930*** End of Description *****

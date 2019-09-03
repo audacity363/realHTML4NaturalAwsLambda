@@ -1,0 +1,66 @@
+0010***********************************************************************
+0020* Class ........ Natural Web Interface - Example Programs
+0030* Subprogram ... E3CNTR
+0040* Author ....... SAG
+0050* Date ......... 2016-03-21
+0060* Description .. Maintain an external counter.
+0070***********************************************************************
+0080* Copyright (c) 2016 Software AG, Germany.  All rights reserved.
+0090*********************** Updates in Version 8.3 ************************
+0100* Date       User  iTrac    Reason
+0110* ---------- ----- -------- -------------------------------------------
+0120*
+0130***********************************************************************
+0140* Data definitions
+0150***********************************************************************
+0160DEFINE DATA
+0170PARAMETER USING W3PARM
+0180LOCAL USING W3CONST
+0190* ----- PRIVATE VARIABLES -----
+0200LOCAL
+02101 #TEXT       (A) DYNAMIC    /* full html text
+02201 #COUNTER    (A) DYNAMIC    /* counter
+02301 #RSP        (I4)           /* Response from W3CNTR
+0240END-DEFINE
+0250*
+0260* ----- ERROR HANDLER -----
+0270ON ERROR
+0280  PERFORM W3ERROR ##W3ERROR
+0290  PERFORM W3END ##RPC
+0300  ESCAPE ROUTINE
+0310END-ERROR
+0320* ----- INITIALISE HTTP API -----
+0330PERFORM W3INIT ##RPC
+0340* ----- HEADER FOR SERVER -----
+0350PERFORM W3CONTENT-TYPE 'text/html'
+0360* ---------------------------------------------------------------------
+0370* Read the template html into #TEXT
+0380* ---------------------------------------------------------------------
+0390PERFORM W3READ-RESOURCE 1X 'e3cntr.html' #TEXT
+0400* ---------------------------------------------------------------------
+0410* Update the general variables
+0420* ---------------------------------------------------------------------
+0430EXAMINE #TEXT FOR '$TITLE$'  REPLACE 'Natural Web Example'
+0440EXAMINE #TEXT FOR '$HEADER$' REPLACE 'Welcome'
+0450* ---------------------------------------------------------------------
+0460* Read, increase and save the counter
+0470* ---------------------------------------------------------------------
+0480CALLNAT 'W3CNTR'
+0490  'W3CNTR-COUNTER'                /* i/m   member name
+0500  #COUNTER                        /* io/m  counter
+0510  'INC'                           /* i/o   option
+0520  #RSP                            /* o/m   response
+0530* ---------------------------------------------------------------------
+0540* Insert counter
+0550* ---------------------------------------------------------------------
+0560EXAMINE #TEXT FOR '$COUNTER$'  REPLACE #COUNTER
+0570* ---------------------------------------------------------------------
+0580* Write to output page
+0590* ---------------------------------------------------------------------
+0600PERFORM W3TEXTDYNAMIC  #TEXT
+0610
+0620* ----- END HTTP -----
+0630PERFORM W3END ##RPC
+0640* ----- END MAIN PROGRAM -----
+0650*
+0660END

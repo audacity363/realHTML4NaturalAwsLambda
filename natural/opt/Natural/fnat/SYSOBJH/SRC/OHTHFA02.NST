@@ -1,0 +1,30 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Administrate
+0080<Header2> Page 2 of 2
+0090/* <Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>OHTHFA01
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170  Create a new Workplan
+0180    If this function is selected, you will get a map where you specify the
+0190    type of the new Workplan and the option 'Free Format Editing'.
+0200    For Option, Parameter and Selection Workplans you will get maps with
+0210    input fields, until the option 'Free Format Editing' is off.
+0220    If the option 'Free Format Editing' is on, or you create a Workplan of
+0230    another type, you will get a map with an edit area where you can enter
+0240    the content of the Workplan.
+0250
+0260  Change the Workplan library
+0270    This function is used to change the Workplan library, i.e. the library
+0280    where the Workplans are searched in the different functions, e.g. Select
+0290    Option Workplan.
+0300<HelpTextEnd>

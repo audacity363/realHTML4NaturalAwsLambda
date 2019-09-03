@@ -1,0 +1,148 @@
+0010/*  Get system parameters
+0020/*  This program serves as example how to design a user-defined
+0030/*  program to call 'USR1005N'
+0040/************************************************************
+0050DEFINE DATA LOCAL
+006001 DATA (A253/4)             /* 'Bytecontainer' to get all data
+007001 REDEFINE DATA
+0080   02 LOWER-UPPER (A1)       /* 'L' = lower-case, 'U' = upper-case
+0090   02 RECAT       (A1)       /* 'X' = RECAT=ON , ' ' = RECAT=OFF
+0100   02 DBUPD       (A1)       /* 'X' = DBUPD=ON , ' ' = DBUPD=OFF
+0110   02 DELETE-PGM  (A1)       /* 'X' = DELETE=ON , ' ' = DELETE=OFF
+0120   02 RELEASE-ISN (A1)       /* 'X' = RI=ON , ' ' = RI=OFF
+0130   02 NATURAL-COMMANDS (A1)  /* 'X' = NC=ON , ' ' = NC=OFF
+0140   02 STRUCTURED-MODE (A1)   /* 'X' = SM=ON , ' ' = SM=OFF
+0150   02 CPU-TIME-LIMIT  (N8)   /* Value of parameter MT (dec.)
+0160   02 MAXCL       (N5)       /* Value of parameter MAXCL (dec.)
+0170   02 MADIO       (N5)       /* Value of parameter MADIO (dec.)
+0180   02 AUTO        (A1)       /* 'X' = AUTO=ON , ' ' = AUTO=OFF
+0190   02 DYNPARM     (A1)       /* 'X' = DYNPARM=ON , ' ' = DYNPARM=OFF
+0200   02 TIME-DIFF   (A6)       /* Time differential
+0210   02 DTFORM      (A1)       /* Date format
+0220   02 ERROR-TA    (A8)       /* Name of current error transaction
+0230   02 STEPLIB     (A8)       /* Name of current steplib
+0240   02 LANG-CODE   (I1)       /* Current language code
+0250   02 UDB         (P3)       /* User DBID
+0260   02 UPDATE-CMD  (A1)       /* 'X' = UPDATE=ON , ' ' = UPDATE=OFF
+0270   02 DAY-DIFF    (N5)       /* Value of parameter DD (dec.)
+0280   02 MESSAGE-LINE(A3)       /* Position of the message line
+0290   02 PFKEY-LINE  (A3)       /* Position of the first PF-key line
+0300   02 STAT-LINE   (A3)       /* Position of the statistics line
+0310   02 IA          (A1)       /* Value of IA - Input assign character
+0320   02 ID          (A1)       /* Value of ID - Input delimiter
+0330   02 DC          (A1)       /* Value of DC - Decimal character
+0340   02 CF          (A1)       /* Value of CF - Char. for terminal cmds;
+0350                             /* For CF=OFF, the char. 'F' is returned
+0360   02 UDB2        (N5)       /* User DBID (2 Byte long)
+0370   /*
+0380   02 TIME-DIFF-S (A9)       /* For mainframes only:
+0390                             /* Time differential in hh:mm:ss
+0400   02 TIMEZONE    (A32)      /* For mainframes only:
+0410                             /* TD=Timezone
+0420   /*
+0430   02 WH          (A1)       /* 'X' = WH=ON,    ' ' = WH=OFF
+0440   02 EJ          (A1)       /* 'X' = EJ=ON,    ' ' = EJ=OFF
+0450   02 SA          (A1)       /* 'X' = SA=ON,    ' ' = SA=OFF
+0460   02 ZP          (A1)       /* 'X' = ZP=ON,    ' ' = ZP=OFF
+0470   02 CC          (A1)       /* 'X' = CC=ON,    ' ' = CC=OFF
+0480   02 ZD          (A1)       /* 'X' = ZD=ON,    ' ' = ZD=OFF
+0490   02 LE          (A1)       /* 'X' = LE=ON,    ' ' = LE=OFF
+0500   02 NC          (A1)       /* 'X' = NC=ON,    ' ' = NC=OFF
+0510   02 FS          (A1)       /* 'X' = FS=ON,    ' ' = FS=OFF
+0520   02 TS          (A1)       /* 'X' = TS=ON,    ' ' = TS=OFF
+0530   02 FCDP        (A1)       /* 'X' = FCDP=ON,  ' ' = FCDP=OFF
+0540   02 OPF         (A1)       /* 'X' = OPF=ON,   ' ' = OPF=OFF
+0550   02 REINP       (A1)       /* 'X' = REINP=ON, ' ' = REINP=OFF
+0560   /*
+0570   02 IM          (A1)       /* Possible values: 'F', 'D'
+0580   02 DFSTACK     (A1)       /* Possible values: 'S', 'C', 'I'
+0590   02 DFOUT       (A1)       /* Possible values: 'S', 'I'
+0600   02 DFTITLE     (A1)       /* Possible values: 'S', 'L', 'I'
+0610   02 PM          (A2)       /* Possible values: 'C', 'P', 'I', 'R'
+0620                             /* and combinations
+0630   /*
+0640   02 LS          (I4)       /* Value of LS session parameter
+0650   02 PS          (I4)       /* Value of PS session parameter
+0660   02 SL          (I4)       /* Value of SL session parameter
+0670   02 LT          (I4)       /* Value of LT session parameter
+0680   02 MT          (I4)       /* Value of MT session parameter
+0690   02 SF          (I4)       /* Value of SF session parameter
+0700   02 TQMARK      (A1)       /* Translate quotation marks
+0710   /* was TQ                 /* 'X' = TQMARK=ON,  ' ' = TQMARK=OFF
+0720   02 THSEPCH     (A1)       /* Value of THousands SEParator CHaracter
+0730   02 CPCVERR     (A1)       /* Code Page ConVersion ERRor
+0740                             /* 'X' = CPCVERR=ON, ' ' CPCVERR=OFF
+0750   02 P-DO        (A1)       /* Display order (DO) of output data
+0760                             /*  'L' Logical display order,
+0770                             /*  'V' visual order
+0780   /*
+0790   /* To be continued.
+0800   /*
+0810END-DEFINE
+0820/************************************************
+0830/*
+0840CALLNAT 'USR1005N' DATA (*)
+0850/*
+0860INPUT (AD=OIL)
+0870      'Lower Case ...............' LOWER-UPPER /
+0880      'RECAT ....................' RECAT /
+0890      'DBUPD ....................' DBUPD /
+0900      'DELETE ...................' DELETE-PGM /
+0910      'RI .......................' RELEASE-ISN /
+0920      'NC .......................' NATURAL-COMMANDS /
+0930      'SM .......................' STRUCTURED-MODE /
+0940      'MT .......................' CPU-TIME-LIMIT /
+0950      'MAXCL ....................' MAXCL /
+0960      'MADIO ....................' MADIO /
+0970      'AUTO .....................' AUTO /
+0980      'DYNPARM ..................' DYNPARM /
+0990      'Time differential ........' TIME-DIFF /
+1000      'Time diff (hh,mm,ss) .....' TIME-DIFF-S /
+1010      'Timezone .................' TIMEZONE /
+1020      'DTFORM ...................' DTFORM /
+1030      'Error transaction ........' ERROR-TA /
+1040      'Steplib ..................' STEPLIB /
+1050      'Language code ............' LANG-CODE /
+1060      'User DBID ................' UDB2 /
+1070INPUT (AD=OIL)
+1080      'UPDATE ...................' UPDATE-CMD /
+1090      'Day differential .........' DAY-DIFF /
+1100      'Pos. message line ........' MESSAGE-LINE /
+1110      'Pos. PF-key line .........' PFKEY-LINE /
+1120      'Pos. statistics line .....' STAT-LINE /
+1130      'Input assign character ...' IA /
+1140      'Input delimiter ..........' ID /
+1150      'Decimal character ........' DC /
+1160      'Thousands separator char..' THSEPCH /
+1170      'Char. for terminal cmds ..' CF /
+1180INPUT (AD=OIL)
+1190      'Wait for record in hold status ...................' WH /
+1200      'Page eject .......................................' EJ /
+1210      'Sound terminal alarm .............................' SA /
+1220      'Zero printing ....................................' ZP /
+1230      'Error processing in batch mode ...................' CC /
+1240      'Zero-division check ..............................' ZD /
+1250      'Reaction when limit for processing loop exceeded .' LE /
+1260      'Use of Natural system commands ...................' NC /
+1270      'Def. format/length for user-defined variables ....' FS /
+1280      'Translate output from programs in system libraries' TS /
+1290      'Filler char. for dyn. protected input fields .....' FCDP /
+1300      'Overwriting of protected fields by helproutines ..' OPF /
+1310      'Issue internal REINPUT statement for inv. data ...' REINP /
+1320      'Code page conversion error .......................' CPCVERR /
+1330INPUT (AD=OIL)
+1340      'Input mode .................' IM /
+1350      'Date format for stack ......' DFSTACK /
+1360      'Date format for output .....' DFOUT /
+1370      'Date format for report title' DFTITLE /
+1380      'Print mode .................' PM /
+1390      'Display order of output data' P-DO /
+1400INPUT (AD=OIL)
+1410      'Line size ................' LS /
+1420      'Page size ................' PS /
+1430      'Source line length .......' SL /
+1440      'Limit for processing loops' LT /
+1450      'Maximum CPU time .........' MT /
+1460      'Spacing factor ...........' SF /
+1470      'Translate quotation marks ' TQMARK /
+1480END

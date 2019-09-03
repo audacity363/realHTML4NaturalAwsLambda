@@ -1,0 +1,44 @@
+0010/*C                     nience)    *Subprogram name aliases (for conve                                DA:00.00ED:00.00PF:WNV:09010100
+0020/*DFC  S            0001A         8C 1NRPTINIT                        /*initialization
+0030/*DFC  S            0002A         8C 1NRPTTERM                        /*termination
+0040/*DFC  S            0003A         8C 1NRPTOPEN                        /*open a report
+0050/*DFC  S            0004A         8C 1NRPTCLOS                        /*close a report
+0060/*DFC  S            0005A         8C 1NRPTSELP                        /*select printer
+0070/*DFC  S            0006A         8C 1NRPTPRNT                        /*print a report
+0080/*DFC  S            0007A         8C 1NRPTPREV                        /*preview a report
+0090/*C                                *Symbolic error codes
+0100/*DFC  S            0008I         4C 1ERROR-FILE-NOT-FOUND
+0110/*DFC  S            0009I         4C 1ERROR-PROC-NOT-FOUND
+0120/*DFC  S            0010I         4C 1ERROR-NOT-INITIALIZED
+0130/*DFC  S            0011I         4C 1ERROR-TOO-MANY-ACTIVE-REPORTS
+0140/*DFC  S            0012I         4C 1ERROR-GENERAL-ERROR
+0150/*DFC  S            0013I         4C 1ERROR-REPORT-NOT-FOUND
+0160/*DFC  S            0014I         4C 1ERROR-UNSUPPORTED-MACHINE-CLASS
+0170/*HS0001
+0180/*I                      USR1059N
+0190/*HS0002
+0200/*I                      USR1060N
+0210/*HS0003
+0220/*I                      USR1061N
+0230/*HS0004
+0240/*I                      USR1062N
+0250/*HS0005
+0260/*I                      USR1063N
+0270/*HS0006
+0280/*I                      USR1064N
+0290/*HS0007
+0300/*I                      USR1065N
+0310/*HS0008
+0320/*I                      -2
+0330/*HS0009
+0340/*I                      -3
+0350/*HS0010
+0360/*I                      -4
+0370/*HS0011
+0380/*I                      -10
+0390/*HS0012
+0400/*I                      -11
+0410/*HS0013
+0420/*I                      -12
+0430/*HS0014
+0440/*I                      -99

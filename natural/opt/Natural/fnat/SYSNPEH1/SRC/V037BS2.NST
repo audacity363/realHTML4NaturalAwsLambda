@@ -1,0 +1,13 @@
+0010&H View COPY-FILE
+0020&L
+0030&L
+0040#Purpose@: Copy files or library members.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : Copy to a BS2000 target can only be done if this target is
+0100           locally available.
+0110&L
+0120#Notes@  : Both source and target files MUST already exist, before this
+0130           function is executed.

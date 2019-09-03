@@ -1,0 +1,21 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR2012N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR2012L
+0070   2 OUTPUTS
+0080     3 NET-USER        (A253)
+0090     3 RESPONSE        (I4)
+0100 /*
+0110 1 USR2012N
+0120   2 VERSION           (I1) INIT <0>
+0130 1 REDEFINE USR2012N
+0140   2 EXTENDED-PARMS
+0150     3 EXTENDED-DATA   (A1/1:1)
+0160END-DEFINE
+0170/*
+0180CALLNAT 'USR2012N' USR2012L USR2012N.EXTENDED-PARMS
+0190WRITE NOTITLE NOHDR '=' RESPONSE '=' NET-USER (AL=64)
+0200/*
+0210END

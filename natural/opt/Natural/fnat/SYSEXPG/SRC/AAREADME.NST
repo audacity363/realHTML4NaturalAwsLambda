@@ -1,0 +1,15 @@
+0010*  AAREADME - Description of the Library SYSEXPG
+0020*
+0030*  All examples in the library SYSEXPG are used in the Natural
+0040*  documentation PROGRAMMING GUIDE.
+0050*
+0060*  The output screens shown in the documentation are based on the
+0070*  default state of the database files EMPLOYEES and VEHICLES.
+0080*
+0090*
+0100*  Please note that some of the examples could modify the database
+0110*  records. These examples are marked as follows:
+0120*
+0130*  CAUTION: Executing this example will modify the database records!
+0140*
+0150************************************************************************

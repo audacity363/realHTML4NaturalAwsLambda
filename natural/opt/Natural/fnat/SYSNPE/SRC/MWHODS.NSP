@@ -1,0 +1,434 @@
+0010* Program   MWHODS
+0020* Views     ACTIVE-JOBS, ALLOCATIONS, SYSTEM-INFO, TCB, etc
+0030*
+0040* Function  Who has the given Dataset?
+0050*
+0060*           Check if a given Dataset is in use by Entire System Server
+0070*           and who uses it.
+0080*
+0090*           The Jobname of Entire System Server is identified
+0100*           through Node number.
+0110*
+0120* ----------------------------------------------------------------------
+0130* Maintenance..:
+0140* wkk 2010-06-20  new with NPR351, valid for NPR341, NPR342, NPR351
+0150* STL 2012-08-08  NPRMF-974  also valid for NPR352
+0160* STL 2013-08-30  NPRMF-1055 also valid for NPR353
+0170* ======================================================================
+0180DEFINE DATA
+0190GLOBAL USING TUTO
+0200LOCAL
+021001 ACTIVE-JOBS   VIEW OF ACTIVE-JOBS
+0220  02 ERROR-CODE
+0230  02 ERROR-TEXT
+0240  02 TYPE
+025001 ALLOC         VIEW OF ALLOCATIONS
+0260  02 ERROR-CODE
+0270  02 ERROR-TEXT
+0280  02 DDNAME
+0290  02 DSNAME
+030001 SYSINF        VIEW OF SYSTEM-INFO
+0310  02 ERROR-CODE
+0320  02 ERROR-TEXT
+0330  02 ESY-VERSION
+0340  02 SYSTEM-TYPE
+0350  02 SYSTEM-NAME
+0360  02 PRODUCT-NAME
+0370  02 OPERATING-SYSTEM-TYPE
+038001 TCB           VIEW OF TCB
+0390  02 ERROR-CODE
+0400  02 ERROR-TEXT
+0410  02 TCB-ADDRESS
+042001 LOADED-MOD    VIEW OF LOADED-MODULES
+0430  02 ERROR-CODE
+0440  02 ERROR-TEXT
+0450  02 LOAD-ADDRESS
+046001 MAIN-STOR     VIEW OF MAIN-STORAGE
+0470  02 ERROR-CODE
+0480  02 ERROR-TEXT
+0490  02 JOB-NAME
+0500  02 AREA
+0510  02 REDEFINE  AREA
+0520    03 AREA-DSNAME         (A44)
+0530    03 AREA-DDNAME         (A08)
+054001 NATPROC-USERS VIEW OF NATPROC-USERS
+0550  02 ERROR-CODE
+0560  02 ERROR-TEXT
+0570  02 USER-ID
+0580  02 ORIGIN-JOBNAME
+059001 #NODE                   (N5)
+060001 #DDNAME                 (A08)
+061001 REDEFINE  #DDNAME
+0620  02 #DDNAME-PREFIX        (A3)
+0630  02 #DDNAME-SUFFIX        (A5)
+064001 #JOBNAME                (A08)
+065001 #DSNAME                 (A44)
+066001 #TCB                    (B4)
+067001 #MAIN-TABS-OFFSET-NPR34 (B2) INIT <H'1B58'> /* NPR34
+068001 #MAIN-TABS-OFFSET-NPR35 (B2) INIT <H'1BF0'> /* NPR35
+069001 #MAIN-TABS-OFFSET       (B2)
+070001 #TSDS-POINTER           (B4)
+071001 #TSDS                   (B404) /* SUBTSDS control block start
+072001 REDEFINE  #TSDS
+0730  02 #TSDS-FIL1            (B20)
+0740  02 #TSDS-RQEN            (B04)
+0750  02 #TSDS-FIL2            (B08)
+0760  02 #TSDS-USER            (B08)
+0770  02 #TSDS-FIL3            (B20)
+0780  02 #TSDS-TKID            (A04)
+0790  02 #TSDS-NEXT            (B04)
+0800  02 #TSDS-FIL4            (B80)
+0810  02 #TSDS-RQE-ARRAY       (B16/1:16)
+082001 #TSDS-NR                (N4)
+083001 #RQ-POINTER             (B4)
+084001 #RQ-NR                  (N2)
+085001 #RQ                     (B16)
+086001 REDEFINE #RQ
+0870  02 #RQ-CID               (B4)     /*  WKK1
+0880  02 #RQ-FID               (B4)     /*  WKK1
+0890  02 REDEFINE #RQ-FID               /*  WKK1
+0900    03 #RQ-FID-FIL           (B3)   /*  WKK1
+0910    03 #RQ-FID-VIEW          (B1)   /*  WKK1
+0920  02 #RQ-FADR              (B4)     /*  WKK1
+0930  02 #RQ-WADS              (B4)
+094001 #WADS-POINTER           (B4)
+095001 #NEXT-WADS-OFFSET       (B2) INIT <H'0010'>
+096001 #WADS-DSNAME-OFFSET     (B2) INIT <H'00D6'>
+097001 #ANCHOR                 (B4)
+098001 #TSDS-RQEN-OFFSET       (B2) INIT <H'0014'>
+099001 #TSDS-USER-OFFSET       (B2) INIT <H'0020'>
+100001 #USER                   (A8)           /* for TSDS loop
+101001 #USER-DSN               (A8)           /* save user if DSNAME found
+102001 #USER-TKID              (A4)
+103001 #ESY-VERSION            (A8)
+104001 #INFO-REC               (A133)
+105001 #ADDRESS                (B4)
+106001 #SYSTEM                 (A8)
+1070END-DEFINE
+1080*
+1090* ------------------------------------------------------------------
+1100*
+1110* Mainline:
+1120*
+1130*
+1140* Get Dataset Name as input to chase for user
+1150* Get ESY Version and set the appropriate offsets
+1160* Get Jobname of   running ESY using Node number
+1170* Get Anchor of user-control block chain called TSDS
+1180* Get Allocations (DDNAMES) for given NPR Job and Dataset
+1190* Run Subroutine Search-user for each found DDNAME
+1200* get origin-jobname, where any found user runs its natural pgm
+1210*
+1220*
+1230* ------------------------------------------------------------------
+1240REPEAT
+1250  #NODE     := ##NODE
+1260  #USER-DSN := '*unknown*'
+1270  RESET   #DSNAME
+1280*
+1290  INPUT (AD=MI'_')
+1300    / ##TITLE (AD=OI IP=OFF)
+1310    '                         in Entire System Server      '
+1320*
+1330    // '  enter DSNAME.......:' #DSNAME
+1340*
+1350  IF #DSNAME = ' '
+1360    REINPUT 'Error in Dsname'
+1370  END-IF
+1380*
+1390  PERFORM GET-ESY-INFO
+1400*
+1410  PERFORM GET-ANCHOR-OF-USER-CHAIN
+1420*
+1430  PERFORM GET-DDNAME-AND-USER
+1440*
+1450END-REPEAT
+1460*
+1470*
+1480* ------------------------------------------------------------------
+1490*
+1500* S u b r o u t i n e s
+1510*
+1520* ------------------------------------------------------------------
+1530*
+1540DEFINE SUBROUTINE GET-ESY-INFO
+1550*
+1560* get ESY version and do initialize work
+1570*
+1580* input  #NODE
+1590* output #JOBNAME
+1600*
+1610* Mainline
+1620*
+1630* get ESY verion
+1640* put offsets related on ESY version
+1650* get Jobname of ESY
+1660* Print Info record with Node-number, Jobname, NPR-version, System-ID
+1670*
+1680FIND    SYSINF WITH NODE = #NODE
+1690  #ESY-VERSION := ESY-VERSION
+1700  #SYSTEM      := SYSTEM-NAME
+1710  IF ERROR-CODE > 0
+1720    PRINT 'System-info'   ERROR-CODE ERROR-TEXT
+1730    STOP
+1740  ELSE
+1750    IF SYSTEM-TYPE  NE 'MVS/ESA'
+1760      PRINT 'only z/OS supported, not ' SYSTEM-TYPE
+1770      PRINT 'Node ' #NODE ' is running on ' PRODUCT-NAME
+1780      STOP
+1790    END-IF
+1800  END-IF
+1810END-FIND
+1820*
+1830
+1840IF #ESY-VERSION = '3.4.1'
+1850  #MAIN-TABS-OFFSET  := #MAIN-TABS-OFFSET-NPR34
+1860END-IF
+1870*
+1880IF #ESY-VERSION = '3.4.2'
+1890  #MAIN-TABS-OFFSET  := #MAIN-TABS-OFFSET-NPR34
+1900END-IF
+1910*
+1920IF #ESY-VERSION = '3.5.1' OR = '3.5.2' OR = '3.5.3'
+1930  #MAIN-TABS-OFFSET  := #MAIN-TABS-OFFSET-NPR35
+1940END-IF
+1950*
+1960IF #MAIN-TABS-OFFSET = 0
+1970  PRINT ' ESY Version '#ESY-VERSION ' not supported '
+1980  STOP
+1990END-IF
+2000*
+2010*
+2020FIND MAIN-STOR
+2030    WITH NODE     = #NODE
+2040    AND  ADDRESS  = #ADDRESS
+2050    AND  JOB-NAME = #JOBNAME
+2060    AND  LENGTH   = 16
+2070  #JOBNAME  :=  JOB-NAME
+2080END-FIND
+2090*
+2100COMPRESS 'Node '#NODE'is running with Jobname '#JOBNAME  ' and '
+2110  'NPR Version'  #ESY-VERSION 'on' #SYSTEM INTO #INFO-REC
+2120PRINT  #INFO-REC
+2130END-SUBROUTINE
+2140*
+2150* ------------------------------------------------------------------
+2160*
+2170DEFINE SUBROUTINE GET-ANCHOR-OF-USER-CHAIN
+2180*
+2190* get anchor of user-related control block chain (called TSDS)
+2200*
+2210* input  #NODE, #JOBNAME
+2220* output #ANCHOR
+2230*
+2240* Mainline
+2250* get running TCB
+2260* get load address ESYNMAIN
+2270* get anchor of TSDS within ESYNMAIN
+2280*
+2290* get maintask TCB
+2300*
+2310FIND(1) TCB WITH NODE = #NODE
+2320    AND   JOB-NAME = #JOBNAME
+2330  IF ERROR-CODE > 0
+2340    PRINT 'TCB error '   ERROR-CODE ERROR-TEXT
+2350    STOP
+2360  END-IF
+2370  #TCB  := TCB.TCB-ADDRESS
+2380END-FIND
+2390*
+2400* get load address of module ESYNMAIN
+2410*
+2420FIND LOADED-MOD   WITH NODE = #NODE
+2430    AND   JOB-NAME = #JOBNAME
+2440    AND   MODULE    = 'ESYNMAIN'
+2450    AND   TCB-ADDRESS = #TCB
+2460  IF ERROR-CODE > 0
+2470    PRINT 'Loaded Modules error '   ERROR-CODE ERROR-TEXT
+2480    STOP
+2490  END-IF
+2500END-FIND
+2510*
+2520* get anchor of user-control block called TSDS
+2530*
+2540FIND MAIN-STOR    WITH NODE = #NODE
+2550    AND   JOB-NAME = #JOBNAME
+2560    AND   ADDRESS   = LOADED-MOD.LOAD-ADDRESS
+2570    AND   OFFSET    = #MAIN-TABS-OFFSET
+2580    AND   LENGTH    = 4
+2590  IF ERROR-CODE > 0
+2600    PRINT 'Mainstorage 1 error '   ERROR-CODE ERROR-TEXT
+2610    STOP
+2620  END-IF
+2630  #ANCHOR  := AREA
+2640END-FIND
+2650*
+2660*
+2670END-SUBROUTINE
+2680*
+2690* ------------------------------------------------------------------
+2700*
+2710DEFINE SUBROUTINE GET-DDNAME-AND-USER
+2720*
+2730* Get Allocations of Address-Space and check who uses given Dataset
+2740*
+2750* input  #JOBNAME, #DSNAME
+2760* output #USER-DSN
+2770*
+2780* Mainline
+2790*
+2800* Get Allocations of Jobname with Dataset
+2810*     if no records found, Dataset not in use
+2820*     get DDNAME in form SYSnnnnn
+2830*         Perform search-user
+2840*         Print Info Record
+2850*
+2860* --------------------------------------------------------------------
+2870*     Check Dataset access by a given job using Allocations View
+2880* --------------------------------------------------------------------
+2890FIND   ALLOC WITH  NODE = #NODE
+2900    AND  JOB-NAME       = #JOBNAME
+2910    AND  DSNAME         = #DSNAME
+2920  IF NO RECORDS FOUND
+2930    COMPRESS 'Node' #NODE 'is not using the mentioned dataset'#DSNAME
+2940      INTO #INFO-REC
+2950    PRINT  #INFO-REC
+2960    ESCAPE BOTTOM
+2970  END-NOREC
+2980  IF ERROR-CODE > 0
+2990    PRINT 'Allocations error ' ERROR-CODE ERROR-TEXT
+3000    STOP
+3010  ELSE /* error-code = 0
+3020    #DDNAME := DDNAME
+3030    IF #DDNAME-PREFIX EQ 'SYS'
+3040      IF #DDNAME-SUFFIX LE '99999' AND
+3050          #DDNAME-SUFFIX GE '00000'
+3060        #DSNAME := DSNAME
+3070        #DDNAME := DDNAME
+3080*       PRINT '=' #DDNAME  '=' #DSNAME
+3090        PERFORM SEARCH-USER-OF-DDNAME
+3100*       COMPRESS 'User'#USER-DSN ' is using Dataset ' DSNAME
+3110*         INTO #INFO-REC
+3120*       PRINT  #INFO-REC
+3130      ELSE
+3140        PRINT '=' #DSNAME '=' #DDNAME
+3150        PRINT 'Dataset not user specific allocated'
+3160      END-IF
+3170    ELSE
+3180      PRINT '=' #DSNAME '=' #DDNAME
+3190      PRINT 'Dataset not user specific allocated'
+3200    END-IF
+3210  END-IF
+3220END-FIND
+3230*
+3240END-SUBROUTINE
+3250*
+3260* ------------------------------------------------------------------
+3270*
+3280DEFINE SUBROUTINE SEARCH-ORIGIN-JOBNAME
+3290*
+3300* get Jobname, where found user runs his Natural Session
+3310*
+3320* input  #USER-DSN
+3330* output Info Record containing Origin-Jobname
+3340*
+3350* Mainline
+3360FIND(1) NATPROC-USERS WITH NODE = #NODE
+3370    AND USER-ID = #USER-DSN
+3380    AND NATPROC-ID = #USER-TKID
+3390  FIND(1) ACTIVE-JOBS   WITH NODE = #NODE
+3400      AND JOB-NAME = ORIGIN-JOBNAME
+3410    COMPRESS 'User'USER-ID  ' is running in ' TYPE  ORIGIN-JOBNAME
+3420      INTO #INFO-REC
+3430    PRINT  #INFO-REC
+3440  END-FIND
+3450END-FIND
+3460*
+3470END-SUBROUTINE
+3480*
+3490* ------------------------------------------------------------------
+3500*
+3510DEFINE SUBROUTINE SEARCH-USER-OF-DDNAME
+3520*
+3530* chase thru user-control-block chain and check who uses given DDNAME
+3540*
+3550* input  #DDNAME, #ANCHOR
+3560* output #USER-DSN
+3570*
+3580* Mainline
+3590* Get anchor adress of SUBTSDS control block chain
+3600* Run thru the TSDS chain
+3610*    Run in each SUBTSDS thru Request-Entries Array
+3620*    and check if pointer to WADS is filled
+3630*    if WADS is available read DSNAME and DDNAME in WADS.
+3640*       if DDNAME = DDNAME of Allocations
+3650*       print Userid and DSNAME
+3660*
+3670*
+3680* #TSDS-POINTER contains the address of first/next SUBTSDS
+3690*
+3700#TSDS-POINTER := #ANCHOR
+3710#TSDS-NR := 0                  /* number of TSDS found
+3720*
+3730REPEAT WHILE (#TSDS-POINTER NE  0)
+3740*
+3750* get area of SUBTSDS user control block
+3760*
+3770  FIND MAIN-STOR  WITH NODE = #NODE
+3780      AND JOB-NAME  = #JOBNAME
+3790      AND ADDRESS   = #TSDS-POINTER
+3800      AND OFFSET    = 0
+3810      AND LENGTH    = 404
+3820    IF ERROR-CODE > 0
+3830      PRINT 'Mainstorage 2 error ' ERROR-CODE ERROR-TEXT
+3840      STOP
+3850    END-IF
+3860    #TSDS := AREA
+3870    #USER := #TSDS-USER
+3880    #USER-TKID := #TSDS-TKID
+3890*   PRINT '=' #USER #TSDS-TKID
+3900  END-FIND
+3910*
+3920  #TSDS-NR := #TSDS-NR + 1
+3930*
+3940* analyze SUBTSDS user control block
+3950*
+3960  #RQ-NR        := 1
+3970  #RQ           := #TSDS-RQE-ARRAY(#RQ-NR)
+3980  #WADS-POINTER := #RQ-WADS
+3990*
+4000* we are using view 22, so do not show our entry
+4010*
+4020  REPEAT WHILE  (#WADS-POINTER NE  0) AND (#RQ-FID-VIEW NE 22) /*WKK1
+4030*
+4040* read dataset name in WADS area
+4050*
+4060    FIND MAIN-STOR    WITH NODE = #NODE
+4070        AND   JOB-NAME = #JOBNAME
+4080        AND   ADDRESS   = #WADS-POINTER
+4090        AND   OFFSET    = #WADS-DSNAME-OFFSET
+4100        AND   LENGTH    = 52             /* DSNAME + DDNAME
+4110      IF ERROR-CODE > 0
+4120        PRINT 'Mainstorage 3 error '   ERROR-CODE ERROR-TEXT
+4130        STOP
+4140      END-IF
+4150      IF #DDNAME = AREA-DDNAME
+4160        #USER-DSN :=   #USER
+4170        IF #DSNAME = AREA-DSNAME
+4180          #USER-DSN :=   #USER
+4190          COMPRESS 'User'#USER-DSN ' is using Dataset ' DSNAME
+4200            INTO #INFO-REC
+4210          PRINT  #INFO-REC
+4220          PERFORM SEARCH-ORIGIN-JOBNAME
+4230        END-IF
+4240      END-IF
+4250    END-FIND
+4260    #RQ-NR        :=  #RQ-NR + 1
+4270    #RQ           :=  #TSDS-RQE-ARRAY(#RQ-NR)
+4280    #WADS-POINTER :=  #RQ-WADS
+4290  END-REPEAT
+4300  #TSDS-POINTER := #TSDS-NEXT
+4310END-REPEAT
+4320END-SUBROUTINE
+4330*
+4340END

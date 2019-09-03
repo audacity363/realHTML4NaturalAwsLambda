@@ -1,0 +1,34 @@
+0010/* This program serves as example how to design a user-defined
+0020/* program to call 'USR0010N'
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR0010L
+0070   2 OUTPUTS
+0080     3 FILENAME       (A12/1:50)
+0090     3 DBID           (P03/1:50)
+0100     3 FNR            (P03/1:50)
+0110     3 DBNAME         (A07/1:50)
+0120     3 AMOUNT         (P04)
+0130 1 IX                 (I01)
+0140END-DEFINE
+0150/**********************
+0160CALLNAT 'USR0010N'  USR0010L
+0170/*
+0180IF AMOUNT = 0
+0190  WRITE '*** INFORMATION NOT AVAILABLE ***' (I)
+0200ELSE
+0210  WRITE NOTITLE /
+0220    '+---------------------------------+' (I) /
+0230    '+ NATURAL System File Assignments +' (I) /
+0240    '+                                 +' (I) /
+0250    '+ File Name    DBID  FNR  Type    +' (I)
+0260  FOR IX = 1 TO AMOUNT
+0270    WRITE '+' (I)
+0280      FILENAME (IX)  DBID (IX) 1X FNR (IX) 2X DBNAME (IX) '+' (I)
+0290  END-FOR
+0300  WRITE
+0310    '+                                 +' (I) /
+0320    '+---------------------------------+' (I)
+0330END-IF
+0340END

@@ -1,0 +1,10 @@
+0010** Example 'CALEX3': CALL PROGRAM 'CICSP'
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #MESSAGE (A10) INIT <' '>
+0050END-DEFINE
+0060*
+0070CALL 'CICSP' #MESSAGE
+0080DISPLAY #MESSAGE
+0090*
+0100END

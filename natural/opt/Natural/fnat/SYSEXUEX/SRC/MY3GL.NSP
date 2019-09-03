@@ -1,0 +1,57 @@
+0010**********************************************************************
+0020*
+0030* FILE   : MY3GL.NSP
+0040* PURPOSE: SAMPLE PROGRAM CALLING USER EXITS (MYC3GL)
+0050*
+0060* The NATURAL program MY3GL calls the user-written
+0070*       3GL function MYC3GL (myc3gl.c) and passes 2 parameters.
+0080*       The 3GL function itself activates the NATURAL
+0090*       subprogram MY3GLSUB via a call to ncxr_callnat()
+0100*       and passes the two received parameters to the
+0110*       subprogram.
+0120*       The subprogram may process these parameters, and
+0130*       after its termination control is returned to
+0140*       the 3GL function and then back to this program.
+0150*
+0160* (c) Copyright 1991-2004 by Software AG
+0170*
+0180**********************************************************************
+0190*
+0200DEFINE DATA LOCAL
+02101  #FIELD1(A10)
+02201  #FIELD2(I4)
+0230END-DEFINE
+0240*
+0250* allow lower case values
+0260*
+0270SET CONTROL 'L'
+0280*
+0290* you may enter initial values for the parameters
+0300*
+0310INPUT (AD=M IP=ON)
+0320      / 'Initial values may be entered now'
+0330     // #FIELD1
+0340      / #FIELD2 (AD=L)
+0350*
+0360* prepare call the 3GL routine, to be able to call MY3GLSUB
+0370CALL 'CMSUBZ' 'CLNOTHRE' '8749' 'S' /* needed only on Windows
+0380*
+0390* call the 3GL function MYC3GL and pass the parameters
+0400*
+0410CALL 'MYC3GL' #FIELD1 #FIELD2
+0420IF ret('MYC3GL') = -1
+0430  WRITE NOTITLE 'error: MYC3GL not available for this platform'
+0440ELSE
+0450*
+0460* display the parameters which are received from the 3GL function
+0470*
+0480INPUT (AD=M IP=ON)
+0490      / 'These parameters were returned from subprogram MY3GLSUB'
+0500      / 'which was called by the 3GL function MYC3GL'
+0510     // #FIELD1
+0520      / #FIELD2 (AD=L)
+0530END-IF
+0540*
+0550* end of program
+0560*
+0570END

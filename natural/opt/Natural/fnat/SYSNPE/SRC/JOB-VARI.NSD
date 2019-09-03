@@ -1,0 +1,200 @@
+0010DB: 148 FILE: 082  - JOB-VARIABLES                    DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:22
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:22
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      BS2000 fields
+0230*
+0240  1 ES SYSTEM-CODE                       B    2      System error code.
+0250*      System error code.
+0260  1 FN FUNCTION                          A    8    D Possible functions a
+0270*      Possible functions are:
+0280*      ALLOC    define a job variable
+0290*      READ     get value of jv
+0300*      WRITE    set value of jv
+0310*      (can also be used to
+0320*      copy from one jv to
+0330*      another)
+0340*      MODATTR  modify jv attributes
+0350*      DELETE   delete jv
+0360*      ATTRIB   get info about jv
+0370*      LIST     get list of jv
+0380*      (Only NAME is valid
+0390*      for this function.)
+0400  1 B1 NAME                              A   54    D Name of the job vari
+0410*      Name of the job variable to
+0420*      handle. Only for function
+0430*      LIST the name may contain
+0440*      wildcards or be ommitted, but
+0450*      name may not start with '*'.
+0460*      Wildcards in catalog ID or
+0470*      user ID of the JV name are
+0480*      only allowed for user TSOS.
+0490  1 B2 SECOND-NAME                       A   54    D Only for functions M
+0500*      Only for functions MODATTR
+0510*      and WRITE.
+0520*      For MODATTR no userid may be
+0530*      specified in SECOND-NAME.
+0540  1 B4 ACCESS                            A    5    D Specifies allowed ac
+0550*      Specifies allowed access to
+0560*      jv: READ or WRITE (default).
+0570*      Used with functions
+0580*      ALLOC, ATTRIB  as output field
+0590*      MODATTR        as input field
+0600  1 B5 SHARE                             A    3    D YES  jv is accessibl
+0610*      YES  jv is accessible for
+0620*      other users
+0630*      NO   accessible for owner only
+0640*      (default)
+0650*      Used with functions
+0660*      ALLOC, ATTRIB  as output field
+0670*      MODATTR        as input field
+0680  1 B6 READ-PASSWORD                     A    8    D Usage depending on F
+0690*      Usage depending on FUNCTION:
+0700*      ATTRIB:
+0710*      YES   read-password is
+0720*      defined for jv
+0730*      NONE  no read-password
+0740*      ALLOC, MODATTR:
+0750*      new read-password to be
+0760*      defined for jv
+0770*      (*NONE resets existing
+0780*      password.)
+0790*      WRITE:
+0800*      For copy from another jv
+0810*      which is password protected
+0820*      the appropriate password
+0830*      for that jv must be
+0840*      specified here.
+0850  1 B7 WRITE-PASSWORD                    A    8    D Usage depending on F
+0860*      Usage depending on FUNCTION:
+0870*      ATTRIB:
+0880*      YES   write-password is
+0890*      defined for jv
+0900*      NONE  no write-password
+0910*      ALLOC, MODATTR:
+0920*      new write-password to be
+0930*      defined for jv
+0940*      (*NONE resets existing
+0950*      password.)
+0960  1 B8 RETENTION-PERIOD                  N  5.0    D Specifies how many d
+0970*      Specifies how many days the JV
+0980*      must remain unchanged.
+0990*      (Only for function MODATTR.)
+1000  1 B9 SUBSTRING-START                   N  3.0    D For functions READ a
+1010*      For functions READ and WRITE:
+1020*      Start position of substring,
+1030*      if only substring of jv is to
+1040*      be written / read.
+1050*      Maximum value: 256
+1060  1 BA SUBSTRING-LENGTH                  N  3.0    D Usage depending on F
+1070*      Usage depending on FUNCTION:
+1080*      READ   Length of substring to
+1090*      be read.
+1100*      WRITE  Length of substring to
+1110*      be written. May also be
+1120*      specified in field
+1130*      LENGTH. Both may be
+1140*      ommitted if DATA is
+1150*      given.
+1160*      SUBSTRING-START + SUBSTRING-
+1170*      LENGTH must not exceed 256.
+1180  1 BC CREATION-DATE                     A    8      Only for function AT
+1190*      Only for function ATTRIB:
+1200*      Creation date of jv.
+1210  1 BD EXPIRATION-DATE                   A    8      Only for function AT
+1220*      Only for function ATTRIB:
+1230*      Expiration date of jv.
+1240  1 BF JV-TYPE                           A   10      Only for function AT
+1250*      Only for function ATTRIB:
+1260*      Returns JV type. Values are:
+1270*      NUMERIC, NO NUMERIC
+1280  1 BH LENGTH                            N  3.0    D Usage depending on F
+1290*      Usage depending on FUNCTION:
+1300*      ATTRIB  size of jv (length of
+1310*      jv value)
+1320*      READ    length of data read
+1330*      WRITE   length of data to be
+1340*      written. May also be
+1350*      specified in field
+1360*      SUBSTRING-LENGTH.
+1370*      Both may be ommitted,
+1380*      if DATA is given.
+1390*      SUBSTRING-START +
+1400*      LENGTH must not exceed
+1410*      256.
+1420  1 BI DATA                              A  253    D Usage depending on F
+1430*      Usage depending on FUNCTION:
+1440*      READ   contents of jv or part
+1450*      of it (substring)
+1460*      WRITE  value to be written
+1470*      (It is also possible
+1480*      to copy contents or
+1490*      substring from another
+1500*      jv. See fields
+1510*      SECOND-NAME,
+1520*      FROM-SUBSTRING-START,
+1530*      FROM-SUBSTRING-LENGTH.)
+1540  1 BJ DATA-APPENDIX                     A    3    D Bytes 254-256 of jv.
+1550*      Bytes 254-256 of jv. Refer to
+1560*      DATA for usage.
+1570  1 BK PASSWORD                          A    8    D Used for all functio
+1580*      Used for all functions but
+1590*      ATTRIB.
+1600*      If jv specified in NAME is
+1610*      password protected, the
+1620*      appropiate password must be
+1630*      specified here.
+1640  1 DC CREATION-DATX                     D    6      Creation date in NAT
+1650*      Creation date in NATURAL
+1660*      format.
+1670  1 DD EXPIRATION-DATX                   D    6      Expiration date in N
+1680*      Expiration date in NATURAL
+1690*      format.
+1700  1 BL REPLACE                           A    3    D Only for function AL
+1710*      Only for function ALLOC:
+1720*      YES  Allocate jv and replace
+1730*      eventually existing jv
+1740*      with same name.
+1750*      NO   Allocate jv only, if it
+1760*      does not yet exist, and
+1770*      return error (987), if it
+1780*      exists already.
+1790*      IGN  Allocate jv, if it does
+1800*      not yet exist and ignore
+1810*      allocate for existing jv.
+1820*      (Corresponds to BS2000
+1830*      command 'DCLJV')
+1840  1 BM FROM-SUBSTRING-START              N  3.0    D Only for function WR
+1850*      Only for function WRITE:
+1860*      Start of substring to copy
+1870*      from jv specified in field
+1880*      SECOND-NAME. If ommitted,
+1890*      the entire jv is copied.
+1900  1 BN FROM-SUBSTRING-LENGTH             N  3.0    D Only for function WR
+1910*      Only for function WRITE:
+1920*      Length of substring to be
+1930*      copied from jv specified in
+1940*      SECOND-NAME. Required if
+1950*      FROM-SUBSTRING-START is
+1960*      specified.
+1970*
+1980*      End of JOB-VARIABLES
+1990*
+2000******DDM OUTPUT TERMINATED******

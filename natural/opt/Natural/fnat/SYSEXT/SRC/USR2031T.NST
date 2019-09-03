@@ -1,0 +1,79 @@
+0010Get SYSPROD information
+0020.
+0030Documentation ......... USR2031T    /*  Text object
+0040Interface ............. USR2031N    /*  Cataloged subprogram
+0050Example Program ....... USR2031P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. SYSTEM COMMANDS
+0100.
+0110Keywords .............. +CURRENT-VERSION,
+0120                        ENVIRONMENT, SYSPROD
+0130.
+0140Interface Versions .... USR0050N, USR2031N
+0150.
+0160Function .............. Information about installed Natural (sub-)
+0170                        products is returned to the calling program.
+0180                        The information is contained in arrays.
+0190                        With USR2031N, get more information of SYSPROD.
+0200.
+0210.
+0220Parameters
+0230----------
+0240Define the following parameters with the DEFINE DATA statement:
+0250.
+0260In/Output .. FIRST-CALL (L) Must be 'TRUE' for the first call and
+0270                           must not be changed for the subsequent
+0280                           calls. It will be set to FALSE automatically
+0290                           during all consecutive calls.
+0300                           If FIRST-CALL = TRUE,
+0310                             start from the beginnig and get Natural
+0320                             first
+0330                           If FIRST-CALL = FALSE,
+0340                             get products starting after SEARCH-PRODUCT
+0350                           If RESPONSE = 4 (end of product table),
+0360                             FIRST-CALL will be set to TRUE
+0370.
+0380In/Output .. SEARCH-PRODUCT (A03) Must not be changed between
+0390                           consecutive calls. It will contain the last
+0400                           checked product.
+0410                           IF FIRST-CALL = TRUE
+0420                             SEARCH-PRODUCT has no effect
+0430                           If FIRST-CALL = FALSE (means more than 15
+0440                             products) SEARCH-PRODUCT contains the
+0450                             product after which the search continues
+0460                           If RESPONSE = 4 (end of product table)
+0470                             SEARCH-PRODUCT will be reset
+0480.
+0490Output ..... P-TABLE (15)
+0500                           PN (A27)     Product Name
+0510                           VS (A05)     Product Version and Release
+0520                           SM (A02)     SM level
+0530                           DT (A10)     SM date (EM=YYYY'-'MM'-'DD)
+0540                           IU (A02)     Update level
+0550.
+0560Output ..... RESPONSE (I04) Response code
+0570                            = 0  product table returned, there are more
+0580                                 products in the table
+0590                            = 4  end of product table or no products
+0600                                 found, P-TABLE(*) may contain data
+0610.
+0620.
+0630Interface Call
+0640--------------
+0650Use the interface with the CALLNAT statement:
+0660.
+0670CALLNAT 'USR2031N'
+0680         FIRST-CALL SEARCH-PRODUCT
+0690         P-TABLE(*) RESPONSE
+0700.
+0710.
+0720Using the Application Programming Interface:
+0730--------------------------------------------
+0740Copy the subprogram USR2031N to the library SYSTEM or the steplib
+0750library respectively, or to the required library.
+0760.
+0770.
+0780***** End of Description *****
+0790

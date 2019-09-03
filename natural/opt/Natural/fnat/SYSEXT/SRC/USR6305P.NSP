@@ -1,0 +1,57 @@
+0010/* RPC: Commit/Rollback reliable RPC message(s)
+0020/*
+0030/* Function ... Commit/Rollback reliable RPC message(s).
+0040/*
+0050/* This program serves as example how to design a user-defined
+0060/* program call 'USR6305N'.
+0070/*
+0080/* Parameter ..
+0090/*
+0100/*     INPUT
+0110/*              FUNCTION     (A08)  Function code
+0120/*                                  'COMMIT'
+0130/*                                  'ROLLBACK'
+0140/*     OUTPUT
+0150/*              RC           (N04)  return value
+0160/*                                  0     ok
+0170/*                                  1     invalid function code
+0180/*                                  9999  Broker error (see MESSAGE)
+0190/*              MESSAGE      (A80)  message text
+0200/*
+0210/***********************************************************************
+0220DEFINE DATA LOCAL
+02301 USR6305-PARMS
+0240  2 P-FUNC     (A08)
+0250  2 P-RC       (N04)
+0260  2 P-MESSAGE  (A80)
+0270END-DEFINE
+0280*
+0290DEFINE WINDOW RPC-COMMIT    SIZE 9*65 BASE 5/9
+0300  TITLE 'Commit/Rollback reliable RPC message(s)' CONTROL SCREEN
+0310*
+0320SET KEY PF3
+0330*
+0340/*****************************************
+0350/* SAMPLE FOR BATCH-MODE OR CALL VIA STACK
+0360/*****************************************
+0370IF *DATA > 0
+0380  INPUT (AD=T) P-FUNC
+0390  CALLNAT 'USR6305N' USING USR6305-PARMS
+0400  ESCAPE ROUTINE
+0410END-IF
+0420/*****************************************
+0430/* SAMPLE FOR CALLING ONLINE
+0440/*****************************************
+0450REPEAT UNTIL *PF-KEY = 'PF3' OR P-FUNC = '.'
+0460*
+0470  INPUT WINDOW='RPC-COMMIT'     (AD=MIT'_')           /
+0480    'Please enter'                                    /
+0490    '   Function:' P-FUNC   '   COMMIT,   ROLLBACK'   //
+0500                   P-MESSAGE    (AD=IOT AL=79 IP=OFF) /
+0510    'or hit PF3 to leave.'
+0520*
+0530  CALLNAT 'USR6305N' USING USR6305-PARMS
+0540*
+0550END-REPEAT
+0560*
+0570END

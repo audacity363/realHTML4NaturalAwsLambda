@@ -1,0 +1,64 @@
+0010DB: 148 FILE: 040  - EVENTING                         DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:21
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:21
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 FN FUNCTION                          A    8    D Function to be perfo
+0250*      Function to be performed:
+0260*      DEFINE   define an event
+0270*      DELETE   delete an event
+0280*      LIST     list events
+0290*      POST     post event
+0300*      SEND     send message to
+0310*      event
+0320*      RECEIVE  receive message from
+0330*      event
+0340*      WAIT     wait for post from
+0350*      event (or timeout)
+0360*      SENDPOST both functions
+0370  1 A2 EVENT-NAME                        A    8    D Name of event.
+0380*      Name of event.
+0390  1 A3 MAX-TIME                          B    4    D Maximum time you wan
+0400*      Maximum time you want to wait
+0410*      for a message to arrive. If no
+0420*      message arrived within this
+0430*      time you will get ERROR-CODE
+0440*      891 (timeout).
+0450  1 A4 NUMBER-OF-WAITERS                 N  5.0    D Number of tasks wait
+0460*      Number of tasks waiting to
+0470*      be posted.
+0480  1 A6 NUMBER-OF-MESSAGES                N  5.0    D Number of messages w
+0490*      Number of messages waiting
+0500*      to be received.
+0510M 1 A7 MESSAGE-ARRAY                     A  250    D Array of max. 5 mess
+0520*      Array of max. 5 messages for
+0530*      SEND/RECEIVE function.
+0540*
+0550*      In BS2000 only available for
+0560*      multi user mode.
+0570*
+0580*      BS2000 fields
+0590*
+0600  1 ES SYSTEM-CODE                       B    2
+0610*
+0620*      End of EVENTING
+0630*
+0640******DDM OUTPUT TERMINATED******

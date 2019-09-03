@@ -1,0 +1,50 @@
+0010Convert store clock into microseconds
+0020.
+0030Documentation ......... USR1009T    /*  Text object
+0040Interface ............. USR1009N    /*  Cataloged subprogram
+0050Example Program ....... USR1009P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATE / TIME SUPPORT
+0100.
+0110Keywords .............. +MOD-NAT-8.2.6,
+0120                        *TIMESTMP, STORE CLOCK, TIME
+0130.
+0140Function .............. Converts store clock value (such as *TIMESTMP)
+0150                        into microseconds (since 1900-01-01 00:00:00)
+0160                        Note:
+0170                        For better precision use USR2036N instead of
+0180                        USR1009N.
+0190                        See also USR1023N or copycode USR1023Y
+0200                        for similar functions.
+0210                        With NAT 8.2.6 the performance is enhanced.
+0220.
+0230.
+0240Parameters
+0250----------
+0260Define the following parameters with the DEFINE DATA statement:
+0270.
+02801 P-STORECLOCK   (B8)  /* in:  store clock value (such as *TIMESTMP)
+02901 P-MICROSECONDS (P19) /* out: microseconds
+0300.
+0310Interface Call
+0320--------------
+0330Use the interface with the CALLNAT statement:
+0340.
+0350CALLNAT 'USR1009N' P-STORECLOCK P-MICROSECONDS
+0360.
+0370.
+0380Using the Application Programming Interface:
+0390--------------------------------------------
+0400Copy the subprogram USR1009N to the library SYSTEM or the steplib
+0410library respectively, or to the required library.
+0420.
+0430.
+0440For more information about using the subprogram USR1009N see the
+0450example program USR1009P.
+0460.
+0470.
+0480***** End of Description *****
+0490
+0500

@@ -1,0 +1,15 @@
+0010&H View LOAD-MODULE
+0020&L
+0030&L
+0040#Zweck@    : Lesen von Informationen zu einem bestimmten Lademodul.
+0050&L
+0060&L
+0070#System@   : z/OS.
+0080&L
+0090&L
+0100#Anwendung@: Dieser View liefert Informationen zu einem bestimmten
+0110             Lademodul, wie z.B. Name der CSECT, Typen der externen
+0120             Symbole, Adresse und Laenge der CSECT's, AMODE & RMODE,
+0130             eingespielte ZAP's usw.
+0140&L
+0150#Anmerkung@:

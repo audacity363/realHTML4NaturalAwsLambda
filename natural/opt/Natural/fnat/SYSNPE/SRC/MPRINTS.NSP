@@ -1,0 +1,84 @@
+0010* Program   MPRINTS
+0020* View      WRITE-SPOOL
+0030*
+0040* Function  Write OS-file directly to IBM Infoprint server
+0050*
+0060*           The output will be routed to the destination defined
+0070*           in the infoprint parameters.
+0080*
+0090* ----------------------------------------------------------------------
+0100*
+0110DEFINE DATA
+0120   GLOBAL USING TUTO
+0130   LOCAL  USING WRTSPL-L
+0140   LOCAL  USING READ-L
+0150   LOCAL
+01601 #DESTINATION (A50)
+01701 #COPIES       (I1)
+0180END-DEFINE
+0190*
+0200REPEAT
+0210*
+0220*  Switch to lowercase, because printqueue could be lowercase
+0230*
+0240   SET CONTROL 'L'
+0250   INPUT (AD=MIL'_' SG=OFF ZP=OFF)
+0260     / ##TITLE (AD=OI IP=OFF)
+0270    // '  Data set ..:' READ-FILE.DSNAME (AD=MIT)
+0280     / '  Member ....:' READ-FILE.MEMBER (AD=MIT)
+0290    // 'Options' (I)
+0300     / '  Class .....:' WRITE-SPOOL.CLASS (AD=MIT)
+0310     / '  Form ......:' WRITE-SPOOL.FORM (AD=MIT)
+0320     / '  Copies ....:' #COPIES (AD=MIT)
+0330    // '  Destination:' #DESTINATION (AD=MIT)
+0340     / '  Fssdata....:' WRITE-SPOOL.FSSDATA (AL=64 AD=MIT)
+0350* rmu 02-12-18 Added AL=64 to above line since FSSDATA is A127 and
+0360*              NAT complained about line size being exceeded.
+0370*              (You could stow on a Mod 5 display, though...)
+0380     / '  Print queue:' WRITE-SPOOL.PRTQUEUE (AL=60 AD=MIL)
+0390     / '  Port number:' WRITE-SPOOL.PORTNO (AD=MIT)
+0400     / '  Opt. compon:' WRITE-SPOOL.PRTOPTNS (AD=MIT)
+0410*
+0420   SET CONTROL 'U'
+0430   READ.
+0440   FIND READ-FILE WITH NODE   = ##NODE
+0450                   AND DSNAME = READ-FILE.DSNAME
+0460                   AND MEMBER = READ-FILE.MEMBER
+0470*
+0480      IF ERROR-CODE NE 0
+0490         REINPUT ERROR-TEXT
+0500      END-IF
+0510*
+0520      PROCESS WRITE-SPOOL USING NODE    = ##NODE
+0530                            ,   RECORD  = RECORD
+0540                            ,   RECORD-LENGTH = RECORD-LENGTH
+0550                            ,   CLASS   = WRITE-SPOOL.CLASS
+0560                            ,   FORM    = WRITE-SPOOL.FORM
+0570                            ,   COPIES  = #COPIES
+0580                            ,   DESTINATION = #DESTINATION
+0590                            ,   FSSDATA     = WRITE-SPOOL.FSSDATA
+0600                            ,   PRTQUEUE    = WRITE-SPOOL.PRTQUEUE
+0610                            ,   PORTNO      = WRITE-SPOOL.PORTNO
+0620                            ,   PRTOPTNS    = WRITE-SPOOL.PRTOPTNS
+0630                        GIVING ERROR-CODE
+0640                               ERROR-TEXT
+0650*
+0660      IF ERROR-CODE NE 0
+0670         REINPUT ERROR-TEXT
+0680      END-IF
+0690*
+0700   END-FIND
+0710*
+0720   PROCESS WRITE-SPOOL USING NODE     = ##NODE
+0730                         ,   FUNCTION = 'CLOSE'
+0740                      GIVING ERROR-CODE
+0750                             ERROR-TEXT
+0760   IF ERROR-CODE NE 0
+0770      REINPUT ERROR-TEXT
+0780   END-IF
+0790*
+0800   REINPUT *1023,*COUNTER (READ.)
+0810*
+0820END-REPEAT
+0830*
+0840END

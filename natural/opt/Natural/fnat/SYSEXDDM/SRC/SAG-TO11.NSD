@@ -1,0 +1,66 @@
+0010 DB: 000 FILE: 027  - SAG-TOURS-G-REISE                DEFAULT SEQUENCE:
+0020
+0030T L DB Name                              F Leng  S D Remark
+0040- - -- --------------------------------  - ----  - - ------------------------
+0050  1 CI REISE-ID                          N  8.0  N D
+0060  1 CJ REISE-TYP                         A    1  N N
+0070*      'A' wenn Charter-Reise, 'B'
+0080*      wenn Mitsegel-Reise
+0090  1 CK REISE-STATUS                      A    1  N N
+0100*      0=Planung, 1=Plätze frei,
+0110*      2=ausgebucht, 3=gesperr
+0120G 1 CL BEGINN
+0130  2 CM B-DATUM                           N  8.0    D
+0140  2 CN B-UHRZEIT                         N  6.0  N
+0150G 1 CO ENDE
+0160  2 CP E-DATUM                           N  8.0  N D
+0170  2 CQ E-UHRZEIT                         N  6.0  N
+0180  1 CR START-HAFEN                       A   20    D
+0190  1 CS ZIEL-HAFEN                        A   20    D
+0200  1 CT ID-YACHT                          N  8.0  N D
+0210*      ID der Yacht, die die Reise
+0220*      segelt
+0230  1 CU ID-VORGAENGER                     N  8.0  N D
+0240*      ID der Vorgaenger-Reise
+0250  1 CV ID-NACHFOLGER                     N  8.0  N D
+0260*      ID der Nachfolger-Reise
+0270G 1 CW CHARTER-REISE
+0280*      nur fuer REISE-TYP = 'A'
+0290  2 CX CHARTER-YACHT-TYP                 A   30
+0300  2 CY ID-CHARTER-BASIS                  A    8
+0310*      die Kombination d.beiden  IDs
+0320*      defin. die CH-PREISE
+0330G 1 CZ MITSEGEL-REISE
+0340*      nur fuer REISE-TYP = 'B'
+0350  2 C0 ID-SKIPPER                        N  8.0  N D
+0360*      PERSON-ID des Skippers
+0370  2 C1 KOJE-PREIS                        P 10.3  N
+0380  2 C2 KOJE-ANZAHL                       P  3.0  N
+0390P 1 C3 MITSEGLER
+0400  2 C4 ALTER                             P  2.0  N
+0410  2 C5 ANREDE-NAME                       A   30  N
+0420  2 C6 ERFAHRUNG                         A    1  N
+0430*      'Y' wenn Mitsegler auch
+0440*      Segelerfahrung hat
+0450M 2 C7 SPRACHEN                          A    3  N
+0460*      Zur Verstaendigung auf der Yacht
+0470  2 C8 ID-VERTRAG                        P  6.0  N D
+0480*      ID des Mitsegler-Vertrags
+0490  1 T6 CRUISE-TIMESTAMP                  T   12  N
+0500*      wird benutzt fuer Natural
+0510*      Constract
+0520  1 EG REISE-TYP-SP                      A    9  N S
+0530*      -------- SOURCE FIELD(S) -------
+0540*      CRUISE-TYPE(1-1)
+0550*      CRUISE-ID(1-8)
+0560  1 DA CHARTER-PRICES-SP                 A   38    S
+0570*      -------- SOURCE FIELD(S) -------
+0580*      CHARTER-YACHT-TYPE(1-30)
+0590*      ID-CHARTER-BASE(1-8)
+0600  1 EF START-DATUM-ZIEL                  A   49    S
+0610*      -------- SOURCE FIELD(S) -------
+0620*      CRUISE-TYPE(1-1)
+0630*      START-HARBOR(1-20)
+0640*      START-DATE(1-8)
+0650*      DESTINATION-HARBOR(1-20)
+0660******DDM OUTPUT TERMINATED******

@@ -1,0 +1,27 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1031N'.
+0030/***********************************************************************
+0040DEFINE DATA LOCAL
+0050 1 OBJECT-NAME      (A32)   /* Name of object to be checked
+0060 1 P-RESPONSE       (N04)   /* Error pointer
+0070END-DEFINE
+0080/*
+0090SET KEY ALL
+0100/*
+0110REPEAT
+0120  /*
+0130  INPUT (AD=OIL IP=OFF ZP=ON CD=TU)
+0140  /// 18T 'Check object name:' (YEI)
+0150    / 18T '-' (18) (YEI) /
+0160    / 18T 'Object name .............' (TU) OBJECT-NAME (AD=MIT'_' CD=NE)
+0170    / 18T 'Response/Error pointer...' (TU) P-RESPONSE
+0180  /// 18T 'Press any PF-Key to stop.' (TU)
+0190    /*
+0200  IF *PF-KEY NE 'ENTR'
+0210    ESCAPE ROUTINE
+0220  END-IF
+0230  /*
+0240  CALLNAT 'USR1031N' OBJECT-NAME P-RESPONSE
+0250  /*
+0260END-REPEAT
+0270END

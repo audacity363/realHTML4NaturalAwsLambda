@@ -1,0 +1,62 @@
+0010 DB: 000 FILE: 027  - SAG-TOURS-E-CRUISE               DEFAULT SEQUENCE:
+0020
+0030T L DB Name                              F Leng  S D Remark
+0040- - -- --------------------------------  - ----  - - ------------------------
+0050  1 CI CRUISE-ID                         N  8.0  N D
+0060  1 CJ CRUISE-TYPE                       A    1  N N
+0070*      'A' = 'charter cruise',  'B'
+0080*      ='sailor cruise'
+0090  1 CK CRUISE-STATUS                     A    1  N
+0100*      0 = planned, 1 = available, 2 =
+0110*      sold, 3 = removed
+0120G 1 CL START
+0130  2 CM START-DATE                        N  8.0    D
+0140  2 CN START-TIME                        N  6.0  N
+0150G 1 CO END
+0160  2 CP END-DATE                          N  8.0  N D
+0170  2 CQ END-TIME                          N  6.0  N
+0180  1 CR START-HARBOR                      A   20    D
+0190  1 CS DESTINATION-HARBOR                A   20    D
+0200  1 CT ID-YACHT                          N  8.0  N D
+0210*      ID of yacht sailing cruise
+0220  1 CU ID-PREDECESSOR                    N  8.0  N D
+0230*      ID of predecessor cruise
+0240  1 CV ID-SUCCESSOR                      N  8.0  N D
+0250*      ID of successor cruise
+0260G 1 CW CHARTER-CRUISE
+0270*      only for CRUISE-TYPE = 'A'
+0280  2 CX CHARTER-YACHT-TYPE                A   30
+0290  2 CY ID-CHARTER-BASE                   A    8
+0300*      the combination of this two IDs
+0310*      defines the CH-PRI
+0320G 1 CZ SAILING-CRUISE
+0330*      only for CRUISE-TYP = 'B'
+0340  2 C0 ID-SKIPPER                        N  8.0  N D
+0350*      PERSON-ID of skipper
+0360  2 C1 CRUISE-PRICE                      P 10.3  N
+0370  2 C2 BUNK-NUMBER                       P  3.0  N
+0380P 1 C3 SAILOR
+0390  2 C4 AGE                               P  2.0  N
+0400  2 C5 S-NAME                            A   30  N
+0410  2 C6 EXPERIENCE                        A    1  N
+0420*      'Y' if sailor has sailor
+0430*      experience
+0440M 2 C7 LANGUAGES                         A    3  N
+0450  2 C8 ID-CONTRACT                       P  6.0  N D
+0460  1 T6 CRUISE-TIMESTAMP                  T   12  N
+0470*      used for Natural Constract
+0480  1 EG CRUISE-TYPE-SP                    A    9    S
+0490*      -------- SOURCE FIELD(S) -------
+0500*      CRUISE-TYPE(1-1)
+0510*      CRUISE-ID(1-8)
+0520  1 DA CHARTER-PRICES-SP                 A   38    S
+0530*      -------- SOURCE FIELD(S) -------
+0540*      CHARTER-YACHT-TYPE(1-30)
+0550*      ID-CHARTER-BASE(1-8)
+0560  1 EF START-DATE-DESTINATION            A   49    S
+0570*      -------- SOURCE FIELD(S) -------
+0580*      CRUISE-TYPE(1-1)
+0590*      START-HARBOR(1-20)
+0600*      START-DATE(1-8)
+0610*      DESTINATION-HARBOR(1-20)
+0620******DDM OUTPUT TERMINATED******

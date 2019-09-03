@@ -1,0 +1,55 @@
+0010/* Function ... Get or set RPC TIMEOUT value
+0020/*
+0030/* This program serves as example how to design a user-defined
+0040/* program to call 'USR2076N'
+0050/***********************************************************************
+0060*
+0070DEFINE DATA
+0080LOCAL
+0090 1 USR2076-PARMS
+0100   2 FUNCTION (A1)        /* G=Get, S=Set
+0110   2 TIMEOUT  (N8)        /* Timeout value in seconds: 0-32767
+0120   2 RESPONSE (I4)        /* Response code. Possible values are:
+0130                          /* 0 - Ok
+0140                          /* 2 - Function disallowed by Natural Security
+0150                          /* 4 - Invalid value for FUNCTION entered
+0160                          /* 8 - Invalid value for TIMEOUT-VALUE entered
+0170   2 MSG      (A) DYNAMIC /* Explains an error situation.
+0180END-DEFINE
+0190FUNCTION  := 'G'
+0200*
+0210SET KEY ALL
+0220/*
+0230REPEAT
+0240  /*
+0250  INPUT (AD=MI'_' IP=OFF CD=NE)
+0260      5T 'Get or set RPC TIMEOUT value' (YEI)
+0270   // 5T 'Command ...........' (TU) FUNCTION (AD=T) '(G,S)'     (TU)
+0280   // 5T 'Timout in seconds..' (TU) TIMEOUT  (AD=T) '(0-32767)' (TU)
+0290   // 5T 'Response: '          (TU) RESPONSE (AD=OL ZP=ON CD=TU)
+0300      27T  '0 - OK' (TU)
+0310    / 27T  '2 - Function disallowed by Natural Security' (TU)
+0320    / 27T  '4 - Invalid value for FUNCTION entered' (TU)
+0330    / 27T  '8 - Invalid value for TIMEOUT entered' (TU)
+0340
+0350    / 5T 'Message:' (TU) MSG (AD=OL AL=64  CD=TU)
+0360   // 5T 'Press any PF-key to stop.' (TU)
+0370  /*
+0380  IF *PF-KEY NE 'ENTR'
+0390    ESCAPE ROUTINE
+0400  END-IF
+0410  /*
+0420  /*
+0430  CALLNAT 'USR2076N' USR2076-PARMS
+0440  /*
+0450  IF RESPONSE = 0
+0460  THEN
+0470    COMPRESS FUNCTION 'et'
+0480        INTO MSG LEAVING NO SPACE
+0490    COMPRESS MSG 'timeout value: ' TIMEOUT
+0500        INTO MSG
+0510  END-IF
+0520END-REPEAT
+0530*
+0540END
+0550

@@ -1,0 +1,75 @@
+0010** EXAMPLE 'UTIL04': USE THE ACTIVEX COMPONENT 'Enumerator'.
+0020** LIST THE FILES CONTAINED IN A FOLDER.
+0030******************************************************************************
+0040DEFINE DATA
+0050LOCAL
+00601 #CLASS (A) DYNAMIC CONST <"SoftwareAG.NaturalX.Enumerator.3">
+00701 #ENUM HANDLE OF OBJECT
+00801 #FILESYSTEM HANDLE OF OBJECT
+00901 #FOLDER HANDLE OF OBJECT
+01001 #FILES HANDLE OF OBJECT
+01101 #FILE HANDLE OF OBJECT
+01201 #FOLDERNAME (A) DYNAMIC
+01301 #I (I4)
+01401 #CNT(I4)
+01501 #PATH (A) DYNAMIC
+01601 #MSG (A72)
+01701 #ERR (I4)
+0180END-DEFINE
+0190*
+0200* Create an instance of the Enumerator class.
+0210CREATE OBJECT #ENUM OF #CLASS
+0220IF #ENUM EQ NULL-HANDLE
+0230  COMPRESS "Object of class" #CLASS "could not be created." TO #MSG
+0240  WRITE #MSG
+0250  ESCAPE ROUTINE
+0260END-IF
+0270*
+0280* Create an instance of the FileSystemObject class.
+0290CREATE OBJECT #FILESYSTEM
+0300OF "Scripting.FileSystemObject"
+0310IF #FILESYSTEM EQ NULL-HANDLE
+0320  COMPRESS "Scripting.FileSystemObject could not be created." TO #MSG
+0330  WRITE #MSG
+0340  ESCAPE ROUTINE
+0350END-IF
+0360*
+0370* Access an abitrary folder.
+0380#FOLDERNAME := "c:\temp"
+0390SEND "GetFolder" TO #FILESYSTEM WITH #FOLDERNAME
+0400RETURN #FOLDER GIVING #ERR
+0410IF #FOLDER EQ NULL-HANDLE
+0420  COMPRESS "Folder" #FOLDERNAME "not found." TO #MSG
+0430  WRITE #MSG
+0440  ESCAPE ROUTINE
+0450END-IF
+0460*
+0470* Access the Files collection.
+0480#FILES := #FOLDER.Files
+0490IF #FILES EQ NULL-HANDLE
+0500  WRITE "Files collection not found."
+0510  ESCAPE ROUTINE
+0520END-IF
+0530*
+0540* Attach the Files collection to the enumerator.
+0550* The method expects the collection by value.
+0560SEND "Attach" TO #ENUM WITH #FILES (AD=O)
+0570*
+0580* Start the enumeration from the beginning. This is
+0590* not necessary the first time. Just for demo reasons.
+0600SEND "Reset" TO #ENUM
+0610*
+0620* Enumerate the collection.
+0630SEND "Next" TO #ENUM RETURN #FILE
+0640REPEAT WHILE #FILE NE NULL-HANDLE
+0650  #PATH := #FILE.PATH
+0660  WRITE #PATH (AL=60)
+0670  SEND "Next" TO #ENUM RETURN #FILE
+0680END-REPEAT
+0690*
+0700* Print the number of files.
+0710#CNT := #FILES.Count
+0720COMPRESS "Total:" #CNT "file(s)." TO #MSG
+0730WRITE #MSG
+0740*
+0750END

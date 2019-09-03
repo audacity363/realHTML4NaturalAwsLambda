@@ -1,0 +1,19 @@
+0010/* ---------------------------------------------------------------------
+0020/* Program:        HIDESHOW
+0030/* Library:        SYSEXBAT (Batch mode samples)
+0040/*
+0050/* Functionality:  Hide/Show input data
+0060/*
+0070/* Description:    Depending of the dynamic parameter ECHO, Natural will
+0080/*                 write input data (ECHO=ON) to CMPRINT, or not
+0090/*                 (ECHO=OFF).
+0100/* ---------------------------------------------------------------------
+0110DEFINE DATA LOCAL
+01201 #first_name (A10)
+01301 #last_name  (A10)
+0140END-DEFINE
+0150**
+0160INPUT (IP=ON AD=M) #first_name #last_name
+0170**
+0180DISPLAY #first_name #last_name
+0190END

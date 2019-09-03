@@ -1,0 +1,27 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Object Date New Value
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor> OHT-P009
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180You can specify a new value for the object date or
+0190'*' for time change only.
+0200
+0210The date value must be specified in international date format (YYYY-MM-DD).
+0220
+0230A single date, a date range or a special date value can be specified.
+0240
+0250See next help screen for valid ranges and special date values.
+0260
+0270<HelpTextEnd>

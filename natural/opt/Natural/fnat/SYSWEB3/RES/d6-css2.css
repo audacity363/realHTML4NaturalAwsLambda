@@ -1,0 +1,49 @@
+<STYLE><!-- d6-css2.css
+BODY { FONT-WEIGHT: normal; COLOR: #000000; FONT-STYLE: normal; FONT-FAMILY: verdana, arial, helvetica, sans-serif; TEXT-DECORATION: none }
+
+td         { FONT-SIZE: 80%; FONT-FAMILY: verdana, arial, helvetica, sans-serif;} 
+th         { FONT-SIZE: 80%; FONT-FAMILY: verdana, arial, helvetica, sans-serif; FONT-WEIGHT: bold; } 
+
+A:active  { COLOR: #3366cc;  TEXT-DECORATION: underline }
+A:hover   { COLOR: #3366cc;  TEXT-DECORATION: underline }
+A:link    { COLOR: #003399;  TEXT-DECORATION: underline }
+A:visited { COLOR: #336699;  TEXT-DECORATION: underline }
+
+
+TD.TOPLINK { FONT-SIZE: 60%; FONT-WEIGHT: bold; COLOR: #ffffff; TEXT-DECORATION: none }
+A.TOPLINK:link    { FONT-WEIGHT: bold; COLOR: #ffffff;  TEXT-DECORATION: none }
+A.TOPLINK:hover   { FONT-WEIGHT: bold; COLOR: #ffffff;  TEXT-DECORATION: none }
+A.TOPLINK:active  { FONT-WEIGHT: bold; COLOR: #ffffff;  TEXT-DECORATION: none }
+A.TOPLINK:visited { FONT-WEIGHT: bold; COLOR: #ffffff;  TEXT-DECORATION: none }
+
+A.noline:active  {  TEXT-DECORATION: none }
+A.noline:hover   {  TEXT-DECORATION: none }
+A.noline:link    { COLOR: #000000; TEXT-DECORATION: none }
+A.noline:visited { COLOR: #000000;  TEXT-DECORATION: none }
+
+div.index       { FONT-SIZE: 60%; }
+A.index:active  { COLOR: #3366cc;  TEXT-DECORATION: none }
+A.index:hover   { COLOR: #3366cc;  TEXT-DECORATION: underline }
+A.index:link    { COLOR: #003399;  TEXT-DECORATION: none }
+A.index:visited { COLOR: #336699;  TEXT-DECORATION: none }
+
+td.copywhite { FONT-WEIGHT: normal; FONT-SIZE: 60%; COLOR: #ffffff; TEXT-DECORATION: none }
+
+td.submenue-selected { FONT-WEIGHT: bold;  background-color: white; FONT-SIZE: 60%; CURSOR: pointer; COLOR: #003399; }
+td.submenue-inactive { FONT-WEIGHT: normal; FONT-SIZE: 60%; CURSOR: pointer; COLOR: #b4cffc;}
+td.submenue          { FONT-WEIGHT: normal; FONT-SIZE: 60%; CURSOR: pointer; COLOR: black;   }
+
+p.msg { FONT-WEIGHT: bold; FONT-SIZE: 60%; CURSOR: pointer; COLOR: #003399; }
+
+input    { FONT-SIZE: 80%; FONT-WEIGHT: normal; COLOR: #000000; FONT-STYLE: normal; }
+select          { FONT-SIZE: 80%; FONT-WEIGHT: normal; COLOR: #000000; }
+
+td.white        { background-color: white } 
+td.blue 	{ background-color: #e9eef5; COLOR: #336699;} 
+TR.gray         { background-color: #E9EEF5 }
+
+td.input        { FONT-WEIGHT: normal;  COLOR: #000000; background-color: #7FAADF }
+tr.top          { FONT-WEIGHT: normal;  COLOR: #000000; background-color: #7FAADF }
+
+.history { FONT-SIZE: 80%; COLOR: #666666; TEXT-DECORATION: none }
+--></STYLE>

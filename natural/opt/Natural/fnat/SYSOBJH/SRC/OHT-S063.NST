@@ -1,0 +1,32 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Unload Symbol Table
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180Valid on mainframe only:
+0190
+0200 Y Unloads cataloged Natural library objects with their
+0210   corresponding internal Natural symbol tables (default).
+0220
+0230 N Unloads cataloged Natural library objects without their
+0240   corresponding internal Natural symbol tables.
+0250   This will reduce the amount of disk storage required.
+0260   However, this is only useful for a production environment,
+0270   as several application development functions which require
+0280   the symbol tables will then not be available; in addition,
+0290   the profile parameter RECAT=ON (see the Parameter
+0300   Reference documentation) will not apply.
+0310
+0320<HelpTextEnd>

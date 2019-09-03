@@ -1,0 +1,109 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR2019N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+00601 USR2019L
+0070  2 OBJECT-KEY
+0080    3 SYSTEM-FILE    (A01)
+0090    3 DBID           (N05)
+0100    3 FNR            (N05)
+0110    3 PASSWORD       (A08)
+0120    3 CIPHERCODE     (N08)
+0130    3 OBJECT-CLASS   (I01)
+0140    3 LIBRARY        (A08)
+0150    3 OBJECT-NAME    (A32)
+0160    3 OBJECT-TYPE    (A02)
+0170    3 OBJECT-KIND    (A01)
+0180      /*
+0190  2 INPUTS
+0200    3 OPT-ACCESS     (A01)
+0210    3 OPT-ET         (L)
+0220    3 OPT-REPLACE    (A01)
+0230    3 OPT-SESNUM     (B02)
+0240    3 OPT-BUFFNAME   (A08)
+0250    3 OPT-NSC-CHECK  (A01)    /* not used */
+0260  2 OUTPUTS
+0270    3 EDIT-MODE      (A01)
+0280      /*
+02901 USR2019N
+0300  2 VERSION          (I01)     INIT <4>
+0310  2 RENUMBER-SA      (A01)     INIT <'Y'>
+0320  2 RENUMBER-INC     (I02)     INIT <0>  /* MF only */
+0330  2 FSEC_DBID        (N05)     /* Fsec Dbid
+0340  2 FSEC_FNR         (N05)     /* Fsec Fnr
+0350  2 FSEC_PASSW       (A08)     /* Fsec password
+0360  2 FSEC_CIPHC       (N08)     /* Fsec ciphercode
+03701 REDEFINE USR2019N
+0380  2 EXTENDED-PARMS
+0390    3 EXTENDED-DATA  (A01/1:30)
+0400/*
+0410LOCAL USING USR-MSG   /* Data for message exchange
+0420LOCAL USING USR-FLD   /* Description of the field in error
+0430/*
+0440END-DEFINE
+0450/*
+0460SET KEY ALL
+0470/*
+0480USR2019L.SYSTEM-FILE   := ' '
+0490USR2019L.LIBRARY       := *LIBRARY-ID
+0500USR2019L.OBJECT-NAME   := *PROGRAM
+0510USR2019L.OPT-ACCESS    := 'R'
+0520USR2019L.OPT-REPLACE   := 'N'
+0530/*
+0540REPEAT
+0550  INPUT (AD=MITL'_' IP=OFF)
+0560    TEXT NAD-MSG.MSG, MSG-DATA (1), MSG-DATA (2), MSG-DATA (3)
+0570    MARK NAD-FLD.FIELD-POSITION
+0580    /   10T 'READ/SAVE A NATURAL SOURCE:' (I)
+0590    /   10T '-' (27) (I) /
+0600    /   10T 'Access ...............'  USR2019L.OPT-ACCESS
+0610    /   10T 'Library ..............'  USR2019L.LIBRARY
+0620    /   10T 'Object name ..........'  USR2019L.OBJECT-NAME  (AL=8)
+0630    /   10T 'Object type ..........'  USR2019L.OBJECT-TYPE  (AL=1)
+0640    /   10T 'Replace ..............'  USR2019L.OPT-REPLACE
+0650    /   10T 'System file (N/U) ....'  USR2019L.SYSTEM-FILE
+0660    /   10T 'DBID .................'  USR2019L.DBID
+0670            'Password .............'  USR2019L.PASSWORD (AD=N)
+0680    /   10T 'FNR ..................'  USR2019L.FNR
+0690            'Cipher ...............'  USR2019L.CIPHERCODE
+0700    /   10T 'End transaction ......'  USR2019L.OPT-ET
+0710    /   10T 'Renumber before SAVE .'  USR2019N.RENUMBER-SA
+0720    /   10T 'Renumber increment ...'  USR2019N.RENUMBER-INC
+0730    /   10T 'DBID of FSEC .........'  USR2019N.FSEC_DBID
+0740            'Password of FSEC .....'  USR2019N.FSEC_PASSW (AD=N)
+0750    /   10T 'FNR of FSEC ..........'  USR2019N.FSEC_FNR
+0760            'Cipher of FSEC .......'  USR2019N.FSEC_CIPHC
+0770    //  10T 'Press any other PF-key to stop.'
+0780/*
+0790  IF *PF-KEY NE 'ENTR'
+0800    ESCAPE BOTTOM
+0810  END-IF
+0820/*
+0830  CALLNAT 'USR2019N' USR2019L  USR2019N.EXTENDED-PARMS
+0840    NAD-MSG   NAD-FLD
+0850/*
+0860  IF MSG-TYPE > 1
+0870    IF MSG-NR = -82 THEN
+0880      EXAMINE NAD-MSG.MSG FOR ':1:' REPLACE USR2019L.LIBRARY
+0890      EXAMINE NAD-MSG.MSG FOR ':2:' REPLACE USR2019L.OBJECT-NAME
+0900    END-IF
+0910    ESCAPE TOP
+0920  END-IF
+0930/*
+0940  WRITE (AD=LI)
+0950    /  'Object type .......' OBJECT-TYPE
+0960    /  'Programming mode ..' EDIT-MODE
+0970  WRITE (AD=LI)
+0980    /  'Message number ....' NAD-MSG.MSG-NR
+0990    /  'Message ...........' NAD-MSG.MSG (AL=59)
+1000    /  'Message type ......' NAD-MSG.MSG-TYPE
+1010    /  'Message data ......' NAD-MSG.MSG-DATA (1:3)
+1020    // 'Field structure ...' NAD-FLD.FIELD-STRUCTURE
+1030    /  'Field name ........' NAD-FLD.FIELD-NAME
+1040    /  'Field position ....' NAD-FLD.FIELD-POSITION
+1050    /  'Field index .......' NAD-FLD.FIELD-INDEX1
+1060    NAD-FLD.FIELD-INDEX2
+1070    NAD-FLD.FIELD-INDEX3
+1080END-REPEAT
+1090END

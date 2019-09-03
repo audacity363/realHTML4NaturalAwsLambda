@@ -1,0 +1,47 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1033N'.
+0030/***********************************************************************
+0040DEFINE DATA LOCAL
+005001 PARM
+0060   02 DBID         (N05)      /* DBID of FDIC
+0070   02 FNR          (N05)      /* File number of FDIC
+0080   02 PASSWORD     (A08)      /* Password of FDIC
+0090   02 CIPHERCODE   (B08)      /* Ciphercode of FDIC
+0100   02 DDM-NAME     (A32)      /* Name of the DDM
+0110   02 RESPONSE     (N04)      /* Error code
+0120   02 DDM-DBID     (N05)      /* DBID of DDM
+0130   02 DDM-FNR      (N05)      /* File number of DDM
+0140   02 DDM-TYPE     (A01)      /* Type of DDM
+0150   02 VSAM-SUBTYPE (A01)      /* Subtype of VSAM DDM
+0160   02 FILE-NAME    (A08)      /* Used by VSAM, ISAM, LEASY
+0170  /*
+0180END-DEFINE
+0190/*
+0200SET KEY ALL
+0210/*
+0220REPEAT
+0230  /*
+0240  INPUT (AD=MITL'_' IP=OFF ZP=ON SG=OFF CD=NE)
+0250   // 15T 'Find DBID/FNR of a cataloged DDM:' (YEI)
+0260    / 15T '-' (33) (YEI) /
+0270    / 15T 'DDM name ........' (TU) DDM-NAME
+0280    / 15T 'DBID of FDIC ....' (TU) DBID
+0290    / 15T 'FNR of FDIC .....' (TU) FNR
+0300    / 15T 'Password ........' (TU) PASSWORD
+0310    / 15T 'Ciphercode ......' (TU) CIPHERCODE
+0320    / 15T 'Response ........' (TU) RESPONSE  (AD=OI CD=TU ZP=ON SG=ON)
+0330   // 15T 'DBID of DDM .....' (TU) DDM-DBID  (AD=OI CD=TU)
+0340    / 15T 'FNR of DDM ......' (TU) DDM-FNR   (AD=OI CD=TU)
+0350    / 15T 'Type of DDM .....' (TU) DDM-TYPE  (AD=OI CD=TU)
+0360    / 15T 'VSAM subtype ....' (TU) VSAM-SUBTYPE (AD=OI CD=TU)
+0370    / 15T 'File name .......' (TU) FILE-NAME (AD=OI CD=TU)
+0380  /// 15T 'Press any PF-Key to stop.' (TU)
+0390    /*
+0400  IF *PF-KEY NE 'ENTR'
+0410    ESCAPE ROUTINE
+0420  END-IF
+0430  /*
+0440  CALLNAT 'USR1033N' PARM
+0450  /*
+0460END-REPEAT
+0470END

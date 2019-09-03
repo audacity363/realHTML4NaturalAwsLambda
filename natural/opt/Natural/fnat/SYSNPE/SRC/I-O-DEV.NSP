@@ -1,0 +1,28 @@
+0010* List I/O devices using complex selection criteria
+0020*
+0030DEFINE DATA
+0040   LOCAL USING UNIT-L
+0050END-DEFINE
+0060*
+0070WRITE TITLE LEFT JUST
+0080/ 'I/O devices matching the following quite complex selection criteria:'
+0090// ' 1. DISKS which are not ''STORAGE'' and with at least one open DCB'
+0100 / ' 2. DISKS which are not ONLINE'
+0110 / ' 3. TAPES which are ONLINE and whose DENSITY is not 800'
+0120 / ' 4. TAPES which are OFFLINE and whose DENSITY is 800' /
+0130*
+0140FIND UNIT-ATTRIBUTES WITH
+0150   CLASS = 'DASD' AND ((VOLUME-STATUS NE 'STORAGE' AND DCB-COUNT GE 1)
+0160                                         OR DEVICE-STATUS NE 'ONLINE' )
+0170    OR
+0180       CLASS='TAPE' AND ((DEVICE-STATUS = 'ONLINE' AND DENSITY NE '800')
+0190                     OR (DEVICE-STATUS = 'OFFLINE' AND DENSITY = '800'))
+0200*
+0210  DISPLAY UNIT VOLSER
+0220    'D-STAT' DEVICE-STATUS 'M-STAT' MOUNT-STATUS
+0230    SERIES 'V-STAT' VOLUME-STATUS 'DCB' DCB-COUNT 'ACT' ACTIVITY
+0240    CLASS DENSITY
+0250*
+0260END-FIND
+0270*
+0280END

@@ -1,0 +1,513 @@
+0010*
+0020* Program .. V637RELO
+0030* Library .. SYSEXV
+0040* Version .. 6.3.7
+0050*
+0060* Functionality: Read large object fields (LOB) in Adabas records
+0070*                (EMPLOYEES-VIEW),
+0080*                save them as resources Document-* in library SYSEXV
+0090*                and list all resources Document-* in library SYSEXV.
+0100************************************************************************
+0110*
+0120DEFINE DATA LOCAL
+01301 EMPLOYEES-VIEW VIEW OF EMPLOYEES-V2009
+0140  2 NAME
+0150  2 DOCUMENT-DESCRIPTION (1)
+0160  2 DOCUMENT-TYPE (1)
+0170  2 L@DOCUMENT (1,1)
+0180  2 DOCUMENT (1,1)
+0190*
+02001 #NAME        (U25/1:10)
+02101 #SIZE        (A8/1:10)
+02201 #TYPE        (A3/1:10)
+02301 #DESCRIPTION (U40/1:10)
+02401 #NAME-RES    (A245/1:10)
+02501 #TYPE-RES    (A4/1:10)
+02601 #LIBRARY     (A8)
+02701 #NUMBER      (A05)
+02801 REDEFINE #NUMBER
+0290  2 #NUMBER-N  (N5)
+03001 IX           (I4)
+03101 J            (I2)
+0320*
+0330LOCAL                                 /* Used for USR4208N
+03401 USR4208L
+0350  2 RESOURCE-FUNCTION                 (A1)  /* 'R'ead, 'W'rite
+0360  2 OBJECT-KEY
+0370    3 LIBRARY-NAME                    (A8)
+0380    3 RESOURCE-NAME                   (A250)
+0390    3 OBJECT-NAME                     (A8)  /* Mainframe only
+0400  2 OBJECT-LOCATION
+0410    3 LIBRARY-DBID                    (N5)
+0420    3 LIBRARY-FNR                     (N5)
+0430    3 LIBRARY-PASSWORD                (A8)
+0440    3 LIBRARY-CIPHER                  (N8)
+0450  2 WRITE-OPTIONS
+0460    3 OPTION-REPLACE                  (A1)
+0470  2 INPUT-OUTPUTS
+0480    3 RESOURCE-DATA                   (A) DYNAMIC
+0490    3 RESOURCE-DIRECTORY-DATA         (A389)
+0500    3 REDEFINE RESOURCE-DIRECTORY-DATA
+0510      4 RD-RESOURCE-LIBRARY           (A8)
+0520      4 RD-RESOURCE-OBJECT-NAME       (A8)
+0530      4 RD-RESOURCE-NAME              (A245)
+0540      4 RD-RESOURCE-TYPE              (A4)
+0550      4 RD-RESOURCE-FORMAT            (A1)
+0560      4 RD-RESOURCE-DATE              (A8)  /* (YYYYMMDD)
+0570      4 RD-RESOURCE-TIME              (A7)  /* (HHMMSST)
+0580      4 RD-RESOURCE-USER              (A8)
+0590      4 RD-RESOURCE-INIT-USER         (A8)
+0600      4 RD-RESOURCE-SIZE              (I4)
+0610      4 RD-RESOURCE-VERSION           (A8)  /* rr.vv.ss
+0620      4 RD-RESOURCE-OPSYS             (A8)
+0630      4 RD-RESOURCE-TPSYS             (A8)
+0640      4 RD-RESOURCE-CODE-PAGE         (A64)
+0650        /*
+06601 USR4208N
+0670  2 VERSION                           (I1)     INIT <0>
+06801 REDEFINE USR4208N
+0690  2 EXTENDED-PARMS
+0700    3 EXTENDED-DATA                   (A1/1:1)
+0710/*
+0720LOCAL USING USR-MSG   /* Data for message exchange
+0730LOCAL USING USR-FLD   /* Description of the field in error
+0740/*
+0750LOCAL                                 /* Used for USR4215N
+07601 USR4215N-PARA
+0770  2 P-FUNCTION                        (A1)
+0780  2 P-LIBRARY                         (A8)
+0790  2 P-LIBRARY-DBID                    (N5)
+0800  2 P-LIBRARY-FNR                     (N5)
+0810  2 P-LIBRARY-PASSWORD                (A8)
+0820  2 P-LIBRARY-CIPHER                  (A8)
+0830  2 P-RESOURCE-NAME-RANGE             (A250)
+0840  2 P-RESOURCE-TYPE-RANGE             (A11)
+0850  2 P-OBJECT-NAME-RANGE               (A9)
+0860  2 P-OBJECT-DATE-RANGE               (A11)
+0870  2 P-OBJECT-TIME-RANGE               (A9)
+0880  2 P-OBJECT-USER-ID-RANGE            (A9)
+0890  2 P-OBJECT-VERSION-RANGE            (A7)
+0900  2 P-NUMBER-RESOURCE-FOUND           (I2)
+0910  2 P-RESOURCE-LIST                   (10)
+0920    3 P-RESOURCE-LIST-RESOURCE-NAME   (A250)
+0930    3 P-RESOURCE-LIST-OBJECT-NAME     (A8)
+0940    3 P-RESOURCE-LIST-OBJECT-DATE     (A10)
+0950    3 P-RESOURCE-LIST-OBJECT-TIME     (A8)
+0960    3 P-RESOURCE-LIST-OBJECT-USER     (A8)
+0970    3 P-RESOURCE-LIST-OBJECT-VERSION  (A6)
+0980  2 P-WORK-AREA-EXT                   (A1527)
+0990  2 P-RETURN-CODE                     (I4)
+1000  2 P-MESSAGE-LINE                    (A79)
+10101 USR4215N-ADDITIONAL-PARAMETERS                (A1/1:2)
+10201 REDEFINE USR4215N-ADDITIONAL-PARAMETERS
+1030  2 USR4215N-ADD-PARA-VERSION         (N2)
+1040*
+1050END-DEFINE
+1060*
+1070FORMAT KD=ON
+1080SET KEY PF3  NAMED 'Exit'
+1090  PF12 NAMED 'Canc'
+1100*
+1110INPUT (IP=OFF)
+1120  01T *TIMX  (AD=OTD)
+1130  21T '***** NATURAL 6.3.7 ENHANCEMENTS *****'
+1140  70T *DATX  (DF=L AD=OTD)
+1150  /
+1160  01T 'User'
+1170  06T *USER  (AD=OILT)
+1180  27T '- New Adabas Data Types -'(I)
+1190  64T 'Program'
+1200  72T *PROGRAM (AD=OI)
+1210  ///
+1220  02T 'Read and save large object field.' (I)
+1230  ///
+1240  02T 'Read the large object field DOCUMENT on the database with DDM '-
+1250  'EMPLOYEES-V2009.'
+1260  //
+1270  02T 'You can find an existing DOCUMENT using the length '-
+1280  'indicator L@DOCUMENT.'
+1290  //
+1300  02T 'Save the large object field as resource Document-*.pdf '-
+1310  'in the library SYSEXV'
+1320  /
+1330  02T '(an existing resource will be replaced).'
+1340  ///
+1350  05T 'Please press ENTER.'
+1360*
+1370IF *PF-KEY = 'PF3'
+1380  ESCAPE ROUTINE
+1390END-IF
+1400IF (*PF-KEY = 'PF12' OR= 'CLR')
+1410  CALLNAT 'UTILSTOP'
+1420END-IF
+1430*
+1440*
+1450* Read large object field DOCUMENT and
+1460* save it as resource Document-* in the library SYSEXV
+1470*
+1480#LIBRARY := 'SYSEXV'
+1490*
+1500RESOURCE-FUNCTION        := 'W'             /* Write resource
+1510LIBRARY-NAME             := #LIBRARY
+1520OPTION-REPLACE           := 'Y'             /* Replace existing object
+1530*
+1540RD-RESOURCE-LIBRARY      := #LIBRARY
+1550RD-RESOURCE-FORMAT       := 'B'
+1560RD-RESOURCE-DATE         := *DATN
+1570RD-RESOURCE-USER         := *USER
+1580RD-RESOURCE-INIT-USER    := *INIT-USER
+1590RD-RESOURCE-VERSION      := *NATVERS
+1600RD-RESOURCE-OPSYS        := *OPSYS
+1610RD-RESOURCE-TPSYS        := *TPSYS
+1620RD-RESOURCE-CODE-PAGE    := *CODEPAGE
+1630*
+1640READ EMPLOYEES-VIEW BY NAME = 'A'
+1650  /*
+1660  /* Read length indicator of LOB field DOCUMENT
+1670  /*
+1680  IF L@DOCUMENT (1,1) GT 0
+1690    /*
+1700    RESOURCE-DATA           := DOCUMENT (1,1)
+1710    /*
+1720    ADD 1 TO #NUMBER-N
+1730    COMPRESS 'Document-' NAME '.' DOCUMENT-TYPE (1)
+1740      INTO RESOURCE-NAME LEAVING NO
+1750    RD-RESOURCE-NAME        := RESOURCE-NAME
+1760    RD-RESOURCE-TYPE        := DOCUMENT-TYPE (1)
+1770    RD-RESOURCE-SIZE        := L@DOCUMENT (1,1)
+1780    RD-RESOURCE-TIME        := *TIMN
+1790    /*
+1800    /* Save large object DOCUMENT as Natural resource
+1810    /*
+1820    CALLNAT 'USR4208N' USR4208L USR4208N.EXTENDED-DATA (*)
+1830      NAD-MSG  NAD-FLD
+1840    /*
+1850    IF MSG-NR NE 0
+1860      WRITE (AD=LI)
+1870        / 'Message number ....' NAD-MSG.MSG-NR
+1880        / 'Message ...........' NAD-MSG.MSG (AL=59)
+1890        / 'Message type ......' NAD-MSG.MSG-TYPE
+1900        / 'Message data ......' NAD-MSG.MSG-DATA (1:3)
+1910        // 'Field structure ...' NAD-FLD.FIELD-STRUCTURE
+1920        / 'Field name ........' NAD-FLD.FIELD-NAME
+1930        / 'Field position ....' NAD-FLD.FIELD-POSITION
+1940        / 'Field index .......' NAD-FLD.FIELD-INDEX1
+1950        NAD-FLD.FIELD-INDEX2
+1960      ESCAPE ROUTINE
+1970    END-IF
+1980    /*
+1990    ADD 1 TO J
+2000    MOVE NAME                     TO #NAME (J)
+2010    MOVE L@DOCUMENT (1,1)         TO #SIZE (J)
+2020    MOVE DOCUMENT-TYPE (1)        TO #TYPE (J)
+2030    MOVE DOCUMENT-DESCRIPTION (1) TO #DESCRIPTION (J)
+2040    COMPRESS 'Document-' NAME   INTO #NAME-RES(J) LEAVING NO
+2050    /*
+2060    IF J = 10
+2070      INPUT (IP=OFF AD=OI)
+2080        01T *TIMX  (AD=OTD)
+2090        21T '***** NATURAL 6.3.7 ENHANCEMENTS *****'
+2100        70T *DATX  (DF=L AD=OTD)
+2110        /
+2120        01T 'User'
+2130        06T *USER  (AD=OILT)
+2140        27T '- New Adabas Data Types -'(I)
+2150        64T 'Program'
+2160        72T *PROGRAM (AD=OI)
+2170        / / /
+2180        02T 'Read large object field DOCUMENT on the database with '-
+2190        'DDM EMPLOYEES-V2009.' (I)
+2200        ///
+2210        05T 'Name' 21T 'Type' 29T 'Size'
+2220        36T 'Description' 59T 'Saved as'
+2230        //
+2240        05T #NAME(1)(AL=15) #TYPE(1) #SIZE(1)(AD=R)
+2250        3X #DESCRIPTION(1)(AL=21) 2X #NAME-RES(1)(AL=20)
+2260        /
+2270        05T #NAME(2)(AL=15) #TYPE(2) #SIZE(2)(AD=R)
+2280        3X #DESCRIPTION(2)(AL=21) 2X #NAME-RES(2)(AL=20)
+2290        /
+2300        05T #NAME(3)(AL=15) #TYPE(3) #SIZE(3)(AD=R)
+2310        3X #DESCRIPTION(3)(AL=21) 2X #NAME-RES(3)(AL=20)
+2320        /
+2330        05T #NAME(4)(AL=15) #TYPE(4) #SIZE(4)(AD=R)
+2340        3X #DESCRIPTION(4)(AL=21) 2X #NAME-RES(4)(AL=20)
+2350        /
+2360        05T #NAME(5)(AL=15) #TYPE(5) #SIZE(5)(AD=R)
+2370        3X #DESCRIPTION(5)(AL=21) 2X #NAME-RES(5)(AL=20)
+2380        /
+2390        05T #NAME(6)(AL=15) #TYPE(6) #SIZE(6)(AD=R)
+2400        3X #DESCRIPTION(6)(AL=21) 2X #NAME-RES(6)(AL=20)
+2410        /
+2420        05T #NAME(7)(AL=15) #TYPE(7)#SIZE(7)(AD=R)
+2430        3X #DESCRIPTION(7)(AL=21) 2X #NAME-RES(7)(AL=20)
+2440        /
+2450        05T #NAME(8)(AL=15) #TYPE(8) #SIZE(8)(AD=R)
+2460        3X #DESCRIPTION(8)(AL=21) 2X #NAME-RES(8)(AL=20)
+2470        /
+2480        05T #NAME(9)(AL=15) #TYPE(9) #SIZE(9)(AD=R)
+2490        3X #DESCRIPTION(9)(AL=21) 2X #NAME-RES(9)(AL=20)
+2500        /
+2510        05T #NAME(10)(AL=15) #TYPE(10) #SIZE(10)(AD=R)
+2520        3X #DESCRIPTION(10)(AL=21) 2X #NAME-RES(10)(AL=20)
+2530      /*
+2540      IF *PF-KEY = 'PF3'
+2550        ESCAPE ROUTINE
+2560      END-IF
+2570      IF (*PF-KEY = 'PF12' OR= 'CLR')
+2580        CALLNAT 'UTILSTOP'
+2590      END-IF
+2600      /*
+2610      RESET J
+2620      RESET #NAME(*) #TYPE(*) #SIZE(*) #DESCRIPTION(*) #NAME-RES(*)
+2630    END-IF
+2640  END-IF
+2650END-READ
+2660*
+2670IF J > 0
+2680  INPUT (IP=OFF AD=OI)
+2690    01T *TIMX  (AD=OTD)
+2700    21T '***** NATURAL 6.3.7 ENHANCEMENTS *****'
+2710    70T *DATX  (DF=L AD=OTD)
+2720    /
+2730    01T 'User'
+2740    06T *USER  (AD=OILT)
+2750    27T '- New Adabas Data Types -'(I)
+2760    64T 'Program'
+2770    72T *PROGRAM (AD=OI)
+2780    ///
+2790    02T 'Read large object field DOCUMENT on the database with DDM '-
+2800    'EMPLOYEES-V2009.' (I)
+2810    ///
+2820    05T 'Name' 21T 'Type' 29T 'Size'
+2830    36T 'Description' 59T 'Saved as'
+2840    //
+2850    05T #NAME(1)(AL=15) #TYPE(1) #SIZE(1)(AD=R)
+2860    3X #DESCRIPTION(1)(AL=21) 2X #NAME-RES(1)(AL=20)
+2870    /
+2880    05T #NAME(2)(AL=15) #TYPE(2) #SIZE(2)(AD=R)
+2890    3X #DESCRIPTION(2)(AL=21) 2X #NAME-RES(2)(AL=20)
+2900    /
+2910    05T #NAME(3)(AL=15) #TYPE(3) #SIZE(3)(AD=R)
+2920    3X #DESCRIPTION(3)(AL=21) 2X #NAME-RES(3)(AL=20)
+2930    /
+2940    05T #NAME(4)(AL=15) #TYPE(4) #SIZE(4)(AD=R)
+2950    3X #DESCRIPTION(4)(AL=21) 2X #NAME-RES(4)(AL=20)
+2960    /
+2970    05T #NAME(5)(AL=15) #TYPE(5) #SIZE(5)(AD=R)
+2980    3X #DESCRIPTION(5)(AL=21) 2X #NAME-RES(5)(AL=20)
+2990    /
+3000    05T #NAME(6)(AL=15) #TYPE(6) #SIZE(6)(AD=R)
+3010    3X #DESCRIPTION(6)(AL=21) 2X #NAME-RES(6)(AL=20)
+3020    /
+3030    05T #NAME(7)(AL=15) #TYPE(7)#SIZE(7)(AD=R)
+3040    3X #DESCRIPTION(7)(AL=21) 2X #NAME-RES(7)(AL=20)
+3050    /
+3060    05T #NAME(8)(AL=15) #TYPE(8) #SIZE(8)(AD=R)
+3070    3X #DESCRIPTION(8)(AL=21) 2X #NAME-RES(8)(AL=20)
+3080    /
+3090    05T #NAME(9)(AL=15) #TYPE(9) #SIZE(9)(AD=R)
+3100    3X #DESCRIPTION(9)(AL=21) 2X #NAME-RES(9)(AL=20)
+3110    /
+3120    05T #NAME(10)(AL=15) #TYPE(10) #SIZE(10)(AD=R)
+3130    3X #DESCRIPTION(10)(AL=21) 2X #NAME-RES(10)(AL=20)
+3140  /*
+3150  IF *PF-KEY = 'PF3'
+3160    ESCAPE ROUTINE
+3170  END-IF
+3180  IF (*PF-KEY = 'PF12' OR= 'CLR')
+3190    CALLNAT 'UTILSTOP'
+3200  END-IF
+3210END-IF
+3220*
+3230NEWPAGE
+3240*
+3250* List all resources Document-* in library SYSEXV (USR4215N)
+3260*
+3270P-LIBRARY-DBID         := 0
+3280P-LIBRARY-FNR          := 0
+3290P-LIBRARY-PASSWORD     := ' '
+3300P-LIBRARY-CIPHER       := ' '
+3310P-LIBRARY              := #LIBRARY
+3320P-RESOURCE-NAME-RANGE  := 'Document-*'
+3330P-RESOURCE-TYPE-RANGE  := 'PDF'
+3340P-OBJECT-NAME-RANGE    := '*'
+3350P-OBJECT-DATE-RANGE    := '*'
+3360P-OBJECT-TIME-RANGE    := '*'
+3370P-OBJECT-USER-ID-RANGE := '*'
+3380P-OBJECT-VERSION-RANGE := '*'
+3390P-FUNCTION := 'S'
+3400*
+3410* Read resource for additional information (USR4208N)
+3420*
+3430RESOURCE-FUNCTION := 'R'             /* Read resource
+3440LIBRARY-NAME      := #LIBRARY
+3450*
+3460RESET J
+3470RESET #NAME(*) #TYPE(*) #SIZE(*) #NAME-RES(*)
+3480*
+3490REPEAT
+3500  /*
+3510  /* List all resources in library SYSEXV
+3520  /*
+3530  USR4215N-ADD-PARA-VERSION := 0
+3540  CALLNAT 'USR4215N' USR4215N-PARA
+3550    USR4215N-ADDITIONAL-PARAMETERS (*)
+3560  /*
+3570  IF P-RETURN-CODE NE 0
+3580    INPUT (AD=O LS=80 IP=OFF)
+3590      / 'Return Code' P-RETURN-CODE (NL=5)
+3600      'received from USR4215N'
+3610      / 'Message:'
+3620      / P-MESSAGE-LINE
+3630    ESCAPE BOTTOM
+3640  END-IF
+3650  /*
+3660  FOR IX = 1 TO P-NUMBER-RESOURCE-FOUND
+3670    /*
+3680    /* Read type, size etc. of resource
+3690    /*
+3700    MOVE P-RESOURCE-LIST-RESOURCE-NAME (IX) TO RESOURCE-NAME
+3710    CALLNAT 'USR4208N' USR4208L USR4208N.EXTENDED-DATA (*)
+3720      NAD-MSG  NAD-FLD
+3730    /*
+3740    IF MSG-NR NE 0
+3750      WRITE (AD=LI)
+3760        / 'Message number ....' NAD-MSG.MSG-NR
+3770        / 'Message ...........' NAD-MSG.MSG (AL=59)
+3780        / 'Message type ......' NAD-MSG.MSG-TYPE
+3790        / 'Message data ......' NAD-MSG.MSG-DATA (1:3)
+3800        // 'Field structure ...' NAD-FLD.FIELD-STRUCTURE
+3810        / 'Field name ........' NAD-FLD.FIELD-NAME
+3820        / 'Field position ....' NAD-FLD.FIELD-POSITION
+3830        / 'Field index .......' NAD-FLD.FIELD-INDEX1
+3840        NAD-FLD.FIELD-INDEX2
+3850    END-IF
+3860    /*
+3870    ADD 1 TO J
+3880    MOVE P-RESOURCE-LIST-RESOURCE-NAME (IX) TO #NAME-RES (J)
+3890    MOVE RD-RESOURCE-TYPE                   TO #TYPE-RES (J)
+3900    MOVE RD-RESOURCE-SIZE                   TO #SIZE (J)
+3910    /*
+3920    IF J = 10
+3930      INPUT (IP=OFF AD=OI)
+3940        01T *TIMX  (AD=OTD)
+3950        21T '***** NATURAL 6.3.7 ENHANCEMENTS *****'
+3960        70T *DATX  (DF=L AD=OTD)
+3970        /
+3980        01T 'User'
+3990        06T *USER  (AD=OILT)
+4000        27T '- New Adabas Data Types -'(I)
+4010        64T 'Program'
+4020        72T *PROGRAM (AD=OI)
+4030        ///
+4040        02T 'List all resources Document-* of type PDF in the '-
+4050        'library SYSEXV.' (I)
+4060        ///
+4070        05T 'Resource Name'
+4080        41T 'Type' 50T 'Size'
+4090        //
+4100        05T #NAME-RES(1)(AL=35)
+4110        41T #TYPE-RES(1) #SIZE(1)(AD=R)
+4120        /
+4130        05T #NAME-RES(2)(AL=35)
+4140        #TYPE-RES(2) #SIZE(2)(AD=R)
+4150        /
+4160        05T #NAME-RES(3)(AL=35)
+4170        #TYPE-RES(3) #SIZE(3)(AD=R)
+4180        /
+4190        05T #NAME-RES(4)(AL=35)
+4200        #TYPE-RES(4) #SIZE(4)(AD=R)
+4210        /
+4220        05T #NAME-RES(5)(AL=35)
+4230        #TYPE-RES(5) #SIZE(5)(AD=R)
+4240        /
+4250        05T #NAME-RES(6)(AL=35)
+4260        #TYPE-RES(6) #SIZE(6)(AD=R)
+4270        /
+4280        05T #NAME-RES(7)(AL=35)
+4290        #TYPE-RES(7) #SIZE(7)(AD=R)
+4300        /
+4310        05T #NAME-RES(8)(AL=35)
+4320        #TYPE-RES(8) #SIZE(8)(AD=R)
+4330        /
+4340        05T #NAME-RES(9)(AL=35)
+4350        #TYPE-RES(9) #SIZE(9)(AD=R)
+4360        /
+4370        05T #NAME-RES(10)(AL=35)
+4380        #TYPE-RES(10) #SIZE(10)(AD=R)
+4390        /
+4400      RESET J
+4410      RESET #NAME-RES (*) #TYPE-RES (*) #SIZE(*)
+4420      /*
+4430      IF *PF-KEY = 'PF3'
+4440        ESCAPE ROUTINE
+4450      END-IF
+4460      IF (*PF-KEY = 'PF12' OR= 'CLR')
+4470        CALLNAT 'UTILSTOP'
+4480      END-IF
+4490    END-IF
+4500  END-FOR
+4510  IF P-NUMBER-RESOURCE-FOUND < 10
+4520    ESCAPE BOTTOM
+4530  END-IF
+4540  P-FUNCTION := 'R'
+4550END-REPEAT
+4560*
+4570*
+4580IF J > 0
+4590  INPUT (IP=OFF AD=OI)
+4600    01T *TIMX  (AD=OTD)
+4610    21T '***** NATURAL 6.3.7 ENHANCEMENTS *****'
+4620    70T *DATX  (DF=L AD=OTD)
+4630    /
+4640    01T 'User'
+4650    06T *USER  (AD=OILT)
+4660    27T '- New Adabas Data Types -'(I)
+4670    64T 'Program'
+4680    72T *PROGRAM (AD=OI)
+4690    ///
+4700    02T 'List all resources Document-* of type PDF in the '-
+4710    'library SYSEXV.' (I)
+4720    ///
+4730    05T 'Resource Name'
+4740    46T 'Type' 55T 'Size'
+4750    //
+4760    05T #NAME-RES(1)(AL=40)
+4770    #TYPE-RES(1) #SIZE(1)(AD=R)
+4780    /
+4790    05T #NAME-RES(2)(AL=40)
+4800    #TYPE-RES(2) #SIZE(2)(AD=R)
+4810    /
+4820    05T #NAME-RES(3)(AL=40)
+4830    #TYPE-RES(3) #SIZE(3)(AD=R)
+4840    /
+4850    05T #NAME-RES(4)(AL=40)
+4860    #TYPE-RES(4) #SIZE(4)(AD=R)
+4870    /
+4880    05T #NAME-RES(5)(AL=40)
+4890    #TYPE-RES(5) #SIZE(5)(AD=R)
+4900    /
+4910    05T #NAME-RES(6)(AL=40)
+4920    #TYPE-RES(6) #SIZE(6)(AD=R)
+4930    /
+4940    05T #NAME-RES(7)(AL=40)
+4950    #TYPE-RES(7) #SIZE(7)(AD=R)
+4960    /
+4970    05T #NAME-RES(8)(AL=40)
+4980    #TYPE-RES(8) #SIZE(8)(AD=R)
+4990    /
+5000    05T #NAME-RES(9)(AL=40)
+5010    #TYPE-RES(9) #SIZE(9)(AD=R)
+5020    /
+5030    05T #NAME-RES(10)(AL=40)
+5040    #TYPE-RES(10) #SIZE(10)(AD=R)
+5050END-IF
+5060IF *PF-KEY = 'PF3'
+5070  ESCAPE ROUTINE
+5080END-IF
+5090IF (*PF-KEY = 'PF12' OR= 'CLR')
+5100  CALLNAT 'UTILSTOP'
+5110END-IF
+5120*
+5130END

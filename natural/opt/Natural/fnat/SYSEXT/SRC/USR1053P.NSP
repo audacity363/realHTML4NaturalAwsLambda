@@ -1,0 +1,33 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1053N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR1053L
+0070   2 INPUTS
+0080     3 ENV-VARIABLE    (A80)
+0090   2 OUTPUTS
+0100     3 CHAR-STRING     (A253)
+0110     3 RESPONSE        (I04)
+0120END-DEFINE
+0130/*
+0140SET KEY ALL
+0150SET CONTROL 'L'        /* Accept lower case
+0160/*
+0170ENV-VARIABLE := 'NATROOT'
+0180/*
+0190REPEAT
+0200  INPUT (AD=OIL IP=OFF)
+0210      'Get the value of an environment variable:' (I)
+0220    / '-' (41) (I) /
+0230    / 'Environment variable ..' ENV-VARIABLE (AD=MIW'_' AL=32)
+0240    / 'Character string ......' CHAR-STRING (AL=55)
+0250   // 'Response ..............' RESPONSE
+0260  /*
+0270  IF *PF-KEY NE 'ENTR'
+0280    ESCAPE ROUTINE
+0290  END-IF
+0300  /*
+0310  CALLNAT 'USR1053N'  USR1053L
+0320END-REPEAT
+0330END

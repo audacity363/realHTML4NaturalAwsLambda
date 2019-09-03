@@ -1,0 +1,66 @@
+0010Call external XSLT processor
+0020.
+0030Documentation ......... USR6001T    /*  Text object
+0040Interface ............. USR6001N    /*  Cataloged subprogram
+0050Example Program ....... USR6001P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. RUNTIME
+0100.
+0110Keywords .............. XML, XSLT
+0120.
+0130Function .............. Call an external XSLT processor.
+0140.
+0150.
+0160Parameters
+0170----------
+0180Define the following parameters with the DEFINE DATA statement:
+0190.
+020001 USR6001L
+0210  02 XML         (A) DYNAMIC /* XML Document
+0220  02 XSL         (A) DYNAMIC /* XSL Stylesheet
+0230  02 RESULT      (A) DYNAMIC /* Resulting Document
+0240  02 RESPONSE    (I4)        /* Error Response from the XSLT processor
+0250.
+0260.
+0270Interface Call
+0280--------------
+0290Use the interface with the CALLNAT statement:
+0300.
+0310CALLNAT 'USR6001N' USR6001L
+0320.
+0330.
+0340Using the Application Programming Interface:
+0350--------------------------------------------
+0360####################################################################
+0370The interface 'USR6001N' must be copied to the current application.
+0380####################################################################
+0390USR6001N calls an external XSLT processor. With Natural 61 the XALAN
+0400XSLT processor from the Apache Group is called. For further Information
+0410about the used XSLT see http://xml.apache.org/xalan-c/ for the current
+0420used version see release notes of Natural.
+0430.
+0440For further information about XSL style sheets and XSL style sheet
+0450tranformations see: http://www.w3.org/Style/XSL/
+0460.
+0470The parameters listed above must be defined via DEFINE DATA in
+0480structured mode or via RESET statement in reporting mode.
+0490.
+0500The following variables have to be filled before invoking the interface:
+0510.
+0520XML ...
+0530  A valid XML Document
+0540.
+0550XSL ...
+0560  A valid XSL Style Sheet.
+0570.
+0580The following variables will be returned:
+0590.
+0600RESULT ...
+0610  The resulting document of the conversion or a description of the
+0620  occured error.
+0630RESPONSE
+0640  0000 ...  Conversion Done
+0650.
+0660***** End of description *****

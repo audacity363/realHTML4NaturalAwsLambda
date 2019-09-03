@@ -1,0 +1,138 @@
+0010DB: 148 FILE: 012  - READ-SPOOL                       DEFAULT SEQUENCE:
+0020                              Cataloged by STL      on 2012-08-08 15:08:15
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2012-08-08 14:40:03
+0080*      by user ESY352
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to MVS and VSE
+0230*
+0240  1 A1 JOB-NAME                          A    8    D Name of job.
+0250*      Name of job.
+0260  1 A2 JOB-NUMBER                        N  7.0    D Job number assigned
+0270*      Job number assigned by the
+0280*      spooling system.
+0290  1 JA JOB-ID                            A    8    D Job number or TSN of
+0300*      Job number or TSN of job.
+0310  1 A4 RECORD-NUMBER                     N  9.0    D Relative record numb
+0320*      Relative record number from
+0330*      start of data set.
+0340  1 A5 TYPE                              A    2    D MVS spool data set t
+0350*      MVS spool data set type:
+0360*      SI  SYSIN data
+0370*      JL  input JCL
+0380*      SM  system messages
+0390*      SO  SYSOUT data
+0400*      CC  summary of job steps
+0410*      and completion codes
+0420*      VSE spool data set type:
+0430*      RD reader queue
+0440*      LS list queue
+0450*      PU punch queue
+0460*      X  transmit queue
+0470*      CC summary of job steps
+0480*      and completion codes
+0490  1 A6 RECORD-LENGTH                     N  5.0    D Length of spool reco
+0500*      Length of spool record.
+0510  1 A7 RECORD                            A  253    D Spool record.
+0520*      Spool record.
+0530  1 A8 POSITION                          B    1    D Offset in spool reco
+0540*      Offset in spool record
+0550*      (RECORD will contain spool
+0560*      record starting at this
+0570*      offset).
+0580  1 AG DATA-SET-KEY                      N 11.0    D unique data set iden
+0590*      unique data set identification
+0600*      which offers much faster
+0610*      access than the data set
+0620*      number. The data set key can
+0630*      be obtained from the
+0640*      SPOOL-FILES view.
+0650  1 AS SCAN                              A    3    D If YES is given, the
+0660*      If YES is given, the first
+0670*      record which meets the
+0680*      selection criteria and all
+0690*      following records are
+0700*      returned.
+0710  1 AT SCAN-LIMIT                        N  7.0    D Specifies the maximu
+0720*      Specifies the maximum number
+0730*      of records to scan before a
+0740*      record is selected.
+0750*      If the limit is reached,
+0760*      error-code 533 and the
+0770*      appropriate text is returned.
+0780  1 AU SCAN-TYPE                         A    1    D If 'A' is given, an
+0790*      If 'A' is given, an absolute
+0800*      scan will be performed.
+0810*      Wild cards '*' and '_' are
+0820*      treated as normal characters.
+0830  1 AV SCAN-LENGTH                       N  3.0    D Specifies the length
+0840*      Specifies the length of the
+0850*      scan string in field 'RECORD'.
+0860*      Only relevant if SCAN-TYPE=A.
+0870  1 AW SCAN-COLUMN-FROM                  N  3.0    D Specifies the column
+0880*      Specifies the column number
+0890*      where the scan should start.
+0900*      Default is 1.
+0910*      Only relevant if SCAN-TYPE=A.
+0920  1 AX SCAN-COLUMN-TO                    N  3.0    D Specifies the column
+0930*      Specifies the column number
+0940*      where the scan should end.
+0950*      Default is the end of the
+0960*      record.
+0970*      Only relevant if SCAN-TYPE=A.
+0980  1 AY TIME-LIMIT                        N  5.0    D Specifies the maximu
+0990*      Specifies the maximum number
+1000*      of seconds to scan for a given
+1010*      record.
+1020  1 AK SEGMENT-NUMBER                    N  3.0    D Segment number of sp
+1030*      Segment number of spool record
+1040*      to be retrieved, if output
+1050*      segmented.
+1060*
+1070*      MVS fields
+1080*
+1090  1 A3 DATA-SET                          N  5.0    D Requested data set n
+1100*      Requested data set number.
+1110  1 SL SEGMENT-LENGTH                    N  3.0    D Length of segment.
+1120*      Length of segment.
+1130  1 V0 DIRECTION                         A    1    D Can be used with SCA
+1140*      Can be used with SCAN='YES'
+1150*      to search backwards.
+1160*
+1170*      VSE fields
+1180*
+1190  1 AH CONTROL-RECORDS                   A    3    D Control records to b
+1200*      Control records to be
+1210*      returned :
+1220*      YES  (Default)
+1230*      NO
+1240  1 AI RECORD-TYPE                       B    1    D Record type of spool
+1250*      Record type of spool record.
+1260*      Relevant if CONTROL-RECORDS =
+1270*      'YES'. This field will contain
+1280*      the type of record returned :
+1290*      X'00' - Normal data record
+1300*      X'05' - Control command
+1310*      record
+1320  1 AJ INTERNAL-RECORD-NUMBER            N  7.0    D Internal record numb
+1330*      Internal record number as
+1340*      returned by POWER.
+1350*
+1360*      End of READ-SPOOL
+1370*
+1380******DDM OUTPUT TERMINATED******

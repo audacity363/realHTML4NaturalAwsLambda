@@ -1,0 +1,60 @@
+0010Get or set Request Document timeout value (RQTOUT)
+0020.
+0030Documentation ......... USR6307T    /*  Text object
+0040Interface ............. USR6307N    /*  Cataloged subprogram
+0050Example Program ....... USR6307P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. PROFILE PARAMETERS
+0100.
+0110Keywords .............. +NEW-NAT-6.3.11,
+0120                        GET, SET, REQUEST DOCUMENT, TIMEOUT
+0130.
+0140Function .............. Get or set the Natural profile parameter
+0150                        RQTOUT. It can be used to set a timeout limit
+0160                        for the execution of the REQUEST DOCUMENT
+0170                        statement, so that a request can be
+0180                        terminated when the specified wait time was
+0190                        exceeded.
+0200                        Value range:    0 - 65535 seconds,
+0210                                        0 means unlimited
+0220                        Default value:  0 seconds
+0230.
+0240.
+0250Parameters
+0260----------
+0270Define the following parameters with the DEFINE DATA statement:
+0280.
+0290 1 USR6307-PARMS
+0300   2 FUNCTION (A1)         /* G=Get, S=Set
+0310   2 TIMEOUT  (I4)         /* Timeout value in seconds: 0-65535
+0320                           /*  0 means unlimited
+0330   2 RESPONSE (I4)         /* Response code. Possible values are:
+0340                           /*  0 - Ok
+0350                           /*  1 - Parameter error
+0360                           /*  2 - Error from interface
+0370   2 MSG      (A) DYNAMIC  /* Explains an error situation.
+0380.
+0390.
+0400Interface Call
+0410--------------
+0420Use the interface with the CALLNAT statement:
+0430.
+0440CALLNAT 'USR6307N' USR6307-PARMS
+0450.
+0460.
+0470Using the Application Programming Interface:
+0480--------------------------------------------
+0490Copy the subprogram USR6307N to the library SYSTEM or the steplib
+0500library respectively, or to the required library.
+0510.
+0520Following variables have to be filled before invoking the interface:
+0530.
+0540FUNCTION
+0550  'G' or 'S'
+0560.
+0570TIMEOUT
+0580  In case of FUNCTION='S' a value between 0 and 65535.
+0590.
+0600***** End of description *****

@@ -1,0 +1,264 @@
+0010/*  EXAM-HKX - HELP Keywords (individual list ...)
+0020***********************************************************************
+0030DEFINE DATA
+0040LOCAL
+0050  01 CMD VIEW OF COMMAND
+0060     02 PROCESSOR-NAME
+0070     02 COMMAND-LINE      (01:08)
+0080     02 NATURAL-ERROR
+0090     02 RETURN-CODE
+0100     02 RESULT-FIELD      (01:12)
+0110     02 GETSET-FIELD-NAME
+0120     02 GETSET-FIELD-VALUE
+0130LOCAL
+0140  01 KW VIEW OF COMMAND
+0150     02 PROCESSOR-NAME
+0160     02 COMMAND-LINE      (01:08)
+0170     02 NATURAL-ERROR
+0180     02 RETURN-CODE
+0190     02 RESULT-FIELD      (01:09)
+0200     02 GETSET-FIELD-NAME
+0210     02 GETSET-FIELD-VALUE
+0220  01 MSG                  (A72)
+0230  01 MAX-ARR              (I01) CONST <12> /* CMD.RESULT-FIELD (max)
+0240  01 IY                   (I01)
+0250  01 NO                   (N03)
+0260  01 PROC-NAME            (A08)
+0270  01 INTERNAL             (A03)
+0280  01 PREFIX1              (A01)
+0290  01 PREFIX2              (A01)
+0300  01 HEX1                 (A01)
+0310  01 HEX2                 (A01)
+0320  01 KEYW                 (A16)
+0330  01 REDEFINE KEYW
+0340     02 KEYW-B            (A01/1:16)
+0350  01 LINE                 (A72)
+0360  01 REDEFINE LINE
+0370     02 L-KEYWORD         (A16)
+0380     02 FILLER            16X
+0390     02 L-IKN             (N04)
+0400     02 FILLER            01X
+0410     02 L-MIN             (A03)
+0420     02 FILLER            01X
+0430     02 L-MAX             (A03)
+0440     02 FILLER            01X
+0450     02 L-TYPE            (A02)
+0460     02 FILLER            01X
+0470     02 L-TEXT            (A16)
+0480  /*
+0490  01 #KW-MODE             (A03)  /*  K, S, IKN (Keyword, Syno, IKN)
+0500  01 #KW-TYPES            (A01)  /*  *, 1, 2, 3, P.
+0510  01 #KW-SYNO             (A01)  /*  S, X
+0520  01 #KW-IKN              (A01)  /*  I
+0530  01 #KW-UPPER            (A01)  /*  T
+0540  01 #KW-INTERNAL         (A01)  /*  A
+0550  01 #KW-BEHIND           (A01)  /*  +
+0560  01 #KW-START            (A16)  /*
+0570END-DEFINE
+0580DEFINE WINDOW PARMS
+0590  SIZE 13 * 70
+0600  BASE 02 / 02
+0610  TITLE ' (HKX) Individual list of Keywords'
+0620  CONTROL SCREEN
+0630  FRAMED POSITION OFF
+0640SET KEY ALL
+0650/**********************************************************************
+0660/* Ask for currently active processor name:
+0670/*
+0680PROCESS CMD ACTION GET USING
+0690  CMD.PROCESSOR-NAME = ' '
+0700  CMD.GETSET-FIELD-NAME = 'NAME&'
+0710/*
+0720MOVE CMD.GETSET-FIELD-VALUE TO PROC-NAME
+0730/*
+0740IF CMD.NATURAL-ERROR NE 0
+0750  CALLNAT 'EXAM-ERR' CMD.NATURAL-ERROR MSG
+0760  WRITE MSG (AD=I)
+0770  RESET CMD.NATURAL-ERROR MSG
+0780  ESCAPE ROUTINE
+0790END-IF
+0800/**********************************************************************
+0810PROCESS CMD ACTION GET USING
+0820  CMD.PROCESSOR-NAME = ' '
+0830  CMD.GETSET-FIELD-NAME = 'PREFIX1'
+0840MOVE CMD.GETSET-FIELD-VALUE TO PREFIX1
+0850/**********************************************************************
+0860PROCESS CMD ACTION GET USING
+0870  CMD.PROCESSOR-NAME = ' '
+0880  CMD.GETSET-FIELD-NAME = 'PREFIX2'
+0890MOVE CMD.GETSET-FIELD-VALUE TO PREFIX2
+0900/**********************************************************************
+0910PROCESS CMD ACTION GET USING
+0920  CMD.PROCESSOR-NAME = ' '
+0930  CMD.GETSET-FIELD-NAME = 'HEX1'
+0940MOVE CMD.GETSET-FIELD-VALUE TO HEX1
+0950/**********************************************************************
+0960PROCESS CMD ACTION GET USING
+0970  CMD.PROCESSOR-NAME = ' '
+0980  CMD.GETSET-FIELD-NAME = 'HEX2'
+0990MOVE CMD.GETSET-FIELD-VALUE TO HEX2
+1000/********************************************************************
+1010/* Some defaults:
+1020MOVE 'K' TO #KW-MODE
+1030MOVE '*' TO #KW-TYPES
+1040MOVE 'S' TO #KW-SYNO
+1050MOVE 'I' TO #KW-IKN
+1060MOVE '+' TO #KW-BEHIND
+1070MOVE 'T' TO #KW-UPPER
+1080MOVE 'A' TO #KW-INTERNAL
+1090/********************************************************************
+1100REPEAT
+1110  INPUT WINDOW = 'PARMS' (AD=MIT' ' IP=OFF  ) WITH TEXT MSG
+1120    / 'Processor name ...................' PROC-NAME (AD=OI)
+1130    / 'Help for keywords ................' #KW-MODE
+1140    / 'Type of keywords .................' #KW-TYPES
+1150    / 'Return Synonyms, too .............' #KW-SYNO
+1160    / 'Return IKN, too ..................' #KW-IKN
+1170    / 'Start BEHIND given keyword .......' #KW-BEHIND
+1180    / 'Upper case for abbrev. keywords ..' #KW-UPPER
+1190    / 'Return internal keywords, too ....' #KW-INTERNAL
+1200    / 'Start Value ......................' #KW-START
+1210  /*******************************************************************
+1220  IF *PF-KEY NE 'ENTR'
+1230    ESCAPE BOTTOM
+1240  END-IF
+1250  RESET NO
+1260  /*******************************************************************
+1270  DECIDE ON FIRST #KW-MODE
+1280    VALUE ' '   MOVE 'K' TO #KW-MODE  /*  assume a default ...
+1290    VALUE 'K'   IGNORE  /*  Return the list of keywords
+1300    VALUE 'S'   IGNORE  /*  Return the list of synonyms
+1310    VALUE 'IKN' IGNORE  /*  Translate a given IKN
+1320    NONE  REINPUT FULL 'Enter "K", "S" or "IKN".' MARK *#KW-MODE
+1330  END-DECIDE
+1340  DECIDE ON FIRST #KW-TYPES
+1350    VALUE ' '   MOVE '*' TO #KW-TYPES  /* assume a default ...
+1360    VALUE '*'   IGNORE  /*  All types of keywords
+1370    VALUE '1', '2', '3', 'P' IGNORE
+1380    NONE  REINPUT FULL
+1390          'Enter "*", "1", "2", "3" or "P".' MARK *#KW-TYPES
+1400  END-DECIDE
+1410  DECIDE ON FIRST #KW-SYNO
+1420    VALUE ' '   IGNORE  /*  No Synonyms to be returned
+1430    VALUE 'S'   IGNORE  /*  Synonyms, too.
+1440    VALUE 'X'   IGNORE  /*  Only the synonyms.
+1450    NONE  REINPUT FULL 'Enter "_", "S" or "X".' MARK *#KW-SYNO
+1460  END-DECIDE
+1470  DECIDE ON FIRST #KW-IKN
+1480    VALUE ' '   IGNORE  /*  No IKNs to be returned
+1490    VALUE 'I'   IGNORE  /*  Return IKNs, too.
+1500    NONE  REINPUT FULL 'Enter "_" or "I".' MARK *#KW-IKN
+1510  END-DECIDE
+1520  DECIDE ON FIRST #KW-BEHIND
+1530    VALUE ' '   IGNORE  /*  Start with given start value
+1540    VALUE '+'   IGNORE  /*  Start behind given start value
+1550    NONE  REINPUT FULL 'Enter "_" or "+".' MARK *#KW-BEHIND
+1560  END-DECIDE
+1570  DECIDE ON FIRST #KW-UPPER
+1580    VALUE ' '   IGNORE  /*  Do not translate to upper case
+1590    VALUE 'T'   IGNORE  /*  Translate to upper case
+1600    NONE  REINPUT FULL 'Enter "_" or "T".' MARK *#KW-UPPER
+1610  END-DECIDE
+1620  DECIDE ON FIRST #KW-INTERNAL
+1630    VALUE ' '   IGNORE  /*  Do not return internal keywords
+1640    VALUE 'A'   IGNORE  /*  Return internal keywords, too.
+1650    NONE  REINPUT FULL 'Enter "_" or "A".' MARK *#KW-INTERNAL
+1660  END-DECIDE
+1670  /********************************************************************
+1680  /* Define the  wanted HELP:
+1690  /*
+1700  COMPRESS
+1710    #KW-MODE #KW-TYPES #KW-SYNO #KW-IKN
+1720    #KW-BEHIND #KW-UPPER #KW-INTERNAL
+1730      TO CMD.COMMAND-LINE (1) LEAVING NO   /*  Options
+1740  /*
+1750  IF #KW-START = ' '
+1760    MOVE ALL H'00' TO COMMAND-LINE (2)   /*  Start value
+1770  ELSE
+1780    MOVE #KW-START TO COMMAND-LINE (2)   /*  Start value
+1790  END-IF
+1800  /*
+1810  /******************************************************************
+1820  REP. REPEAT
+1830    /*
+1840    RESET MSG
+1850    /*
+1860    PROCESS CMD ACTION HELP USING
+1870      CMD.PROCESSOR-NAME = PROC-NAME
+1880      CMD.COMMAND-LINE (*) = CMD.COMMAND-LINE (*)
+1890      /*
+1900    RESET CMD.COMMAND-LINE (2)           /*  Old start value
+1910    MOVE ALL CMD.RESULT-FIELD (MAX-ARR)  /*  Take the last line
+1920      TO CMD.COMMAND-LINE (2)            /*  Make it the start value
+1930      UNTIL 16                           /*  do not take the IKN
+1940    EXAMINE CMD.COMMAND-LINE (2)
+1950      TRANSLATE INTO UPPER
+1960    /*
+1970    IF CMD.NATURAL-ERROR > 0
+1980      CALLNAT 'EXAM-ERR' CMD.NATURAL-ERROR MSG
+1990      WRITE MSG (AD=I)
+2000      RESET CMD.NATURAL-ERROR MSG
+2010    END-IF
+2020    /*
+2030    FOR IY 1 MAX-ARR
+2040      IF CMD.RESULT-FIELD (IY) = ' '
+2050        ESCAPE BOTTOM (REP.)
+2060      END-IF
+2070      MOVE CMD.RESULT-FIELD (IY) TO LINE
+2080      PERFORM KEYWORD-INFO
+2090      ADD 1 TO NO
+2100      WRITE NO (SG=F)  L-KEYWORD L-IKN (SG=F)
+2110        L-MIN L-MAX L-TYPE ' ' INTERNAL MSG (AL=7) L-TEXT
+2120      RESET MSG
+2130    END-FOR
+2140    /*
+2150    IF CMD.COMMAND-LINE (1) NE SCAN '+'
+2160      WRITE '-' (64) 'new page'
+2170    END-IF
+2180    /*
+2190  END-REPEAT
+2200END-REPEAT
+2210ESCAPE ROUTINE
+2220/******************************************************************
+2230DEFINE KEYWORD-INFO
+2240  RESET INTERNAL
+2250  KEYW := L-KEYWORD
+2260  EXAMINE KEYW TRANSLATE INTO UPPER
+2270  IF KEYW-B (1) = PREFIX1
+2280    MOVE HEX1 TO KEYW-B (1)
+2290    INTERNAL := 'Yes'
+2300  ELSE
+2310    IF KEYW-B (1) = PREFIX2
+2320      MOVE HEX2 TO KEYW-B (1)
+2330      INTERNAL := 'Yes'
+2340    END-IF
+2350  END-IF
+2360  KW.COMMAND-LINE (1) := KEYW
+2370  DECIDE ON FIRST L-IKN
+2380    VALUE 1000 : 1999   KW.COMMAND-LINE (2) := '1'
+2390    VALUE 2000 : 2999   KW.COMMAND-LINE (2) := '2'
+2400    VALUE 3000 : 3999   KW.COMMAND-LINE (2) := '3'
+2410    NONE                KW.COMMAND-LINE (2) := ' '
+2420  END-DECIDE
+2430  PROCESS KW ACTION TEXT USING
+2440    KW.PROCESSOR-NAME = PROC-NAME
+2450    KW.COMMAND-LINE (*) = KW.COMMAND-LINE (*)
+2460  /*************************************
+2470  IF KW.NATURAL-ERROR > 0
+2480    CALLNAT 'EXAM-ERR' KW.NATURAL-ERROR MSG
+2490  END-IF
+2500  MOVE KW.RESULT-FIELD (1) TO L-TEXT
+2510  MOVE KW.RESULT-FIELD (6) TO L-MIN
+2520  MOVE KW.RESULT-FIELD (7) TO L-MAX
+2530  MOVE KW.RESULT-FIELD (8) TO L-TYPE
+2540  /*************************************
+2550END-SUBROUTINE
+2560/******************************************************************
+2570WRITE TITLE LEFT
+2580    'Help for Keywords in Processor' CMD.PROCESSOR-NAME (AD=I)
+2590    'with options =' CMD.COMMAND-LINE (1) (AD=I AL=08)
+2600  / ' '
+2610  / 'No. Keyword          IKN  Min Max Type Int Error   Text'
+2620  / '--- ---------------- ---- --- --- ---- --- -------' '-' (16)
+2630/******************************************************************
+2640END

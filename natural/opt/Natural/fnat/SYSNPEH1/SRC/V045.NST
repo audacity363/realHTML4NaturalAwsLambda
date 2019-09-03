@@ -1,0 +1,14 @@
+0010&H View CHECK-SECURTIY
+0020&L
+0030&L
+0040#Purpose@: Check security information for given facilities and
+0050&L         entities
+0060#OpSys@  : z/OS
+0070&L
+0080&L
+0090#Usage@  : This view retrieves information from the security system
+0100           like RACF, ACF2 or TOP-SECRET and allows the programmer
+0110           to check for a security-violation in an application
+0120&L
+0130#Notes@  :
+0140

@@ -1,0 +1,50 @@
+0010/*  EXAM - Menu
+0020/**********************************************************************
+0030DEFINE DATA
+0040LOCAL
+0050  1 PGM (A08)
+0060  1 REDEFINE PGM
+0070    2 FILLER 5X
+0080    2 CMD (A01)
+0090  1 IX (I1)
+0100  1 MOD (C)
+0110END-DEFINE
+0120DEFINE WINDOW EXAM
+0130  SIZE 17 * 48
+0140  BASE IX / IX
+0150  TITLE ' Demonstrate PROCESS COMMAND Statement'
+0160  CONTROL SCREEN
+0170  FRAMED POSITION OFF
+0180SET KEY ALL
+0190REPEAT
+0200  MOVE 'EXAM-' TO PGM
+0210  IX := *LEVEL * 2
+0220  /*****************************************************************
+0230  INPUT WINDOW = 'EXAM' (AD=MIT'_' IP=OFF CV=MOD  ) /
+0240    08T   'Code '(I)  'Function           ' (I) //
+0250    08T   ' O   '  'Open A Processor   ' /
+0260    08T   ' G   '  'GET                ' /
+0270    08T   ' S   '  'SET                ' /
+0280    08T   ' T   '  'TEXT               ' /
+0290    08T   ' H   '  'HELP               ' /
+0300    08T   ' C   '  'CHECK              ' /
+0310    08T   ' X   '  'EXEC               ' /
+0320    08T   ' Q   '  'CLOSE              ' /
+0330    08T   ' .   '  'Exit               ' //
+0340    09T    CMD
+0350  /**************************************************
+0360  IF *PF-KEY NE 'ENTR'
+0370  OR MOD NOT MODIFIED
+0380    ESCAPE ROUTINE
+0390  END-IF
+0400  /*
+0410  DECIDE ON FIRST CMD
+0420    VALUE '.'
+0430      ESCAPE ROUTINE
+0440    VALUE 'O', 'G', 'S', 'T', 'H', 'C', 'X', 'Q'
+0450      FETCH RETURN PGM
+0460    NONE
+0470      REINPUT 'Please enter valid code.'
+0480  END-DECIDE
+0490END-REPEAT
+0500END

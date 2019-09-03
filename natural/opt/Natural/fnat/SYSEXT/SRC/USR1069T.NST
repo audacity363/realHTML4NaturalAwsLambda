@@ -1,0 +1,140 @@
+0010Get or set a printer configuration
+0020.
+0030Documentation ......... USR1069T    /*  Text object
+0040Interface ............. USR1069N    /*  Cataloged subprogram
+0050Example Program ....... USR1069P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. WORK FILE / PRINTER
+0100.
+0110Keywords .............. +MOD-NAT-8.4.1
+0120                        GET, PRINTER, SET
+0130.
+0140Function .............. With this interface you can retrieve or modify
+0150                        the printer configuration. Up to 31 logical
+0160                        printers can be assigned to physical printers.
+0170                        Hint:
+0180                        A modification of Line Size, Page Size and Max.
+0190                        Pages will have an effect when the interface is
+0200                        executed first.
+0210                        Then the modification applies for programs that
+0220                        are compiled again or for programs that are
+0230                        executed by RUN command afterwards (re-compiled
+0240                        with new settings).
+0250.
+0260.
+0270Parameters
+0280----------
+0290Define the following parameters with the DEFINE DATA statement:
+0300.
+0310 1 USR1069L
+0320   2 INPUTS
+0330     3 FUNCTION              (A1)
+0340     3 PRINTER-ID            (I1)
+0350   2 INPUT-OUTPUTS
+0360     3 PHYSICAL-NAME         (A80)
+0370     3 PAGE-SIZE             (I4)
+0380     3 LINE-SIZE             (I4)
+0390     3 MAX-PAGES             (I4)
+0400     3 PRINT-METHOD          (A8)
+0410   2 OUTPUTS
+0420     3 LOGICAL-NAME          (A8)
+0430     3 RESPONSE              (I4)
+0440 /*
+0450 1 USR1069N
+0460   2 VERSION                 (I1)     INIT <2>
+0470   2 OUTPUT-TARGET           (I4)      /* for Version > 0
+0480   2 PHYSICAL-NAME-LONG      (A256)    /* for Version > 1
+0490 1 REDEFINE USR1069N
+0500   2 EXTENDED-PARMS
+0510     3 EXTENDED-DATA         (A01/1:261)
+0520.
+0530.
+0540Interface Call
+0550--------------
+0560Use the interface with the CALLNAT statement:
+0570.
+0580CALLNAT 'USR1069N' USR1069L USR1069N.EXTENDED-PARMS
+0590.
+0600.
+0610Using the Application Programming Interface:
+0620--------------------------------------------
+0630Copy the subprogram USR1069N to the library SYSTEM or the steplib
+0640library respectively, or to the required library.
+0650.
+0660Input ...... 1 FUNCTION (A1)
+0670                     Function code. Possible values are:
+0680                     'G' - Get the configuration for PRINTER-ID
+0690                     'S' - Set the configuration for PRINTER-ID
+0700                     'R' - Reset a printer configuration to the
+0710                           NATPARM assignments
+0720.
+0730Input ...... 1 PRINTER-ID (I1)
+0740                     Number of the logical printer. The PRINTER-ID
+0750                     must be in the range of 1 to 31 and corresponds
+0760                     to the logical device name LPT1 to LPT31.
+0770.
+0780In/Output .. 1 PHYSICAL-NAME (A80)
+0790                     For VERSION = 0 or 1 only:
+0800                     Physical name of the printer. This field will
+0810                     be ignored if you want to set the PRINT-METHOD
+0820                     to 'GUI'.
+0830.
+0840In/Output .. 1 PAGE-SIZE (I4)
+0850                     The page size can be 5 to 250 or 0.
+0860.
+0870In/Output .. 1 LINE-SIZE (I4)
+0880                     The line size can be 35 to 250.
+0890.
+0900In/Output .. 1 MAX-PAGES (I4)
+0910                     The maximum number of output pages can be 1
+0920                     to 99999, whereas 0 is for unlimited.
+0930.
+0940In/Output .. 1 PRINT-METHOD (A8)
+0950                      Print method. Possible values are:
+0960                      'TTY' - TTY-type printer profile
+0970                      'GUI' - GUI-type printer profile
+0980.
+0990Output ..... 1 LOGICAL-NAME (A8)
+1000                     Logical device name (LPT1 to LPT31).
+1010.
+1020Output ..... 1 RESPONSE (I4)
+1030                     Response code. Possible values are:
+1040                        0 - Ok
+1050                        4 - Invalid value for FUNCTION entered
+1060                        8 - Invalid value for PRINTER-ID entered
+1070                       12 - Invalid value for PAGE-SIZE entered
+1080                       16 - Invalid value for LINE-SIZE entered
+1090                       20 - Invalid value for MAX-PAGES entered
+1100                       24 - Invalid value for PRINT-METHOD entered
+1110                       25 - Invalid extension number
+1120                       26 - Invalid extension length
+1130                       27 - Invalid value for OUTPUT-TARGET entered
+1140.
+1150In/Output .. USR1069N.VERSION (I1)
+1160                    Version number of the subprogram.
+1170                    0 is the version number for the original
+1180                    parameter layout. The output-target and the
+1190                    PHYSICAL-NAME-LONG parameters are
+1200                    ignored for version number = 0, the
+1210                    PHYSICAL-NAME-LONG parameter is ignored for
+1220                    version number = 1.
+1230                    With version 2 for the Physical name of the printer
+1240                    the variable PHYSICAL-NAME-LONG is used and no
+1250                    longer PHYSICAL-NAME.
+1260                    2 is the current version number.
+1270.
+1280In/Output .. USR1069N.OUTPUT-TARGET (I4)
+1290                    Output target. Possible values are
+1300                    0 = unknown
+1310                    1 = printer
+1320                    2 = file
+1330.
+1340In/Output .. PHYSICAL-NAME-LONG (A256)
+1350                     For VERSION > 1:
+1360                     Physical name of the printer. This field will
+1370                     be ignored if you want to set the PRINT-METHOD
+1380                     to 'GUI'.
+1390.
+1400*****  End of description  *****

@@ -1,0 +1,14 @@
+0010&H View SYSTEM-COMMAND
+0020&L
+0030&L
+0040#Purpose@: Execute BS2000 Commands.
+0050&L
+0060#OpSys@  : z/OS, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : This view allows you to execute BS2000 commands.
+0100           The example program shows how to fill the view fields to
+0110           issue the command TRANSFER-FILE.
+0120&L
+0130#Notes@  : Using this functionality in multi user mode is only possible
+0140           if security exit USERSSEC is active.

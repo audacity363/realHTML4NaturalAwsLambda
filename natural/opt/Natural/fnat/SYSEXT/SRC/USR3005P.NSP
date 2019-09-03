@@ -1,0 +1,80 @@
+0010/* Process documentation objects
+0020/*
+0030/* This program serves as example how to design a user-defined
+0040/* program to call 'USR3005N'
+0050/**********************
+0060DEFINE DATA LOCAL
+007001 #EXAM (A2)
+008001 MSG(A78)
+009001 #MARK(I2)
+0100END-DEFINE
+0110SET KEY ALL
+0120/*
+0130REPEAT
+0140  /************************************************
+0150  INPUT (AD=OITL' ' IP=F SG=T) WITH TEXT MSG MARK #MARK
+0160   *TIMX 10X 'Demonstrate Predict API USR3005N' (I)
+0170   70T *DATX (EM=YYYY'-'MM'-'DD)
+0180  / *PROGRAM 10X '-' (32) (I) 70T *LIBRARY-ID
+0190  /
+0200  / 18X 'Currently implemented examples             Implemented by'  (I)
+0210  /
+0220  / 18X '1 Get attributes of a single object          USR30051'
+0230  / 18X '2 Get list of defined object types           USR30052'
+0240  / 18X '3 Complex search                             USR30053'
+0250  / 18X '4 Add an file object                         USR30054'
+0260  / 18X '5 Get the field list of a file               USR30055'
+0270  / 18X '6 Search links between objects               USR30056'
+0280  / 18X '7 Get list of defined associations           USR30057'
+0290  / 18X '8 Update single object                       USR30058'
+0300  / 18X '9 Extend field list of a file                USR30059'
+0310  / 18X 'A Update links between objects               USR3005A'
+0320  / 18X 'B Purge objects                              USR3005B'
+0330  / 18X 'C Get list of attribute definiton            USR3005C'
+0340  / 18X 'D Update a single field object               USR3005D'
+0350  / 18X 'E Update the Adabas attributes of a file     USR3005E'
+0360  / 18X '- --------------------------------------     --------'
+0370  / 10X 'Code ..' #EXAM (AD=MLT)
+0380  /*
+0390  IF *PF-KEY NE 'ENTR'
+0400  OR #EXAM = '.'
+0410    STOP
+0420  END-IF
+0430  /*
+0440  RESET MSG #MARK
+0450  DECIDE ON FIRST #EXAM
+0460    VALUE '1'
+0470      FETCH RETURN 'USR30051'
+0480    VALUE '2'
+0490      FETCH RETURN 'USR30052'
+0500    VALUE '3'
+0510      FETCH RETURN 'USR30053'
+0520    VALUE '4'
+0530      FETCH RETURN 'USR30054'
+0540    VALUE '5'
+0550      FETCH RETURN 'USR30055'
+0560    VALUE '6'
+0570      FETCH RETURN 'USR30056'
+0580    VALUE '7'
+0590      FETCH RETURN 'USR30057'
+0600    VALUE '8'
+0610      FETCH RETURN 'USR30058'
+0620    VALUE '9'
+0630      FETCH RETURN 'USR30059'
+0640    VALUE 'A'
+0650      FETCH RETURN 'USR3005A'
+0660    VALUE 'B'
+0670      FETCH RETURN 'USR3005B'
+0680    VALUE 'C'
+0690      FETCH RETURN 'USR3005C'
+0700    VALUE 'D'
+0710      FETCH RETURN 'USR3005D'
+0720    VALUE 'E'
+0730      FETCH RETURN 'USR3005E'
+0740    NONE
+0750      MSG := 'Please select an example.'
+0760      #MARK := 1
+0770  END-DECIDE
+0780  /*
+0790END-REPEAT
+0800END

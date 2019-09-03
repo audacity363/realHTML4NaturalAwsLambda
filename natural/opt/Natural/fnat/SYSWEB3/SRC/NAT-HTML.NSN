@@ -1,0 +1,176 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Utilities
+0030*
+0040*        NAT-HTML
+0050*
+0060* DESCRIPTION
+0070*               RETURN a NATURAL source as HTML page
+0080*
+0090*               The output is text/html
+0100*
+0110* AUTHOR        SAG   28.07.97
+0120*
+0130* Version       8.3
+0140*
+0150* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0160*
+0170* HISTORY
+0180* USER    DATE       REASON
+0190* ------+----------+----------------------------------------------
+0200*       ! --.--.-- !
+0210* ------+----------+----------------------------------------------
+0220*
+0230DEFINE DATA
+0240* ------------------------------------------- standard PDA for HTTP Api
+0250PARAMETER USING W3PARM
+0260* -------------------------------------------- definitions for HTTP Api
+0270LOCAL  USING W3CONST
+0280* -------------------------------------------------- parameter USR1057N
+0290LOCAL USING USR-MSG    /* Data for message exchange
+0300LOCAL USING USR-FLD    /* Description of the field in error
+0310LOCAL
+03201 V                    (I002) CONST <100>
+03301 USR1057L
+0340  2 OBJECT-KEY
+0350    3 LIBRARY          (A008)
+0360    3 OBJECT-NAME      (A032)
+0370    3 OBJECT-TYPE      (A002)
+0380*
+0390  2 INPUTS
+0400    3 OPT-ACCESS       (A001)
+0410    3 OPT-UNUSED-1     (   L)
+0420    3 OPT-UNUSED-2     (A001)
+0430    3 OPT-LINE-NUM     (A001)
+0440    3 OPT-UNUSED-3     (   L)
+0450    3 OPT-REDEF-DIR    (   L)
+0460    3 OPT-UNUSED-4     (A001)
+0470    3 OPT-AMOUNT       (I002)
+0480    3 OPT-LINESIZE     (I002)
+0490*
+0500  2 INPUT-OUTPUTS
+0510    3 INT-HANDLE       (I004)
+0520    3 NEXT-SEQ         (I004)
+0530    3 NEXT-NUM         (I002)
+0540*
+0550  2 OUTPUTS
+0560    3 RETURNED         (I002)
+0570    3 SRC-NUM          (I002/1:V)
+0580    3 SRC-TEXT         (A001/1:V,1:092)
+0590    3 REDEFINE SRC-TEXT
+0600      4 SRC-GROUP      (1:V)
+0610        5 SRC-LINE     (A092)
+0620    3 REDEFINE SRC-TEXT
+0630      4 DIR-OBJNAME    (A032)    /* Object Name
+0640      4 DIR-LIBRARY    (A008)    /* Library ID
+0650      4 DIR-OBJTYPE    (A002)    /* Object Type
+0660      4 DIR-OBJKIND    (A001)    /* Source or Module
+0670      4 DIR-DBID       (A005)    /* DBID of System File
+0680      4 DIR-FNR        (A005)    /* FNR of System File
+0690      4 DIR-DATN       (A008)    /* Date in Format (YYYYMMDD)
+0700      4 DIR-TIMN       (A007)    /* Time in Format (HHIISST)
+0710      4 DIR-USERID     (A008)    /* User ID
+0720      4 DIR-PROGMODE   (A001)    /* Programming Mode
+0730      4 DIR-SRCSIZE    (A010)    /* Source Area Size
+0740      4 DIR-GPSIZE     (A010)    /* Size of Module
+0750      4 DIR-UNIQUE-ID  (A032)    /* Unique ID
+0760      4 DIR-DDM-DBID   (A005)    /* DBID the DDM is cataloged with
+0770      4 DIR-DDM-FNR    (A005)    /* FNR the DDM is cataloged with
+0780      4 DIR-NATVERS    (A004)    /* NATURAL Version
+0790      4 DIR-NATSM      (A002)    /* NATURAL SM Level
+0800      4 DIR-INIT-USER  (A008)    /* Init User ID
+0810      4 DIR-TID        (A008)    /* Terminal ID
+0820      4 DIR-TRANS-NAME (A008)    /* TP Transcation Name
+0830      4 DIR-OPSYS      (A008)    /* Operating System
+0840      4 DIR-TPSYS      (A008)    /* TP System
+0850      4 DIR-USED-GDA   (A008)    /* Used GDA
+0860*
+0870    3 SRC-SEQ          (I004/1:V)
+0880    3 SRC-LONG         (A001/1:V)
+0890*
+09001 USR1057N
+0910  2 VERSION            (I001) INIT <0>
+09201 REDEFINE USR1057N
+0930  2 EXTENDED-PARMS
+0940    3 EXTENDED-DATA    (A001/1:1)
+0950* ----------------------------------------------
+09601 IX                   (I002)
+0970* -------------------------------------------------- parmeter W3READENV
+09801 #VALUE               (A) DYNAMIC
+0990*
+10001 TEST-MF              (A001) INIT <"A">
+1010END-DEFINE
+1020* ---------------------------------------------------- error handling
+1030ON ERROR
+1040  PERFORM W3ERROR ##W3ERROR
+1050  PERFORM W3END ##RPC
+1060  ESCAPE ROUTINE
+1070END-ERROR
+1080* ======================================================== Main Program
+1090* ------------------------------------------------------- init HTML API
+1100PERFORM W3INIT ##RPC
+1110* ------------------------------------------------- Name of the source
+1120PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "SOURCE" " " #VALUE
+1130IF *LENGTH(#VALUE) = 0 THEN
+1140  OBJECT-NAME := *PROGRAM
+1150ELSE
+1160  OBJECT-NAME := #VALUE
+1170END-IF
+1180EXAMINE OBJECT-NAME TRANSLATE INTO UPPER
+1190* ------------------------------------------------ Name of the library
+1200PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "LIB" " " #VALUE
+1210IF *LENGTH(#VALUE) = 0 THEN
+1220  LIBRARY := *LIBRARY-ID
+1230ELSE
+1240  LIBRARY := #VALUE
+1250END-IF
+1260EXAMINE LIBRARY TRANSLATE INTO UPPER
+1270* ----------------------------------------- Set Interface to 'USR1057N'
+1280OPT-LINE-NUM  := 'Y'
+1290OPT-REDEF-DIR := TRUE
+1300OPT-AMOUNT    := V
+1310* ------------------------------ for MF only linesize of 92 is possible
+1320* ------------------------- error at userexit, more then 92 may not run
+1330* IF TEST-MF EQ H'41' THEN
+1340*  OPT-LINESIZE  := 250
+1350* ELSE
+1360OPT-LINESIZE  := 92
+1370* END-IF
+1380* ----------------------------------------- Set Interface to 'USR1057N'
+1390OPT-LINE-NUM  := 'Y'
+1400OPT-REDEF-DIR := TRUE
+1410OPT-AMOUNT    := V
+1420OPT-ACCESS   := "O"
+1430* ------------------------------------------- Set header for HTML page
+1440PERFORM W3CONTENT-TYPE 'text/html'
+1450* ----------------------------------------------------- Read all lines
+1460REPEAT
+1470  CALLNAT 'USR1057N' USR1057L  USR1057N.EXTENDED-PARMS NAD-MSG NAD-FLD
+1480  OPT-ACCESS := "R"
+1490  IF MSG-NR NE 0 AND MSG-NR NE 100 THEN
+1500    IF MSG-NR EQ 1006 THEN
+1510      COMPRESS '<FONT COLOR="RED">' MSG-NR MSG 'or is locked.</FONT>'
+1520        INTO #VALUE
+1530    ELSE
+1540      COMPRESS '<FONT COLOR="RED">' MSG-NR MSG'.</FONT>' INTO #VALUE
+1550    END-IF
+1560    PERFORM W3TEXTLINEDYNAMIC #VALUE
+1570  END-IF
+1580* ------------------------------------------------------- display lines
+1590  FOR IX = 1 TO RETURNED
+1600    IF SRC-NUM(IX) NE 0 THEN
+1610      COMPRESS SRC-LINE(IX) INTO #VALUE
+1620      PERFORM W3TEXTLINEDYNAMIC #VALUE
+1630    END-IF
+1640  END-FOR
+1650* ------------------------------------------------- Error from USR1057N
+1660  IF MSG-NR NE 0
+1670    ESCAPE BOTTOM
+1680  END-IF
+1690END-REPEAT
+1700* ------------------------------------------------------ close USR1057N
+1710OPT-ACCESS := 'C'
+1720CALLNAT 'USR1057N' USR1057L USR1057N.EXTENDED-PARMS NAD-MSG NAD-FLD
+1730* ------------------------------------------------------ close HTTP Api
+1740PERFORM W3END ##RPC
+1750* ================================================================= End
+1760END

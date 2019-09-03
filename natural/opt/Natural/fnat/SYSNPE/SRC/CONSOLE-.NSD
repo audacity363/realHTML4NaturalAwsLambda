@@ -1,0 +1,183 @@
+0010DB: 148 FILE: 025  - CONSOLE-LOG                      DEFAULT SEQUENCE:
+0020                              Cataloged by ESY352   on 2012-04-13 14:40:04
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2012-04-13 14:40:04
+0080*      by user ESY352
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common MVS and VSE
+0230*
+0240  1 A3 DATA-SET                          N  5.0    D Requested dataset nu
+0250*      Requested dataset number of
+0260*      job SYSLOG.
+0270  1 A4 RECORD-NUMBER                     N  9.0    D Retrieve records fro
+0280*      Retrieve records from log
+0290*      starting at this relative
+0300*      record number. If a negative
+0310*      value (-nnnnnnn) is supplied,
+0320*      the nnnnnnn most current
+0330*      log records are retrieved.
+0340  1 A6 RECORD-LENGTH                     N  3.0    D Length of log record
+0350*      Length of log record.
+0360  1 A7 RECORD                            A  253    D Log record.
+0370*      Log record.
+0380  1 A8 POSITION                          B    1    D Offset in log record
+0390*      Offset in log record
+0400*      (RECORD will contain log
+0410*      record starting at this
+0420*      offset).
+0430  1 AD TOKEN-VECTOR                      A  225    D Tokenized log record
+0440*      Tokenized log record
+0450*      (15 tokens with a length
+0460*      of 15 bytes each).
+0470  1 AE NUMBER-OF-TOKENS                  N  3.0    D Number of tokens in
+0480*      Number of tokens in record.
+0490  1 AF TOKEN-DELIMITERS                  A   10    D Up to ten delimiter
+0500*      Up to ten delimiter characters
+0510*      to be used for tokenizing
+0520*      the record.
+0530  1 AS SCAN                              A    3    D If YES is given, the
+0540*      If YES is given, the first
+0550*      record which meets the
+0560*      selection criteria and all
+0570*      following records are
+0580*      returned.
+0590  1 AT SCAN-LIMIT                        N  7.0    D Specifies the maximu
+0600*      Specifies the maximum number
+0610*      of records to scan before a
+0620*      record is selected.
+0630*      If the limit is reached,
+0640*      error-code 533 and the
+0650*      appropriate text is returned.
+0660  1 AU SCAN-TYPE                         A    1    D If 'A' is given, an
+0670*      If 'A' is given, an absolute
+0680*      scan will be performed.
+0690*      Wild cards '*' and '_' are
+0700*      treated as normal characters.
+0710  1 AV SCAN-LENGTH                       N  3.0    D Specifies the length
+0720*      Specifies the length of the
+0730*      scan string in field 'RECORD'.
+0740*      Only relevant if SCAN-TYPE=A.
+0750  1 AW SCAN-COLUMN-FROM                  N  3.0    D Specifies the column
+0760*      Specifies the column number
+0770*      where the scan should start.
+0780*      Default is 1.
+0790*      Only relevant if SCAN-TYPE=A.
+0800  1 AX SCAN-COLUMN-TO                    N  3.0    D Specifies the column
+0810*      Specifies the column number
+0820*      where the scan should end.
+0830*      Default is the end of the
+0840*      record.
+0850*      Only relevant if SCAN-TYPE=A.
+0860  1 L1 LOG-TIME                          A    8    D Time stamp in log re
+0870*      Time stamp in log record.
+0880  1 L1 LOG-TIME-LONG                     A   11    D Time stamp in log re
+0890*      Time stamp in log record.
+0900*      Format: HH:MM:SS.th
+0910  1 L2 LOG-TEXT                          A  128    D The pure log record.
+0920*      The pure log record.
+0930  1 L4 LOG-ROUTE-CODE                    A    8    D Route codes.
+0940*      Route codes.
+0950  1 L6 LOG-RECORD-TYPE                   A    1    D Possible values:
+0960*      Possible values:
+0970*      N - single line message
+0980*      W - single line message with
+0990*      reply
+1000*      The following values are only
+1010*      available as of MVS/XA 2.2
+1020*      M - first line of a multi line
+1030*      message
+1040*      O - Log command input
+1050*      X - Entry from a source other
+1060*      than hardcopy or log
+1070*      command
+1080*      S - continuing previous line
+1090*      L - Label line of multi line
+1100*      D - Data line of multi line
+1110*      E - Data/end line of multi lin
+1120  1 L7 LOG-REQUEST-TYPE                  A    1    D Possible values:
+1130*      Possible values:
+1140*      R - Command response
+1150*      The following values are only
+1160*      available as of MVS/XA 2.2
+1170*      C - Command issued by operator
+1180*      I - Internal issued command
+1190  1 DN LOG-DATX                          D    6    D Date in NATURAL inte
+1200*      Date in NATURAL internal
+1210*      format.
+1220  1 TN LOG-TIMX                          T   12    D Time in NATURAL inte
+1230*      Time in NATURAL internal
+1240*      format.
+1250*
+1260*      MVS fields
+1270*
+1280  1 L3 LOG-JOB-NUMBER                    N  7.0    D Job number if contai
+1290*      Job number if contained in
+1300*      record.
+1310  1 L5 LOG-JOB-NAME                      A    8    D Job name correspondi
+1320*      Job name corresponding to
+1330*      the job number contained in
+1340*      the record. This can only be
+1350*      given if the job is still
+1360*      active at calling time.
+1370  1 L8 LOG-REPLY-ID                      A    8    D Reply-ID of WTOR.
+1380*      Reply-ID of WTOR.
+1390  1 LS LOG-SOURCE                        A    8    D Source of the CONSOL
+1400*      Source of the CONSOLE-LOG:
+1410*      'SYSLOG' or 'OPERLOG'
+1420  1 AG DATA-SET-KEY                      N 11.0    D Unique data set iden
+1430*      Unique data set identification
+1440*      which offers much faster
+1450*      access than the data set
+1460*      number. The data set key can
+1470*      be obtained from the
+1480*      SPOOL-FILES view using job
+1490*      name SYSLOG.
+1500  1 V0 DIRECTION                         A    1    D Can be used with SCA
+1510*      Can be used with SCAN='YES'
+1520*      to search backwards.
+1530*
+1540*      VSE fields
+1550*
+1560  1 A9 DATE                              A    6      Date the message was
+1570*      Date the message was issued.
+1580  1 AN TIME                              A    8      Time the message was
+1590*      Time the message was issued.
+1600  1 AA PARTITION                         A    2    D Partition which issu
+1610*      Partition which issued the
+1620*      message.
+1630  1 AB MESSAGE-TYPE                      A    8      Type of message:
+1640*      Type of message:
+1650*      ACTION
+1660*      E-ACTION
+1670*      DECISION
+1680*      INFO
+1690*      CONT
+1700*      IPL
+1710  1 AC CONSOLE-TYPE                      A    8      Type of console:
+1720*      Type of console:
+1730*      REMOTE
+1740*      LOCAL
+1750*      REPLY
+1760*      HCF-ONLY
+1770  1 AJ INTERNAL-RECORD-NUMBER            N  7.0      The internal record
+1780*      The internal record number
+1790*      from the hardcopy file.
+1800*
+1810*      End of CONSOLE-LOG
+1820*
+1830******DDM OUTPUT TERMINATED******

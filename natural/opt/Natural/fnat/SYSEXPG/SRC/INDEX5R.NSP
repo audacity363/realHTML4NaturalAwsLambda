@@ -1,0 +1,24 @@
+0010** Example 'INDEX5R': Array definition with constants (reporting mode)
+0020**                   (multiple definition of same database field)
+0030***********************************************************************
+0040DEFINE DATA LOCAL                  /* For reporting mode programs
+00501 EMPLOY-VIEW VIEW OF EMPLOYEES    /* DEFINE DATA is recommended
+0060  2 NAME                           /* to use multiple definitions
+0070  2 CITY                           /* of same database field
+0080  2 LANG (1:10)
+0090  2 LANG (5:10)
+0100*
+01101 I (I2)
+01201 J (I2)
+0130END-DEFINE
+0140*
+0150I := 1
+0160J := 2
+0170*
+0180READ (1) EMPLOY-VIEW WITH NAME = 'WINTER' WHERE CITY = 'LONDON'
+0190  WRITE 'LANG(1.1:10) :' LANG (1.1:10) /
+0200        'LANG(1.I:I+2):' LANG (1.I:I+2) //
+0210  WRITE 'LANG(5.1:5)  :' LANG (5.1:5)  /
+0220        'LANG(5.J)    :' LANG (5.J)
+0230LOOP
+0240END

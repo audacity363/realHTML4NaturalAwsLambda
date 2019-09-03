@@ -1,0 +1,102 @@
+0010DB: 148 FILE: 015  - NET-OPER                         DEFAULT SEQUENCE:
+0020                              Cataloged by ESY341   on 2007-06-14 11:37:05
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2007-06-14 11:37:05
+0080*      by user ESY341
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to MVS and VSE
+0230*
+0240  1 A1 COMMAND                           A   80    D VTAM command.
+0250*      VTAM command.
+0260  1 A2 LINE-LENGTH                       N  3.0      Length of output lin
+0270*      Length of output line.
+0280  1 A3 LINE                              A  126    D Output line from VTA
+0290*      Output line from VTAM
+0300*      (this line will be split into
+0310*      segments, or 'tokens').
+0320  1 A4 LINE-STATUS                       A    3    D Line status:
+0330*      Line status:
+0340*      YES  a line has been returned
+0350*      NO   no line has been
+0360  1 A6 PURGE-PREVIOUS                    A    3    D Action performed on
+0370*      Action performed on messages:
+0380*      YES  purge any message queued
+0390*      for this user before
+0400  1 A7 TIME-STAMP                        A    8    D Time message was rec
+0410*      Time message was received from
+0420*      VTAM in HH:MM:SS format.
+0430  1 A8 TERMINATE-TIME                    N  5.0    D Terminate processing
+0440*      Terminate processing loop if
+0450*      no real lines have been
+0460*      returned within this period.
+0470  1 AZ TOKEN-VECTOR                      A  225    D Tokenized VTAM outpu
+0480*      Tokenized VTAM output line
+0490*      (15 tokens with a length
+0500*      of 15 bytes each).
+0510  1 B0 NUMBER-OF-TOKENS                  N  3.0    D Number of tokens in
+0520*      Number of tokens in LINE.
+0530M 1 AY TOKENS                            A   15    D Tokenized VTAM outpu
+0540*      Tokenized VTAM output line
+0550*      (20 tokens with a length
+0560*      of 15 bytes each).
+0570  1 B1 TOKEN-1                           A   15    D Token #1.
+0580*      Token #1.
+0590*      Note: Tokens 1 - 20 will
+0600*      be returned in a
+0610  1 B2 TOKEN-2                           A   15    D Token #2.
+0620*      Token #2.
+0630  1 B3 TOKEN-3                           A   15    D Token #3.
+0640*      Token #3.
+0650  1 B4 TOKEN-4                           A   15    D Token #4.
+0660*      Token #4.
+0670  1 B5 TOKEN-5                           A   15    D Token #5.
+0680*      Token #5.
+0690  1 B6 TOKEN-6                           A   15    D Token #6.
+0700*      Token #6.
+0710  1 B7 TOKEN-7                           A   15    D Token #7.
+0720*      Token #7.
+0730  1 B8 TOKEN-8                           A   15    D Token #8.
+0740*      Token #8.
+0750  1 B9 TOKEN-9                           A   15    D Token #9.
+0760*      Token #9.
+0770  1 BA TOKEN-10                          A   15    D Token #10.
+0780*      Token #10.
+0790  1 BB TOKEN-11                          A   15    D Token #11.
+0800*      Token #11.
+0810  1 BC TOKEN-12                          A   15    D Token #12.
+0820*      Token #12.
+0830  1 BD TOKEN-13                          A   15    D Token #13.
+0840*      Token #13.
+0850  1 BE TOKEN-14                          A   15    D Token #14.
+0860*      Token #14.
+0870  1 BF TOKEN-15                          A   15    D Token #15.
+0880*      Token #15.
+0890  1 BG TOKEN-16                          A   15    D Token #16.
+0900*      Token #16.
+0910  1 BH TOKEN-17                          A   15    D Token #17.
+0920*      Token #17.
+0930  1 BI TOKEN-18                          A   15    D Token #18.
+0940*      Token #18.
+0950  1 BJ TOKEN-19                          A   15    D Token #19.
+0960*      Token #19.
+0970  1 BK TOKEN-20                          A   15    D Token #20.
+0980*      Token #20.
+0990*
+1000*      End of NET-OPER
+1010*
+1020******DDM OUTPUT TERMINATED******

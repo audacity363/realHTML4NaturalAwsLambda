@@ -1,0 +1,24 @@
+0010p/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Use PC Work File
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180Mark this field to use a work file
+0190which is located on the PC.
+0200In this case work files 7 and 8 must
+0210be defined as Entire Connection work
+0220files in your Natural parameters.
+0230
+0240<HelpTextEnd>

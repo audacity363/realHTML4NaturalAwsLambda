@@ -1,0 +1,95 @@
+0010* Program ...... V62UPARM
+0020* Library ...... SYSEXV
+0030* Version ...... 6.2
+0040* Machine ...... UNIX
+0050* Encoding ..... UTF-8 (use Natural Studio Editor for editing)
+0060*
+0070* Functionality  Unicode EMU edit mask
+0080*                Unicode Display Parameters ICU, LCU and TCU
+0090************************************************************************
+0100*
+0110*
+0120DEFINE DATA LOCAL
+01301 EURO       (P7)
+0140END-DEFINE
+0150*
+0160FORMAT KD=ON
+0170SET KEY PF3  NAMED 'Exit'
+0180        PF12 NAMED 'Canc'
+0190*
+0200INPUT  (IP=OFF)
+0210  01T *TIMX  (AD=OTD)
+0220  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0230  70T *DATX  (AD=OTD DF=L)
+0240  /
+0250  01T 'User'
+0260  06T *USER  (AD=OLTI)
+0270  25T     '- Natural Unicode Support  -' (I)
+0280  64T 'Program'
+0290  72T *PROGRAM (AD=OI)
+0300  /
+0310  15T '         - Unicode Session Parameters -' (I)
+0320  //
+0330  02T 'The' 'new Unicode edit mask EMU' (I)
+0340  'can be used for Unicode constants in edit masks.' /
+0350  /
+0360  02T 'Insertion, leading and trailing characters' (I)
+0370  'in a DISPLAY statement can be' /
+0380  02T 'supplied with Unicode constants by using the'
+0390  'new ICU, LCU and TCU parameters' (I) /
+0400  02T '(which correspond to the IC, LC and TC parameters).' /
+0410  /
+0420  02T '  MOVE 12345 TO EURO           /* defined as (P7)' /
+0430  02T '  DISPLAY EURO' U'(EMU=99999''€'')' (I)
+0440  'EURO' U'(ICU=€)' (I)
+0450  'EURO' U'(LCU=€)' (I)
+0460  'EURO' U'(TCU=€)' (I) /
+0470  /
+0480  02T 'In this example, the Euro sign is displayed no matter'
+0490  'which code page is used.' /
+0500  /
+0510  02T 'Press Enter to display the result.'
+0520*
+0530  IF *PF-KEY = 'PF3'
+0540    ESCAPE ROUTINE
+0550  END-IF
+0560  IF (*PF-KEY = 'PF12' OR= 'CLR')
+0570  CALLNAT 'UTILSTOP'
+0580  END-IF
+0590
+0600*
+0610NEWPAGE
+0620*
+0630WRITE TITLE
+0640  01T *TIMX  (AD=OTD)
+0650  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0660  70T *DATX  (AD=OTD DF=L)
+0670  /
+0680  01T 'User'
+0690  06T *USER  (AD=OLTI)
+0700  25T     '- Natural Unicode Support  -' (I)
+0710  64T 'Program'
+0720  72T *PROGRAM   (AD=OI)
+0730  /
+0740  '- Unicode Session Parameters -  ' (I)
+0750  //
+0760MOVE 12345 TO EURO
+0770/* Unicode edit mask EMU
+0780DISPLAY U'EMU=99999''€''' (I) EURO (CD=TU EMU=99999'€')
+0790  /* ICU - Insertion character (Unicode)
+0800  U'ICU=€' (I) EURO (CD=TU ICU=€)
+0810  /* LCU - Leading characters (Unicode)
+0820  U'LCU=€' (I) EURO (CD=TU LCU=€)
+0830  /* TCU - Trailing characters (Unicode)
+0840  U'TCU=€' (I) EURO (CD=TU TCU=€)
+0850*
+0860 IF *PF-KEY = 'PF3'
+0870    ESCAPE ROUTINE
+0880  END-IF
+0890  IF (*PF-KEY = 'PF12' OR= 'CLR')
+0900  CALLNAT 'UTILSTOP'
+0910  END-IF
+0920*
+0930*
+0940END
+0950

@@ -1,0 +1,31 @@
+0010DB: 148 FILE: 050  - AUTHORIZED-LIBRARIES             DEFAULT SEQUENCE:
+0020                              Cataloged by ESY353   on 2013-08-27 10:45:05
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2013-08-27 10:45:05
+0080*      by user ESY353
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      MVS fields
+0230*
+0240  1 A1 DSNAME                            A   44    D Dataset Name.
+0250*      Dataset Name.
+0260  1 A2 VOLSER                            A    6    D Volume of Dataset.
+0270*      Volume of Dataset.
+0280*
+0290*      End of AUTHORIZED-LIBRARIES
+0300*
+0310******DDM OUTPUT TERMINATED******

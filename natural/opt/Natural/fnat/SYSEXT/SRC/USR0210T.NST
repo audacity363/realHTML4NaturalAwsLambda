@@ -1,0 +1,119 @@
+0010Save, catalog or stow Natural object
+0020.
+0030Documentation ......... USR0210T    /*  Text object
+0040Interface ............. USR0210N    /*  Cataloged subprogram
+0050Example Program ....... USR0210P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL OBJECTS
+0100.
+0110Keywords .............. CAT, EDITOR, ESIZE, OBJECT TYPE,
+0120                        SAVE, STOW, TYPE
+0130.
+0140Function .............. A prepared Natural source, which is located
+0150                        in the ESIZE, can be saved, cataloged or
+0160                        stowed using this interface.
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+0230  01 ACTION   (A06)         /* 'SAVE', 'CAT' or 'STOW'
+0240  01 READ-OBJ (A01)         /* 'Y' --> Read Object into ESIZE
+0250                            /* 'N' --> take source which is currently
+0260                            /*         to be found in ESIZE.
+0270  01 ERR      (B01)         /* Error Indicator
+0280  01 TYPE     (A01)         /* Type of the source
+0290  01 NAME     (A08)         /* Name of the source
+0300  01 LIB      (A08)         /* Name of the library
+0310.
+0320Interface Call
+0330--------------
+0340Use the interface with the CALLNAT statement:
+0350.
+0360CALLNAT 'USR0210N'
+0370         ACTION READ-OBJ ERR TYPE NAME LIB
+0380.
+0390.
+0400Using the Application Programming Interface:
+0410--------------------------------------------
+0420Copy the subprogram USR0210N to the library SYSTEM or the steplib
+0430library respectively, or to the required library.
+0440.
+0450The parameters have to be filled as follows:
+0460--------------------------------------------
+0470ACTION ...
+0480    can only be 'SAVE', 'CAT' or 'STOW'.
+0490.
+0500READ-OBJ ...
+0510    can either be 'Y' or 'N'.
+0520    'Y' --> Read Object with the given NAME into ESIZE.
+0530            Contents of TYPE is ignored.
+0540    'N' --> take source which is currently to be found in ESIZE.
+0550.
+0560TYPE ...
+0570    is ignored with READ-OBJ = 'Y',
+0580    else is must be set to 'G' = Global,
+0590                           'L' = Local,
+0600                           'A' = Parameter,
+0610                           'M' = Map,
+0620                           'P' = Program,
+0630                           'N' = Subprogram,
+0640                           'S' = Subroutine,
+0650                           'H' = Helproutine,
+0660                           'T' = Text,
+0670                           'C' = Copycode,
+0680                           '3' = Dialog (in GUI environments only),
+0690                           '7' = Function,
+0700                           '8' = Adapter.
+0710.
+0720NAME ...
+0730    the name of the source. If READ-OBJ is set to 'Y', it must be
+0740    specified. IF READ-OBJ = 'N' and this field is left blank,
+0750    the current name will be taken. If the current name is blank,
+0760    the action will be interrupted.
+0770.
+0780LIB ...
+0790    the name of the library. The library is optional, but when a
+0800    library is specified, a name must be specified also. Remember,
+0810    that the same rules apply as for the Natural commands CAT, SAVE,
+0820    STOW.
+0830.
+0840.
+0850ERR can have the following values:
+0860  0 .... 'Ok.'
+0870  1 .... 'Invalid Command.'
+0880  2 .... 'READ-OBJ must be 'Y' or 'N''
+0890  3 .... 'Invalid Object Type.'
+0900  4 .... 'Error during READ of a Map.'
+0910  5 .... 'NAME must be specified.'
+0920  6 .... 'Source doesn't exist.'
+0930  7 .... 'Map Source contains an Error.'
+0940  8 .... 'Type DIALOG is not allowed.'
+0950.
+0960Once the subprogram has returned to the calling program
+0970with ERR=0, the Natural STACK will have been modified.
+0980The caller has to issue a STOP statement to give control
+0990to the STACK mechanism.
+1000.
+1010On the STACK, there are now commands that start the wanted function.
+1020If USR0210N generates a program, which shall be executed
+1030immediately after it has been generated, do the following:
+1040         STACK TOP COMMAND 'NEWPGM'
+1050         CALLNAT 'USR0210N' ... 'NEWPGM'
+1060A newly generated program  C A N N O T  be executed by doing
+1070         CALLNAT 'USR0210N' ... 'NEWPGM'
+1080         FETCH RETURN 'NEWPGM'
+1090since NEWPGM will be created by stack commands and does not yet exist
+1100when the FETCH statement executes.
+1110.
+1120.
+1130ATTENTION:   USR0210N only starts the mechanism, but it does
+1140----------   not receive control, if there is, for example,
+1150             a syntax error in the source. Please verify your
+1160             error transaction ( --> *ERROR-TA) to receive
+1170             control if you execute USR0210N in batch mode.
+1180.
+1190***** End of Description *****

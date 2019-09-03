@@ -1,0 +1,70 @@
+0010Get type of Natural object
+0020.
+0030Documentation ......... USR1029T    /*  Text object
+0040Interface ............. USR1029N    /*  Cataloged subprogram
+0050Example Program ....... USR1029P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL OBJECTS
+0100.
+0110Keywords .............. OBJECT TYPE, TYPE
+0120.
+0130Function .............. Returns the object type of a given
+0140                        Natural object.
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+02101 PARM-USR1029N
+0220  2 LIBRARY         (A08)      /* Library of object to be checked
+0230  2 OBJ-NAME        (A08)      /* Name of object
+0240  2 DBID            (N05)      /* DBID
+0250  2 FNR             (N05)      /* File number
+0260  2 PASSWORD        (A08)      /* Password of file
+0270  2 CIPHERCODE      (B08)      /* Ciphercode of file
+0280  2 OBJ-TYPE        (A01)      /* Object type to be returned
+0290  2 RESPONSE        (N04)      /* Error code
+0300.
+0310Interface Call
+0320--------------
+0330Use the interface with the CALLNAT statement:
+0340.
+0350CALLNAT 'USR1029N' PARM-USR1029N
+0360.
+0370.
+0380Using the Application Programming Interface:
+0390--------------------------------------------
+0400Copy the subprogram USR1029N to the library SYSTEM or the steplib
+0410library respectively, or to the required library.
+0420.
+0430Description of the parameters:
+0440.
+0450OBJ-NAME (Input)
+0460  Has to be filled before invoking the interface.
+0470  OBJ-NAME contains the name of the object of which the type
+0480  is to be returned.
+0490.
+0500LIBRARY, DBID, FNR, PASSWORD, CIPHERCODE (Input)
+0510  Has to be filled before invoking the interface.
+0520  IF LIBRARY is <blank>, *LIBRARY-ID will apply and DBID
+0530  and FNR are set to zero.
+0540  If both DBID and FNR are zero the current file definition
+0550  for FNAT/FUSER will apply, dependent on the content of LIBRARY.
+0560.
+0570OBJ-TYPE (Output)
+0580  Natural object type
+0590.
+0600RESPONSE (Output)
+0610  Error code:
+0620   0001 - Invalid DBID
+0630   0002 - LFILE access not allowed
+0640   0003 - Invalid FNR
+0650  -4888 - Currently no logical files available
+0660  -0082 - Object not found
+0670  -0906 - Natural nucleus does not support Natural 1.2 runtime
+0680.
+0690.
+0700*****  End of Description  *****

@@ -1,0 +1,80 @@
+0010Maintain the number of DBMS calls, MAXCL and MADIO parameters
+0020.
+0030Documentation ......... USR1068T    /*  Text object
+0040Interface ............. USR1068N    /*  Cataloged subprogram
+0050Example Program ....... USR1068P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATABASE
+0100.
+0110Keywords .............. COUNTER, DATABASE, GET, MADIO, MAXCL, SET
+0120.
+0130Function .............. With this interface you can retrieve the value
+0140                        of the MADIO and MAXCL parameter and the number
+0150                        of DBMS calls since the last I/O operation.
+0160                        This is useful to avoid the Natural error
+0170                        message NAT1009.
+0180                        You can reset the counter for DBMS calls and
+0190                        in addition set values for the MADIO and MAXCL
+0200                        parameters.
+0210                        NOTE: If Natural Security is installed, it is
+0220                        only allowed to retrieve the values.
+0230.
+0240.
+0250Parameters
+0260----------
+0270Define the following parameters with the DEFINE DATA statement:
+0280.
+0290 1 USR1068L
+0300   2 INPUTS
+0310     3 FUNCTION         (A02)
+0320   2 INPUT-OUTPUTS
+0330     3 MADIO            (I02)
+0340     3 MAXCL            (I02)
+0350   2 OUTPUTS
+0360     3 DBMS-CALLS       (I02)
+0370     3 RESPONSE         (I04)
+0380.
+0390Interface Call
+0400--------------
+0410Use the interface with the CALLNAT statement:
+0420.
+0430CALLNAT 'USR1068N' USR1068L USR1068N.EXTENDED-PARMS
+0440.
+0450.
+0460Using the Application Programming Interface:
+0470--------------------------------------------
+0480Copy the subprogram USR1068N to the library SYSTEM or the steplib
+0490library respectively, or to the required library.
+0500.
+0510Description of the parameters:
+0520.
+05301 FUNCTION (Input)
+0540  Function code; possible values are:
+0550  'G'  - Get the values of MADIO, MAXCL and the counter for DBMS calls
+0560  'SM' - Set the value of the MADIO parameter
+0570  'SX' - Set the value of the MAXCL parameter
+0580  'RC' - Reset the value of the counter for DBMS calls
+0590.
+06001 MADIO (Input/Output)
+0610  Value of the MADIO parameter (Output if FUNCTION = 'G';
+0620                                Input if FUNCTION = 'SM').
+0630.
+06401 MAXCL (Input/Output)
+0650  Value of the MAXCL parameter (Output if FUNCTION = 'G';
+0660                                Input if FUNCTION = 'SX').
+0670.
+06801 DBMS-CALLS (Output)
+0690  Value of the counter for DBMS calls (FUNCTION = 'G').
+0700.
+07101 RESPONSE (Output)
+0720  Response code; possible values are:
+0730  0000 - No error occurred.
+0740  1000 - Natural Security installed. Only FUNCTION = 'G' is allowed.
+0750  1001 - Invalid value for FUNCTION entered.
+0760  1002 - Invalid value for MADIO entered.
+0770  1003 - Invalid value for MAXCL entered.
+0780.
+0790.
+0800*****  End of Description  *****

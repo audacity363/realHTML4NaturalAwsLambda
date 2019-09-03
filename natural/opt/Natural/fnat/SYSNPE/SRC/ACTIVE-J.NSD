@@ -1,0 +1,168 @@
+0010DB: 148 FILE: 029  - ACTIVE-JOBS                      DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:19
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:19
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A2 JOB-NAME                          A    8    D Name of job.
+0250*      Name of job.
+0260  1 A7 TYPE                              A    6    D Type of job. Possibl
+0270*      Type of job. Possible values:
+0280*      MVS
+0290*      JOB     batch job
+0300*      STC     started task
+0310*      TSU     TSO user
+0320*      INI     JES initiator
+0330*      BS2000:
+0340*      DIALOG  TIAM task
+0350*      BATCH   batch job
+0360*      TP      batch job with TP
+0370*      privilege
+0380*      VSE
+0390*      JOB
+0400  1 A5 STATUS                            A    8    D Status of the addres
+0410*      Status of the address space:
+0420*      V=R       running in
+0430*      real memory
+0440*      TERM      address space is
+0450*      terminating
+0460*      SWAP-OUT  address space
+0470*      swapped out
+0480*      NON-SWAP  address space is
+0490*      nonswappable
+0500*      blank     address space is
+0510*      swapped in
+0520*      BS2000: same as field TYPE
+0530  1 A8 CPU-USED                          N  7.2    D Amount of CPU consum
+0540*      Amount of CPU consumed by
+0550*      the address space / task
+0560*      (format SSSSS.HH).
+0570  1 AA DISPATCHING-PRIORITY              B    1    D Dispatching priority
+0580*      Dispatching priority given by
+0590*      the operating system.
+0600*      BS2000: run priority of the
+0610*      task.
+0620  1 AD JES-INIT-ID                       A    4    D JES batch initiator
+0630*      JES batch initiator identifier
+0640*      (only if TYPE='JOB').
+0650  1 AE JOB-NUMBER                        N  7.0    D JES job identifier.
+0660*      JES job identifier.
+0670*      BS2000: task serial number
+0680*      of job
+0690  1 JA JOB-ID                            A    8    D Job number or TSN of
+0700*      Job number or TSN of job in
+0710*      alpha numeric format.
+0720*
+0730*      Fields common to MVS and VSE
+0740*
+0750  1 A1 ADDRESS                           B    4      ASCB address.
+0760*      ASCB address.
+0770  1 A9 REGION                            N  7.0    D Amount of real stora
+0780*      Amount of real storage used
+0790*      by the address space
+0800*      (in K bytes).
+0810  1 AB PROC-NAME                         A    8    D Name of procedure cu
+0820*      Name of procedure currently
+0830*      being executed.
+0840  1 AC STEP-NAME                         A    8    D Name of step current
+0850*      Name of step currently
+0860*      being executed.
+0870  1 AF CLASSES                           A    6    D JES batch initiator
+0880*      JES batch initiator classes
+0890*      (only if TYPE='JOB').
+0900  1 AI SIO-COUNT                         N 11.0    D Number of I/O operat
+0910*      Number of I/O operations
+0920*      performed so far.
+0930  1 AP REGION-ALLOCATED-BELOW            N  7.0    D Amount of virtual st
+0940*      Amount of virtual storage
+0950*      allocated below the 16 MB line
+0960*      (in K bytes).
+0970  1 AQ REGION-LIMIT-BELOW                N  7.0    D Amount of virtual st
+0980*      Amount of virtual storage that
+0990*      can be allocated below the
+1000*      16 MB line (in K bytes).
+1010  1 AR REGION-ALLOCATED-ABOVE            N  7.0    D Amount of virtual st
+1020*      Amount of virtual storage
+1030*      allocated above the 16 MB line
+1040*      (in K bytes).
+1050  1 AS REGION-LIMIT-ABOVE                N  7.0    D Amount of virtual st
+1060*      Amount of virtual storage that
+1070*      can be allocated above the
+1080*      16 MB line (in K bytes).
+1090*
+1100*      MVS fields
+1110*
+1120  1 A3 TCB                               B    4    D TCB address of first
+1130*      TCB address of first ready
+1140*      task for this address space.
+1150  1 A4 ASID                              N  4.0    D Address space identi
+1160*      Address space identifier.
+1170  1 A6 DISPATCHABLE                      A    3    D Dispatchability of a
+1180*      Dispatchability of address
+1190*      space:
+1200*      YES  address space is
+1210*      dispatchable
+1220*      NO   address space is
+1230*      non-dispatchable
+1240  1 AJ WORKLOAD                          A    8    D Workload Name
+1250*      Workload Name
+1260  1 AK SERVICE-CLASS                     A    8    D Service Class Name
+1270*      Service Class Name
+1280  1 AL SERVICE-CLASS-PERIOD              N  3.0    D Service Class Period
+1290*      Service Class Period
+1300  1 AM RESOURCE-GROUP                    A    8    D Resource Group Name
+1310*      Resource Group Name
+1320  1 AN SERVER                            A    3    D Server Indicator (YE
+1330*      Server Indicator (YES/NO)
+1340  1 AO QUIESCE                           A    3    D Quiesce Indicator (Y
+1350*      Quiesce Indicator (YES/NO)
+1360*
+1370*      VSE fields
+1380*
+1390  1 AD PARTITION                         A    2    D PARTITION identifier
+1400*      PARTITION identifier
+1410  1 AG VSIZE                             N  5.0    D Partition size.
+1420*      Partition size.
+1430  1 AH REPLY-ID                          A    3    D Identification of op
+1440*      Identification of open reply
+1450*      for the job.
+1460*
+1470*      BS2000 fields
+1480*
+1490  1 ES SYSTEM-CODE                       B    2      System error code.
+1500*      System error code.
+1510  1 B2 ACCOUNT-NUMBER                    A    8    D Account number of jo
+1520*      Account number of job.
+1530  1 B4 CPU-MAX                           N  7.2    D CPU time limit for t
+1540*      CPU time limit for the job.
+1550  1 B5 TYPE-NUMBER                       N  1.0    D Numeric job type ide
+1560*      Numeric job type identifier
+1570*      as used in BS2000 (e.g.
+1580*      2 = BATCH, 3 = DIALOG).
+1590  1 B9 USER                              A    8    D User ID of job.
+1600*      User ID of job.
+1610  1 BA HOLD                              A    3      Task type 2:
+1620*      Task type 2:
+1630*      Value YES will be returned
+1640*      for hold jobs, otherwise NO.
+1650*
+1660*      End of ACTIVE-JOBS
+1670*
+1680******DDM OUTPUT TERMINATED******

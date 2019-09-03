@@ -1,0 +1,25 @@
+0010** Example 'UPDEX1R': UPDATE (reporting mode)
+0020**
+0030** CAUTION: Executing this example will modify the database records!
+0040************************************************************************
+0050RESET #NAME (A20)
+0060*
+0070INPUT 'ENTER A NAME:' #NAME (AD=M)
+0080IF #NAME = ' '
+0090  STOP
+0100*
+0110FIND EMPLOYEES WITH NAME = #NAME
+0120  IF NO RECORDS FOUND
+0130    REINPUT WITH 'NO RECORDS FOUND'  MARK 1
+0140  /*
+0150  INPUT 'NAME:      ' NAME (AD=O) /
+0160        'FIRST NAME:' FIRST-NAME (AD=M) /
+0170        'CITY:      ' CITY (AD=M)
+0180  /*
+0190  UPDATE USING SAME RECORD
+0200  /*
+0210  END TRANSACTION
+0220  /*
+0230LOOP
+0240*
+0250END

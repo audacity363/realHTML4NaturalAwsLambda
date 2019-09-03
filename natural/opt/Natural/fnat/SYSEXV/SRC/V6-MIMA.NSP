@@ -1,0 +1,142 @@
+0010*
+0020* Program .. V6-MIMA
+0030* Library .. SYSEXV
+0040* Version .. 6.1
+0050*
+0060* Functionality: Show new system functions *MINVAL and *MAXVAL
+0070************************************************************************
+0080*
+0090DEFINE DATA LOCAL
+01001 #NUM1      (N3)
+01101 #NUM2      (N3/1:2)
+01201 #NUM3      (N2)
+01301 #MAX-NUM   (N4)
+01401 #MIN-NUM   (N4)
+01501 #VALUE1    (A5)
+01601 #VALUE2    (A5/1:2)
+01701 #VALUE3    (A5)
+01801 #MAX-VALUE (A5)
+01901 #MIN-VALUE (A5)
+0200END-DEFINE
+0210*
+0220FORMAT KD=ON
+0230SET KEY PF3  NAMED 'Exit'
+0240  PF8  NAMED 'Next'
+0250  PF12 NAMED 'Canc'
+0260*
+0270#NUM1    := -12
+0280#NUM2(1) := -31
+0290#NUM2(2) := 322
+0300#NUM3    := 7
+0310*
+0320REPEAT
+0330*
+0340  #MAX-NUM := *MAXVAL((IR=N4) #NUM1,#NUM2(*),#NUM3)
+0350  #MIN-NUM := *MINVAL((IR=N4) #NUM1,#NUM2(*),#NUM3)
+0360*
+0370*
+0380  INPUT (IP=OFF)
+0390    01T *TIMX  (AD=OTD )
+0400    21T '***** NATURAL 6.1 ENHANCEMENTS *****'
+0410    70T *DATX  (AD=OTD DF=L)
+0420    /
+0430    01T 'User'
+0440    06T *USER  (AD=OILT)
+0450    28T '- *MINVAL / *MAXVAL -'(I)
+0460    64T 'Program'
+0470    72T *PROGRAM (AD=OI)
+0480    ///
+0490    02T 'New system functions *MINVAL and *MAXVAL'(I)
+0500    '     * First example *'
+0510    ///
+0520    02T '#Max-Num :=' '*MAXVAL'(I)
+0530    '((IR=N4) #Num1,#Num2(1:2),#Num3)'
+0540    /
+0550    02T '#Min-Num :=' '*MINVAL'(I)
+0560    '((IR=N4) #Num1,#Num2(1:2),#Num3)'
+0570    ///
+0580    02T 'Numeric values to be checked'
+0590    ' ( -999 to +999 )'
+0600    //
+0610    02T '#Num1:'    #NUM1    (AD=MI'_') 3X
+0620    '#Num2(1):' #NUM2(1) (AD=MI'_') 3X
+0630    '#Num2(2):' #NUM2(2) (AD=MI'_') 3X
+0640    '#Num3:'    #NUM3    (AD=MI'_')
+0650    ///
+0660    02T 'Results #Max-Num:'
+0670    #MAX-NUM (AD=OI)
+0680    /
+0690    02T '        #Min-Num:'
+0700    #MIN-NUM (AD=OI)
+0710    //
+0720  /*
+0730  IF *PF-KEY = 'PF3'
+0740    ESCAPE ROUTINE
+0750  END-IF
+0760  IF (*PF-KEY = 'PF12' OR= 'CLR')
+0770    CALLNAT 'UTILSTOP'
+0780  END-IF
+0790  IF *PF-KEY = 'PF8'
+0800    ESCAPE BOTTOM
+0810  END-IF
+0820*
+0830*
+0840END-REPEAT
+0850*
+0860SET KEY PF8 = OFF
+0870*
+0880#VALUE1    := 'Hello'
+0890#VALUE2(1) := 'Yes'
+0900#VALUE2(2) := 'No'
+0910#VALUE3    := 'D'
+0920*
+0930REPEAT
+0940*
+0950  #MAX-VALUE := *MAXVAL((IR=A5) #VALUE1,#VALUE2(*),#VALUE3)
+0960  #MIN-VALUE := *MINVAL((IR=A5) #VALUE1,#VALUE2(*),#VALUE3)
+0970*
+0980  INPUT (IP=OFF)
+0990    01T *TIMX  (AD=OTD)
+1000    21T '***** NATURAL 6.1 ENHANCEMENTS *****'
+1010    70T *DATX  (AD=OTD DF=L)
+1020    /
+1030    01T 'User'
+1040    06T *USER  (AD=OILT)
+1050    28T '- *MINVAL / *MAXVAL -'(I)
+1060    64T 'Program'
+1070    72T *PROGRAM (AD=OI)
+1080    ///
+1090    02T 'New system functions *MINVAL and *MAXVAL'(I)
+1100    '     * Second example *'
+1110    ///
+1120    02T '#Max-Value :=' '*MAXVAL'(I)
+1130    '((IR=A5) #Value1,#Value2(1:2),#Value3)'
+1140    /
+1150    02T '#Min-Value :=' '*MINVAL'(I)
+1160    '((IR=A5) #Value1,#Value2(1:2),#Value3)'
+1170    ///
+1180    02T 'Alpha-numeric values to be checked'
+1190    //
+1200    02T '#Value1:'    #VALUE1    (AD=MI'_') 3X
+1210    '#Value2(1):' #VALUE2(1) (AD=MI'_') 3X
+1220    '#Value2(2):' #VALUE2(2) (AD=MI'_') 3X
+1230    '#Value3:'    #VALUE3    (AD=MI'_')
+1240    ///
+1250    02T 'Results #Max-Value:'
+1260    #MAX-VALUE (AD=OI)
+1270    /
+1280    02T '        #Min-Value:'
+1290    #MIN-VALUE (AD=OI)
+1300
+1310*
+1320  IF *PF-KEY ='PF3'
+1330    ESCAPE BOTTOM
+1340  END-IF
+1350  IF (*PF-KEY = 'PF12' OR= 'CLR')
+1360    CALLNAT 'UTILSTOP'
+1370  END-IF
+1380*
+1390*
+1400END-REPEAT
+1410*
+1420END

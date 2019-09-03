@@ -1,0 +1,32 @@
+0010** Example 'PCCLEX1': CLOSE PC FILE
+0020**
+0030** NOTE: Example requires that Natural Connection is installed.
+0040************************************************************************
+0050DEFINE DATA LOCAL
+006001 W-DAT   (A40)
+007001 REC-NUM (N3)
+008001 I       (P3)
+0090END-DEFINE
+0100*
+0110REPEAT
+0120  UPLOAD PC FILE 7 ONCE W-DAT                /* Data upload
+0130  AT END OF FILE
+0140    ESCAPE BOTTOM
+0150  END-ENDFILE
+0160  INPUT 'Processing file' W-DAT (AD=O)
+0170    /   'Enter record number to display' REC-NUM
+0180  IF REC-NUM = 0
+0190    STOP
+0200  END-IF
+0210  FOR I = 1 TO REC-NUM
+0220    UPLOAD PC FILE 7 ONCE W-DAT
+0230    AT END OF FILE
+0240      WRITE 'Max. record number reached, last record is'
+0250      ESCAPE BOTTOM
+0260    END-ENDFILE
+0270  END-FOR
+0280  I := I - 1
+0290  WRITE 'Record' I ':' W-DAT
+0300  CLOSE PC FILE 7                            /* Close PC file 7
+0310END-REPEAT
+0320END

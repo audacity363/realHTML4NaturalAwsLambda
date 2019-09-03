@@ -1,0 +1,29 @@
+0010** Example 'NEWPAX02': NEWPAGE (in combination with EJECT and
+0020**                     parameter PS)
+0030************************************************************************
+0040DEFINE DATA LOCAL
+00501 EMPLOY-VIEW VIEW OF EMPLOYEES
+0060  2 CITY
+0070  2 NAME
+0080  2 JOB-TITLE
+0090END-DEFINE
+0100*
+0110FORMAT PS=15
+0120*
+0130READ (9) EMPLOY-VIEW BY CITY STARTING FROM 'BOSTON'
+0140  AT START OF DATA
+0150    EJECT
+0160    WRITE /// 20T '%' (29) /
+0170              20T '%%'                          47T '%%' /
+0180              20T '%%' 3X 'REPORT OF EMPLOYEES' 47T '%%' /
+0190              20T '%%' 3X '  SORTED BY CITY   ' 47T '%%' /
+0200              20T '%%'                          47T '%%' /
+0210              20T '%' (29) /
+0220    NEWPAGE
+0230  END-START
+0240  AT BREAK OF CITY
+0250    NEWPAGE WHEN LESS 3 LINES LEFT
+0260  END-BREAK
+0270  DISPLAY CITY (IS=ON) NAME JOB-TITLE
+0280END-READ
+0290END

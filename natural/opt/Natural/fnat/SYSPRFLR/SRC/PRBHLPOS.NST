@@ -1,0 +1,150 @@
+0010/**********************************************************************
+0020/* Product ....: Natural PROFILER Batch
+0030/* Help Text ..: PRBHLPOS
+0040/* Description : Help for LUW Batch.
+0050/**********************************************************************
+0060<Text>
+0070$STARS$
+0080<Head>
+0090                  ***** NATURAL PROFILER UTILITY *****
+0100                               - Help -
+0110</Head>
+0120
+0130The Profiler utility batch mode input looks like
+0140  PROFILER
+0150  entry,...
+0160  ...
+0170  END-PROFILER
+0180
+0190An entry looks like
+0200  keyword
+0210or
+0220  keyword = value
+0230
+0240                        General Keywords
+0250                        ================
+0260
+0270Profiler help
+0280-------------
+0290HELP                   /* Write help information
+0300
+0310
+0320Set Profiler trace level
+0330------------------------
+0340TRACE=2                /* Profiler internal trace level
+0350
+0360Internal trace levels for monitor or trace session
+0370  0  off
+0380  1  error messages
+0390  2  warnings
+0400  3  result
+0410  4  function specific data
+0420  5  statistics of each block
+0430  6  detailed information
+0440 10  internal usage
+0450
+0460
+0470Profiler input comment
+0480----------------------
+0490* This line is ignored
+0500
+0510
+0520End of Profiler input
+0530---------------------
+0540END-PROFILER           /* End of Profiler input
+0550
+0560                 Keywords for Data Collection
+0570                 ============================
+0580
+0590Start Profiling
+0600---------------
+0610FUNCTION=START         /* Start Profiling
+0620  COUNT=0              /* Set event counter
+0630
+0640
+0650Pause Profiling
+0660---------------
+0670FUNCTION=PAUSE         /* Pause Profiling
+0680
+0690
+0700                 Keywords for Data Processing
+0710                 ============================
+0720
+0730NaturalONE customers can process the event data with Profiler utility
+0740functions.
+0750
+0760List Profiler resources
+0770-----------------------
+0780FUNCTION=LIST          /* List Profiler resources
+0790  RESOURCE-LIB=...     /* Resource library
+0800  RESOURCE-TYPE=...    /* Resource type NPRF/NPRC
+0810  PRINT=ON             /* Write to standard output ON/OFF
+0820  EXPORT=OFF           /* Export to work file 7 ON/OFF
+0830  FORMAT=TEXT          /* Export in text format (default)
+0840  FORMAT=SEMICOLON     /* Export in CSV (semicolon) format
+0850  FORMAT=COMMA         /* Export in CSV (comma) format
+0860
+0870Default resource type: both nprf and nprc are listed
+0880
+0890
+0900Consolidate Profiler event data
+0910-------------------------------
+0920FUNCTION=CONSOLIDATE   /* Consolidate Profiler event data
+0930  RESOURCE=ON          /* Write to resource ON/OFF
+0940  RESOURCE-NAME=...    /* Input and output resource name
+0950  RESOURCE-LIB=...     /* Input and output resource library
+0960  REPLACE=YES          /* Replace resource YES/NO
+0970  EXPORT=OFF           /* Export to work file 7 ON/OFF
+0980  FORMAT=TEXT          /* Export in text format (default)
+0990  FORMAT=SEMICOLON     /* Export in CSV (semicolon) format
+1000  FORMAT=COMMA         /* Export in CSV (comma) format
+1010  TRACE-EVENT=OFF      /* Profiler event trace ON/OFF
+1020  TRACE-CONSOLIDATE=OFF /* Profiler consolidation trace ON/OFF
+1030
+1040Default resource name: last created nprf resource in the library
+1050Default resource library: *LIBRARY-ID
+1060The extension nprf is added to the input resource name.
+1070The extension nprc is added to the output resource name.
+1080
+1090
+1100Read Profiler resource data
+1110---------------------------
+1120FUNCTION=READ          /* Read Profiler resource data
+1130  RESOURCE-NAME=...    /* Resource name
+1140  RESOURCE-TYPE=NPRF   /* Resource type NPRF/NPRC
+1150  RESOURCE-LIB=...     /* Resource library
+1160  EVENT=ON             /* Profiler event/consolidation trace ON/OFF
+1170  STATISTICS=ON        /* Profiler statistics ON/OFF
+1180  PROGRAM=ON           /* Program trace/summary ON/OFF
+1190  PRINT=ON             /* Write to standard output ON/OFF
+1200  EXPORT=OFF           /* Export to work file 7 ON/OFF
+1210  FORMAT=TEXT          /* Export in text format (default)
+1220  FORMAT=SEMICOLON     /* Export in CSV (semicolon) format
+1230  FORMAT=COMMA         /* Export in CSV (comma) format
+1240
+1250Default resource name: last created nprf/nprc resource in the library
+1260Default resource library: *LIBRARY-ID
+1270
+1280
+1290Export Profiler resource data in MashZone format
+1300------------------------------------------------
+1310FUNCTION=MASHZONE      /* Export in MashZone format
+1320  RESOURCE-NAME=...    /* Resource name
+1330  RESOURCE-LIB=...     /* Resource library
+1340
+1350Default resource name: last created nprc resource in the library
+1360Default resource library: *LIBRARY-ID
+1370The function is only available nprc resources.
+1380The data is exported in CSV (semicolon) format to work file 7.
+1390
+1400
+1410How to Activate Data Processing
+1420-------------------------------
+1430Start NaturalONE.
+1440In the server view, map to the environment where the resources reside.
+1450Add the program ACTIVATE from library SYSPRFLR to a new or already
+1460existing project in NaturalONE (if not done before).
+1470Profile the program ACTIVATE (context menu: NaturalONE > Profile).
+1480Check the user-defined event data in the Profiler Event Trace page.
+1490$STARS$
+1500</Text>

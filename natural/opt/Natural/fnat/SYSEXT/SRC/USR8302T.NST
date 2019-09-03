@@ -1,0 +1,37 @@
+0010Define wait interval for current session
+0020.
+0030Documentation ......... USR8302T    /*  Text object
+0040Interface ............. USR8302N    /*  Cataloged subprogram
+0050Example Program ....... USR8302P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. RUNTIME
+0100.
+0110Keywords .............. +NEW-NAT-8.3.7, WAIT
+0120.
+0130Function .............. With this interface you can specify a "wait
+0140                        interval" for the session.
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+0210  1 WAIT-INTERVAL  (N5.3)   /* Wait interval for session seconds
+0220.
+0230.
+0240Interface Call
+0250--------------
+0260Use the interface with the CALLNAT statement:
+0270.
+0280CALLNAT 'USR8302N'  WAIT-INTERVAL
+0290.
+0300.
+0310Using the Application Programming Interface:
+0320--------------------------------------------
+0330Copy the subprogram USR8302N to the library SYSTEM or the steplib
+0340library respectively, or to the required library.
+0350.
+0360.
+0370***** End of Description *****

@@ -1,0 +1,88 @@
+0010** For the given IANA character set the following information is returned:
+0020**  - number of character set in the alphabetically sequence
+0030**    (the character set closest to given input is taken)
+0040**  - whether it is supported by Natural,
+0050**  - how many bytes the encoding uses,
+0060**  - character set name in upper case
+0070************************************************************************
+0080** #I-ENCODING = '1'  1-byte encoding
+0090**               '2'  2-byte encoding
+0100**               '4'  4-byte encoding
+0110**               '8'  1-4 byte encoding (UTF-8)
+0120**               'X'  special encoding (whatever)
+0130**               ' '  code page not supported
+0140************************************************************************
+0150** #RSP = 1   code page not found, next or last taken
+0160************************************************************************
+0170*
+0180DEFINE DATA
+0190PARAMETER
+02001 #I-CODEPAGE    (A64)     /* code page name (input)
+02101 #I-NUM         (I4)      /* number of character set
+0220/* in the ASCII alphabetically sequence
+02301 #I-SUPPORTED   (L)       /* codepage supported by Natural ?
+02401 #I-ENCODING    (A1)      /* encoding
+02501 #RSP           (I4)
+0260LOCAL USING CODEPL01
+0270LOCAL
+02801 #I             (I4)
+02901 #CODEPAGE      (A64)     /* original code page name (upper)
+03001 #CODEPOINT     (B4)
+03101 #A             (A8)
+03201 REDEFINE #A
+0330  2 #B           (B2/ 4)
+03401 #RESP          (I4)
+0350END-DEFINE
+0360*
+0370*
+0380RESET #RSP
+0390MOVE #I-CODEPAGE TO #CODEPAGE
+0400EXAMINE #CODEPAGE TRANSLATE INTO UPPER
+0410MOVE ENCODED #CODEPAGE TO #CODEPAGE IN CODEPAGE 'US-ASCII'
+0420RESET #I-NUM
+0430FOR #I = 1 TO #IANA-MAX
+0440  MOVE #IANA-ALIAS (#I) TO #IANA-UPPER
+0450  EXAMINE #IANA-UPPER TRANSLATE INTO UPPER
+0460  MOVE ENCODED #IANA-UPPER
+0470    TO #IANA-UPPER IN CODEPAGE 'US-ASCII'
+0480  IF  #IANA-UPPER < #CODEPAGE
+0490    ESCAPE TOP
+0500  END-IF
+0510  IF  #IANA-UPPER >= #CODEPAGE
+0520    IF  #IANA-UPPER > #CODEPAGE
+0530      MOVE 1 TO #RSP
+0540    END-IF
+0550    MOVE #I TO #I-NUM
+0560    ESCAPE BOTTOM
+0570  END-IF
+0580END-FOR
+0590IF #I-NUM = 0  /* not found
+0600  MOVE 1 TO #RSP
+0610  MOVE #IANA-MAX TO #I-NUM
+0620END-IF
+0630MOVE #IANA-ALIAS (#I-NUM) TO #CODEPAGE
+0640
+0650MOVE 1 TO #CODEPOINT  /* checker
+0660RESET #RESP
+0670MOVE ENCODED #CODEPOINT IN CODEPAGE #CODEPAGE
+0680  TO #A IN CODEPAGE 'UTF-16BE' GIVING #RESP
+0690IF #RESP = 3411
+0700  MOVE FALSE TO #I-SUPPORTED
+0710  RESET #I-ENCODING
+0720ELSE
+0730  MOVE TRUE TO #I-SUPPORTED
+0740  DECIDE FOR FIRST CONDITION  /* check the encoding
+0750    WHEN #B (2) = H'0020'
+0760      MOVE '4' TO #I-ENCODING
+0770    WHEN #B (3) = H'0020'
+0780      MOVE '2' TO #I-ENCODING
+0790    WHEN #IANA-NAME (#I) = 'UTF-8'
+0800      MOVE '8' TO #I-ENCODING
+0810    WHEN #B (4) = H'0001'
+0820      MOVE '1' TO #I-ENCODING
+0830    WHEN NONE
+0840      MOVE 'X' TO #I-ENCODING  /* other
+0850  END-DECIDE
+0860END-IF
+0870*
+0880END

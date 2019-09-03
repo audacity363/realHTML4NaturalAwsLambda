@@ -1,0 +1,17 @@
+0010&H View ADDRESS-SPACE
+0020&L
+0030&L
+0040#Purpose@: Retrieve information about all active ADDRESS-SPACES.
+0050&L
+0060&L
+0070#OpSys@  : z/OS
+0080&L
+0090&L
+0100#Usage@  : This view may be used to monitor the activities on a system.
+0110           It contains information about all ACTIVE Address-spaces.
+0120&L
+0130&L
+0140#Notes@  :
+0150
+0160
+0170

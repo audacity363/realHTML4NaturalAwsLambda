@@ -1,0 +1,62 @@
+0010Support EntireX Security on server side
+0020.
+0030Documentation ......... USR2072T    /*  Text object
+0040Interface ............. USR2072N    /*  Cataloged subprogram
+0050Example Program ....... USR2072P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC - SECURITY
+0100.
+0110Keywords .............. ENTIREX, PASSWORD, RPC, SECURITY, SERVER
+0120.
+0130Function .............. Set Password for Logon to EntireX Broker
+0140                        on Server side.
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+0210    INPUT
+0220         PASSWORD  (A32)  - Password for user ID SRVUSER
+0230.
+0240    OUTPUT
+0250         nothing returned
+0260.
+0270Interface Call
+0280--------------
+0290Use the interface with the CALLNAT statement:
+0300.
+0310CALLNAT 'USR2072N' PASSWORD
+0320.
+0330All input parameters to USR2072N are case-sensitive.
+0340.
+0350If you use the sample caller USR2072P to call USR2072N an uppercase
+0360translation takes place in USR2072P.
+0370.
+0380.
+0390Using the Application Programming Interface:
+0400--------------------------------------------
+0410Copy the subprogram USR2072N to the library SYSTEM or the steplib
+0420library respectively, or to the required library.
+0430.
+0440The calling program has to be executed before the Natural RPC server
+0450has started his initialization. To accomplish this, put the name of
+0460the calling program onto the Natural STACK when starting the server.
+0470Sample STACK option:
+0480STACK=(LOGON "server library";USR2072P "server password")
+0490.
+0500Functionality:
+0510--------------
+0520The passed password PASSWORD is used in the EntireX Broker LOGON call
+0530executed by the Natural RPC server during its initialization phase.
+0540.
+0550Notes:
+0560- The user ID used in this LOGON call is as usual the name specified
+0570  with the Natural RPC profile parameter SRVUSER.
+0580- For security reasons (encryption of the password) the Natural RPC
+0590  profile parameter ACIVERS should be set to 4 or greater. It must be
+0600  set at least to 2.
+0610.
+0620***** End of Description *****

@@ -1,0 +1,10 @@
+0010** Example 'HSTEX1R': HISTOGRAM (reporting mode)
+0020************************************************************************
+0030*
+0040LIMIT 8
+0050HISTOGRAM EMPLOYEES CITY STARTING FROM 'M'
+0060 DISPLAY NOTITLE CITY
+0070         'NUMBER OF/PERSONS' *NUMBER *COUNTER
+0080LOOP
+0090*
+0100END

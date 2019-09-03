@@ -1,0 +1,117 @@
+0010* >Natural Source Header 000000
+0020* :Mode S
+0030* :CP
+0040* <Natural Source Header
+0050* Name: XML Data Declaration/Edit Status /*<RO>
+0060*
+0070DEFINE DATA LOCAL
+00801 DP (L)
+00901 FIRSTNAME (A) DYNAMIC
+01001 INFOPAGENAME (A) DYNAMIC INIT <'html/xmldatamode2.html'>
+01101 LASTNAME (A) DYNAMIC
+01201 LINES (1:*)
+0130  2 COMBO1 (A) DYNAMIC
+0140  2 COMBOVALUES (1:*)
+0150    3 ID (A) DYNAMIC
+0160    3 NAME (A) DYNAMIC
+0170  2 FIELD1 (A) DYNAMIC
+0180  2 SELECTED (L)
+01901 SP (A) DYNAMIC
+0200END-DEFINE
+0210*
+0220FIRSTNAME := "First"
+0230LASTNAME := "Last"
+0240*
+0250EXPAND ARRAY LINES TO (1:2)
+0260LINES.FIELD1(1) := 'value 1'
+0270LINES.FIELD1(2) := 'value 2'
+0280*
+0290EXPAND ARRAY LINES.COMBOVALUES TO (*,1:2)
+0300LINES.ID(1,1)   := 'combo value 1'
+0310LINES.NAME(1,1) := 'combo value 1'
+0320LINES.ID(1,2)   := 'combo value 2'
+0330LINES.NAME(1,2) := 'combo value 2'
+0340LINES.COMBO1(1) := 'combo value 1'
+0350LINES.ID(2,1)   := 'combo value 1'
+0360LINES.NAME(2,1) := 'combo value 1'
+0370LINES.ID(2,2)   := 'combo value 2'
+0380LINES.NAME(2,2) := 'combo value 2'
+0390LINES.COMBO1(2) := 'combo value 1'
+0400*
+0410PROCESS PAGE USING 'XMLDM2-A'
+0420*
+0430/*( DEFINE EVENT HANDLER
+0440DECIDE ON FIRST *PAGE-EVENT
+0450  VALUE U'nat:page.end'
+0460    IGNORE
+0470  VALUE U'onStatusChanged'
+0480    DECIDE ON FIRST SP
+0490      VALUE ' '
+0500        IF DP
+0510          PROCESS PAGE UPDATE FULL
+0520            AND SEND EVENT 'nat:page.xmlDataMode'
+0530            WITH PARAMETERS
+0540              NAME 'data' VALUE 'display'
+0550            END-PARAMETERS
+0560        ELSE
+0570          PROCESS PAGE UPDATE FULL
+0580            AND SEND EVENT 'nat:page.xmlDataMode'
+0590            WITH PARAMETERS
+0600              NAME 'data' VALUE 'edit'
+0610            END-PARAMETERS
+0620        END-IF
+0630      VALUE 'INVISIBLE'
+0640        PROCESS PAGE UPDATE FULL
+0650          AND SEND EVENT 'nat:page.xmlDataMode'
+0660          WITH PARAMETERS
+0670            NAME 'data' VALUE 'invisible'
+0680          END-PARAMETERS
+0690      VALUE 'ERROR'
+0700        IF DP
+0710          PROCESS PAGE UPDATE FULL
+0720            AND SEND EVENT 'nat:page.xmlDataMode'
+0730            WITH PARAMETERS
+0740              NAME 'data' VALUE 'errorDisplay'
+0750            END-PARAMETERS
+0760        ELSE
+0770          PROCESS PAGE UPDATE FULL
+0780            AND SEND EVENT 'nat:page.xmlDataMode'
+0790            WITH PARAMETERS
+0800              NAME 'data' VALUE 'error'
+0810            END-PARAMETERS
+0820        END-IF
+0830      VALUE 'ERROR_NO_FOCUS'
+0840        IF DP
+0850          PROCESS PAGE UPDATE FULL
+0860            AND SEND EVENT 'nat:page.xmlDataMode'
+0870            WITH PARAMETERS
+0880              NAME 'data' VALUE 'errorDisplay'
+0890            END-PARAMETERS
+0900        ELSE
+0910          PROCESS PAGE UPDATE FULL
+0920            AND SEND EVENT 'nat:page.xmlDataMode'
+0930            WITH PARAMETERS
+0940              NAME 'data' VALUE 'errorNoFocus'
+0950            END-PARAMETERS
+0960        END-IF
+0970      VALUE 'FOCUS'
+0980        IF DP
+0990          PROCESS PAGE UPDATE FULL
+1000            AND SEND EVENT 'nat:page.xmlDataMode'
+1010            WITH PARAMETERS
+1020              NAME 'data' VALUE 'display'
+1030            END-PARAMETERS
+1040        ELSE
+1050          PROCESS PAGE UPDATE FULL
+1060            AND SEND EVENT 'nat:page.xmlDataMode'
+1070            WITH PARAMETERS
+1080              NAME 'data' VALUE 'focus'
+1090            END-PARAMETERS
+1100        END-IF
+1110      NONE IGNORE
+1120    END-DECIDE
+1130  NONE VALUE
+1140    PROCESS PAGE UPDATE
+1150END-DECIDE
+1160/*) END-HANDLER
+1170END

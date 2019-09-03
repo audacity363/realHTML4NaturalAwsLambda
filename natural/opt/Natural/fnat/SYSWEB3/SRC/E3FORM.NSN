@@ -1,0 +1,70 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3FORM
+0050*
+0060* DESCRIPTION   Creates a form.
+0070*
+0080* AUTHOR        SAG   08.09.1998
+0090*
+0100* Version       8.3
+0110*
+0120* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0130*
+0140* HISTORY
+0150* USER    DATE       REASON
+0160* ------+----------+----------------------------------------------
+0170*       ! --.--.-- !
+0180* ------+----------+----------------------------------------------
+0190*
+0200* ------ PARAMETER -----------------------------------------------
+0210DEFINE DATA
+0220PARAMETER USING W3PARM
+0230LOCAL USING W3CONST
+0240*
+0250END-DEFINE
+0260* --- ERROR HANDLING ---
+0270ON ERROR
+0280  PERFORM W3ERROR ##W3ERROR
+0290  PERFORM W3END ##RPC
+0300  ESCAPE ROUTINE
+0310END-ERROR
+0320*
+0330* --- INITIALIZE Web Interface ---
+0340PERFORM W3INIT ##RPC
+0350*
+0360* --- START HTML Generation ---
+0370PERFORM H3-OPEN-HTML 'HTML Generation - FORM' ' ' ' '
+0380* --- THE LEVEL 2 HEADER ---
+0390PERFORM H3-HEADER 2 'Form'
+0400*
+0410* --- Form with GET -> Parameter will be added after a ? at the URL
+0420PERFORM H3-OPEN-FORM "G" "NAT-ENV"
+0430*
+0440* --- Input field ---
+0450PERFORM H3-INPUT "T" "A-FIELD" "NONE" 32 32
+0460*
+0470* --- Submit button ---
+0480PERFORM H3-BUTTON "S" ' ' 'Submit with GET' ' '
+0490*
+0500PERFORM H3-CLOSE-FORM
+0510*
+0520* --- Form with POST -> Parameter will be pased ot at the URL
+0530PERFORM H3-OPEN-FORM "P" "NAT-ENV"
+0540*
+0550* --- Input field ---
+0560PERFORM H3-INPUT "T" "B-FIELD" "NONE" 32 32
+0570*
+0580* --- Submit button ---
+0590PERFORM H3-BUTTON "S" ' ' 'Submit with POST' ' '
+0600*
+0610PERFORM H3-CLOSE-FORM
+0620*
+0630PERFORM E3-EXAMPLE-END
+0640*
+0650* --- END HTML Generation ---
+0660PERFORM H3-CLOSE-HTML
+0670* --- END Web Interface ---
+0680PERFORM W3END ##RPC
+0690*
+0700END

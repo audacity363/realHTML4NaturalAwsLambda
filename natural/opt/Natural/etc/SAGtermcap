@@ -1,0 +1,562 @@
+#X/Windows terminal
+#PF Key Setting:
+#PF1  to PF9:  keypad key '1' to '9'
+#PF10 to PF19: keypad key PF1 and keypad key '0' to '9' 
+#PF20 to PF29: keypad key PF2 and keypad key '0' to '9' 
+#PF30 to PF39: keypad key PF3 and keypad key '0' to '9' 
+#PF40 to PF48: keypad key PF4 and keypad key '0' to '8' 
+#PA1: keypad key ENTER and keypad key '1'
+#PA2: keypad key ENTER and keypad key '2'
+#PA3: keypad key ENTER and keypad key '3'
+#CYWIN
+cygwin:\
+:ti=\E[61"p\E[?42l\E[?4l\E[?7h\E[?8h:@7=^Xe:bc=\b:bt=^X\t:CREV@:dc=\177:ESC=\E:\
+:ETO#300:kh=^Xh:kN=^F:kP=^B:PF1=\EOP:PF2=\EOQ:PF3=\EOR:PF4=\EOS:PF5=\E[15~:\
+:PF6=\E[17~:PF7=\E[18~:PF8=\E[19~:PF9=\E[20~:PF10=\E[21~:PF11=\E[23~:PF12=\E[24~:\
+:PF13=\EO5P:PF14=\EO5Q:PF15=\EO5R:PF16=\EO5S:PF17=\E[15;5~:PF18=\E[17;5~:\
+:PF19=\E[18;5~:PF20=\E[19;5~:PF21=\E[20;5~:PF22=\E[21;5~:PF23=\E[23;5~:\
+:PF24=\E[24;5~:PF25=\EOF:PF26=\EOxB:PF27=\E[6~:PF28=\EOxD:PF29=\EOxE:PF30=\EOxC:\
+:PF31=\EOxH:PF32=\EOxA:PF33=\EOxR\EOs:PF34=\EOxR\EOt:PF35=\EOxR\EOu:\
+:PF36=\EOxR\EOv:PF37=\EOxR\EOw:PF38=\EOxR\EOx:PF39=\EOxR\EOy:PF40=\EOxS\EOp:\
+:PF41=\EOxS\EOq:PF42=\EOxS\EOr:PF43=\EOxS\EOs:PF44=\EOxS\EOt:PF45=\EOxS\EOu:\
+:PF46=\EOxS\EOv:PF47=\EOxSx\EOw:PF48=\EOxS\EOx:tc=d1:
+#DTTERM
+dtterm:\
+:ti=\E[61"p\E[?42l\E[?4l\E[?7h\E[?8h:@7=^Xe:bc=\b:bt=^X\t:CREV@:dc=\177:ESC=\E:\
+:ETO#300:kh=^Xh:kN=^F:kP=^B:PF1=\EOP:PF2=\EOQ:PF3=\EOR:PF4=\EOS:PF5=\E[15~:\
+:PF6=\E[17~:PF7=\E[18~:PF8=\E[19~:PF9=\E[20~:PF10=\E[21~:PF11=\E[23~:PF12=\E[24~:\
+:PF13=\EO5P:PF14=\EO5Q:PF15=\EO5R:PF16=\EO5S:PF17=\E[15;5~:PF18=\E[17;5~:\
+:PF19=\E[18;5~:PF20=\E[19;5~:PF21=\E[20;5~:PF22=\E[21;5~:PF23=\E[23;5~:\
+:PF24=\E[24;5~:PF25=\EOF:PF26=\EOxB:PF27=\E[6~:PF28=\EOxD:PF29=\EOxE:PF30=\EOxC:\
+:PF31=\EOxH:PF32=\EOxA:PF33=\EOxR\EOs:PF34=\EOxR\EOt:PF35=\EOxR\EOu:\
+:PF36=\EOxR\EOv:PF37=\EOxR\EOw:PF38=\EOxR\EOx:PF39=\EOxR\EOy:PF40=\EOxS\EOp:\
+:PF41=\EOxS\EOq:PF42=\EOxS\EOr:PF43=\EOxS\EOs:PF44=\EOxS\EOt:PF45=\EOxS\EOu:\
+:PF46=\EOxS\EOv:PF47=\EOxSx\EOw:PF48=\EOxS\EOx:tc=d1:
+linux:\
+:ti=\E[?4l\E[?7h\E[?8h:%1=\E[28~:&2=^K:@7=^Xe:ae=^O:as=^N:bc=\b:bcvt=\177:\
+:bl=\007:BR=\E[m:bt=^X\t:ce=\E[K:CKAP=\E[?1h:CKNO=\E[?1l:cl=\E[2J:\
+:cm=\E[%i%d;%dH:CNL=\r\n:cr=\r:CREV@:ct@:DAR=\E[?5l:dc=\E[3~:DK=\EOB:eA=\E)0:\
+:ESC=\E:ETO#300:G1=k:G2=l:G3=m:G4=j:GH=q:GV=x:GD1=k:GD2=l:GD3=m:GD4=j:GDH=q:\
+:GDV=x:HR=\E[m:kd=\E[B:KDEL=^D:ke=\E>:kh=^Xh:kI=\E[2~:kl=\E[D:kN=\E[6~:kP=\E[5~:\
+:kr=\E[C:ks=\E=:ku=\E[A:LIG=\E[?5h:LK=\EOD:mb=\E[5m:md=\E[1m:me=\E[m^O:mr=\E[7m:\
+:mr0=\E[m:PA1=\EOM\EOq:PA2=\EOM\EOr:PA3=\EOM\EOs:PF1=\EOP:PF2=\EOQ:PF3=\EOR:\
+:PF4=\EOS:PF5=\E[15~:PF6=\E[17~:PF7=\E[18~:PF8=\E[19~:PF9=\E[20~:PF10=\E[21~:\
+:PF11=\E[23~:PF12=\E[24~:PF13=\EO2P:PF14=\EO2Q:PF15=\EO2R:PF16=\EO2S:\
+:PF17=\E[15;2~:PF18=\E[17;2~:PF19=\E[18;2~:PF20=\E[19;2~:PF21=\E[20;2~:\
+:PF22=\E[21;2~:PF23=\E[23;2~:PF24=\E[24;2~:RK=\EOC:se=\E[m:so=\E[7m:ta=\t:\
+:TEAC@:TEAK@:TECI@:TECL:TECV:TEDB@:TELB@:TENC:TENK:TENL@:TERA:TIAC:TIAK:TICI:\
+:TICL:TICV@:TIDB@:TIGR:TIIM:TILB@:TINC@:TINK@:TIOM@:TIRA:ue=\E[m:UK=\EOA:\
+:us=\E[4m:xi:xs@:
+#DEC VT100 - non graphic
+vt100ng:\
+:G1=+:G2=+:G3=+:G4=+:GH=-:GV=!:tc=d1:
+#DEC VT100 - 24x80
+vt100-80:\
+:co#80:li#24:tc=d1:
+#DEC VT100 - 24x132
+vt100-132:\
+:co#132:li#24:tc=d1:
+#DEC VT100 - Novell Lan Work Place terminal emulation
+dd|dec-vt100:\
+:ti=\E[61"p\E[?42l\E[?4l\E[?7h\E[?8h:@7=^Xe:bc=\b:bt=^X\t:dc=\177:ESC=\E:ETO#300:\
+:kh=^Xh:kN=^F:kP=^B:tc=d1:
+#DEC VT100
+#PF Key Setting:
+#PF1  to PF9:  keypad key '1' to '9'
+#PF10 to PF19: keypad key PF1 and keypad key '0' to '9' 
+#PF20 to PF29: keypad key PF2 and keypad key '0' to '9' 
+#PF30 to PF39: keypad key PF3 and keypad key '0' to '9' 
+#PF40 to PF48: keypad key PF4 and keypad key '0' to '8' 
+#PA1: keypad key ENTER and keypad key '1'
+#PA2: keypad key ENTER and keypad key '2'
+#PA3: keypad key ENTER and keypad key '3'
+d1|vt100|vt-100|pt100|pt-100|DEC vt100 terminal:\
+:ti=\E[61"p\E[?42h\E[?4l\E[?7h\E[?8h:%1=^X?:&2=^K:@7=^Xe:ae=^O:as=^N:bc=\b:\
+:bl=\007:BR=\E[m:bt=^X\t:ce=\E[K:CKAP=\E[?1h:CKNO=\E[?1l:cl=\E[2J:\
+:cm=\E[%i%d;%dH:CNL=\r\n:cr=\r:ct@:DAR=\E[?5l:dc=^Xx:DK=\EOB:eA=\E)0:ESC=\E:\
+:ETO#300:G1=k:G2=l:G3=m:G4=j:GH=q:GV=x:GD1=k:GD2=l:GD3=m:GD4=j:GDH=q:GDV=x:\
+:HR=\E[m:kd=\E[B:KDEL=^Xd:ke=\E>:kh=^Xh:kI=^Xi:kl=\E[D:kN=^D:kP=^U:kr=\E[C:ks=\E=:\
+:ku=\E[A:LIG=\E[?5h:LK=\EOD:mb=\E[5m:md=\E[1m:me=\E[m^O:mr=\E[7m:mr0=\E[m:\
+:PA1=\EOM\EOq:PA2=\EOM\EOr:PA3=\EOM\EOs:PF1=\EOq:PF2=\EOr:PF3=\EOs:PF4=\EOt:\
+:PF5=\EOu:PF6=\EOv:PF7=\EOw:PF8=\EOx:PF9=\EOy:PF10=\EOP\EOp:PF11=\EOP\EOq:\
+:PF12=\EOP\EOr:PF13=\EOP\EOs:PF14=\EOP\EOt:PF15=\EOP\EOu:PF16=\EOP\EOv:\
+:PF17=\EOP\EOw:PF18=\EOP\EOx:PF19=\EOP\EOy:PF20=\EOQ\EOp:PF21=\EOQ\EOq:\
+:PF22=\EOQ\EOr:PF23=\EOQ\EOs:PF24=\EOQ\EOt:PF25=\EOQ\EOu:PF26=\EOQ\EOv:\
+:PF27=\EOQ\EOw:PF28=\EOQ\EOx:PF29=\EOQ\EOy:PF30=\EOR\EOp:PF31=\EOR\EOq:\
+:PF32=\EOR\EOr:PF33=\EOR\EOs:PF34=\EOR\EOt:PF35=\EOR\EOu:PF36=\EOR\EOv:\
+:PF37=\EOR\EOw:PF38=\EOR\EOx:PF39=\EOR\EOy:PF40=\EOS\EOp:PF41=\EOS\EOq:\
+:PF42=\EOS\EOr:PF43=\EOS\EOs:PF44=\EOS\EOt:PF45=\EOS\EOu:PF46=\EOS\EOv:\
+:PF47=\EOS\EOw:PF48=\EOS\EOx:RK=\EOC:se=\E[m:so=\E[7m:ta=\t:TEAC@:TEAK@:TECI@:\
+:TECL:TECV:TEDB@:TELB@:TENC:TENK:TENL@:TERA:TIAC:TIAK:TICI:TICL:TICV@:TIDB@:\
+:TIGR:TIIM:TILB@:TINC@:TINK@:TIOM@:TIRA:ue=\E[m:UK=\EOA:us=\E[4m:ve=\E[?25h:\
+:vi=\E[?25l:xi:xs@:
+#DEC VT220 - 24x80
+vt220-80|vt320-80:\
+:co#80:li#24:tc=d2:
+#DEC VT220 - 24x132
+vt220-132|vt320-132:\
+:co#132:li#24:tc=d2:
+#DEC VT220 - reverse mode (light background; dark text)
+da|vt200-rv|vt220-rv|vt-220-rv|vt300-rv|vt320-rv|vt-320-rv|pt200-rv|\
+|pt220-rv|pt-220-rv:\
+:TEDB:TILB:tc=d2:
+#DEC VT220 - reverse mode and 24x132 
+db|vt200-w-rv|vt220-w-rv|vt-220-w-rv|vt200-132-rv|vt220-132-rv|vt300-w-rv|\
+|vt320-w-rv|vt-320-w-rv|vt300-132-rv|vt320-132-rv|vt340-w-rv|pt220-w-rv|\
+|pt-220-w-rv:\
+:co#132:li#24:TEDB:TILB:tc=d2:
+#DEC VT220 - Novell Lan Work Place terminal emulation
+de|dec-vt220|dec-vt320:\
+:@7=^Xe:bc=\b:bt=^X\t:dc=\177:ESC=\E:kh=^Xh:kN=^F:kP=^B:tc=d2:
+#Entire Test Client
+etc-vt220:\
+:%1=\E[55~:CREV@:ESC=\E:PF10=\EOP\EOp:PF11=\EOP\EOq:PF12=\EOP\EOr:PF13=\EOP\EOs:\
+:PF14=\EOP\EOt:PF15=\E[28~:PF16=\E[29~:PF17=\E[30~:PF18=\E[31~:PF19=\E[32~:\
+:PF20=\E[33~:PF21=\E[34~:PF22=\E[35~:PF23=\E[36~:PF24=\E[37~:tc=d2:
+#DEC VT220 - numeric keypad
+#PF Key Setting:
+#PF1  to PF9:  DO and '1' to '9'  
+#PF10 to PF19: DO and keypad key PF1 and '0' to '9'
+#PF20 to PF29: DO and keypad key PF2 and '0' to '9'
+#PF30 to PF39: DO and keypad key PF3 and '0' to '9'
+#PF40 to PF48: DO and keypad key PF4 and '0' to '8'
+#PA1: keypad key PF1 
+#PA2: keypad key PF2
+#PA3: keypad key PF3
+dn|vt200-num|vt220-num|vt-220-num|vt300-num|vt320-num|vt-320-num|pt220-num|\
+|pt-220-num:\
+:PA1=\EOP:PA2=\EOQ:PA3=\EOR:PF1=\E[29~1:PF2=\E[29~2:PF3=\E[29~3:PF4=\E[29~4:\
+:PF5=\E[29~5:PF6=\E[29~6:PF7=\E[29~7:PF8=\E[29~8:PF9=\E[29~9:PF10=\E[29~\EOP0:\
+:PF11=\E[29~\EOP1:PF12=\E[29~\EOP2:PF13=\E[29~\EOP3:PF14=\E[29~\EOP4:\
+:PF15=\E[29~\EOP5:PF16=\E[29~\EOP6:PF17=\E[29~\EOP7:PF18=\E[29~\EOP8:\
+:PF19=\E[29~\EOP9:PF20=\E[29~\EOQ0:PF21=\E[29~\EOQ1:PF22=\E[29~\EOQ2:\
+:PF23=\E[29~\EOQ3:PF24=\E[29~\EOQ4:PF25=\E[29~\EOQ5:PF26=\E[29~\EOQ6:\
+:PF27=\E[29~\EOQ7:PF28=\E[29~\EOQ8:PF29=\E[29~\EOQ9:PF30=\E[29~\EOR0:\
+:PF31=\E[29~\EOR1:PF32=\E[29~\EOR2:PF33=\E[29~\EOR3:PF34=\E[29~\EOR4:\
+:PF35=\E[29~\EOR5:PF36=\E[29~\EOR6:PF37=\E[29~\EOR7:PF38=\E[29~\EOR8:\
+:PF39=\E[29~\EOR9:PF40=\E[29~\EOS0:PF41=\E[29~\EOS1:PF42=\E[29~\EOS2:\
+:PF43=\E[29~\EOS3:PF44=\E[29~\EOS4:PF45=\E[29~\EOS5:PF46=\E[29~\EOS6:\
+:PF47=\E[29~\EOS7:PF48=\E[29~\EOS8:TIAC@:TIAK@:TINC:TINK:tc=d2:
+#DEC VT220 - 8-bit control characters
+d8|vt220-8bit|vt320-8bit|dec-vt220-8bit|falco-8bit:\
+:ti=\23362;2"p\233?42l\2201;1|23/1B\234\233?4l\233?7h\233?8h:%1=\23328~:\
+:@7=\2334~:BR=\233m:cl=\233J:cm=\233%i%d;%dH:dc=\2333~:DK=\217B:HR=\233m:\
+:kd=\233B:ke=\E>:kh=\2331~:kI=\2332~:kl=\233D:kN=\2336~:kP=\2335~:kr=\233C:\
+:ks=\E=:ku=\233A:LK=\217D:mb=\2335m:md=\2331m:me=\233m^O:mr=\2337m:mr0=\233m:\
+:PA1=\217M\217q:PA2=\217M\217r:PA3=\217M\217s:PF1=\217q:PF2=\217r:PF3=\217s:\
+:PF4=\217t:PF5=\217u:PF6=\217v:PF7=\217w:PF8=\217x:PF9=\217y:PF10=\217P\217p:\
+:PF11=\217P\217q:PF12=\217P\217r:PF13=\217P\217s:PF14=\217P\217t:PF15=\217P\217u:\
+:PF16=\217P\217v:PF17=\217P\217w:PF18=\217P\217x:PF19=\217P\217y:PF20=\217Q\217p:\
+:PF21=\217Q\217q:PF22=\217Q\217r:PF23=\217Q\217s:PF24=\217Q\217t:PF25=\217Q\217u:\
+:PF26=\217Q\217v:PF27=\217Q\217w:PF28=\217Q\217x:PF29=\217Q\217y:PF30=\217R\217p:\
+:PF31=\217R\217q:PF32=\217R\217r:PF33=\217R\217s:PF34=\217R\217t:PF35=\217R\217u:\
+:PF36=\217R\217v:PF37=\217R\217w:PF38=\217R\217x:PF39=\217R\217y:PF40=\217S\217p:\
+:PF41=\217S\217q:PF42=\217S\217r:PF43=\217S\217s:PF44=\217S\217t:PF45=\217S\217u:\
+:PF46=\217S\217v:PF47=\217S\217w:PF48=\217S\217x:RK=\217C:se=\233m:so=\2337m:\
+:ue=\233m:UK=\217A:us=\2334m:ve=\233?25h:vi=\233?25l:tc=d2:
+#DEC VT220
+#PF Key Setting:
+#PF1  to PF9:  keypad key '1' to '9'
+#PF10 to PF19: keypad key PF1 and keypad key '0' to '9'
+#PF20 to PF29: keypad key PF2 and keypad key '0' to '9'
+#PF30 to PF39: keypad key PF3 and keypad key '0' to '9'
+#PF40 to PF49: keypad key PF4 and keypad key '0' to '9'
+#PA1: keypad key ENTER and keypad key '1'
+#PA2: keypad key ENTER and keypad key '2'
+#PA3: keypad key ENTER and keypad key '3'
+d2|vt200|vt220|vt-220|pt220|pt-220|falco|vt300|vt320|vt-320|pt320|pt-320|\
+|DEC vt220 terminal:\
+:ti=\E[62;1"p\EP1;1|23/1B\E\\\E[?4l\E[?7h\E[?8h:%1=\E[28~:&2=^K:@7=\E[4~:ae=^O:\
+:as=^N:bc=\b:bcvt=\177:bl=\007:BR=\E[m:bt=^X\t:ce=\E[K:CKAP=\E[?1h:CKNO=\E[?1l:\
+:cl=\E[2J:cm=\E[%i%d;%dH:CNL=\r\n:cr=\r:ct@:DAR=\E[?5l:dc=\E[3~:DK=\EOB:eA=\E)0:\
+:ESC=\E:ETO#300:G1=k:G2=l:G3=m:G4=j:GH=q:GV=x:GD1=k:GD2=l:GD3=m:GD4=j:GDH=q:\
+:GDV=x:HR=\E[m:kd=\E[B:KDEL=^D:ke=\E>:kh=\E[1~:kI=\E[2~:kl=\E[D:kN=\E[6~:kP=\E[5~:\
+:kr=\E[C:ks=\E=:ku=\E[A:LIG=\E[?5h:LK=\EOD:mb=\E[5m:md=\E[1m:me=\E[m^O:mr=\E[7m:\
+:mr0=\E[m:PA1=\EOM\EOq:PA2=\EOM\EOr:PA3=\EOM\EOs:PF1=\EOq:PF2=\EOr:PF3=\EOs:\
+:PF4=\EOt:PF5=\EOu:PF6=\EOv:PF7=\EOw:PF8=\EOx:PF9=\EOy:PF10=\EOP\EOp:\
+:PF11=\EOP\EOq:PF12=\EOP\EOr:PF13=\EOP\EOs:PF14=\EOP\EOt:PF15=\EOP\EOu:\
+:PF16=\EOP\EOv:PF17=\EOP\EOw:PF18=\EOP\EOx:PF19=\EOP\EOy:PF20=\EOQ\EOp:\
+:PF21=\EOQ\EOq:PF22=\EOQ\EOr:PF23=\EOQ\EOs:PF24=\EOQ\EOt:PF25=\EOQ\EOu:\
+:PF26=\EOQ\EOv:PF27=\EOQ\EOw:PF28=\EOQ\EOx:PF29=\EOQ\EOy:PF30=\EOR\EOp:\
+:PF31=\EOR\EOq:PF32=\EOR\EOr:PF33=\EOR\EOs:PF34=\EOR\EOt:PF35=\EOR\EOu:\
+:PF36=\EOR\EOv:PF37=\EOR\EOw:PF38=\EOR\EOx:PF39=\EOR\EOy:PF40=\EOS\EOp:\
+:PF41=\EOS\EOq:PF42=\EOS\EOr:PF43=\EOS\EOs:PF44=\EOS\EOt:PF45=\EOS\EOu:\
+:PF46=\EOS\EOv:PF47=\EOS\EOw:PF48=\EOS\EOx:RK=\EOC:se=\E[m:so=\E[7m:ta=\t:TEAC@:\
+:TEAK@:TECI@:TECL:TECV:TEDB@:TELB@:TENC:TENK:TENL@:TERA:TIAC:TIAK:TICI:TICL:\
+:TICV@:TIDB@:TIGR:TIIM:TILB@:TINC@:TINK@:TIOM@:TIRA:ue=\E[m:UK=\EOA:us=\E[4m:\
+:ve=\E[?25h:vi=\E[?25l:xi:xs@:
+#NDV - Terminal Settings (from vt220)
+ndv:\
+:ti=\E[62;1"p\EP1;1|23/1B\E\\\E[?4l\E[?7h\E[?8h:%1=\E[28~:&2=^K:@7=\E[4~:ae=^O:\
+:as=^N:bc=\b:bcvt=\177:bl=\007:BR=\E[m:bt=^X\t:ce=\E[K:CKAP=\E[?1h:CKNO=\E[?1l:\
+:cl=\E[2J:cm=\E[%i%d;%dH:CNL=\r\n:co#80:cr=\r:CREV@:ct@:DAR=\E[?5l:dc=\E[3~:\
+:DK=\EOB:eA=\E)0:ESC=\E:ETO#300:G1=k:G2=l:G3=m:G4=j:GH=q:GV=x:GD1=k:GD2=l:GD3=m:\
+:GD4=j:GDH=q:GDV=x:HR=\E[m:kd=\E[B:KDEL=^D:ke=\E>:kh=\E[1~:kI=\E[2~:kl=\E[D:\
+:kN=\E[6~:kP=\E[5~:kr=\E[C:ks=\E=:ku=\E[A:li#24:LIG=\E[?5h:LK=\EOD:mb=\E[5m:\
+:md=\E[1m:me=\E[m^O:mr=\E[7m:mr0=\E[m:PA1=\EOM\EOq:PA2=\EOM\EOr:PA3=\EOM\EOs:\
+:PF1=\EOq:PF2=\EOr:PF3=\EOs:PF4=\EOt:PF5=\EOu:PF6=\EOv:PF7=\EOw:PF8=\EOx:\
+:PF9=\EOy:PF10=\EOP\EOp:PF11=\EOP\EOq:PF12=\EOP\EOr:PF13=\EOP\EOs:PF14=\EOP\EOt:\
+:PF15=\EOP\EOu:PF16=\EOP\EOv:PF17=\EOP\EOw:PF18=\EOP\EOx:PF19=\EOP\EOy:\
+:PF20=\EOQ\EOp:PF21=\EOQ\EOq:PF22=\EOQ\EOr:PF23=\EOQ\EOs:PF24=\EOQ\EOt:\
+:PF25=\EOQ\EOu:PF26=\EOQ\EOv:PF27=\EOQ\EOw:PF28=\EOQ\EOx:PF29=\EOQ\EOy:\
+:PF30=\EOR\EOp:PF31=\EOR\EOq:PF32=\EOR\EOr:PF33=\EOR\EOs:PF34=\EOR\EOt:\
+:PF35=\EOR\EOu:PF36=\EOR\EOv:PF37=\EOR\EOw:PF38=\EOR\EOx:PF39=\EOR\EOy:\
+:PF40=\EOS\EOp:PF41=\EOS\EOq:PF42=\EOS\EOr:PF43=\EOS\EOs:PF44=\EOS\EOt:\
+:PF45=\EOS\EOu:PF46=\EOS\EOv:PF47=\EOS\EOw:PF48=\EOS\EOx:RK=\EOC:se=\E[m:\
+:so=\E[7m:ta=\t:TEAC@:TEAK@:TECI@:TECL:TECV:TEDB@:TELB@:TENC:TENK:TENL@:TERA:\
+:TIAC:TIAK:TICI:TICL:TICV@:TIDB@:TIGR:TIIM:TILB@:TINC@:TINK@:TIOM@:TIRA:ue=\E[m:\
+:UK=\EOA:us=\E[4m:ve=\E[?25h:vi=\E[?25l:xi:xs@:
+#DEC VT340+ - ANSI color support
+d7|vt340+|dec-vt340+|DEC vt340+ terminal:\
+:ti=\E[62;1"p\EP1;1|23/1B\E\\\E[?4l\E[?7h\E[?8h:%1=\E[28~:&2=^K:@7=\E[4~:ae=^O:\
+:as=^N:bc=\b:bl=\007:BR=\E[m:bt=^X\t:ce=\E[K:CKAP=\E[?1h:CKNO=\E[?1l:cl=\E[2J:\
+:cm=\E[%i%d;%dH:CNL=\r\n:cr=\r:DAR=\E[?5l:dc=\E[3~:DK=\EOB:eA=\E)0:ESC=\E:\
+:ETO#300:G1=k:G2=l:G3=m:G4=j:GH=q:GV=x:GD1=k:GD2=l:GD3=m:GD4=j:GDH=q:GDV=x:\
+:HR=\E[m:kd=\E[B:KDEL=^D:ke=\E>:kh=\E[1~:kI=\E[2~:kl=\E[D:kN=\E[6~:kP=\E[5~:\
+:kr=\E[C:ks=\E=:ku=\E[A:LIG=\E[?5h:LK=\EOD:mb=\E[5m:md=\E[1m:me=\E[m^O:mr=\E[7m:\
+:mr0=\E[m:PA1=\EOM\EOq:PA2=\EOM\EOr:PA3=\EOM\EOs:PF1=\EOq:PF2=\EOr:PF3=\EOs:\
+:PF4=\EOt:PF5=\EOu:PF6=\EOv:PF7=\EOw:PF8=\EOx:PF9=\EOy:PF10=\EOP\EOp:\
+:PF11=\EOP\EOq:PF12=\EOP\EOr:PF13=\EOP\EOs:PF14=\EOP\EOt:PF15=\EOP\EOu:\
+:PF16=\EOP\EOv:PF17=\EOP\EOw:PF18=\EOP\EOx:PF19=\EOP\EOy:PF20=\EOQ\EOp:\
+:PF21=\EOQ\EOq:PF22=\EOQ\EOr:PF23=\EOQ\EOs:PF24=\EOQ\EOt:PF25=\EOQ\EOu:\
+:PF26=\EOQ\EOv:PF27=\EOQ\EOw:PF28=\EOQ\EOx:PF29=\EOQ\EOy:PF30=\EOR\EOp:\
+:PF31=\EOR\EOq:PF32=\EOR\EOr:PF33=\EOR\EOs:PF34=\EOR\EOt:PF35=\EOR\EOu:\
+:PF36=\EOR\EOv:PF37=\EOR\EOw:PF38=\EOR\EOx:PF39=\EOR\EOy:PF40=\EOS\EOp:\
+:PF41=\EOS\EOq:PF42=\EOS\EOr:PF43=\EOS\EOs:PF44=\EOS\EOt:PF45=\EOS\EOu:\
+:PF46=\EOS\EOv:PF47=\EOS\EOw:PF48=\EOS\EOx:RK=\EOC:se=\E[m:so=\E[7m:ta=\t:TEAC@:\
+:TEAK@:TECI@:TECL:TECV:TEDB@:TELB@:TENC:TENK:TENL@:TERA:TIAC:TIAK:TICI:TICL:\
+:TICV@:TIDB@:TIGR:TIIM:TILB@:TINC@:TINK@:TIOM@:TIRA:ue=\E[m:UK=\EOA:us=\E[4m:\
+:ve=\E[?25h:vi=\E[?25l:xi:xs@:tc=ansicolors:
+#DEC VT420 - 24x80 
+vt400-80|vt420-80|vt-420-80|pt420-80|pt-420-80:\
+:co#80:li#24:tc=d4:
+#DEC VT420 - 24x132
+vt420-132|vt420-132:\
+:co#132:li#24:tc=d4:
+#DEC vt420
+#PF Key Setting:
+#PF1  to PF9:  keypad key '1' to '9'
+#PF10 to PF19: keypad key PF1 and keypad key '0' to '9'
+#PF20 to PF29: keypad key PF2 and keypad key '0' to '9'
+#PF30 to PF39: keypad key PF3 and keypad key '0' to '9'
+#PF40 to PF49: keypad key PF4 and keypad key '0' to '9'
+#PA1: keypad key ENTER and keypad key '1'
+#PA2: keypad key ENTER and keypad key '2'
+#PA3: keypad key ENTER and keypad key '3'
+d4|vt400|vt420|vt-420|pt420|pt-420|DEC vt420 terminal:\
+:\
+:ti=\E[62;1"p\E[?42l\E[1;2*}\E[2;2*}\E[4;2*}\EP1;1|23/1B5B33357E;24/1B5B33367E;25/1B5B33377E;26/1B5B33387E;29/1B\E\\\E[?3l\E[?4l\E[?7h\E[?8h:\
+:%1=\E[28~:&2=^K:@7=\E[4~:ae=^O:as=^N:bc=\b:bcvt=\177:bl=\007:BR=\E[m:bt=^X\t:\
+:ce=\E[K:CKAP=\E[?1h:CKNO=\E[?1l:cl=\E[2J:cm=\E[%i%d;%dH:CNL=\r\n:cr=\r:ct@:\
+:DAR=\E[?5l:dc=\E[3~:DK=\EOB:eA=\E)0:ESC=\E:ETO#300:G1=k:G2=l:G3=m:G4=j:GH=q:\
+:GV=x:GD1=k:GD2=l:GD3=m:GD4=j:GDH=q:GDV=x:HR=\E[m:kd=\E[B:KDEL=^D:ke=\E>:kh=\E[1~:\
+:kI=\E[2~:kl=\E[D:kN=\E[6~:kP=\E[5~:kr=\E[C:ks=\E=:ku=\E[A:LIG=\E[?5h:LK=\EOD:\
+:mb=\E[5m:md=\E[1m:me=\E[m^O:mr=\E[7m:mr0=\E[m:PA1=\EOM\EOq:PA2=\EOM\EOr:\
+:PA3=\EOM\EOs:PF1=\EOq:PF2=\EOr:PF3=\EOs:PF4=\EOt:PF5=\EOu:PF6=\EOv:PF7=\EOw:\
+:PF8=\EOx:PF9=\EOy:PF10=\EOP\EOp:PF11=\EOP\EOq:PF12=\EOP\EOr:PF13=\EOP\EOs:\
+:PF14=\EOP\EOt:PF15=\EOP\EOu:PF16=\EOP\EOv:PF17=\EOP\EOw:PF18=\EOP\EOx:\
+:PF19=\EOP\EOy:PF20=\EOQ\EOp:PF21=\EOQ\EOq:PF22=\EOQ\EOr:PF23=\EOQ\EOs:\
+:PF24=\EOQ\EOt:PF25=\EOQ\EOu:PF26=\EOQ\EOv:PF27=\EOQ\EOw:PF28=\EOQ\EOx:\
+:PF29=\EOQ\EOy:PF30=\EOR\EOp:PF31=\EOR\EOq:PF32=\EOR\EOr:PF33=\EOR\EOs:\
+:PF34=\EOR\EOt:PF35=\EOR\EOu:PF36=\EOR\EOv:PF37=\EOR\EOw:PF38=\EOR\EOx:\
+:PF39=\EOR\EOy:PF40=\EOS\EOp:PF41=\EOS\EOq:PF42=\EOS\EOr:PF43=\EOS\EOs:\
+:PF44=\EOS\EOt:PF45=\EOS\EOu:PF46=\EOS\EOv:PF47=\EOS\EOw:PF48=\EOS\EOx:RK=\EOC:\
+:se=\E[m:so=\E[7m:ta=\t:TEAC@:TEAK@:TECI@:TECL:TECV:TEDB@:TELB@:TENC:TENK:TENL@:\
+:TERA:TIAC:TIAK:TICI:TICL:TICV@:TIDB@:TIGR:TIIM:TILB@:TINC@:TINK@:TIOM@:TIRA:\
+:ue=\E[m:UK=\EOA:us=\E[4m:ve=\E[?25h:vi=\E[?25l:xi:xs@:
+#X/Windows terminal - Right-to-left (RTL) settings
+#RTLF toggles the language within a field, while RTLS toggles the screen.
+rtl|rtlxterm|xterm-rtl|xtermrtl|rtlxtrm:\
+:RTLF=^Xl:RTLS=^Xs:tc=x1:
+#X/Windows terminal
+#PF Key Setting:
+#PF1  to PF9:  keypad key '1' to '9'
+#PF10 to PF19: keypad key PF1 and keypad key '0' to '9' 
+#PF20 to PF29: keypad key PF2 and keypad key '0' to '9' 
+#PF30 to PF39: keypad key PF3 and keypad key '0' to '9' 
+#PF40 to PF48: keypad key PF4 and keypad key '0' to '8' 
+#PA1: keypad key ENTER and keypad key '1'
+#PA2: keypad key ENTER and keypad key '2'
+#PA3: keypad key ENTER and keypad key '3'
+x1|xterm:\
+:ti=\E[?4l\E[?7h\E[?8h:%1=\E[28~:&2=^K:@7=^Xe:ae=^O:as=^N:bc=\b:bcvt=\177:\
+:bl=\007:BR=\E[m:bt=^X\t:ce=\E[K:CKAP=\E[?1h:CKNO=\E[?1l:cl=\E[2J:\
+:cm=\E[%i%d;%dH:CNL=\r\n:cr=\r:ct@:DAR=\E[?5l:dc=\E[3~:DK=\EOB:eA=\E)0:ESC=\E:\
+:ETO#300:G1=k:G2=l:G3=m:G4=j:GH=q:GV=x:GD1=k:GD2=l:GD3=m:GD4=j:GDH=q:GDV=x:\
+:HR=\E[m:kd=\E[B:KDEL=^D:ke=\E>:kh=^Xh:kI=\E[2~:kl=\E[D:kN=\E[6~:kP=\E[5~:kr=\E[C:\
+:ks=\E=:ku=\E[A:LIG=\E[?5h:LK=\EOD:mb=\E[5m:md=\E[1m:me=\E[m^O:mr=\E[7m:mr0=\E[m:\
+:PA1=\EOM\EOq:PA2=\EOM\EOr:PA3=\EOM\EOs:PF1=\EOq:PF2=\EOr:PF3=\EOs:PF4=\EOt:\
+:PF5=\EOu:PF6=\EOv:PF7=\EOw:PF8=\EOx:PF9=\EOy:PF10=\EOP\EOp:PF11=\EOP\EOq:\
+:PF12=\EOP\EOr:PF13=\EOP\EOs:PF14=\EOP\EOt:PF15=\EOP\EOu:PF16=\EOP\EOv:\
+:PF17=\EOP\EOw:PF18=\EOP\EOx:PF19=\EOP\EOy:PF20=\EOQ\EOp:PF21=\EOQ\EOq:\
+:PF22=\EOQ\EOr:PF23=\EOQ\EOs:PF24=\EOQ\EOt:PF25=\EOQ\EOu:PF26=\EOQ\EOv:\
+:PF27=\EOQ\EOw:PF28=\EOQ\EOx:PF29=\EOQ\EOy:PF30=\EOR\EOp:PF31=\EOR\EOq:\
+:PF32=\EOR\EOr:PF33=\EOR\EOs:PF34=\EOR\EOt:PF35=\EOR\EOu:PF36=\EOR\EOv:\
+:PF37=\EOR\EOw:PF38=\EOR\EOx:PF39=\EOR\EOy:PF40=\EOS\EOp:PF41=\EOS\EOq:\
+:PF42=\EOS\EOr:PF43=\EOS\EOs:PF44=\EOS\EOt:PF45=\EOS\EOu:PF46=\EOS\EOv:\
+:PF47=\EOS\EOw:PF48=\EOS\EOx:RK=\EOC:se=\E[m:so=\E[7m:ta=\t:TEAC@:TEAK@:TECI@:\
+:TECL:TECV:TEDB@:TELB@:TENC:TENK:TENL@:TERA:TIAC:TIAK:TICI:TICL:TICV@:TIDB@:\
+:TIGR:TIIM:TILB@:TINC@:TINK@:TIOM@:TIRA:ue=\E[m:UK=\EOA:us=\E[4m:xi:xs@:
+#X/Windows emulator on PC (101/102 keyboard)
+#PF Key Setting:
+#PF1  to PF9:  keypad key '1' to '9'
+#PF10 to PF19: keypad key '/' and keypad key '0' to '9' 
+#PF20 to PF24: keypad key '*' and keypad key '0' to '4' 
+#PA1: keypad key '-'
+#PA2: keypad key '+'
+#PA3: keypad key ENTER 
+x2|xtermpc|pcxterm:\
+:ti=\E[?4l\E[?7h\E[?8h:&2=^K:@7=^Xe:ae=^O:as=^N:bc=\b:bl=\007:BR=\E[m:bt=^X\t:\
+:ce=\E[K:CKAP=\E[?1h:CKNO=\E[?1l:cl=\E[2J:cm=\E[%i%d;%dH:CNL=\r\n:cr=\r:ct@:\
+:DAR=\E[?5l:dc=\E[3~:DK=\EOB:eA=\E)0:ESC=\E:ETO#300:G1=k:G2=l:G3=m:G4=j:GH=q:\
+:GV=x:GD1=k:GD2=l:GD3=m:GD4=j:GDH=q:GDV=x:HR=\E[m:kd=\E[B:ke=\E>:kh=^Xh:\
+:kI=\E[2~:kl=\E[D:kN=\E[6~:kP=\E[5~:kr=\E[C:ks=\E=:ku=\E[A:LIG=\E[?5h:LK=\EOD:\
+:mb=\E[5m:md=\E[1m:me=\E[m^O:mr=\E[7m:mr0=\E[m:PA1=\EOm:PA2=\EOk:PA3=\EOM:\
+:PF1=\EOq:PF2=\EOr:PF3=\EOs:PF4=\EOt:PF5=\EOu:PF6=\EOv:PF7=\EOw:PF8=\EOx:\
+:PF9=\EOy:PF10=\EOo\EOp:PF11=\EOo\EOq:PF12=\EOo\EOr:PF13=\EOo\EOs:PF14=\EOo\EOt:\
+:PF15=\EOo\EOu:PF16=\EOo\EOv:PF17=\EOo\EOw:PF18=\EOo\EOx:PF19=\EOo\EOy:\
+:PF20=\EOj\EOp:PF21=\EOj\EOq:PF22=\EOj\EOr:PF23=\EOj\EOs:PF24=\EOj\EOt:RK=\EOC:\
+:se=\E[m:so=\E[7m:ta=\t:TEAC@:TEAK@:TECI@:TECL:TECV:TEDB@:TELB@:TENC:TENK:TENL@:\
+:TERA:TIAC:TIAK:TICI:TICL:TICV@:TIDB@:TIGR:TIIM:TILB@:TINC@:TINK@:TIOM@:TIRA:\
+:ue=\E[m:UK=\EOA:us=\E[4m:xi:xs@:
+#MX-Series 97801, 97808
+#The initialization string performs the following actions:
+#- Sets Background bright
+#- Sets German character set (switchable to USASCII with <CH.CODE> key)
+#- Sets German keyboard (switchable to USASCII with <CH.CODE> key)
+#- To switch to german umlaute with <CH.CODE> : setenv LANG De_DE.646
+#We have set up the sequences for PF23 and PF24 to the rightmost keys
+#in the second top row (just below <F21> and <F22>).
+#PA1 to PA3 are set to the keys right to the <END> key in the second
+#top row (just below <F18> - <F20>).
+sn|sinix|97801|97808:\
+:ti=\E[1;25r\E[21u\E)w\E(K:&2=^K:@7=^D:ae=^O:as=^N:bc=\b:bl=\007:BR=\E[m:\
+:bt=\E[Z:cl=\E[H\E[2J:cm=\E[%i%d;%dH:co#80:cr=\r:ct@:dc=\E[P:eA=\E)0:ESC=\E:\
+:ETO#300:G1=C:G2=B:G3=D:G4=E:GH=A:GV=@:GD1=C:GD2=B:GD3=D:GD4=E:GDH=A:GDV=@:\
+:HR=\E[m:kd=\E[B:ke=\E>:kh=\Em:kI=\E[@:kl=\E[D:kN=\E[T:kP=\E[S:kr=\E[C:ks=\E=:\
+:ku=\E[A:li#25:mb=\E[5m:md=\E[2m:me=\E[m^O:mr=\E[7m:mr0=\E[m:PA1=\E6:PF1=\E@:\
+:PF2=\EA:PF3=\EB:PF4=\EC:PF5=\ED:PF6=\EF:PF7=\EG:PF8=\EH:PF9=\EI:PF10=\EJ:\
+:PF11=\EK:PF12=\EL:PF13=\EM:PF14=\EN:PF15=\EO:PF16=\EP:PF17=\E0:PF18=\E_:PF19=\Ed:\
+:PF20=\ET:PF21=\EV:PF22=\EX:PF23=\E :PF24=\E;:PF25=\E":PF26=\E#:PF27=\E$:PF28=\E%:\
+:PF29=\E&:PF30=\E':PF31=\E<:PF32=\E=:PF33=\E*:PF34=\E+:PF35=\E,:PF36=\E-:PF37=\E.:\
+:PF38=\E/:PF39=\E1:PF40=\E2:PF41=\E3:PF42=\EU:PF43=\EW:PF44=\EY:PF45=\E7:PF46=\E8:\
+:PF47=\El:PF48=\EZ:se=\E[m:so=\E[7m:ta=\t:TEAC@:TEAK@:TECI@:TECL:TECV:TEDB@:\
+:TELB@:TENC:TENK:TENL@:TERA:TIAC:TIAK:TICI:TICL:TICV@:TIDB@:TIGR:TIIM:TILB@:\
+:TINC@:TINK@:TIOM@:TIRA:ue=\E[m:us=\E[4m:ve=\E[7p:vi=\E[6p:xi@:xs@:
+#IBM aixterm
+#We have set up the top row keys <F1> - <F12> of the keypad to correspond
+#to the definitions for function keys PF1 through PF12.  To generate the
+#equivalent of PF9, the user presses the function key <F9> in the top row.
+#PF13 to PF24 are reachable via <Shift> plus <F[1-12]> and the function keys
+#PF25 to PF36 are mapped to <Shift>-<Ctrl> plus <F1> to <F12>.
+#The <Alt> key combined with <Ctrl> plus <F1> to <F3> generates PA1 - PA3.
+#To generate the equivalent of PA2, the user presses <Alt>-<Ctrl> with <F2>.
+i1|aixterm|aixterm-m|8506:\
+:ti=\E[62;1"p\E[?4l\E[?7h\E[?8h:&2=^K:@7=\E[146q:ae=\E(B:as=\E(0:bc=\b:bl=\007:\
+:BR=\E[m:bt=\E[Z:ce=\E[K:CKAP=\E[?1h:CKNO=\E[?1l:cl=\E[2J:cm=\E[%i%d;%dH:co#80:\
+:cr=\r:ct@:dc=\E[P:DK=\EOB:eA=\E)0:ESC=\E:ETO#300:G1=\277:G2=\332:G3=\300:\
+:G4=\331:GH=\304:GV=\263:GD1=\273:GD2=\311:GD3=\310:GD4=\274:GDH=\315:GDV=\272:\
+:HR=\E[m:kd=\E[B:ke=\E>:kh=\E[H:kI=\E[139q:kl=\E[D:kN=\E[154q:kP=\E[150q:\
+:kr=\E[C:ks=\E=:ku=\E[A:li#24:LK=\EOD:mb=\E[5m:md=\E[1m:me=\E[m^O:mr=\E[7m:\
+:mr0=\E[m:PA1=\E[037q:PA2=\E[038q:PA3=\E[039q:PF1=\E[001q:PF2=\E[002q:\
+:PF3=\E[003q:PF4=\E[004q:PF5=\E[005q:PF6=\E[006q:PF7=\E[007q:PF8=\E[008q:\
+:PF9=\E[009q:PF10=\E[010q:PF11=\E[011q:PF12=\E[012q:PF13=\E[013q:PF14=\E[014q:\
+:PF15=\E[015q:PF16=\E[016q:PF17=\E[017q:PF18=\E[018q:PF19=\E[019q:PF20=\E[020q:\
+:PF21=\E[021q:PF22=\E[022q:PF23=\E[023q:PF24=\E[024q:PF25=\E[025q:PF26=\E[026q:\
+:PF27=\E[027q:PF28=\E[028q:PF29=\E[029q:PF30=\E[030q:PF31=\E[031q:PF32=\E[032q:\
+:PF33=\E[033q:PF34=\E[034q:PF35=\E[035q:PF36=\E[036q:RK=\EOC:se=\E[m:so=\E[7m:\
+:ta=\t:TEAC@:TEAK@:TECI@:TECL:TECV:TEDB@:TELB@:TENC:TENK:TENL@:TERA:TIAC:TIAK:\
+:TICI:TICL:TICV@:TIDB@:TIGR:TIIM:TILB@:TINC@:TINK@:TIOM@:TIRA:ue=\E[m:UK=\EOA:\
+:us=\E[4m:ve=\E[?25h:vi=\E[?25l:xi@:xs@:
+#IBM 3151
+#We have set up the top row keys <F1> - <F12> of the keypad to correspond
+#to the definitions for function keys PF1 through PF12.  To generate the
+#equivalent of PF9, the user presses the function key <F9> in the top row.
+#PF13 to PF24 are reachable via <Shift> plus <F[1-12]> and the function keys
+#PF25 to PF36 are mapped to <Shift>-<Ctrl> plus <F1> to <F12>.
+#The <Alt> key combined with <Ctrl> plus <F1> to <F3> generates PA1 - PA3.
+#To generate the equivalent of PA2, the user presses <Alt>-<Ctrl> with <F2>.
+#If your terminal is connected to a 7-bit line you may use following
+#sequences to adapt the block grafical characters:
+#:as=:         :ae=:         :GV=|:          :GH=-:
+#:G1=+:        :G2=+:        :G3=+:          :G4=+:
+#On some models of IBMs 3151 terminal you may have to replace the
+#cursor motion capability with the following code:
+#:cm=\EY%+\040%+\040:\
+i2|ibm3151|IBM3151|3151:\
+:&2=^K:@7=\177:ae=\E>@:as=\E>B:bc=\b:bl=\007:BR=\E4@:bt=\E2:cl=\EH\EJ:\
+:cm=\E[%i%d;%dH:co#80:ct@:dc=\EQ:ESC=\E:ETO#300:G1=\277:G2=\332:G3=\300:G4=\331:\
+:GH=\304:GV=\263:GD1=\277:GD2=\332:GD3=\300:GD4=\331:GDH=\304:GDV=\263:HR=\E4@:\
+:kd=\EB:kh=\EH:kI=\EP:kl=\ED:kN=\EI:kP=\EL\r:kr=\EC:ku=\EA:li#24:mb=\E4$a:\
+:md=\E4(a:mr=\E4!a:mr0=\E4>b:PA1=\E!m\r:PA2=\E!n\r:PA3=\E!o\r:PF1=\Ea\r:\
+:PF2=\Eb\r:PF3=\Ec\r:PF4=\Ed\r:PF5=\Ee\r:PF6=\Ef\r:PF7=\Eg\r:PF8=\Eh\r:PF9=\Ei\r:\
+:PF10=\Ej\r:PF11=\Ek\r:PF12=\El\r:PF13=\E!a\r:PF14=\E!b\r:PF15=\E!c\r:PF16=\E!d\r:\
+:PF17=\E!e\r:PF18=\E!f\r:PF19=\E!g\r:PF20=\E!h\r:PF21=\E!i\r:PF22=\E!j\r:\
+:PF23=\E!k\r:PF24=\E!l\r:PF25=\E"a\r:PF26=\E"b\r:PF27=\E"c\r:PF28=\E"d\r:\
+:PF29=\E"e\r:PF30=\E"f\r:PF31=\E"g\r:PF32=\E"h\r:PF33=\E"i\r:PF34=\E"j\r:\
+:PF35=\E"k\r:PF36=\E"l\r:se=\E4>b:so=\E4!a:TEAC@:TEAK@:TECI@:TECL:TECV:TEDB@:\
+:TELB@:TENC:TENK:TENL@:TERA:TIAC:TIAK:TICI:TICL:TICV@:TIDB@:TIGR:TIIM:TILB@:\
+:TINC@:TINK@:TIOM@:TIRA:ue=\E4=b:us=\E4"a:xi@:xs@:
+#Beta-Version for:
+#sun-cmd / Open-Windows terminal
+#The settings provided here are for running under Open-Windows
+#command tool.
+#We have set up the Natural function keys PF1 - PF12 as normal (top row)
+#function keys <F1> - <F12>.
+#To generate the keys PF13 through PF24 you have to use the combination
+#of <L2> (Again-key) followed by the <F1> - <F12> key.
+#The <L2>-key adds 12 to the value of the function key
+#So PF14 is reached by <L2> followed by <F2>.
+s1|sun-cmd:\
+:ti=\E[s\E[>4l:te=\E[>4h:%1=^Xh:&2=^K:@7=\E[220z:bc=^H:bl=\007:BR=\E[m:bt=^X\t:\
+:ce=\E[K:cl=^L:cm=\E[%i%d;%dH:co#80:cr=\r:ct@:dc=\E[P:ESC=\E:ETO#300:G1=+:G2=+:\
+:G3=+:G4=+:GH=-:GV=|:GD1=+:GD2=+:GD3=+:GD4=+:GDH=-:GDV=|:HR=\E[m:kd=\E[B:\
+:KDEL=\E[M:kh=\E[214z:kI=^Xi:kl=\E[D:kr=\E[C:ku=\E[A:li#35:mb=\E[5m:md=\E[1m:\
+:mr=\E[7m:mr0=\E[m:PA1=\EOR:PA2=\EOS:PA3=\EOm:PD=^D:PF1=\E[224z:PF2=\E[225z:\
+:PF3=\E[226z:PF4=\E[227z:PF5=\E[228z:PF6=\E[229z:PF7=\E[230z:PF8=\E[231z:\
+:PF9=\E[232z:PF10=\E[233z:PF11=\E[234z:PF12=\E[235z:PF13=\E[193z\E[224z:\
+:PF14=\E[193z\E[225z:PF15=\E[193z\E[226z:PF16=\E[193z\E[227z:PF17=\E[193z\E[228z:\
+:PF18=\E[193z\E[229z:PF19=\E[193z\E[230z:PF20=\E[193z\E[231z:PF21=\E[193z\E[232z:\
+:PF22=\E[193z\E[233z:PF23=\E[193z\E[234z:PF24=\E[193z\E[235z:PU=^U:se=\E[m:\
+:so=\E[7m:ta=\t:TEAC@:TEAK@:TECI@:TECL:TECV:TEDB@:TELB@:TENC:TENK:TENL@:TERA:\
+:TIAC:TIAK:TICI:TICL:TICV@:TIDB@:TIGR:TIIM:TILB@:TINC@:TINK@:TIOM@:TIRA:ue=\E[m:\
+:us=\E[4m:xi@:xs@:
+#X/Windows terminal on a SUN console
+#We have set up the Natural function keys PF1 - PF12 as normal (top row)
+#function keys <F1> - <F12>.
+#NOTE: This Entry is designed specifically for the SUN console keyboard.
+#The environmental variable TERM must be set to 'xterm-sun'.
+s2|xterm-sun:\
+:ti=\E[?4l\E[?7h\E[?8h:%1=^XH:&2=^K:@7=^Xe:ae=^O:as=^N:bc=\b:bl=\007:BR=\E[m:\
+:bt=^X\t:CKAP=\E[?1h:CKNO=\E[?1l:cl=\E[2J:cm=\E[%i%d;%dH:co#80:cr=\r:ct@:\
+:dc=^X^X:DK=\EOB:eA=\E)0:ESC=\E:ETO#300:G1=k:G2=l:G3=m:G4=j:GH=q:GV=x:GD1=k:\
+:GD2=l:GD3=m:GD4=j:GDH=q:GDV=x:HR=\E[m:kd=\E[B:ke=\E>:kh=^Xh:kI=^Xi:kl=\E[D:\
+:kr=\E[C:ks=\E=:ku=\E[A:li#24:LK=\EOD:mb=\E[5m:md=\E[1m:me=\E[m:mr=\E[7m:\
+:mr0=\E[m:PA1=\E[25~:PA2=\E[26~:PA3=\E[28~:PD=^D:PF1=\E[11~:PF2=\E[12~:\
+:PF3=\E[13~:PF4=\E[14~:PF5=\E[15~:PF6=\E[17~:PF7=\E[18~:PF8=\E[19~:PF9=\E[20~:\
+:PF10=\E[21~:PF11=\E[23~:PF12=\E[24~:PF13=\EOP\E[11~:PF14=\EOP\E[12~:\
+:PF15=\EOP\E[13~:PF16=\EOP\E[14~:PF17=\EOP\E[15~:PF18=\EOP\E[17~:PF19=\EOP\E[18~:\
+:PF20=\EOP\E[19~:PF21=\EOP\E[20~:PF22=\EOP\E[21~:PF23=\EOP\E[23~:PF24=\EOP\E[24~:\
+:PF25=\EOQ\E[11~:PF26=\EOQ\E[12~:PF27=\EOQ\E[13~:PF28=\EOQ\E[14~:PF29=\EOQ\E[15~:\
+:PF30=\EOQ\E[17~:PF31=\EOQ\E[18~:PF32=\EOQ\E[19~:PF33=\EOQ\E[20~:PF34=\EOQ\E[21~:\
+:PF35=\EOQ\E[23~:PF36=\EOQ\E[24~:PF37=\EOR\E[11~:PF38=\EOR\E[12~:PF39=\EOR\E[13~:\
+:PF40=\EOR\E[14~:PF41=\EOR\E[15~:PF42=\EOR\E[17~:PF43=\EOR\E[18~:PF44=\EOR\E[19~:\
+:PF45=\EOR\E[20~:PF46=\EOR\E[21~:PF47=\EOR\E[23~:PF48=\EOR\E[24~:PU=^U:RK=\EOC:\
+:se=\E[m:so=\E[7m:ta=\t:TEAC@:TEAK@:TECI@:TECL:TECV:TEDB@:TELB@:TENC:TENK:TENL@:\
+:TERA:TIAC:TIAK:TICI:TICL:TICV@:TIDB@:TIGR:TIIM:TILB@:TINC@:TINK@:TIOM@:TIRA:\
+:ue=\E[m:UK=\EOA:us=\E[4m:xi:xs@:
+#NCR console
+#We have set up the top row keys <F1> - <F12> of the keypad to correspond
+#to the definitions for function keys PF1 through PF12.  To generate the
+#equivalent of PF9, the user presses the function key <F9> in the top row.
+#PF13 to PF24 are reachable via <Shift> plus <F[1-12]> and the function keys
+at|AT386-M|Ansi standard screen UNIX V.4:\
+:&2=^K:@7=\E[Y:ae=\E[10m:as=\E[12m:bc=\b:bl=\007:BR=\E[m:bt=\035:cl=\E[2J\E[H:\
+:cm=\E[%i%d;%dH:co#80:ct@:dc=\177:ESC=\E:ETO#300:G1=?:G2=Z:G3=@:G4=Y:GH=D:\
+:GV=\063:GD1=;:GD2=I:GD3=H:GD4=<:GDH=M:GDV=\072:HR=\E[m:kd=\E[B:kh=\E[H:kI=\E[@:\
+:kl=\E[D:kN=\E[U:kP=\E[V:kr=\E[C:ku=\E[A:li#25:mb=\E[5m:md=\E[1m:me=\E[m:\
+:mr=\E[7m:mr0=\E[m:PF1=\EOP:PF2=\EOQ:PF3=\EOR:PF4=\EOS:PF5=\EOT:PF6=\EOU:\
+:PF7=\EOV:PF8=\EOW:PF9=\EOX:PF10=\EOY:PF11=\EOZ:PF12=\EOA:PF13=\EOp:PF14=\EOq:\
+:PF15=\EOr:PF16=\EOs:PF17=\EOt:PF18=\EOu:PF19=\EOv:PF20=\EOw:PF21=\EOx:PF22=\EOy:\
+:PF23=\EOz:PF24=\EOa:se=\E[m:so=\E[7m:TEAC@:TEAK@:TECI@:TECL:TECV:TEDB@:TELB@:\
+:TENC:TENK:TENL@:TERA:TIAC:TIAK:TICI:TICL:TICV@:TIDB@:TIGR:TIIM:TILB@:TINC@:\
+:TINK@:TIOM@:TIRA:ue=\E[m:us=\E[4m:xi@:xs@:
+#NCR console (ANSI color support)
+au|AT386|Ansi color screen UNIX V.4:\
+:&2=^K:@7=\E[Y:ae=\E[10m:as=\E[12m:bc=\b:bl=\007:BR=\E[m:bt=\035:cl=\E[2J\E[H:\
+:cm=\E[%i%d;%dH:co#80:dc=\177:ESC=\E:ETO#300:G1=?:G2=Z:G3=@:G4=Y:GH=D:GV=\063:\
+:GD1=;:GD2=I:GD3=H:GD4=<:GDH=M:GDV=\072:HR=\E[m:kd=\E[B:kh=\E[H:kI=\E[@:kl=\E[D:\
+:kN=\E[U:kP=\E[V:kr=\E[C:ku=\E[A:li#25:mb=\E[5m:md=\E[1m:mr=\E[7m:mr0=\E[m:\
+:PF1=\EOP:PF2=\EOQ:PF3=\EOR:PF4=\EOS:PF5=\EOT:PF6=\EOU:PF7=\EOV:PF8=\EOW:\
+:PF9=\EOX:PF10=\EOY:PF11=\EOZ:PF12=\EOA:PF13=\EOp:PF14=\EOq:PF15=\EOr:PF16=\EOs:\
+:PF17=\EOt:PF18=\EOu:PF19=\EOv:PF20=\EOw:PF21=\EOx:PF22=\EOy:PF23=\EOz:PF24=\EOa:\
+:se=\E[m:so=\E[7m:TEAC@:TEAK@:TECI@:TECL:TECV:TEDB@:TELB@:TENC:TENK:TENL@:TERA:\
+:TIAC:TIAK:TICI:TICL:TICV@:TIDB@:TIGR:TIIM:TILB@:TINC@:TINK@:TIOM@:TIRA:ue=\E[m:\
+:us=\E[4m:xi@:xs@:tc=ansicolors:
+#SCO console
+#We have set up the top row keys <F1> - <F12> of the keypad to correspond
+#to the definitions for function keys PF1 through PF12.  To generate the
+#equivalent of PF9, the user presses the function key <F9> in the top row.
+#PF13 to PF24 are reachable via <Shift> plus <F[1-12]> and the function keys
+#PF25 to PF36 are mapped to <Ctrl> plus <F1> to <F12>.
+#The <Ctrl> key combined with <Shift> plus <F1> to <F3> generates PA1 - PA3.
+#To generate the equivalent of PA2, press <Shift>-<Ctrl> together with <F2>.
+#Rem: original entry for backward tabulator   :bt=\E[Z:
+li|ansi|Ansi standard crt SCO:\
+:%1=^Xh:&2=^K:@7=\E[F:ae=\E[10m:as=\E[12m:bc=\b:bl=\007:BR=\E[m:bt=^X\t:\
+:cl=\E[2J\E[H:cm=\E[%i%d;%dH:co#80:cr=\r:dc=\177:ESC=\E:ETO#300:G1=?:G2=Z:G3=@:\
+:G4=Y:GH=D:GV=\063:GD1=;:GD2=I:GD3=H:GD4=<:GDH=M:GDV=\072:HR=\E[m:kd=\E[B:\
+:kh=\E[H:kI=\E[L:kl=\E[D:kN=\E[G:kP=\E[I:kr=\E[C:ku=\E[A:li#25:mb=\E[5m:\
+:md=\E[1m:me=\E[m:mr=\E[7m:mr0=\E[m:PA1=\E[w:PA2=\E[x:PA3=\E[y:PF1=\E[M:PF2=\E[N:\
+:PF3=\E[O:PF4=\E[P:PF5=\E[Q:PF6=\E[R:PF7=\E[S:PF8=\E[T:PF9=\E[U:PF10=\E[V:\
+:PF11=\E[W:PF12=\E[X:PF13=\E[Y:PF14=\E[Z:PF15=\E[a:PF16=\E[b:PF17=\E[c:PF18=\E[d:\
+:PF19=\E[e:PF20=\E[f:PF21=\E[g:PF22=\E[h:PF23=\E[i:PF24=\E[j:PF25=\E[k:PF26=\E[l:\
+:PF27=\E[m:PF28=\E[n:PF29=\E[o:PF30=\E[p:PF31=\E[q:PF32=\E[r:PF33=\E[s:PF34=\E[t:\
+:PF35=\E[u:PF36=\E[v:se=\E[m:so=\E[7m:ta=\t:TEAC@:TEAK@:TECI@:TECL:TECV:TEDB@:\
+:TELB@:TENC:TENK:TENL@:TERA:TIAC:TIAK:TICI:TICL:TICV@:TIDB@:TIGR:TIIM:TILB@:\
+:TINC@:TINK@:TIOM@:TIRA:ue=\E[m:us=\E[4m:xi@:xs@:tc=ansicolors:
+#DEC VT52
+#PF Key Setting:
+#PF1  to PF10: ESC and '1' to '0' .
+dv|vt52|vt52-80|dec-vt52|DEC vt52 terminal:\
+:ti=\E;:&2=^K:@7=\Ee:ae=\EG:as=\EF:bc=\b:bl=\007:bt=\Eb:cl=\EH\EJ:cm=\EY%+ %+ :\
+:co#80:cr=\r:ct@:dc=^X:ESC=\E\E:G1=l:G2=s:G3=e:G4=m:GH=`:GV=a:GD1=l:GD2=s:GD3=e:\
+:GD4=m:GDH=`:GDV=a:kd=\EB:kh=\Eh:kI=\Ei:kl=\ED:kN=^D:kP=^U:kr=\EC:ku=\EA:li#24:\
+:PF1=\E1:PF2=\E2:PF3=\E3:PF4=\E4:PF5=\E5:PF6=\E6:PF7=\E7:PF8=\E8:PF9=\E9:PF10=\E0:\
+:ta=\t:TEAC:TEAK:TECI@:TECL:TECV@:TEDB@:TELB@:TENC:TENK:TENL@:TERA:TIAC@:\
+:TIAK@:TICI@:TICL:TICV@:TIDB@:TIGR@:TIIM@:TILB@:TINC@:TINK@:TIOM@:TIRA:xi@:\
+:xs@:
+#WYSE 60
+#A wyse60 terminal is not able to display bold attribute
+#for a single field, but only for a whole line. Therefore
+#there is no bold attribute specified. If this feature is
+#absolutely necessary, try the DIM attribute which is given
+#here as an example: :HS=\EGp: :HR=\EG0:
+#In previous NATURAL versions the upper PFkeys are defined
+#in the following way:
+#:k10=J\r:k11=K\r:k12='\r:k13=a\r:k14=b\r:k15=c\r:k16=d\r:
+#:k17=[16~:k18=OB:k19=OC:k20=OD:k21=OE:k22=OI:k23=OH:
+#The new PF13 - PF24 keys now defined as SHIFT and F1 - F12.
+#Example: SHIFT and PF1  results in PF13.
+#Example: SHIFT and PF12 results in PF24.
+w0|wy60|wyse60|Wyse 60/80 Wyse WY-60:\
+:BR=\EG0:ESC=\E:ETO#300:mb=\EG2:PF11=^AJ\r:PF12=^AK\r:PF13=^A`\r:PF14=^Aa\r:\
+:PF15=^Ab\r:PF16=^Ac\r:PF17=^Ad\r:PF18=^Ae\r:PF19=^Af\r:PF20=^Ag\r:PF21=^Ah\r:\
+:PF22=^Ai\r:PF23=^Aj\r:PF24=^Ak\r:tc=w1:
+#WYSE 50
+#There is a difficulty with the left arrow and/or backspace keys 
+#because they send the same code.  Rumor has it the left arrow 
+#key can be reprogrammed. We'd be happy to know how.
+#For the time being we assign the backspace function to the 
+#REPL key.
+#We get around sg by using reverse for "protected" text and
+#"protecting" whatever text we want highlighted.
+w1|wy50|wyse50|Wyse 50/80 Wyse WY-50:\
+:ti=\EA21\E`6:@7=\E{:ae=\EH^C:as=\EH^B:bc=\Er:bl=\007:bt=\EI:cl=\E*:\
+:cm=\Ea%i%dR%dC:co#80:ct@:dc=\EW:ESC=\E\E:G1=3:G2=2:G3=1:G4=5:GH=\072:GV=6:GD1=3:\
+:GD2=2:GD3=1:GD4=5:GDH=\072:GDV=6:kd=^J:kh=\036:kI=\Eq:kl=^H:kN=\EK:kP=\EJ:\
+:kr=^L:ku=^K:li#24:me=\EG0:mr=\E):mr0=\E(:PF1=^A@\r:PF2=^AA\r:PF3=^AB\r:PF4=^AC\r:\
+:PF5=^AD\r:PF6=^AE\r:PF7=^AF\r:PF8=^AG\r:PF9=^AH\r:PF10=^AI\r:se=\E(:so=\E):\
+:TEAC@:TEAK@:TECI@:TECL:TECV:TEDB@:TELB@:TENC:TENK:TENL@:TERA:TIAC@:TIAK@:TICI@:\
+:TICL:TICV@:TIDB@:TIGR@:TIIM@:TILB@:TINC@:TINK@:TIOM@:TIRA:ue=\EG0:us=\EG8:\
+:ve=\E`1:vi=\E`0:xi@:xs@:
+#Ansi Color Definition
+#Color definitions for terminals which support ANSI standard colors
+#ct    = color terminal
+#fg... = foreground (text) color
+#bg... = background color
+#..bla = black
+#..red = red
+#..gre = green
+#..yel = yellow
+#..blu = blue
+#..mag = magenta
+#..cya = cyan
+#..whi = white
+#ctres = color reset
+ansicolors:\
+:bgbla=\E[40m:bgblu=\E[44m:bgcya=\E[46m:bggre=\E[42m:bgmag=\E[45m:bgred=\E[41m:\
+:bgwhi=\E[47m:bgyel=\E[43m:ct:ctres=\E[30m:fgblu=\E[34m:fgcya=\E[36m:fggre=\E[32m:\
+:fgmag=\E[35m:fgred=\E[31m:fgwhi=\E[37m:fgyel=\E[33m:TEAC:TEAK:TECI@:TECL@:\
+:TECV@:TEDB@:TELB@:TENC:TENK:TENL@:TERA@:TIAC@:TIAK@:TICI@:TICL@:TICV@:TIDB@:\
+:TIGR@:TIIM@:TILB@:TINC@:TINK@:TIOM@:TIRA@:xi@:xs@:

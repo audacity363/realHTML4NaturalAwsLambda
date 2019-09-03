@@ -1,0 +1,66 @@
+0010/* This program serves as example how to design a user-defined
+0020/* program to call 'USR0210N'
+0030/********************************************************************
+0040DEFINE DATA LOCAL
+005001 ACTION     (A06)      /* SAVE, CAT, STOW
+006001 READ-OBJ   (A01)      /* Y: Read object into ESIZE
+0070  /* N: Take current contents of ESIZE
+008001 ERR        (B01)      /* Error Code
+009001 REDEFINE ERR
+0100  02 ERR-I   (I01)
+011001 TYPE       (A01)      /* Type of NATURAL Source
+012001 NAME       (A08)      /* Name of NATURAL Source
+013001 LIB        (A08)      /* Library
+0140LOCAL
+015001 ERRTXT     (A40)      /* Explanation to ERR
+016001 #MSG       (A72)
+0170END-DEFINE
+0180/*
+0190SET KEY ALL
+0200MOVE 'CAT'      TO ACTION     /*  SAVE, CAT or STOW
+0210MOVE 'USR0210L' TO NAME       /*  For test purposes only
+0220MOVE '        ' TO LIB        /*  *LIBRARY-ID if blank
+0230MOVE 'Y'        TO READ-OBJ   /*  Read into ESIZE
+0240MOVE ' '        TO TYPE       /*  Take type from object itself
+0250/*
+0260REPEAT
+0270  INPUT (AD=MIT'_' IP=ON CD=NE) WITH TEXT #MSG
+0280    /  'Save, cat, stow NATURAL source:' (YEI)
+0290    /  '-' (31) (YEI)
+0300    // 'Action ....................' (TU) ACTION
+0310    /  'Name of source ............' (TU) NAME
+0320    /  'Library ...................' (TU) LIB
+0330    /  'Read source into editor ...' (TU) READ-OBJ
+0340    /  'Type of source ............' (TU) TYPE
+0350    ///'Press any PF-key to stop.' (TU)
+0360/*
+0370  RESET #MSG
+0380  IF *PF-KEY NE 'ENTR'
+0390    ESCAPE ROUTINE
+0400  END-IF
+0410/*
+0420  CALLNAT 'USR0210N' ACTION READ-OBJ ERR TYPE NAME LIB
+0430/*
+0440  DECIDE ON FIRST ERR-I
+0450    VALUE 0  MOVE 'Ok.'                                TO ERRTXT
+0460    VALUE 1  MOVE 'Invalid Command.'                   TO ERRTXT
+0470    VALUE 2  MOVE 'READ-OBJ must be "Y" or "N".'       TO ERRTXT
+0480    VALUE 3  MOVE 'Invalid Object Type.'               TO ERRTXT
+0490    VALUE 4  MOVE 'Error during READ of a Map.'        TO ERRTXT
+0500    VALUE 5  MOVE 'NAME must be specified.'            TO ERRTXT
+0510    VALUE 6  MOVE 'Source doesn"t exist.'              TO ERRTXT
+0520    VALUE 7  MOVE 'Map Source contains an Error.'      TO ERRTXT
+0530    VALUE 8  MOVE 'Type dialog is not allowed.'        TO ERRTXT
+0540    NONE    COMPRESS 'Unknown Error Code:' ERR-I       TO ERRTXT
+0550  END-DECIDE
+0560/*
+0570  IF ERR NE 0
+0580    RELEASE STACK
+0590    #MSG := ERRTXT
+0600  ELSE
+0610    /* STACK has been modified. Execute the commands:
+0620    ESCAPE ROUTINE
+0630  END-IF
+0640END-REPEAT
+0650/*
+0660END

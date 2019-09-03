@@ -1,0 +1,71 @@
+0010Check Natural library name
+0020.
+0030Documentation ......... USR1067T    /*  Text object
+0040Interface ............. USR1067N    /*  Cataloged subprogram
+0050Example Program ....... USR1067P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATA HANDLING
+0100.
+0110Keywords .............. CHECK, LIBRARY, NAME
+0120.
+0130Function .............. Checks if a library name is valid according to
+0140                        the Natural naming conventions (see the Natural
+0150                        Fundamentals documentation for further
+0160                        information).
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+0230 1 USR1067L
+0240   2 INPUTS
+0250     3 LIBRARY        (A32)
+0260   2 OUTPUTS
+0270     3 ERROR-POSITION (I04)
+0280     3 RESPONSE       (I04)
+0290/*
+0300 1 USR1067N
+0310   2 VERSION          (I01)     INIT <0>
+0320 1 REDEFINE USR1067N
+0330   2 EXTENDED-PARMS
+0340     3 EXTENDED-DATA  (A01/1:1)
+0350.
+0360Interface Call
+0370--------------
+0380Use the interface with the CALLNAT statement:
+0390.
+0400CALLNAT 'USR1067N' USR1067L USR1067N.EXTENDED-PARMS
+0410.
+0420.
+0430Using the Application Programming Interface:
+0440--------------------------------------------
+0450Copy the subprogram USR1067N to the library SYSTEM or the steplib
+0460library respectively, or to the required library.
+0470.
+0480Description of the parameters:
+0490.
+0500Input ...... LIBRARY (A32)
+0510                  LIBRARY contains the name of the library to
+0520                  be checked.
+0530.
+0540Output ..... ERROR-POSITION (I04)
+0550                  ERROR-POSITION = 0 indicates that the name
+0560                  is valid. Otherwise the position of the first
+0570                  character which is not valid according to the
+0580                  Natural naming conventions will be returned.
+0590.
+0600Output ..... RESPONSE (I04)
+0610                  Possible values are:
+0620                  =   0 The library ID is valid
+0630                  = 400 The library ID is invalid
+0640.
+0650In/Output .. USR1067N.VERSION (I01)
+0660                 Version number of the subprogram.
+0670                 0 is the version number for the original
+0680                 parameter layout.
+0690.
+0700.
+0710*****  End of Description  *****

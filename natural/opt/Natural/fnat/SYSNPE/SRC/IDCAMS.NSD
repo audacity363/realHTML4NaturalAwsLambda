@@ -1,0 +1,40 @@
+0010DB: 148 FILE: 014  - IDCAMS                           DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:22
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:22
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      MVS and VSE fields
+0230*
+0240  1 A1 COMMAND                           A  253    D Input command to IDC
+0250*      Input command to IDCAMS.
+0260*      Each command should begin with
+0270*      a blank and multiple commands
+0280*      should be separated by a semi-
+0290*      colon ";".
+0300*      (See the Access Method
+0310*      Services Manual for further
+0320*      information.)
+0330  1 A2 LINE-LENGTH                       N  3.0      Length of output lin
+0340*      Length of output line.
+0350  1 A3 LINE                              A  133    D IDCAMS output line.
+0360*      IDCAMS output line.
+0370*
+0380*      End of IDCAMS
+0390*
+0400******DDM OUTPUT TERMINATED******

@@ -1,0 +1,65 @@
+0010* - Columns and Headings for SYSRPC SRVLIST -                          *
+0020*                                                                      *
+0030* Important: Do not change the names in the Field column. Do not       *
+0040* comment out or move the first (mandatory) code line for SERVER-NAME. *
+0050*                                                                      *
+0060* You can comment out (* ) optional lines to exclude columns from      *
+0070* the report.                                                          *
+0080* You can change the sequence of columns in the report by rearranging  *
+0090* the sequence of lines.                                               *
+0100* You can change text enclosed in apostrophes and inline comments.     *
+0110*                                                                      *
+0120* A hyphen at the end of a line indicates that the description         *
+0130* continues on the next line. This is important for batch runs,        *
+0140* where the description is printed as a legend.                        *
+0150************************************************************************
+0160*
+0170* Field ----------Heading---------/*-Description-----------------------
+0180*
+0190 SERVER-NAME      'Server Name'   /* Name of Natural RPC server.
+0200 TRANS            'TransRoutine'  /* Name of translation routine used.
+0210 REQ-SUM          'Requests'      /* Accumulated number of requests -
+0220                                  /* (number of SEND commands with -
+0230                                  /* CONVID=NEW or NONE).
+0240 CONV-NONACT      'ConvTimeouts'  /* Conversation timeout
+0250 SERVER-ACT       'ServersActive' /* Number of servers active for-
+0260                                  /* service.
+0270 CONV-ACT         'ConvActive'    /* Number of conversations active for-
+0280                                  /* service.
+0290 CONV-HIGH        'ConvHigh'      /* Highest number of conversations -
+0300                                  /* active for service.
+0310 LONG-ACT         'LongBuffActive'/* Number of long buffers active (in -
+0320                                  /* use) for service.
+0330 LONG-HIGH        'LongBuffHigh'  /* Highest number of long buffers -
+0340                                  /* active (in use) for service.
+0350 SHORT-ACT        'ShortBuffActive'/* Number of short buffers active -
+0360                                  /* (in use) for service.
+0370 SHORT-HIGH       'ShortBuffHigh' /* Highest number of short buffers -
+0380                                  /* active (in use) for service.
+0390 NUM-WAIT-SERVER  'ServerWaitNum' /* Number of times client had to wait-
+0400                                  /* for this service -
+0410                                  /* or messages from Natural RPC server.
+0420 NUM-SERV-OCC     'ServerReqNum'  /* Number of times client request -
+0430                                  /* (SEND with CONVID=NEW or NONE) -
+0440                                  /* could not be immediately assigned -
+0450                                  /* to a waiting Natural RPC server.
+0460 NUM-PEND         'NumPending'    /* Number of new conversations which -
+0470                                  /* are pending.
+0480 PEND-HIGH        'ConvPendHigh'  /* Highest number of pending -
+0490                                  /* conversations.
+0500 LMAXUOWS         'UOWsMax'       /* Maximum number of active UOWs.
+0510 LMAXUOWMSG       'UOWmsgMaxG'    /* Maximum number of messages in a UOW.
+0520 LUWTIME          'UOWtime'       /* Maximum UOW lifetime.
+0530 LMAXMSGSIZE      'MsgSizeMax'    /* Maximum size of a message.
+0540 LTOTALUOWS       'UOWsAll'       /* Number of UOWs.
+0550 CSTORE           'CSTORE'        /* Store attribute for all UOWs:-
+0560                                  /*   0=OFF, 1=BROKER .
+0570 CUWSTATP         'CUWSTATP'      /* UOWstatus lifetime multiplier -
+0580                                  /* (0-255).
+0590 CDEFERRED        'CDEFERRED'     /* Default status attribute for all -
+0600                                  /* UOWs:  0=NO, 1=YES.
+0610 CENCLEVEL        'EncrLvl'       /* Encryption level.
+0620 ATTACH-MGRS-ACT  'AttachMgrsAct' /* Number of attach servers active.
+0630 LUWSTAT-ADD-TIME 'LUWstatAddTime'/* Unit of work status additional -
+0640                                  /* lifetime.
+0650 * End-of-HEAD1MAP

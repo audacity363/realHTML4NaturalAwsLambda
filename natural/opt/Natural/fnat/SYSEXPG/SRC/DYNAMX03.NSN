@@ -1,0 +1,17 @@
+0010** Example 'DYNAMX03': Dynamic variables (as parameters)
+0020************************************************************************
+0030DEFINE DATA PARAMETER
+00401 #MYPARM (A) DYNAMIC  BY VALUE RESULT
+0050END-DEFINE
+0060*
+0070WRITE *LENGTH(#MYPARM)                  /* *LENGTH(#MYPARM) = 6
+0080#MYPARM := '1234567'                    /* *LENGTH(#MYPARM) = 7
+0090#MYPARM := '12345678'                   /* *LENGTH(#MYPARM) = 8
+0100EXPAND DYNAMIC VARIABLE #MYPARM TO 10   /* 10 bytes are allocated
+0110*
+0120WRITE *LENGTH(#MYPARM)                  /* *LENGTH(#MYPARM) = 8
+0130*
+0140/* content of #MYPARM is moved back to #MYTEXT
+0150/* used length of #MYTEXT = 8
+0160*
+0170END

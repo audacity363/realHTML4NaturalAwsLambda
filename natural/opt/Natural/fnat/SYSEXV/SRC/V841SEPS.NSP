@@ -1,0 +1,60 @@
+0010* Program .. V841SEPS
+0020* Library .. SYSEXV
+0030* Version .. 8.4.1
+0040* Functionality: This example shows how the options STARTING FROM
+0050* POSITION and REMAINDER POSITION work together in a processing loop
+0060* when separating a source array.
+0070*
+0080************************************************************************
+0090DEFINE DATA LOCAL
+01001 #TEXT (A15/1:3) INIT <'VAL1 VAL2',
+0110  'VAL3',
+0120  'VAL4 VAL5 VAL6'>
+01301 #WORD (A5/1:4)
+01401 #POS  (I1) INIT <1>
+0150END-DEFINE
+0160*
+0170FORMAT KD=ON
+0180SET KEY
+0190  PF3  NAMED 'Exit'
+0200  PF12 NAMED 'Canc'
+0210*
+0220INPUT(IP=OFF PS=100 LS=150 AD=MI)
+0230  01T *TIMX  (AD=OTD)
+0240  21T '***** NATURAL 8.4.1 ENHANCEMENTS *****'
+0250  70T *DATX  (AD=OTD DF=L)
+0260  /
+0270  01T 'User'
+0280  06T *USER  (AD=OILT )
+0290  26T '- Statement Enhancements -'(I)
+0300  64T 'Program'
+0310  72T *PROGRAM (AD=OI)
+0320  ///
+0330  02T
+0340  'Using a Source Array with STARTING FROM and REMAINDER POSITION'
+0350  //
+0360  02T 'SEPARATE #TEXT(*) STARTING FROM POSITION #POS INTO #WORD(*)'-
+0370  ' REMAINDER POSITION #POS' (I)
+0380  //
+0390  02T 'Press Enter to continue'
+0400  /
+0410IF *PF-KEY = 'PF3'
+0420  ESCAPE ROUTINE
+0430END-IF
+0440IF (*PF-KEY = 'PF12' OR= 'CLR')
+0450  CALLNAT 'UTILSTOP'
+0460END-IF
+0470*
+0480WRITE '#TEXT(A15/1:3):      (1)             (2)             (3)'
+0490  /  16T #TEXT(*)
+0500  /  16T '----+----1----+ ----2----+----3 ----+----4----+'
+0510  // '#WORD (A5/1:4): (1)   (2)   (3)   (4)      :  #POS'
+0520  '(within #TEXT(*))'
+0530*
+0540REPEAT
+0550  SEPARATE #TEXT(*) STARTING FROM POSITION #POS
+0560    INTO #WORD(*) REMAINDER POSITION #POS
+0570  WRITE 16T #WORD(*) 44T ': ' #POS
+0580  UNTIL #POS = 0
+0590END-REPEAT
+0600END

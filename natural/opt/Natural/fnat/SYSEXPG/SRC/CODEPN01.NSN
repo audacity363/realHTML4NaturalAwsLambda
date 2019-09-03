@@ -1,0 +1,60 @@
+0010** For all IANA character set the following information is returned:
+0020**  - supported by Natural,
+0030**  - how many bytes the encoding uses,
+0040**  - character set name in upper case
+0050************************************************************************
+0060** #I-ENCODING = '1'  1-byte encoding
+0070**               '2'  2-byte encoding
+0080**               '4'  4-byte encoding
+0090**               '8'  1-4 byte encoding (UTF-8)
+0100**               'X'  special encoding (whatever)
+0110**               ' '  code page not supported
+0120************************************************************************
+0130*
+0140DEFINE DATA
+0150PARAMETER
+01601 #I-SUPPORTED   (L/1:V)      /* codepage supported by Natural ?
+01701 #I-ENCODING    (A1/1:V)     /* encoding
+01801 #MSG           (A79)
+01901 #RSP           (I4)
+0200LOCAL USING CODEPL01
+0210LOCAL
+02201 #I             (I4)
+02301 #ENC           (A8)
+02401 #CODEPOINT     (B4)
+02501 #U             (U4)
+02601 #A             (A8)
+02701 REDEFINE #A
+0280  2 #B           (B2/ 4)
+02901 #RESP          (I4)
+0300END-DEFINE
+0310*
+0320*
+0330RESET #RSP #MSG
+0340MOVE 1 TO #CODEPOINT  /*
+0350FOR #I = 1 TO #IANA-MAX
+0360  RESET #RESP #ENC
+0370  MOVE ENCODED #CODEPOINT IN CODEPAGE #IANA-ALIAS(#I)
+0380    TO #A IN CODEPAGE 'UTF-16BE' GIVING #RESP
+0390  IF #RESP = 3411
+0400    MOVE FALSE TO #I-SUPPORTED (#I)
+0410    RESET #ENC
+0420  ELSE
+0430    MOVE TRUE TO #I-SUPPORTED (#I)
+0440    DECIDE FOR FIRST CONDITION  /* check the encoding
+0450      WHEN #B (2) = H'0020'
+0460        MOVE '4' TO #ENC
+0470      WHEN #B (3) = H'0020'
+0480        MOVE '2' TO #ENC
+0490      WHEN #IANA-NAME (#I) = 'UTF-8'
+0500        MOVE '8' TO #ENC
+0510      WHEN #B (4) = H'0001'
+0520        MOVE '1' TO #ENC
+0530      WHEN NONE
+0540        MOVE 'X' TO #ENC  /* other
+0550    END-DECIDE
+0560  END-IF
+0570  MOVE #ENC TO #I-ENCODING (#I)
+0580END-FOR
+0590*
+0600END

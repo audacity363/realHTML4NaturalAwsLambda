@@ -1,0 +1,58 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR2011N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR2011L
+0070   2 INPUTS
+0080     3 FUNCTION        (A01)
+0090     3 WORK-NUM        (I01)
+0100   2 INPUT-OUTPUTS
+0110     3 WORK-FILE       (A253)
+0120     3 REDEFINE WORK-FILE
+0130       4 WORK-FILE-A   (A50/1:5)
+0140     3 WORK-TYPE       (A01)
+0150   2 OUTPUTS
+0160     3 MAX-NUM         (I01)
+0170     3 RESPONSE        (I04)
+0180 /*
+0190 1 USR2011N
+0200   2 VERSION           (I01)     INIT <0>
+0210 1 REDEFINE USR2011N
+0220   2 EXTENDED-PARMS
+0230     3 EXTENDED-DATA   (A01/1:1)
+0240 1 WORK-ATTRIBUTES     (A1000)
+0250 1 WORK-CODEPAGE       (A64)
+0260 1 WORK-PROPERTIES     (A1000)
+0270END-DEFINE
+0280/*
+0290SET KEY ALL
+0300SET CONTROL 'L'        /* Accept lower case
+0310/*
+0320FUNCTION  := 'G'
+0330WORK-NUM  := 1
+0340WORK-TYPE := 'D'
+0350/*
+0360REPEAT
+0370  INPUT (AD=MILT'_' IP=OFF)
+0380      'Get or set a work file name:' (I)
+0390    / '-' (28) (I) /
+0400    / 'Function ...........' FUNCTION
+0410    / 'Work file number ...' WORK-NUM (NL=2)
+0420    / 'Work file name .....'
+0430    /                        WORK-FILE-A(1:5)  (AD=MILW'_')
+0440    / 'Work file type .....' WORK-TYPE
+0450    / 'Work file attr. ....' WORK-ATTRIBUTES (AL=50)
+0460    / 'Work file codepage .' WORK-CODEPAGE (AL=50)
+0470    / 'Work file prop. ....' WORK-PROPERTIES (AL=50)
+0480    / 'Maximum number .....' MAX-NUM (AD=O)
+0490   // 'Response ...........' RESPONSE (AD=O)
+0500  /*
+0510  IF *PF-KEY NE 'ENTR'
+0520    ESCAPE ROUTINE
+0530  END-IF
+0540  /*
+0550  CALLNAT 'USR2011N'  USR2011L  USR2011N.EXTENDED-PARMS
+0560    WORK-ATTRIBUTES WORK-CODEPAGE WORK-PROPERTIES
+0570END-REPEAT
+0580END

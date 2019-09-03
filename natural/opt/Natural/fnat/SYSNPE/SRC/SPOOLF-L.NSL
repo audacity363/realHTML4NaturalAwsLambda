@@ -1,0 +1,19 @@
+0010**DV          0020     V1SPOOL-FILES                     SPOOL-FILES
+0020**DD          0023N 3.0 2ERROR-CODE
+0030**DD          0024A  58 2ERROR-TEXT
+0040**DD          0025N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0026A   8 2JOB-NAME
+0060**DD          0027N 7.0 2JOB-NUMBER                      /* Job number - was N5 02-02-15
+0070**DD          0028A   2 2TYPE
+0080**DD          0029N 3.0 2COPIES
+0090**DD          0030A   1 2CLASS
+0100**DD          0031N 7.0 2RECORD-COUNT
+0110**DD          0032A   8 2FORM
+0120**DD          0033A   8 2STEPNAME
+0130**DD          0034A   8 2DDNAME
+0140**DD          0035N 3.0 2DATA-SET
+0150**DD          0036A   3 2HOLD
+0160**DD          0037A  20 2ACTION
+0170**DD          0038A   1 2NEW-CLASS
+0180**DD          0039A   8 2FUNCTION
+0190**DD          0040N 7.0 2DATA-SET-KEY

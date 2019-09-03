@@ -1,0 +1,22 @@
+0010*
+0020* Function .. V62FUNCA
+0030* Library ... SYSEXV
+0040* Version ... 6.2
+0050*
+0060* Functionality: External function with array as return value
+0070************************************************************************
+0080*
+0090Define Function Fct-Array            /* Function with array definition
+0100  Returns #Arr (N3/1:3)
+0110  Define Data
+0120    Parameter
+0130      1 #Parm  (N3)
+0140  End-define
+0150  /*
+0160  #Arr(1) := #Parm * 1
+0170  #Arr(2) := #Parm * 2
+0180  #Arr(3) := #Parm * 3
+0190  /*
+0200End-Function
+0210*
+0220End

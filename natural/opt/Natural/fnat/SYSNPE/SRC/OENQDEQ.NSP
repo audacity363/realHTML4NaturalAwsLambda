@@ -1,0 +1,64 @@
+0010* Resource control through ENQ/DEQ
+0020*
+0030DEFINE DATA
+0040   GLOBAL USING TUTO
+0050   LOCAL USING RSCTRL-L
+0060   LOCAL
+0070     1 #QNAME      (A8)
+0080     1 #RNAME      (A50)
+0090     1 #CONTROL    (A1)
+0100     1 #FUNCTION   (A8)
+0110     1 #SEL        (A1/1:5)
+0120     1 #TYPE-CODE  (A1/1:2)  CONST (1) <'S'>
+0130                                   (2) <'E'>
+0140     1 #FUNC-CODE  (A8/1:3)  CONST (1) <'ENQ-TEST'>
+0150                                   (2) <'ENQ-USE'>
+0160                                   (3) <'DEQ'>
+0170     1 #I          (I1)
+0180     1 #J          (I1)
+0190END-DEFINE
+0200*
+0210INPUT (AD=MI'_' IP=OFF)
+0220   // ##TITLE (AD=OI IP=OFF)
+0230  /// '  Queue name .....:' #QNAME
+0240   // '  Resource name ..:' #RNAME
+0250   // '  Mark function ..:'
+0260      21T #SEL(3) 'ENQ-TEST' (I)
+0270    / 21T #SEL(4) 'ENQ-USE' (I)
+0280    / 21T #SEL(5) 'DEQ' (I)
+0290   // '  Mark control ..:'
+0300      21T #SEL(1) 'S' (I) 'shared'
+0310    / 21T #SEL(2) 'E' (I) 'exclusive'
+0320*
+0330IF SELECTION NOT UNIQUE #SEL(3:5)
+0340   REINPUT *1012 MARK *#SEL(3)
+0350ELSE
+0360   FOR #I = 3 TO 5
+0370       IF #SEL(#I) NE ' '
+0380          COMPUTE #J = #I - 2
+0390          ASSIGN #FUNCTION = #FUNC-CODE (#J)
+0400       END-IF
+0410   END-FOR
+0420END-IF
+0430*
+0440IF #SEL(1:2) NE ' '
+0450   IF SELECTION NOT UNIQUE #SEL(1:2)
+0460      REINPUT 'Please mark only one Type' MARK *#SEL(1)
+0470   ELSE
+0480      IF #SEL(1) NE ' '
+0490         ASSIGN #CONTROL = #TYPE-CODE(1)
+0500      ELSE
+0510         ASSIGN #CONTROL = #TYPE-CODE(2)
+0520      END-IF
+0530   END-IF
+0540END-IF
+0550*
+0560PROCESS RESOURCE-CONTROL USING NODE         = ##NODE
+0570                           ,   QNAME        = #QNAME
+0580                           ,   RNAME        = #RNAME
+0590                           ,   RNAME-LENGTH = 50
+0600                           ,   CONTROL      = #CONTROL
+0610                           ,   FUNCTION     = #FUNCTION
+0620REINPUT ERROR-TEXT
+0630*
+0640END

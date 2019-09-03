@@ -1,0 +1,12 @@
+0010&H View CATALOG-UPDATE
+0020&L
+0030&L
+0040#Zweck@    : Durchfuehrung von Wartungsfunktionen im Katalog.
+0050&L
+0060#System@   : z/OS, BS2000/OSD.
+0070&L
+0080&L
+0090#Anwendung@: Dieser View erlaubt das Ausfuehren von verschiedenen
+0100             Wartungsfunktionen im Katalog.
+0110&L
+0120#Anmerkung@:

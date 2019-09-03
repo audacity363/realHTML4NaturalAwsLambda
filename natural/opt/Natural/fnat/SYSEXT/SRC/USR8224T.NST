@@ -1,0 +1,74 @@
+0010Get Adabas file name
+0020.
+0030Documentation ......... USR8224T    /*  Text object
+0040Interface ............. USR8224N    /*  Cataloged subprogram
+0050Example Program ....... USR8224P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATABASE
+0100.
+0110Keywords .............. +NEW-NAT-8.2.7,
+0120                        DATABASE, FILE, NAME
+0130.
+0140Function .............. Returns the name of a single Adabas file or the
+0150                        names of all Adabas files for a given DBID.
+0160                        On UNIX and Windows, Work File 1 is used.
+0170.
+0180Parameters
+0190----------
+0200Define the following parameters with the DEFINE DATA statement:
+0210.
+02201 USR8224N-Parameters
+0230  2 USR8224N-Input-DBID   (I4) /* Input:
+0240                               /*   Data base number
+0250  2 USR8224N-Input-FNR    (I4) /* Input:
+0260                               /*   File number of the data base
+0270                               /*   or 0 (= all files of the data base)
+0280  2 USR8224N-Number-Files (I4) /* Output:
+0290                               /*   Number of files found (= size of
+0300                               /*   array USR8224N-File-List)
+0310  2 USR8224N-File-List    (*)  /* Output:
+0320    3 USR8224N-FNR        (I4) /*   found file number
+0330    3 USR8224N-File-Name  (A16)/*   name of the file
+0340  2 USR8224N-Return-Code  (I4) /* Output:
+0350                               /*   Result of the call;
+0360                               /*   possible values:
+0370                               /*      <0 = Natural runtime error
+0380                               /*       0 = OK
+0390                               /*       1 = Input DBID invalid
+0400                               /*       2 = Input FNR invalid
+0410                               /*      99 = File doesn't exist
+0420                               /*   Mainframe only:
+0430                               /*    1000 = AOS program missing
+0440                               /*    1001 = Error OPEN data base
+0450                               /*    1002 = Error GET FNR
+0460                               /*    1003 = Error CLOSE data base
+0470                               /*   LUW only:
+0480                               /*    2001 = Env var not defined
+0490                               /*    2002 = Error get env
+0500                               /*    2003 = Error Registry query
+0510                               /*    2004 = Error ADAREP
+0520                               /*    2005 = Structure level mismatch
+0530                               /*    2010 = Error create work file
+0540                               /*    3148 = Data base not active.
+0550  2 USR8224N-Return-Message (A250)
+0560                               /* Output:
+0570                               /*   Error message when
+0580                               /*   USR8224N-Return-Code <> 0
+0590.
+0600.
+0610Interface Call
+0620--------------
+0630Use the interface with the CALLNAT statement:
+0640.
+0650CALLNAT 'USR8224N'
+0660        USR8224N-Parameters
+0670.
+0680.
+0690Using the Application Programming Interface:
+0700--------------------------------------------
+0710Copy the subprogram USR8224N to the library SYSTEM, to the appropriate
+0720steplib library, or to the required library.
+0730.
+0740***** End of Description *****

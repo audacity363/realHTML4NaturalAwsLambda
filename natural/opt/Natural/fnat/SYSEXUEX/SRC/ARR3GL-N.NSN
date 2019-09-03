@@ -1,0 +1,44 @@
+0010**********************************************************************
+0020*
+0030* FILE   : ARR3GL-N.NSN
+0040* PURPOSE: SAMPLE SUBPROGRAM CALLED BY USER EXIT
+0050*
+0060* (c) Copyright 1991-2004 by Software AG
+0070*
+0080**********************************************************************
+0090*
+0100DEFINE DATA PARAMETER
+01101 strt(I4)
+01201 increm(I4)
+01301 arr(N4/9,1:V)
+01401 dyn(a) dynamic
+0150*
+0160LOCAL
+01701 i(I4)
+01801 j(I4)
+01901 real-large(a45678) init <'AbcDefghIJklmNOpQ'>
+0200END-DEFINE
+0210****************************
+0220i := *occ(arr,1)
+0230j := *occ(arr,2)
+0240*
+0250input (ad=o ip=off sg=off) // 'The reduced array' //
+0260         '         start:     ' strt       /
+0270         '         increment: ' increm     /
+0280         '         rows:      ' i          /
+0290         '         columns:   ' j          ///
+0300         arr(1,1:j) (ad=m)                 /
+0310         arr(2,1:j) (ad=m)                 /
+0320         arr(3,1:j) (ad=m)                 /
+0330         arr(4,1:j) (ad=m)                 /
+0340         arr(5,1:j) (ad=m)                 /
+0350         arr(6,1:j) (ad=m)                 /
+0360         arr(7,1:j) (ad=m)                 /
+0370         arr(8,1:j) (ad=m)                 /
+0380         arr(9,1:j) (ad=m)                 //
+0390         'Please make changes and check the results in the main program'
+0400*
+0410* resize the dynamic var
+0420*
+0430move real-large to dyn
+0440END

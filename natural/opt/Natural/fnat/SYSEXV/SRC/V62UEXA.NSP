@@ -1,0 +1,136 @@
+0010* Program ...... V62UEXA
+0020* Library ...... SYSEXV
+0030* Version ...... 6.2
+0040* Machine ...... UNIX
+0050*
+0060* Functionality: EXAMINE Unicode for Character Position and Length
+0070************************************************************************
+0080*
+0090*
+0100DEFINE DATA LOCAL
+01101 U1         (U9)    /* Unicode field
+01201 U2         (U9)    /* Unicode field
+01301 U3         (U9)    /* Unicode field
+01401 P1         (I2)    /* code unit position (output)
+01501 L1         (I2)    /* code unit length   (output)
+0160END-DEFINE
+0170*
+0180FORMAT KD=ON
+0190SET KEY PF3  NAMED 'Exit'
+0200    PF12 NAMED 'Canc'
+0210*
+0220*
+0230INPUT  (IP=OFF)
+0240  01T *TIMX  (AD=OTD)
+0250  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0260  70T *DATX  (AD=OTD DF=L)
+0270  /
+0280  01T 'User'
+0290  06T *USER  (AD=OLTI)
+0300  25T     '- Natural Unicode Support  -' (I)
+0310  64T 'Program'
+0320  72T *PROGRAM   (AD=OI)
+0330  /
+0340  15T '            - EXAMINE for Unicode  -' (I)
+0350  //
+0360  02T 'EXAMINE' (I) 'u'  'CHARPOSITION' (I) 'cp'
+0370
+0380  'CHARLENGTH' (I) 'cl'
+0390  'GIVING POSITION IN pos LENGTH IN len'  /
+0400  /
+0410  02T 'Most visible characters consist of one code unit (2 bytes)'
+0420
+0430  'but some consist'  /
+0440  02T 'of two code units.'  //
+0450  02T 'When the'  'EXAMINE' (I)
+0460  'statement is used with the new clauses'
+0470  'CHARPOSITION' (I) 'and'  /
+0480  02T 'CHARLENGTH,' (I)
+0490  'the position and length of the visible characters are translated'
+0500  /
+0510  02T 'into the corresponding code unit position and length'
+0520  '(POSITION' (I) 'and'  'LENGTH).' (I) /
+0530  /
+0540  02T 'A Unicode variable contains the following string:'  /
+0550  02T '  Visible Characters:'
+0560  UH'00E200620063006400EA00660067' (I) /
+0570  02T '  CHARPOSITION:      '  '1234567' (I) /
+0580  /
+0590  02T 'The characters with the circumflex accent'
+0600  'are internally represented by two'  /
+0610  02T 'code units which look like this:'  /
+0620  02T '  Code Units:'
+0630  UH'0061005E0062006300640065005E00660067' (I) /
+0640  02T '  POSITION:  '   '123456789' (I) /
+0650
+0660*
+0670IF *PF-KEY = 'PF3'
+0680  ESCAPE ROUTINE
+0690END-IF
+0700IF (*PF-KEY = 'PF12' OR= 'CLR')
+0710  CALLNAT 'UTILSTOP'
+0720END-IF
+0730*
+0740MOVE UH'006103020062006300640065030200660067' TO U1
+0750MOVE SUBSTRING(U1,3,4) TO U2
+0760EXAMINE U1 CHARPOSITION 3 CHARLENGTH 4
+0770  GIVING POSITION IN P1 LENGTH IN L1
+0780MOVE SUBSTRING(U1,P1,L1) TO U3
+0790*
+0800INPUT  (IP=OFF)
+0810  01T *TIMX  (AD=OTD)
+0820  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0830  70T *DATX  (AD=OTD DF=L)
+0840  /
+0850  01T 'User'
+0860  06T *USER  (AD=OLTI)
+0870  25T     '- Natural Unicode Support  -' (I)
+0880  64T 'Program'
+0890  72T *PROGRAM   (AD=OI)
+0900  /
+0910  15T '            - EXAMINE for Unicode  -' (I)
+0920  //
+0930  02T '  U1 Visible Characters:'
+0940  UH'00E200620063006400EA00660067' (I)
+0950  36T '  U1 Code Units:'
+0960  UH'0061005E0062006300640065005E00660067' (I) /
+0970  02T '  CHARPOSITION:         '  '1234567' (I)
+0980  36T '  POSITION:     '   '123456789' (I) /
+0990  /
+1000  02T 'The part'
+1010  UH'00270063006400EA00660027' (I)
+1020  'should be picked out from the string above. Because the'  /
+1030  02T 'SUBSTRING function works on the code units and not on the'-
+1040  '  visible characters,'  /
+1050  02T 'it will not return the expected value:'  /
+1060  /
+1070  02T '  MOVE SUBSTRING(U1,3,4) TO U2     /* U1, U2 defined as (U9)'
+1080  /
+1090  02T '  U2:'  U2 (AD=OI) /
+1100  /
+1110  02T 'An'  'EXAMINE' (I)
+1120  'translates the position and length of the visible characters into'
+1130  /
+1140  02T 'the desired position and length of the code units so that the'-
+1150  '  SUBSTRING'  /
+1160  02T 'function can return the expected value.'  /
+1170  /
+1180  02T '  EXAMINE' (I) 'U1'  'CHARPOSITION' (I)
+1190  '3'  'CHARLENGTH' (I)
+1200  '4 GIVING POSITION IN P1 LENGTH IN L1'  /
+1210  02T '  MOVE SUBSTRING(U1,P1,L1) TO U3   /* U1, U3 defined as (U9),'-
+1220  '  P1, L1 as (I2)'  /
+1230  02T '  P1:'  P1 (AD=OI)
+1240  '  L1:' (TU) L1 (AD=OI)
+1250  '  U3:' (TU) U3 (AD=OI) /
+1260*
+1270IF *PF-KEY = 'PF3'
+1280  ESCAPE ROUTINE
+1290END-IF
+1300IF (*PF-KEY = 'PF12' OR= 'CLR')
+1310  CALLNAT 'UTILSTOP'
+1320END-IF
+1330*
+1340*
+1350END
+1360

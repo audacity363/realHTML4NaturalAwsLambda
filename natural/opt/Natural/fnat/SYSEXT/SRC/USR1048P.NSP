@@ -1,0 +1,64 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1048N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR1048L
+0070   2 INPUTS
+0080     3 FUNCTION        (A01)
+0090     3 AMOUNT          (I02)
+0100     3 LABEL-DEFAULT   (A04/1:24)
+0110     3 LABEL-NEW       (A10/1:24)
+0120   2 OUTPUTS
+0130     3 RESPONSE        (I04)
+0140 /*
+0150 1 USR1048N
+0160   2 VERSION          (I01)     INIT <0>
+0170 1 REDEFINE USR1048N
+0180   2 EXTENDED-PARMS
+0190     3 EXTENDED-DATA  (A01/1:1)
+0200 /*
+0210END-DEFINE
+0220/*
+0230SET KEY ALL
+0240SET KEY PF1  = PGM NAMED 'Help'
+0250        PF2  = PGM NAMED 'Menu'
+0260        PF3  = PGM NAMED 'Exit'
+0270        PF12 = PGM NAMED 'Canc'
+0280/*
+0290ASSIGN FUNCTION = 'S'
+0300ASSIGN AMOUNT = 3
+0310/*
+0320ASSIGN LABEL-DEFAULT (01) = 'PF1'
+0330ASSIGN LABEL-NEW     (01) = 'F1   '
+0340/*
+0350ASSIGN LABEL-DEFAULT (02) = 'PF2'
+0360ASSIGN LABEL-NEW     (02) = 'CtrlD'
+0370/*
+0380ASSIGN LABEL-DEFAULT (03) = 'PF3'
+0390ASSIGN LABEL-NEW     (03) = 'Label'
+0400/*
+0410FORMAT KD=ON
+0420SET CONTROL 'L'
+0430REPEAT
+0440  INPUT (AD=MILW'_' IP=OFF)
+0450      'Modify PF-key label:' (I)
+0460    / '-' (20) (I) /
+0470    / 'Function ........' FUNCTION (AD=MILT'_')
+0480    / 'Amount ..........' AMOUNT
+0490    / 'Default label ...' LABEL-DEFAULT (01) 7X LABEL-DEFAULT (02) 7X
+0500                          LABEL-DEFAULT (03) 7X LABEL-DEFAULT (04) 7X
+0510                          LABEL-DEFAULT (05)
+0520    / 'New label .......' LABEL-NEW     (01) LABEL-NEW     (02)
+0530                          LABEL-NEW     (03) LABEL-NEW     (04)
+0540                          LABEL-NEW     (05)
+0550   // 'Response ........' RESPONSE (AD=O)
+0560  /*
+0570  IF *PF-KEY NE 'ENTR'
+0580    ESCAPE BOTTOM
+0590  END-IF
+0600  /*
+0610  CALLNAT 'USR1048N'  USR1048L  USR1048N.EXTENDED-PARMS
+0620END-REPEAT
+0630/*
+0640END

@@ -1,0 +1,70 @@
+0010**********************************************************************
+0020*
+0030* FILE   : MY3GL4.NSP
+0040* PURPOSE: SAMPLE PROGRAM CALLING USER EXITS (MYC3GL)
+0050*
+0060*          This differs from MY3GL in the CALL via INTERFACE4.
+0070*
+0080*          The different CALL interfaces can be used only if the
+0090*          user exit passes all parameters directly to ncxr_callnat(),
+0100*          as it is done in myc3gl.c. The function ncxr_callnat()
+0110*          can detect the interface and process parameters
+0120*          accordingly. It does not work for a user supplied
+0130*          parameter list to ncxr_callnat(): it must always be
+0140*          the standard pointer array and FINFO array. If a user
+0150*          defined parameter description with INTERFACE4 is
+0160*          passed, the function to be called is ncxr_if4_callnat().
+0170*          See the example ARR3GL-P.
+0180*
+0190*
+0200* The NATURAL program MY3GL calls the user-written
+0210*       3GL function MYC3GL (myc3gl.c) and passes 2 parameters.
+0220*       The 3GL function itself activates the NATURAL
+0230*       subprogram MY3GLSUB via a call to ncxr_callnat()
+0240*       and passes the two received parameters to the
+0250*       subprogram.
+0260*       The subprogram may process these parameters, and
+0270*       after its termination control is returned to
+0280*       the 3GL function and then back to this program.
+0290*
+0300* (c) Copyright 1991-2004 by Software AG
+0310*
+0320**********************************************************************
+0330*
+0340DEFINE DATA LOCAL
+03501  #FIELD1(A10)
+03601  #FIELD2(I4)
+0370END-DEFINE
+0380*
+0390* allow lower case values
+0400*
+0410SET CONTROL 'L'
+0420*
+0430* you may enter initial values for the parameters
+0440*
+0450INPUT (AD=M IP=ON)
+0460      / 'Initial values may be entered now'
+0470     // #FIELD1
+0480      / #FIELD2 (AD=L)
+0490*
+0500* prepare call the 3GL routine, to be able to call MY3GLSUB
+0510CALL 'CMSUBZ' 'CLNOTHRE' '8749' 'S' /* needed only on Windows
+0520* call the 3GL function MYC3GL and pass the parameters
+0530*
+0540CALL INTERFACE4 'MYC3GL' #FIELD1 #FIELD2
+0550IF ret('MYC3GL') = -1
+0560  WRITE NOTITLE 'error: MYC3GL not available for this platform'
+0570ELSE
+0580*
+0590* display the parameters which are received from the 3GL function
+0600*
+0610INPUT (AD=M IP=ON)
+0620      / 'These parameters were returned from subprogram MY3GLSUB'
+0630      / 'which was called by the 3GL function MYC3GL'
+0640     // #FIELD1
+0650      / #FIELD2 (AD=L)
+0660END-IF
+0670*
+0680* end of program
+0690*
+0700END

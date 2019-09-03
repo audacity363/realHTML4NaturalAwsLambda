@@ -1,0 +1,48 @@
+0010Check name for wildcard or asterisk notation
+0020.
+0030Documentation ......... USR1011T    /*  Text object
+0040Interface ............. USR1011N    /*  Cataloged subprogram
+0050Example Program ....... USR1011P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATA HANDLING
+0100.
+0110Keywords .............. +PREVIOUS-VERSION,
+0120                        ASTERISK, MASK, NAME, WILDCARD
+0130.
+0140Interface Versions .... USR1011N, USR1021N
+0150.
+0160Function .............. Checks a name (A08) against a mask containing
+0170                        wildcards
+0180.
+0190.
+0200Parameters
+0210----------
+0220Define the following parameters with the DEFINE DATA statement:
+0230.
+0240Input ...... 1 FIELD (A8)     - Field to be checked
+0250             1 MASK (A8)      - Mask against to be used for check
+0260             1 WILDCARD (A1)  - wildcard character, default is '?'
+0270             1 ASTERISK (A1)  - asterisk character, default is '*'
+0280Output ..... 1 MATCHED (A1)   - Return value = 'Y' or 'N'
+0290.
+0300Interface Call
+0310--------------
+0320Use the interface with the CALLNAT statement:
+0330.
+0340CALLNAT 'USR1011N' FIELD MASK MATCH WILDCARD ASTERISK
+0350.
+0360.
+0370Using the Application Programming Interface:
+0380--------------------------------------------
+0390Copy the subprogram USR1011N to the library SYSTEM or the steplib
+0400library respectively, or to the required library.
+0410.
+0420.
+0430If FIELD matches the mask considering the asterisk/wildcard syntax,
+0440MATCHED = 'Y' is returned.
+0450The asterisk/wildcard characters to be used may be specified.
+0460Blanks are no valid characters for FIELD and MASK.
+0470.
+0480***** End of description *****

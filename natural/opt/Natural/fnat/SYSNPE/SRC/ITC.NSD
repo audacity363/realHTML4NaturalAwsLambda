@@ -1,0 +1,73 @@
+0010DB: 148 FILE: 080  - ITC                              DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:22
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:22
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      BS2000 fields
+0230*      (only available for single
+0240*      user mode)
+0250*
+0260  1 ES SYSTEM-CODE                       B    2      System error code.
+0270*      System error code.
+0280  1 FN FUNCTION                          A    8    D Valid values for fun
+0290*      Valid values for functions are
+0300*      OPEN    : build an ITC
+0310*      CLOSE   : delete an ITC
+0320*      DELETE  : delete the first
+0330*      message in the queue
+0340*      RECEIVE : receive message from
+0350*      ITC partner
+0360*      SEND    : send message to ITC
+0370*      partner
+0380  1 B1 INTER-TASK-COMMUNICATION-NAME     A    8    D Function dependent f
+0390*      Function dependent field:
+0400*      OPEN     own (new) ITC name
+0410*      CLOSE    own ITC name
+0420*      SEND     ITC name of
+0430*      destination
+0440*      RECEIVE  ITC name of sending
+0450*      ITC partner
+0460  1 B2 ERASE                             A    3    D Specifies erasing of
+0470*      Specifies erasing of message
+0480*      from queue after receipt.
+0490*      YES - erase message (default)
+0500*      NO  - retain message
+0510*      For CLOSE function, specifies
+0520*      whether all waiting messages
+0530*      should be erased YES or NO.
+0540  1 B4 MESSAGE-LENGTH                    N  6.0    D Message length for f
+0550*      Message length for functions
+0560*      SEND and RECEIVE.
+0570  1 B5 MESSAGE-TEXT                      A  250    D Message text.
+0580*      Message text.
+0590*      For messages longer than 250
+0600*      bytes please use field
+0610*      'MESSAGE-ARRAY'.
+0620  1 B6 WAIT-TIME                         B    4    D Maximum time (in sec
+0630*      Maximum time (in seconds) to
+0640*      wait for a message.
+0650*      Possible values: 0 - 21599
+0660*      Default:         600
+0670M 1 B8 MESSAGE-ARRAY                     A  250    D Array of max. 5 mess
+0680*      Array of max. 5 messages for
+0690*      SEND / RECEIVE function.
+0700*
+0710*      End of ITC
+0720*
+0730******DDM OUTPUT TERMINATED******

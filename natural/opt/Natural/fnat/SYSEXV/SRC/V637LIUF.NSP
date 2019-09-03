@@ -1,0 +1,164 @@
+0010*
+0020* Program .. V637LIUF (character version)
+0030* Library .. SYSEXV
+0040* Version .. 6.3.7
+0050*
+0060* Functionality: List Unicode fields NAME and FIRST-NAME
+0070*                in Adabas records (EMPLOYEES-V2009)
+0080************************************************************************
+0090*
+0100DEFINE DATA LOCAL
+01101 EMPLOYEES-VIEW VIEW OF EMPLOYEES-V2009
+0120  2 NAME
+0130  2 FIRST-NAME
+0140  2 BIRTH
+0150  2 PRIVATE-COUNTRY (1)
+0160*
+01701 J            (I2)
+01801 #FIRST-NAME  (U20/1:10)
+01901 #NAME        (U25/1:10)
+02001 #COUNTRY     (A3/1:10)
+02101 #BIRTH       (A10/1:10)
+0220END-DEFINE
+0230*
+0240FORMAT KD=ON
+0250SET KEY PF3  NAMED 'Exit'
+0260        PF12 NAMED 'Canc'
+0270*
+0280* For correct and complete output use Natural WebIO
+0290*
+0300INPUT (IP=OFF  )
+0310  01T *TIMX  (AD=OTD )
+0320  21T '***** NATURAL 6.3.7 ENHANCEMENTS *****'
+0330  70T *DATX  (DF=L AD=OTD   )
+0340  /
+0350  01T 'User'
+0360  06T *USER  (AD=OILT   )
+0370  27T '- New Adabas Data Types -'(I)
+0380  64T 'Program'
+0390  72T *PROGRAM (AD=OI)
+0400  ///
+0410  02T 'List Unicode fields NAME and FIRST-NAME reading the DDM '-
+0420      'EMPLOYEES-V2009.' (I)
+0430  ////
+0440  02T 'For a correct and complete output of the results, use '-
+0450      'the'  'Natural WebIO.'(I)
+0460  ///
+0470  05T 'Please press ENTER.'
+0480*
+0490IF *PF-KEY = 'PF3' OR= 'PF12'
+0500  ESCAPE ROUTINE
+0510END-IF
+0520*
+0530IF (*PF-KEY = 'PF12' OR= 'CLR')
+0540  CALLNAT 'UTILSTOP'
+0550END-IF
+0560* Show the Unicode fields NAME and FIRST-NAME
+0570*
+0580READ EMPLOYEES-VIEW BY BIRTH = D'1974-01-01' THRU D'1974-12-31'
+0590  ADD 1 TO J
+0600  MOVE FIRST-NAME                   TO #FIRST-NAME (J)
+0610  MOVE NAME                         TO #NAME (J)
+0620  MOVE PRIVATE-COUNTRY (1)          TO #COUNTRY (J)
+0630  MOVE EDITED BIRTH (EM=YYYY-MM-DD) TO #BIRTH (J)
+0640*
+0650  IF J = 10
+0660    INPUT (IP=OFF AD=OI CD=YE)
+0670      01T *TIMX  (AD=OTD   )
+0680      21T '***** NATURAL 6.3.7 ENHANCEMENTS *****'
+0690      70T *DATX  (DF=L AD=OTD   )
+0700      /
+0710      01T 'User'
+0720      06T *USER  (AD=OILT   )
+0730      27T '- New Adabas Data Types -'(I)
+0740      64T 'Program'
+0750      72T *PROGRAM (AD=OI)
+0760      ///
+0770      02T 'List Unicode fields NAME and FIRST-NAME reading the DDM '-
+0780          'EMPLOYEES-V2009.' (I)
+0790      ///
+0800      05T 'Name'   26T 'First Name'   47T 'Country'
+0810      57T 'Birth'
+0820      //
+0830      05T #NAME(1)(AL=20) #FIRST-NAME(1) #COUNTRY(1) 7X #BIRTH(1)
+0840      /
+0850      05T #NAME(2)(AL=20) #FIRST-NAME(2) #COUNTRY(2) 7X #BIRTH(2)
+0860      /
+0870      05T #NAME(3)(AL=20) #FIRST-NAME(3) #COUNTRY(3) 7X #BIRTH(3)
+0880      /
+0890      05T #NAME(4)(AL=20) #FIRST-NAME(4) #COUNTRY(4) 7X #BIRTH(4)
+0900      /
+0910      05T #NAME(5)(AL=20) #FIRST-NAME(5) #COUNTRY(5) 7X #BIRTH(5)
+0920      /
+0930      05T #NAME(6)(AL=20) #FIRST-NAME(6) #COUNTRY(6) 7X #BIRTH(6)
+0940      /
+0950      05T #NAME(7)(AL=20) #FIRST-NAME(7) #COUNTRY(7) 7X #BIRTH(7)
+0960      /
+0970      05T #NAME(8)(AL=20) #FIRST-NAME(8) #COUNTRY(8) 7X #BIRTH(8)
+0980      /
+0990      05T #NAME(9)(AL=20) #FIRST-NAME(9) #COUNTRY(9) 7X #BIRTH(9)
+1000      /
+1010      05T #NAME(10)(AL=20) #FIRST-NAME(10) #COUNTRY(10) 7X #BIRTH(10)
+1020      /
+1030*
+1040    IF *PF-KEY = 'PF3'
+1050      ESCAPE ROUTINE
+1060    END-IF
+1070    IF (*PF-KEY = 'PF12' OR= 'CLR')
+1080     CALLNAT 'UTILSTOP'
+1090    END-IF
+1100*
+1110    RESET J
+1120    RESET #FIRST-NAME (*) #NAME (*)
+1130          #COUNTRY (*) #BIRTH (*)
+1140  END-IF
+1150*
+1160END-READ
+1170*
+1180IF J > 0
+1190  INPUT (IP=OFF AD=OI CD=YE)
+1200    01T *TIMX  (AD=OTD   )
+1210    21T '***** NATURAL 6.3.7 ENHANCEMENTS *****'
+1220    70T *DATX  (DF=L AD=OTD   )
+1230    /
+1240    01T 'User'
+1250    06T *USER  (AD=OILT   )
+1260    27T '- New Adabas Data Types -'(I)
+1270    64T 'Program'
+1280    72T *PROGRAM (AD=OI)
+1290    ///
+1300    02T 'List Unicode fields NAME and FIRST-NAME reading the DDM '-
+1310        'EMPLOYEES-V2009.' (I)
+1320    ///
+1330    05T 'Name'   26T 'First Name'   47T 'Country'
+1340    57T 'Birth'
+1350    //
+1360    05T #NAME(1)(AL=20) #FIRST-NAME(1) #COUNTRY(1) 7X #BIRTH(1)
+1370    /
+1380    05T #NAME(2)(AL=20) #FIRST-NAME(2) #COUNTRY(2) 7X #BIRTH(2)
+1390    /
+1400    05T #NAME(3)(AL=20) #FIRST-NAME(3) #COUNTRY(3) 7X #BIRTH(3)
+1410    /
+1420    05T #NAME(4)(AL=20) #FIRST-NAME(4) #COUNTRY(4) 7X #BIRTH(4)
+1430    /
+1440    05T #NAME(5)(AL=20) #FIRST-NAME(5) #COUNTRY(5) 7X #BIRTH(5)
+1450    /
+1460    05T #NAME(6)(AL=20) #FIRST-NAME(6) #COUNTRY(6) 7X #BIRTH(6)
+1470    /
+1480    05T #NAME(7)(AL=20) #FIRST-NAME(7) #COUNTRY(7) 7X #BIRTH(7)
+1490    /
+1500    05T #NAME(8)(AL=20) #FIRST-NAME(8) #COUNTRY(8) 7X #BIRTH(8)
+1510    /
+1520    05T #NAME(9)(AL=20) #FIRST-NAME(9)  #COUNTRY(9) 7X #BIRTH(9)
+1530    /
+1540    05T #NAME(10)(AL=20) #FIRST-NAME(10)  #COUNTRY(10) 7X #BIRTH(10)
+1550    /
+1560END-IF
+1570 IF *PF-KEY = 'PF3'
+1580      ESCAPE ROUTINE
+1590    END-IF
+1600    IF (*PF-KEY = 'PF12' OR= 'CLR')
+1610     CALLNAT 'UTILSTOP'
+1620    END-IF
+1630*
+1640END

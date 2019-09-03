@@ -1,0 +1,315 @@
+0010/**********************************************************************
+0020/* NDVSEMPR: Read the EMPLOYEES file and send the data to the client
+0030/*---------------------------------------------------------------------
+0040/* Note:
+0050/* For more information see also A-README in SYSEXNDC in
+0060/* Natural Studio 62 and above.
+0070/**********************************************************************
+0080/*---------------------------------------------------------------------
+0090/*---------------- Compiler options -----------------------------------
+0100/*---------------------------------------------------------------------
+0110OPTIONS LOWSRCE=ON
+0120/*---------------------------------------------------------------------
+0130/*---------------- Data definitions -----------------------------------
+0140/*---------------------------------------------------------------------
+0150DEFINE DATA
+0160/*---------------------------------------------------------------------
+0170/*---------------- Independent data -----------------------------------
+0180/*---------------------------------------------------------------------
+0190INDEPENDENT
+02001 +User-TRACE-LEVEL                   (I2)
+0210/*---------------------------------------------------------------------
+0220/*---------------- Local data -----------------------------------------
+0230/*---------------------------------------------------------------------
+0240LOCAL
+02501 Local-Buffer                        (A1/1:5000)
+02601 Redefine Local-Buffer
+0270  2 Filler                            20X
+0280  2 Local-Buffer-Header-Data          (A1/1:480)
+0290  2 Redefine Local-Buffer-Header-Data
+0300    3 Local-Buffer-Caller-Name        (A8)
+0310    3 Local-Buffer-Function-Code      (A2)
+0320    3 Local-Buffer-Return-Code-Sign   (A1)
+0330    3 Local-Buffer-Return-Code        (N4)
+0340  2 Redefine Local-Buffer-Header-Data
+0350    3 Filler                          100X     /* Header data
+0360    3 LBHD-Number-to-Read             (A2)     /* contents must be (N2)
+0370    3 LBHD-Number-Returned            (N2)
+0380    3 LBHD-Reposition                 (A1)
+0390    3 LBHD-End-Of-Data                (A1)
+0400    3 LBHD-New-Name-Start-Value       (A20)
+0410  2 Local-Buffer-Function-Data        (A1/1:4500)
+0420  2 Redefine Local-Buffer-Function-Data
+0430    3 LBFD-Empl-Data-Lines            (50)
+0440      4 LBFDE-Personnel-ID            (A8)
+0450      4 LBFDE-First-Name              (A20)
+0460      4 LBFDE-Middle-Name             (A20)
+0470      4 LBFDE-Name                    (A20)
+0480      4 LBFDE-Mar-Stat                (A1)
+0490      4 LBFDE-Sex                     (A1)
+0500      4 LBFDE-City                    (A20)
+0510  2 Redefine Local-Buffer-Function-Data
+0520    3 LBFD-Error-Line                 (A250)
+0530/*---------------------------------------------------------------------
+0540/* Parameter for NDVS004N
+0550/*---------------------------------------------------------------------
+05601 NDVS004N-Function                   (A2)  /* ST = Set Trace level
+05701 NDVS004N-Para                       (A332)
+05801 Redefine NDVS004N-Para                    /* For funtion 'WT'
+0590  2 NDVS004N-Trace-Msg                (A230)
+06001 NDVS004N-RETURN-CODE                (I4)
+0610/*---------------------------------------------------------------------
+0620/* Other local data
+0630/*---------------------------------------------------------------------
+06401 Actual-Function-Code                (A2)
+06501 Read-Counter                        (I2)
+06601 Read-Direction                      (A1) Init <'A'>
+06701 Read-Max                            (I2)
+06801 Reposition-to-Value                 (L)
+06901 Error-Text-1                        (A250)
+07001 Return-Code                         (I4)
+0710/*---------------------------------------------------------------------
+0720/* EMPLOYEES view
+0730/*---------------------------------------------------------------------
+07401 Employees-View                      view of Employees
+0750  2 Personnel-ID                      /* (A8)
+0760  2 Full-Name
+0770    3 First-Name                      /* (A20)
+0780    3 Middle-Name                     /* (A20)
+0790    3 Name                            /* (A20)
+0800  2 Mar-Stat                          /* (A1)
+0810  2 Sex                               /* (A1)
+0820  2 City                              /* (A20)
+0830END-DEFINE
+0840/**********************************************************************
+0850/*---------------------------------------------------------------------
+0860/*---------------- Start of main program ------------------------------
+0870/*---------------------------------------------------------------------
+0880/*---------------------------------------------------------------------
+0890/* Init Communication (set steplibs, check for trace and set the
+0900/* +User-TRACE-LEVEL variable)
+0910/*---------------------------------------------------------------------
+0920Callnat 'NDVS001N'
+0930        Return-Code
+0940        Error-Text-1
+0950If (Return-Code <> 0)
+0960  *Error-Nr := 999
+0970End-If
+0980/*---------------------------------------------------------------------
+0990/* Write a user trace message
+1000/*---------------------------------------------------------------------
+1010If (+User-TRACE-LEVEL > 0)               /* set in NDVS001N
+1020  NDVS004N-Trace-Msg := 'Example function ''Read EMPLOYEES'' started.'
+1030  NDVS004N-Function  := 'WT'              /* Write Trace
+1040  CALLNAT 'NDVS004N'
+1050          NDVS004N-Function
+1060          NDVS004N-Para
+1070          NDVS004N-RETURN-CODE
+1080End-If
+1090/*---------------------------------------------------------------------
+1100/* Read data sent from client
+1110/*---------------------------------------------------------------------
+1120Perform Get-Data-From-Client
+1130/*---------------------------------------------------------------------
+1140/* Main processing loop
+1150/*---------------------------------------------------------------------
+1160Main-Repeat.
+1170Repeat
+1180  /*-------------------------------------------------------------------
+1190  /* Check if error occurred
+1200  /*-------------------------------------------------------------------
+1210  If (Return-Code <> 0)
+1220    Escape Bottom (Main-Repeat.)
+1230  End-If
+1240  /*-------------------------------------------------------------------
+1250  /* Check what to do
+1260  /*-------------------------------------------------------------------
+1270  Actual-Function-Code := Local-Buffer-Function-Code
+1280  Decide on first value of Actual-Function-Code
+1290    /*-----------------------------------------------------------------
+1300    /* Read (forward or backward)
+1310    /*-----------------------------------------------------------------
+1320    Value 'RF', 'RB'
+1330      If (Actual-Function-Code = 'RF')
+1340        Then Read-Direction := 'A'
+1350        Else Read-Direction := 'D'
+1360      End-If
+1370      Read-Repeat.
+1380      Repeat                             /* to allow repositioning
+1390        Reposition-to-Value := False
+1400        /*-------------------------------------------------------------
+1410        /* Read Employees file
+1420        /*-------------------------------------------------------------
+1430        Read-Forward.
+1440        Read Employees-View in variable Read-Direction sequence
+1450             by Name = LBHD-New-Name-Start-Value
+1460          Add 1 to Read-Counter
+1470          If (Read-Counter <= Read-Max)
+1480            Add 1 to LBHD-Number-Returned
+1490            LBFDE-Personnel-ID (Read-Counter) := Personnel-ID
+1500            LBFDE-First-Name (Read-Counter)   := First-Name
+1510            LBFDE-Middle-Name (Read-Counter)  := Middle-Name
+1520            LBFDE-Name (Read-Counter)         := Name
+1530            LBFDE-Mar-Stat (Read-Counter)     := Mar-Stat
+1540            LBFDE-Sex (Read-Counter)          := Sex
+1550            LBFDE-City (Read-Counter)         := City
+1560          End-If
+1570          /*-----------------------------------------------------------
+1580          /* Return values to client and read the answer
+1590          /*-----------------------------------------------------------
+1600          If (Read-Counter >= Read-Max)
+1610            LBHD-New-Name-Start-Value := LBFDE-Name (Read-Counter)
+1620            /*---------------------------------------------------------
+1630            /* Return values to client
+1640            /*---------------------------------------------------------
+1650            Callnat 'NDVS003N'
+1660                    Local-Buffer (*)
+1670                    'A'                  /* Put + Interaction
+1680                    Return-Code
+1690                    Error-Text-1
+1700            /*---------------------------------------------------------
+1710            /* Read data sent from client
+1720            /*---------------------------------------------------------
+1730            If (Return-Code = 0)
+1740              Perform Get-Data-From-Client
+1750            End-If
+1760            /*---------------------------------------------------------
+1770            /* Check result
+1780            /*---------------------------------------------------------
+1790            If (Return-Code <> 0)
+1800              Escape Bottom (Main-Repeat.)
+1810            End-If
+1820            /*---------------------------------------------------------
+1830            /* Check for reposition
+1840            /*---------------------------------------------------------
+1850            If (LBHD-Reposition = 'Y' )
+1860              Reposition-to-Value := True
+1870            End-If
+1880            /*---------------------------------------------------------
+1890            /* Check if we have to leave the READ loop
+1900            /*---------------------------------------------------------
+1910            If Reposition-to-Value or
+1920               (Local-Buffer-Function-Code <> Actual-Function-Code)
+1930              Escape Bottom (Read-Forward.)
+1940            End-If
+1950          End-If
+1960        End-Read /* (Read-Forward.)
+1970        /*-------------------------------------------------------------
+1980        /* Check if ready
+1990        /*-------------------------------------------------------------
+2000        If not Reposition-to-Value and
+2010           (Local-Buffer-Function-Code = Actual-Function-Code)
+2020          Escape Bottom (Main-Repeat.)
+2030        End-If
+2040        If (Local-Buffer-Function-Code <> Actual-Function-Code)
+2050          Escape Bottom (Read-Repeat.)
+2060        End-If
+2070      End-Repeat /* (Read-Repeat.)
+2080    /*-----------------------------------------------------------------
+2090    /* Exit function
+2100    /*-----------------------------------------------------------------
+2110    Value 'EX'                           /* Exit
+2120        Compress *Program 'End of function ''Read EMPLOYEES file''.'
+2130                 into LBFD-Error-Line
+2140        Local-Buffer-Return-Code-Sign := ' '
+2150        Local-Buffer-Return-Code      := 0
+2160        Escape Bottom (Main-Repeat.)
+2170    /*-----------------------------------------------------------------
+2180    /* Invalid function code received from client
+2190    /*-----------------------------------------------------------------
+2200    None value                           /* Error
+2210        Compress *Program ': unknown/invalid function code'
+2220                 Local-Buffer-Function-Code 'received.'
+2230                 into LBFD-Error-Line
+2240        Local-Buffer-Function-Code    := 'ER'  /* Error
+2250        Local-Buffer-Return-Code-Sign := ' '
+2260        Local-Buffer-Return-Code      := 999
+2270        Escape Bottom (Main-Repeat.)
+2280  End-Decide
+2290End-Repeat /* (Main-Repeat.)
+2300/*---------------------------------------------------------------------
+2310/* Write a trace message if error occurred
+2320/*---------------------------------------------------------------------
+2330If (Return-Code <> 0) and (+User-TRACE-LEVEL > 0)
+2340  Compress numeric 'Error' Return-Code
+2350           'occurred, processing stopped.' into NDVS004N-Trace-Msg
+2360  NDVS004N-Function  := 'WT'              /* Write Trace
+2370  CALLNAT 'NDVS004N'
+2380          NDVS004N-Function
+2390          NDVS004N-Para
+2400          NDVS004N-RETURN-CODE
+2410End-If
+2420/*---------------------------------------------------------------------
+2430/* Send final buffer to client
+2440/*---------------------------------------------------------------------
+2450LBHD-End-Of-Data := 'Y'
+2460Callnat 'NDVS003N'
+2470        Local-Buffer (*)
+2480        'P'                              /* Put
+2490        Return-Code
+2500        Error-Text-1
+2510/*---------------------------------------------------------------------
+2520/* Write a trace message
+2530/*---------------------------------------------------------------------
+2540If (+User-TRACE-LEVEL > 4)
+2550  NDVS004N-Trace-Msg := 'End of example function ''Read EMPLOYEES''.'
+2560  NDVS004N-Function  := 'WT'              /* Write Trace
+2570  CALLNAT 'NDVS004N'
+2580          NDVS004N-Function
+2590          NDVS004N-Para
+2600          NDVS004N-RETURN-CODE
+2610End-If
+2620/*---------------------------------------------------------------------
+2630/* Delete the steplibs and leave here
+2640/*---------------------------------------------------------------------
+2650CALLNAT 'NDVS002N'                       /* Cleanup
+2660Stop
+2670/*---------------------------------------------------------------------
+2680/*---------------- End of main program --------------------------------
+2690/*---------------------------------------------------------------------
+2700/**********************************************************************
+2710/**********************************************************************
+2720/**********************************************************************
+2730/**********************************************************************
+2740/*---------------------------------------------------------------------
+2750/*---------------- Subroutine Get-Data-From-Client --------------------
+2760/*---------------------------------------------------------------------
+2770Define Subroutine Get-Data-From-Client
+2780  /*-------------------------------------------------------------------
+2790  /* Read data sent from client
+2800  /*-------------------------------------------------------------------
+2810  Callnat 'NDVS003N'
+2820          Local-Buffer (*)
+2830          'G'                          /* Get
+2840          Return-Code
+2850          Error-Text-1
+2860  LBHD-End-Of-Data := ' '
+2870  /*-------------------------------------------------------------------
+2880  /* Check for error
+2890  /*-------------------------------------------------------------------
+2900  If (Return-Code = 0)
+2910    /*-----------------------------------------------------------------
+2920    /* Init some variables
+2930    /*-----------------------------------------------------------------
+2940    If (LBHD-Number-to-Read is (N2))
+2950      Then Read-Max := val (LBHD-Number-to-Read)
+2960           If not (Read-Max = 1 thru 50)
+2970             Read-Max := 50
+2980           End-If
+2990      Else Read-Max := 50
+3000    End-If
+3010    LBHD-Number-Returned := 0
+3020    Read-Counter         := 0
+3030    Reset Local-Buffer-Function-Data (*)
+3040  Else
+3050    /*-----------------------------------------------------------------
+3060    /* Fill buffer for client with error data
+3070    /*-----------------------------------------------------------------
+3080    Local-Buffer-Function-Code := 'ER'   /* Error
+3090    Compress *Program ':' Error-Text-1 into LBFD-Error-Line
+3100  End-If
+3110  /*-------------------------------------------------------------------
+3120End-Subroutine /* Get-Data-From-Client
+3130/**********************************************************************
+3140/**********************************************************************
+3150END

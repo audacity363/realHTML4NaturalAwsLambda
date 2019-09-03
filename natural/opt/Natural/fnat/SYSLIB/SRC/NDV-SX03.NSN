@@ -1,0 +1,78 @@
+0010************************************************************************
+0020* Application: Natural Development Server
+0030* Program:     NDV-SX03
+0040**----------------------------------------------------------------------
+0050* Function:    Source of the NDV user exit NDV-UX03.
+0060*
+0070*              To activate this exit, catalog or stow as NDV-UX03 in
+0080*              library SYSLIB, SYSLIBS or SYSTEM
+0090*
+0100**----------------------------------------------------------------------
+0110* Remarks:     This exit is used to set flags for the NDV server
+0120*              programs.
+0130*
+0140*              Control must be returned to NDV.
+0150**----------------------------------------------------------------------
+0160* The following flags can be set:
+0170*   DISPLAY-RESOURCES (A1)
+0180*     possible values (Mainframe only):
+0190*     'Y' = Natural objects of type Resource are displayed in
+0200*           the Natural Studio
+0210*     other values = Natural objects of type Resource are not displayed
+0220*           the Natural Studio/NaturalONE.
+0230*
+0240* SAVE-ORIGINAL-SOURCE (A1)
+0250*     possible values:
+0260*     'Y' = A data area source coming from NaturalONE in DEFINE DATA
+0270*           format is stored as comment in the original format in front
+0280*           of the internal data area format. This allows to rebuild
+0290*           the original structure during download if the source wasn't
+0300*           changed in the meantime on the server.
+0310*           'Y' is the default value.
+0320*     other values = do not store the original data area source from
+0330*           NaturalONE.
+0340*
+0350* DATA-AREA-NO-INDENTION (A1)
+0360*     possible values:
+0370*     'Y' = When a data area source coming from NaturalONE in DEFINE
+0380*           DATA format is stored the indention is stored at the end
+0390*           of the internal data area format source line.
+0400*           This increases the data area source size and may cause
+0410*           a NAT0886 (Storage overflow) during SAVE/CAT/STOW.
+0420*           DATA-AREA-NO-INDENRION = 'Y' suppresses the storage of the
+0430*           indention value.
+0440*     other values = store indention value at the end of the internal
+0450*           data area format source line. This is the default value.
+0460*
+0470* DATA-AREA-CONVERT-TO-NEW-FORMAT (A1)
+0480*     possible values:
+0490*     'Y' = Convert and save a data area coming from NaturalONE into
+0500*           new internal data area format (Natural 41 and above) when
+0510*           the data area shall be stored in old internal data area
+0520*           format (compatible with Natural Version 3.1, i.e. the
+0530*           property 'Support old internal data area format' is set
+0540*           in NaturalONE) and can't be converted into the old internal
+0550*           data area format.
+0560*           'Y' is the default value.
+0570*     other values = return corresponding error message to NaturalONE
+0580*           and do not save the data area.
+0590************************************************************************
+0600DEFINE DATA PARAMETER
+06101 NDV-SERVER-FLAGS                    (A100)
+06201 REDEFINE NDV-SERVER-FLAGS
+0630  2 DISPLAY-RESOURCES                 (A1)
+0640  2 SAVE-ORIGINAL-SOURCE              (A1)
+0650  2 DATA-AREA-NO-INDENTION            (A1)
+0660  2 DATA-AREA-CONVERT-TO-NEW-FORMAT   (A1)
+0670END-DEFINE
+0680/*----------------------------------------------------------------------
+0690DISPLAY-RESOURCES               := 'Y'   /* Example code
+0700SAVE-ORIGINAL-SOURCE            := 'Y'   /* Example code
+0710DATA-AREA-NO-INDENTION          := 'N'   /* Example code
+0720DATA-AREA-CONVERT-TO-NEW-FORMAT := 'Y'   /* Example code
+0730/*
+0740IF *USER = 'XMEMBER'            /* Example code
+0750  DISPLAY-RESOURCES := 'N'      /* Example code
+0760END-IF                          /* Example code
+0770/*----------------------------------------------------------------------
+0780END

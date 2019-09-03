@@ -1,0 +1,13 @@
+0010** Example 'INCEX4C': INCLUDE (copycode used by INCEX4)
+0020************************************************************************
+0030* Transferred parameters from INCEX4:
+0040*
+0050* &1& : #GROUP.
+0060* &2& : ABC
+0070* &3& : AB
+0080*
+0090*
+0100WRITE  '=' &2&          /* 'ABC'             results into ABC
+0110WRITE  '=' &1&ABC       /* '#GROUP.' ABC     results into #GROUP.ABC
+0120WRITE  '=' &1&&2&       /* '#GROUP.' 'ABC'   results into #GROUP.ABC
+0130WRITE  '=' &1&&3&C      /* '#GROUP.' 'AB' C  results into #GROUP.ABC

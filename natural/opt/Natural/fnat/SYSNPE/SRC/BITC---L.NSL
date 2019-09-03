@@ -1,0 +1,13 @@
+0010**DV          0014     V1ITC                             ITC
+0020**DD          0017N 3.0 2ERROR-CODE
+0030**DD          0018A  58 2ERROR-TEXT
+0040**DD          0019N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0020A  10 2SYSTEM-MESSAGE-CODE
+0060**DD          0021B   2 2SYSTEM-CODE
+0070**DD          0022A   8 2FUNCTION
+0080**DD          0023A   8 2INTER-TASK-COMMUNICATION-NAME
+0090**DD          0024A   3 2ERASE
+0100**DD          0025N 6.0 2MESSAGE-LENGTH
+0110**DD          0026A 250 2MESSAGE-TEXT
+0120**DD          0027B   4 2WAIT-TIME
+0130**DD I1 C     0028A 250M2MESSAGE-ARRAY                   (1:5) /* MU-FIELD

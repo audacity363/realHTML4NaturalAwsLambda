@@ -1,0 +1,96 @@
+0010*
+0020SQLCODE, SQLSTATE, SQLCA from SQL call Product=NDB    Lib=STEPLIBS
+0030**
+0040Name of Subprogram......:  NDBERR      /*  'CALLNAT'-Interface
+0050**
+0060Function................:  Returns the SQLCODE, SQLSTATE and SQLCA
+0070                           from the last SQL call. It also return the
+0080                           Type of DBMS, that returned the error.
+0090**
+0100                           This program is typically called, if the
+0110                           an database call returns a nonzero SQLCODE
+0120                           (NATURAL error 3700)
+0130**
+0140Parameter layout........:
+0150              #SQLCODE      (I4)    /* SQLCODE
+0160              #SQLSTATE     (A5)    /* SQLSTATE
+0170              #SQLCA        (A136)  /* SQLCA
+0180              #DBMS         (B1)    /* DBMS that produced the error.
+0190*/                                                         Next page ...
+0200   Values for #DBMS   on Mainframes :
+0210
+0220    1         ADABAS SQL SERVER
+0230    2         DB2
+0240    3         SQL/DS
+0250
+0260   Values for #DBMS   with ENTIRE ACCESS :
+0270
+0280   10         ORACLE
+0290   12         SYBASE
+0300   15         INFORMIX
+0310   17         DB2/UNIX or DB2/2
+0320   18         INGRES
+0330   19         ADABAS SQL SERVER
+0340   20         ADABAS D
+0350   21         ODBC datasource
+0360*/                                                         Next page ...
+0370**
+0380#SQLCODE, #SQLSTATE and #SQLCA contain database specific information,
+0390not all fields of #SQLCA are filled by all databases.
+0400
+0410#SQLCA uses the DB2 SQLCA layout. To access the elementary fields
+0420#SQLCA should be redefined like
+0430
+04401 #SQLCA (A136)
+0450  2 SQLCAID        (A8)
+0460  2 SQLCABC        (I4)
+0470  2 SQLCODE        (I4)
+0480  2 SQLERRL        (I2)
+0490  2 SQLERRM        (A70)
+0500  2 SQLERRP        (A8)
+0510  2 SQLERRD1       (I4)
+0520  2 SQLERRD2       (I4)
+0530  2 SQLERRD3       (I4)
+0540  2 SQLERRD4       (I4)
+0550  2 SQLERRD5       (I4)
+0560  2 SQLERRD6       (I4)
+0570  2 SQLWARN0       (A1)
+0580  2 SQLWARN1       (A1)
+0590  2 SQLWARN2       (A1)
+0600  2 SQLWARN3       (A1)
+0610  2 SQLWARN4       (A1)
+0620  2 SQLWARN5       (A1)
+0630  2 SQLWARN6       (A1)
+0640  2 SQLWARN7       (A1)
+0650  2 SQLEXT         (A8)
+0660*/                                                         Next page ...
+0670**
+0680   When used with ENTIRE ACCESS #SQLCA contains the values
+0690     #SQLCA.SQLCODE         same as #SQLCODE
+0700     #SQLCA.SQLERRL         length filled in #SQLCA.SQLERRM
+0710     #SQLCA.SQLERRM         SQL Error text from DBMS
+0720                            may be truncated to 70 Bytes
+0730     all other fields have undefined values
+0740
+0750   With ENTIRE ACCESS  #SQLSTATE is set to
+0760
+0770      blank       if #SQLCODE is   0
+0780      02000       if #SQLCODE is 100
+0790      ZZZZZ       for all other SQLSTATES
+0800
+0810*/                                                         Next page ...
+0820**
+0830* How to use the interface NDBERR:
+0840* ----------------------------------
+0850* The Subprogram 'NDBERR' should be copied to library 'SYSTEM' or
+0860* to the steplib-library respectively,  or to any application.
+0870**
+0880* The parameter above listed must be defined via DEFINE DATA in
+0890* structured mode or via RESET statement in reporting mode.
+0900**
+0910* The calling program has to use the following statement:
+0920**
+0930* CALLNAT 'NDBERR' #SQLCODE #SQLSTATE #SQLCA #DBTYPE
+0940**
+0950***** End of description *****
+0960*

@@ -1,0 +1,156 @@
+0010Get or set work file name
+0020.
+0030Documentation ......... USR2011T    /*  Text object
+0040Interface ............. USR2011N    /*  Cataloged subprogram
+0050Example Program ....... USR2011P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. WORK FILE / PRINTER
+0100.
+0110Keywords .............. +CURRENT-VERSION, +MOD-NAT-6.3.13,
+0120                        GET, SET, WORK FILE
+0130.
+0140Interface Versions .... USR1050N, USR2011N
+0150.
+0160Function .............. This interface reads or modifies the work file
+0170                        settings.
+0180                        With USR2011N, the field for work file name is
+0190                        enhanced.
+0200                        On mainframe systems it is recommended to use
+0210                        USR1007N to read the work file assignments.
+0220                        With OS 6.3.13, the workfile properties are
+0230                        supported with optional parameter.
+0240.
+0250.
+0260Parameters
+0270----------
+0280Define the following parameters with the DEFINE DATA statement:
+0290.
+0300 1 USR2011L
+0310   2 INPUTS
+0320     3 FUNCTION        (A01)
+0330     3 WORK-NUM        (I01)
+0340   2 INPUT-OUTPUTS
+0350     3 WORK-FILE       (A253)
+0360     3 WORK-TYPE       (A01)
+0370   2 OUTPUTS
+0380     3 MAX-NUM         (I01)
+0390     3 RESPONSE        (I04)
+0400.
+0410 1 USR2011N
+0420   2 VERSION           (I01)     INIT <0>
+0430 1 REDEFINE USR1011N
+0440   2 EXTENDED-PARMS
+0450     3 EXTENDED-DATA   (A01/1:1)
+0460.
+0470 1 WORK-ATTRIBUTES     (A1000)  OPTIONAL
+0480 1 WORK-CODEPAGE       (A64)    OPTIONAL
+0490 1 WORK-PROPERTIES     (A1000)  OPTIONAL
+0500.
+0510.
+0520Interface Call
+0530--------------
+0540Use the interface with the CALLNAT statement:
+0550.
+0560CALLNAT 'USR2011N' USR2011L
+0570                   USR2011N.EXTENDED-PARMS
+0580                   WORK-ATTRIBUTES   /* Optional parameter
+0590                   WORK-CODEPAGE     /* Optional parameter
+0600                   WORK-PROPERTIES   /* Optional parameter
+0610.
+0620WORK-ATTRIBUTES and WORK-CODEPAGE must be specified together.
+0630WORK-PROPERTIES requires WORK-ATTRIBUTES and WORK-CODEPAGE.
+0640.
+0650.
+0660Using the Application Programming Interface:
+0670--------------------------------------------
+0680Copy the subprogram USR2011N to the library SYSTEM or the steplib
+0690library respectively, or to the required library.
+0700.
+0710Parameter Description:
+0720----------------------
+0730Input ...... 1 FUNCTION (A01)
+0740                      Function code. Possible values are:
+0750                      'G' - Get work file name
+0760                      'S' - Set work file name
+0770                      'R' - Reset work file name to NATPARM value
+0780                            (workfile type, attributes, codepage)
+0790                      On mainframe systems, function code 'G' is
+0800                      supported only.
+0810.
+0820Input ...... 1 WORK-NUM (I01)
+0830                      Number of the work file entry. WORK-NUM must
+0840                      be in the range of 1 to 32.
+0850.
+0860In/Output .. 1 WORK-FILE (A253)
+0870                      Name of the work file; including the full
+0880                      path description.
+0890.
+0900In/Output .. 1 WORK-TYPE (A01)
+0910                      Type of the work file. Possible values are:
+0920                      'D' - Default
+0930                      'N' - transfer to/from PC with Entire Connection
+0940                      'S' - binary format
+0950                      'T' - "text" files with records
+0960                            terminated by [carriage return] linefeed
+0970                      'C' - as ASCII, but trailing blanks are removed
+0980                      'E' - READ/WRITE directly in Entire Connection
+0990                            format
+1000                      'U' - no formatting information is written
+1010                            (neither for fields nor for records)
+1020                      'P' - files which can handle dynamic variables
+1030                            exactly and can also be transported:
+1040                            e.g., from a little endian machine to a
+1050                            big endian machine, and vice versa
+1060                      'B' - Work file type CSV
+1070.
+1080Output ..... 1 MAX-NUM (I01)
+1090                      Maximum number of work files as specified
+1100                      in NATPARM utility.
+1110.
+1120Output ..... 1 RESPONSE (I04)
+1130                      Response code. Possible values are:
+1140                         0 - Ok
+1150                         4 - Invalid value for FUNCTION entered
+1160                         8 - Invalid value for WORK-NUM entered
+1170                        12 - Invalid value for WORK-TYPE entered
+1180                        16 - Invalid value for WORK-FILE entered
+1190                        20 - Invalid work file attribute specified
+1200                        24 - Work file type does not support
+1210                             codepage/properties setting.
+1220                             Work file type allowed for codepage:
+1230                             'T', 'C', 'U', 'B'.
+1240                             Work file type allowed for properties:
+1250                             'B'.
+1260                        28 - Invalid work file property specified
+1270.
+1280In/Output .. USR2011N.VERSION (I01)
+1290                    Version number of the subprogram.
+1300                    0 is the version number for the original
+1310                    parameter layout.
+1320.
+1330In/Output .. WORK-ATTRIBUTES (A1000)  OPTIONAL
+1340                    Matches the attributes clause of the
+1350                    DEFINE WORK FILE statement. Currently possible
+1360                    values are APPEND/NOAPPEND
+1370                               BOM/NOBOM
+1380                               DELETE/KEEP
+1390.
+1400In/Output .. WORK-CODEPAGE (A64)  OPTIONAL
+1410                    Matches the work file property CODEPAGE, allowed
+1420                    for work file type ASCII 'T',
+1430                                       ASCII compressed 'C'
+1440                                       UNFORMATTED 'U'
+1450                                       CSV 'B'
+1460.
+1470In/Output .. WORK-PROPERTIES (A1000)  OPTIONAL
+1480                    Matches the work file properties, allowed
+1490                    for work file type CSV 'B'.
+1500                    Currently possible values are:
+1510                      HEADER/NOHEADER
+1520                      SEPARATOR-COMMA/SEPARATOR-SEMICOLON/SEPARATOR-TAB
+1530                    The values should be separated by a comma.
+1540.
+1550.
+1560*****  End of Description  *****

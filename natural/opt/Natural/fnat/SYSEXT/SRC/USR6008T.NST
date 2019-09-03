@@ -1,0 +1,55 @@
+0010Get data of object in source area
+0020.
+0030Documentation ......... USR6008T    /*  Text object
+0040Interface ............. USR6008N    /*  Cataloged subprogram
+0050Example Program ....... USR6008P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. EDITOR
+0100.
+0110Keywords .............. LIBRARY, MODE, NAME, SOURCE AREA, TYPE
+0120.
+0130Function .............. Get data of a member in source area and
+0140                        get the size used in source area.
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+021001 PARM-AREA         (A253)   /* Contains Parameters
+022001 REDEFINE PARM-AREA
+0230  02 #LIBRARY        (A8)     /* Lib currently linked to member in SA
+0240  /* The library is only different to *LIBRARY-ID, when a member will
+0250  /* be loaded into the source area from a library different than
+0260  /* *LIBRARY-ID (e.g. with with READ <mem> <lib>) and there is no
+0270  /* LOGON (implicit or explicit) before running USR6008N.
+0280  02 #MEMBER         (A8)     /* Name of member in SA
+0290  02 #TYPE           (A1)     /* Type of member in SA
+0300  02 #MODE           (A1)     /* Mode of member in SA
+0310                              /*  R Reporting Mode
+0320                              /*  S Structured Mode
+0330  02 #BYTES-SA       (P20)    /* Bytes in SA used, the value differs
+0340                              /* from the source size of the module.
+0350  02 #EMPTY          (L)      /* TRUE if SA is empty, FALSE otherwise
+0360  02 #RESPONSE       (N04)    /* Error during execution
+0370                              /*  0 ok
+0380                              /*  4 Type cannot be found.
+0390  02 #ERR-TXT        (A65)    /* Short text
+0400.
+0410.
+0420Interface Call
+0430--------------
+0440Use the interface with the CALLNAT statement:
+0450.
+0460CALLNAT 'USR6008N' PARM-AREA
+0470.
+0480.
+0490Using the Application Programming Interface:
+0500--------------------------------------------
+0510Copy the subprogram USR6008N to the library SYSTEM or the steplib
+0520library respectively, or to the required library.
+0530.
+0540***** End of Description *****
+0550

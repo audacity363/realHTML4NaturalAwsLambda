@@ -1,0 +1,122 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1036N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 ED-SESNUM          (B02)   /* Number of session
+0070 1 ED-REQUEST         (A04)   /* Editor request
+0080 1 ED-ERRNUM          (B02)   /* Error number
+0090 1 PROFILE-DATA
+0100   2 PROF-CAPS        (A01)   /* Translate to upper case: Y, n, c
+0110   2 PROF-HEX         (A01)   /* Hexadecimal mode: y, N
+0120   2 PROF-NULLS       (A01)   /* Fill end of line with nulls: y, N
+0130   2 PROF-JUSTIFY     (A01)   /* Justification: N, l, r, b
+0140   2 PROF-LOGCHR      (A01)   /* Character for logical tab
+0150   2 PROF-RECOVERY    (A01)   /* Automatic recovery: y, N
+0160   2 PROF-AUTOSAVE    (A01)   /* Automatic save before end: y, N
+0170   2 PROF-AUTOREN     (A01)   /* Automatic renumbering: Y, n
+0180   2 PROF-LOG         (A01)   /* Log file: y, N
+0190   2 PROF-PHSTAB      (B01)   /* Physical tabulation: y, N
+0200   2 PROF-PHSCHR      (B01)   /* Character for physical tabulation
+0210   2 PROF-LANGUAGE    (A01)   /* Language: Default is 1
+0220   2 PROF-DIRECTION   (A01)   /* Direction of numbers: L, r
+0230   2 PROF-MSO         (A01)   /* Multi session operation: y, N
+0240   2 PROF-MASK        (A01)   /* Mask line: y, N
+0250   2 PROF-RENUM       (B01)   /* Renumbering amount
+0260   2 PROF-FIX         (A01)   /* Fix: y, N
+0270   2 PROF-FIXLEN      (B01)   /* Fix length, 0 - is fixed
+0280   2 PROF-ADVANCE     (A01)   /* Advance: Y, n, p
+0290   2 PROF-PROTECT     (A01)   /* Protectthe prefix area: y, N, i
+0300   2 PROF-ESCAPE      (A01)   /* Escape character activated: y, N
+0310   2 PROF-ESCHAR      (A01)   /* Escape character
+0320   2 PROF-ESCDIR      (A01)   /* Escape direction '+' or '-'
+0330   2 PROF-ESCDISP     (A01)   /* Escape char. disposition; default is 0
+0340   2 PROF-EMPTY       (A01)   /* Empty line to be deleted: y, N
+0350   2 PROF-INSERT      (A01)   /* Insert lines: 0 thru 9; default is 9
+0360   2 PROF-HYPHENATION (A01)   /* Hyphenation: y, N
+0370   2 PROF-HSYMBOL     (A01)   /* Hyphenation symbol
+0380   2 PROF-HCHAR       (B01)   /* Hyphenation character
+0390   2 PROF-TWOLANG     (B01)   /* Second language
+0400   2 PROF-DECIMAL     (A01)   /* Decimal character
+0410   2 PROF-AORDER      (A01)   /* Auto order: y, N
+0420   2 PROF-ATTRDATA    (A01)   /* Put attribute characters in data: y, N
+0430   2 PROF-ATTRDEF     (B01)   /* Default attribute character
+0440   2 PROF-ATTRH       (B01)   /* Attribute char. for highligthed field
+0450   2 PROF-ATTRP       (B01)   /* Attribute char. for protected field
+0460   2 PROF-LIMIT       (A01)   /* Scan limit: y, N
+0470   2 PROF-WINDOW      (A01)   /* Window: y, N
+0480   2 PROF-CONTROL     (A01)   /* Control line: y, N
+0490   2 PROF-CONTROL-CHAR(A01)   /* Control character: y, N
+0500   2 PROF-COLS        (A01)   /* Column line on top: y, N
+0510   2 PROF-PREFIX      (A01)   /* User prefix: y, N, a
+0520   2 PROF-PREFIX-CHAR (A01)   /* User prefix character
+0530   2 PROF-NEWLINE     (A01)   /* Hard new line: y, N
+0540   2 PROF-NEWLINE-CHAR(A01)   /* Hard new line character
+0550   2 PROF-STATS       (A01)   /* Statistics: y, N
+0560   2 PROF-HEADER      (A01)   /* Header: y, N
+0570   2 PROF-DUMMY       (A32)   /* For future use
+0580END-DEFINE
+0590/* Assign some profile data, if you use ED-REQUEST = 'PROF':
+0600ASSIGN PROF-CAPS = 'Y'
+0610/*
+0620ASSIGN ED-SESNUM  = 1
+0630ASSIGN ED-REQUEST = 'STAT'
+0640CALLNAT 'USR1036N'  ED-SESNUM ED-REQUEST ED-ERRNUM PROFILE-DATA
+0650/*
+0660WRITE 'User profile. First page:' (I) /
+0670   / '=' ED-SESNUM
+0680   / '=' ED-REQUEST
+0690   / '=' ED-ERRNUM
+0700  // '=' PROF-CAPS
+0710   / '=' PROF-HEX
+0720   / '=' PROF-NULLS
+0730   / '=' PROF-JUSTIFY
+0740   / '=' PROF-LOGCHR
+0750   / '=' PROF-RECOVERY
+0760   / '=' PROF-AUTOSAVE
+0770   / '=' PROF-AUTOREN
+0780   / '=' PROF-LOG
+0790   / '=' PROF-PHSTAB
+0800   / '=' PROF-PHSCHR
+0810   / '=' PROF-LANGUAGE
+0820   / '=' PROF-DIRECTION
+0830   / '=' PROF-MSO
+0840NEWPAGE
+0850WRITE 'User profile. Second page:' (I) /
+0860   / '=' PROF-MASK
+0870   / '=' PROF-RENUM
+0880   / '=' PROF-FIX
+0890   / '=' PROF-FIXLEN
+0900   / '=' PROF-ADVANCE
+0910   / '=' PROF-PROTECT
+0920   / '=' PROF-ESCAPE
+0930   / '=' PROF-ESCHAR
+0940   / '=' PROF-ESCDIR
+0950   / '=' PROF-ESCDISP
+0960   / '=' PROF-EMPTY
+0970   / '=' PROF-INSERT
+0980   / '=' PROF-HYPHENATION
+0990   / '=' PROF-HSYMBOL
+1000   / '=' PROF-HCHAR
+1010   / '=' PROF-TWOLANG
+1020   / '=' PROF-DECIMAL
+1030   / '=' PROF-AORDER
+1040NEWPAGE
+1050WRITE 'User profile. Third page:' (I) /
+1060   / '=' PROF-ATTRDATA
+1070   / '=' PROF-ATTRDEF
+1080   / '=' PROF-ATTRH
+1090   / '=' PROF-ATTRP
+1100   / '=' PROF-LIMIT
+1110   / '=' PROF-WINDOW
+1120   / '=' PROF-CONTROL
+1130   / '=' PROF-CONTROL-CHAR
+1140   / '=' PROF-COLS
+1150   / '=' PROF-PREFIX
+1160   / '=' PROF-PREFIX-CHAR
+1170   / '=' PROF-NEWLINE
+1180   / '=' PROF-NEWLINE-CHAR
+1190   / '=' PROF-STATS
+1200   / '=' PROF-HEADER
+1210NEWPAGE
+1220END

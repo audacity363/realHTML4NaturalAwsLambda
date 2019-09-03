@@ -1,0 +1,28 @@
+0010*  EXAMPLE 'EXMEX3': EXAMINE AND REPLACE WITH MULTIPLE VALUES
+0020************************************************************************
+0030* This example shows a translation of the pattern
+0040* 'AA', 'Aa' and 'aA' into '++',
+0050* 'BB', 'Bb' and 'bB' into '--' and
+0060* 'CC', 'Cc' and 'cC' into '**'.
+0070************************************************************************
+0080DEFINE DATA LOCAL
+00901 #SV     (A2/1:3,1:3) INIT (1,V) <'AA','BB','CC'>
+0100                            (2,V) <'Aa','Bb','Cc'>
+0110                            (3,V) <'aA','bB','cC'>
+01201 #RV     (A2/1:3)     INIT       <'++','--','**'>
+01301 #STRING (A20)        INIT <'AAABbbbbBCCCcccCaaaA'>
+01401 #NUM    (N2)
+0150END-DEFINE
+0160*
+0170*
+0180WRITE NOTITLE / 'EXAMINE #STRING FOR #SV(*,*) AND REPLACE WITH #RV(*)' /
+0190*
+0200WRITE 'Before:' #STRING   /* shows   'AAABbbbbBCCCcccCaaaA'
+0210*
+0220EXAMINE #STRING FOR #SV(*,*) AND REPLACE WITH #RV(*)
+0230        GIVING NUMBER #NUM
+0240*
+0250WRITE 'After: ' #STRING   /* shows   '++A--bb--****c**aa++'
+0260  40T 'Number found:' #NUM
+0270*
+0280END

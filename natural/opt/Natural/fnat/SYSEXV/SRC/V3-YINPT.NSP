@@ -1,0 +1,66 @@
+0010*
+0020* Program .. V3-YINPT
+0030* Library .. SYSEXV
+0040* Version .. 3.1
+0050*
+0060* Functionality: For Year 2000, INPUT with a date variable
+0070*
+0080* Note: Set profile parameter DTFORM=I for this example.
+0090************************************************************************
+0100*
+0110DEFINE DATA
+0120LOCAL
+01301 #DATE1   (D)
+0140END-DEFINE
+0150*
+0160FORMAT KD=ON
+0170SET KEY PF3  NAMED 'Exit'
+0180  PF12 NAMED 'Canc'
+0190*
+0200MOVE D'1997-12-20' TO #DATE1
+0210*
+0220REPEAT
+0230*
+0240*
+0250  INPUT (IP=OFF)
+0260    01T *TIMX  (AD=OTD )
+0270    21T '***** NATURAL 3.1 ENHANCEMENTS *****'
+0280    70T *DATX  (AD=OTD DF=L )
+0290    /
+0300    01T 'User'
+0310    06T *USER  (AD=OILT )
+0320    28T '- Year 2000 Features -'(I)
+0330    64T 'Program'
+0340    72T *PROGRAM (AD=OI)
+0350    //
+0360    02T 'INPUT with date variable'(I)
+0370    ///
+0380    02T 'Enter value in #DATE (D):'
+0390    #DATE1 (AD=MIT CD=NE)
+0400    //
+0410    02T '(valid input in Version 2.2 is YY-MM-DD)'
+0420    /
+0430    02T '(valid input in Version 3.1 is YY-MM-DD and YYYYMMDD)'
+0440    ///
+0450    02T 'Result:'
+0460    #DATE1 (AD=OI  EM=YYYY-MM-DD)
+0470    ///
+0480    /
+0490    02T 'Note: If no century is specified, either the current'
+0500    'century is used'
+0510    /
+0520    02T '      or the YSLW parameter determines the century.'
+0530    //
+0540    /
+0550    /
+0560*
+0570  IF *PF-KEY = 'PF3'
+0580    ESCAPE BOTTOM
+0590  END-IF
+0600  IF (*PF-KEY = 'PF12' OR= 'CLR')
+0610    CALLNAT 'UTILSTOP'
+0620  END-IF
+0630*
+0640END-REPEAT
+0650*
+0660END

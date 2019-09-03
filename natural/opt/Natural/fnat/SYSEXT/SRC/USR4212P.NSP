@@ -1,0 +1,146 @@
+0010/*  Analyze data area
+0020/*  This program serves as an example how to design a user-defined
+0030/*  program to call 'USR4212N'
+0040/***********************************************************************
+0050/*---------------------------------------------------------------------
+0060DEFINE DATA LOCAL
+0070/*---------------------------------------------------------------------
+0080/*---------------- Parameter for USR4212N -----------------------------
+0090/*---------------------------------------------------------------------
+01001 P-FUNCTION                          (A1)
+01101 P-OBJECT-TYPE                       (A1)
+01201 P-OBJECT-NAME                       (A8)
+01301 P-OBJECT-LIBRARY                    (A8)
+01401 P-LIBRARY-DBID                      (N5)
+01501 P-LIBRARY-FNR                       (N5)
+01601 P-LIBRARY-PASSWORD                  (A8)
+01701 P-LIBRARY-CIPHER                    (A8)
+01801 P-DATA-AREA-DEFINITION              (1:1)
+0190  2 ENTRY-TYPE                        (A1)
+0200  2 VARIABLE-DEFINITION               (A77)
+0210  2 REDEFINE VARIABLE-DEFINITION
+0220    3 V-LEVEL                         (A2)
+0230    3 V-NAME                          (A32)
+0240    3 V-FORMAT                        (A1)
+0250    3 V-LENGTH                        (A10)
+0260    3 V-FIELD-COMMENT                 (A32)
+0270  2 REDEFINE VARIABLE-DEFINITION
+0280    3 V-COMMENT-LINE                  (A77)
+0290  2 EM-VALUE                          (A63)
+0300  2 HD-VALUE                          (A58)
+0310  2 PM-VALUE                          (A5)
+0320  2 NAME-OF-VIEW-BLOCK-HANDLE         (A32)
+0330  2 ARRAY-INDEX-1-FROM                (A11)
+0340  2 ARRAY-INDEX-1-TO                  (A11)
+0350  2 ARRAY-INDEX-2-FROM                (A11)
+0360  2 ARRAY-INDEX-2-TO                  (A11)
+0370  2 ARRAY-INDEX-3-FROM                (A11)
+0380  2 ARRAY-INDEX-3-TO                  (A11)
+0390  2 INIT-CONST-VALUE                  (A) DYNAMIC
+0400  2 FLAGS                             (A1/1:20)
+04101 P-WORK-AREA                         (A1/1:250)
+04201 P-RETURN-CODE                       (I4)
+04301 P-RETURN-MESSAGE                    (A250)
+04401 P-EXTENSIONS
+0450  2 VERSION                           (I1)     INIT <1>
+0460  2 V1-FSEC-DBID                      (N05)    /* Fsec-dbid
+0470  2 V1-FSEC-FNR                       (N05)    /* Fsec-fnr
+0480  2 V1-FSEC-PSW                       (A08)    /* Fsec password
+0490  2 V1-FSEC-CIP                       (N08)    /* Fsec cip
+05001 REDEFINE P-EXTENSIONS
+0510  2 EXTENDED-DATA                     (A1/1:27)
+0520/*---------------------------------------------------------------------
+0530/*---------------- Local data -----------------------------------------
+0540/*---------------------------------------------------------------------
+0550LOCAL
+05601 INDEX1                              (I4)
+0570END-DEFINE
+0580/**********************************************************************
+0590/**********************************************************************
+0600/*---------------------------------------------------------------------
+0610/* Inits
+0620/*---------------------------------------------------------------------
+0630SET KEY ALL
+0640P-FUNCTION         := 'R'
+0650P-OBJECT-NAME      := 'USR4212L'
+0660P-OBJECT-LIBRARY   := *LIBRARY-ID
+0670/*
+0680INPUT  (AD=MILT)
+0690    'Analyze data area:' (I)
+0700  / '-' (18) (I) /
+0710  / 'Object Name ..' P-OBJECT-NAME
+0720  / 'Library ......' P-OBJECT-LIBRARY
+0730  / 'DBID .........' P-LIBRARY-DBID
+0740  / 'FNR ..........' P-LIBRARY-FNR
+0750  / 'DBID of FSEC .' V1-FSEC-DBID
+0760  / 'FNR of FSEC ..' V1-FSEC-FNR
+0770  /// 'Press any PF-key to stop.'
+0780/*
+0790IF *PF-KEY NE 'ENTR'
+0800  ESCAPE ROUTINE
+0810END-IF
+0820/*
+0830REPEAT
+0840  CALLNAT 'USR4212N'
+0850          P-FUNCTION
+0860          P-OBJECT-TYPE
+0870          P-OBJECT-NAME
+0880          P-OBJECT-LIBRARY
+0890          P-LIBRARY-DBID
+0900          P-LIBRARY-FNR
+0910          P-LIBRARY-PASSWORD
+0920          P-LIBRARY-CIPHER
+0930          P-DATA-AREA-DEFINITION (*)
+0940          P-WORK-AREA (*)
+0950          P-RETURN-CODE
+0960          P-RETURN-MESSAGE
+0970          P-EXTENSIONS.EXTENDED-DATA (*)
+0980  IF (P-RETURN-CODE = 0 OR = 99)
+0990    PRINT 'RC:' P-RETURN-CODE (AD=L) 10T 'Msg:' P-RETURN-MESSAGE
+1000    FOR INDEX1 = 1 TO *OCCURRENCE (ENTRY-TYPE)
+1010      IF (ENTRY-TYPE (INDEX1) <> ' ')
+1020        WRITE 'Entry-Type .........' ENTRY-TYPE (INDEX1)
+1030        IF (ENTRY-TYPE (INDEX1) = 'D')
+1040          WRITE 'Level ..............' V-LEVEL (INDEX1)
+1050          WRITE 'Name ...............' V-NAME (INDEX1)
+1060          WRITE 'Format .............' V-FORMAT (INDEX1)
+1070          WRITE 'Length .............' V-LENGTH (INDEX1)
+1080          WRITE 'Field-Comment ......' V-FIELD-COMMENT (INDEX1)
+1090        ELSE
+1100          PRINT 'Comment-Line .......' V-COMMENT-LINE (INDEX1)
+1110        END-IF
+1120        PRINT 'EM-Value ...........' EM-VALUE (INDEX1)
+1130        PRINT 'HD-Value ...........' HD-VALUE (INDEX1)
+1140        WRITE 'PM-Value ...........' PM-VALUE (INDEX1)
+1150        WRITE 'View-Block-Handle ..'
+1160                               NAME-OF-VIEW-BLOCK-HANDLE (INDEX1)
+1170        WRITE 'Array-Index-1-from .' ARRAY-INDEX-1-FROM (INDEX1)
+1180        WRITE 'Array-Index-1-to ...' ARRAY-INDEX-1-TO (INDEX1)
+1190        WRITE 'Array-Index-2-from .' ARRAY-INDEX-2-FROM (INDEX1)
+1200        WRITE 'Array-Index-2-to ...' ARRAY-INDEX-2-TO (INDEX1)
+1210        WRITE 'Array-Index-3-from .' ARRAY-INDEX-3-FROM (INDEX1)
+1220        WRITE 'Array-Index-3-to ...' ARRAY-INDEX-3-TO (INDEX1)
+1230        WRITE 'Flags .............. 1 2 3 4 5 6 7'
+1240        WRITE '                    ' FLAGS (INDEX1,1) FLAGS (INDEX1,2)
+1250                                     FLAGS (INDEX1,3) FLAGS (INDEX1,4)
+1260                                     FLAGS (INDEX1,5) FLAGS (INDEX1,6)
+1270                                     FLAGS (INDEX1,7)
+1280        PRINT 'Init-Const-Value ...' INIT-CONST-VALUE (INDEX1)
+1290        NEWPAGE
+1300      END-IF
+1310      IF (*PF-KEY <> 'ENTR')
+1320        ESCAPE ROUTINE
+1330      END-IF
+1340    END-FOR
+1350  ELSE
+1360    PRINT 'Return code' P-RETURN-CODE 'from USR4212N with message'
+1370        / P-RETURN-MESSAGE
+1380  END-IF
+1390  RESET P-DATA-AREA-DEFINITION (*)
+1400  IF (P-RETURN-CODE <> 0)
+1410    ESCAPE BOTTOM
+1420  END-IF
+1430END-REPEAT
+1440/**********************************************************************
+1450/**********************************************************************
+1460END

@@ -1,0 +1,5 @@
+0001VDIC-DBID= 0
+0002VDIC-FNR= 0
+0003VDIC-NAME= NDV-FDIC
+0004/* 2018-10-29 16:43:21.7 Actions performed by SYSPCI:
+0005/* Initialize NDV without using Adabas files.

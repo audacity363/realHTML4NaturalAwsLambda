@@ -1,0 +1,101 @@
+0010/*  Copy definition of 'FNAT' to 'FUSER'
+0020/***********************************************************************
+0030DEFINE DATA
+0040LOCAL
+0050  01 FUNCTION   (A01)    /*  E=Enable
+0060  01 ERR-MSG    (A72)    /*  <blank> if ok.
+0070LOCAL
+0080  01 FUSER
+0090     02 U-LFID     (P05)   /*  QUESTION
+0100     02 U-FILENAME (A12)   /*  Answers:
+0110     02 U-DBID     (P05)
+0120     02 U-FNR      (P05)
+0130     02 U-DBTYPE   (A07)
+0140     02 U-ERR-MSG  (A48)
+0150     02 U-RC       (P03)
+0160  01 FNAT
+0170     02 N-LFID     (P05)   /*  QUESTION
+0180     02 N-FILENAME (A12)   /*  Answers:
+0190     02 N-DBID     (P05)
+0200     02 N-FNR      (P05)
+0210     02 N-DBTYPE   (A07)
+0220     02 N-ERR-MSG  (A48)
+0230     02 N-RC       (P03)
+0240**
+0250** For NAT22 (one byte DBID,FNR)
+0260**
+0270* 01 FUSER
+0280*    02 U-LFID     (P03)   /*  QUESTION
+0290*    02 U-FILENAME (A12)   /*  Answers:
+0300*    02 U-DBID     (P03)
+0310*    02 U-FNR      (P03)
+0320*    02 U-DBTYPE   (A07)
+0330*    02 U-ERR-MSG  (A48)
+0340*    02 U-RC       (P03)
+0350* 01 FNAT
+0360*    02 N-LFID     (P03)   /*  QUESTION
+0370*    02 N-FILENAME (A12)   /*  Answers:
+0380*    02 N-DBID     (P03)
+0390*    02 N-FNR      (P03)
+0400*    02 N-DBTYPE   (A07)
+0410*    02 N-ERR-MSG  (A48)
+0420*    02 N-RC       (P03)
+0430END-DEFINE
+0440/***********************************************************************
+0450MOVE 000 TO U-LFID         /*  Read current FUSER definition
+0460CALLNAT 'USR2004N' FUSER
+0470MOVE 255 TO N-LFID         /*  Read current FNAT definition
+0480CALLNAT 'USR2004N' FNAT
+0490**
+0500** For NAT22 (one byte DBID,FNR)
+0510**
+0520* MOVE 000 TO U-LFID         /*  Read current FUSER definition
+0530* CALLNAT 'USR0011N' FUSER
+0540* MOVE 255 TO N-LFID         /*  Read current FNAT definition
+0550* CALLNAT 'USR0011N' FNAT
+0560/*
+0570WRITE NOTITLE (AD=LI)
+0580      'Before "USR0060N" ...' //
+0590  /   'File ....' U-FILENAME
+0600  /   'DBID ....' U-DBID
+0610  /   'FNR .....' U-FNR
+0620  /   'Type ....' U-DBTYPE
+0630  ///
+0640  /   'File ....' N-FILENAME
+0650  /   'DBID ....' N-DBID
+0660  /   'FNR .....' N-FNR
+0670  /   'Type ....' N-DBTYPE
+0680/***********************************************************************
+0690/*  Make FUSER equal to FNAT definition:
+0700MOVE 'E' TO FUNCTION
+0710CALLNAT 'USR0060N' FUNCTION ERR-MSG
+0720/***********************************************************************
+0730MOVE 000 TO U-LFID         /*  Read current FUSER definition
+0740CALLNAT 'USR2004N' FUSER
+0750MOVE 255 TO N-LFID         /*  Read current FNAT definition
+0760CALLNAT 'USR2004N' FNAT
+0770**
+0780** For NAT22 (one byte DBID,FNR)
+0790**
+0800* MOVE 000 TO U-LFID         /*  Read current FUSER definition
+0810* CALLNAT 'USR0011N' FUSER
+0820* MOVE 255 TO N-LFID         /*  Read current FNAT definition
+0830* CALLNAT 'USR0011N' FNAT
+0840/*
+0850NEWPAGE
+0860WRITE NOTITLE (AD=LI)
+0870      'FUSER is now equal to FNAT definition ...' //
+0880  /   'File ....' U-FILENAME
+0890  /   'DBID ....' U-DBID
+0900  /   'FNR .....' U-FNR
+0910  /   'Type ....' U-DBTYPE
+0920  ///
+0930  /   'File ....' N-FILENAME
+0940  /   'DBID ....' N-DBID
+0950  /   'FNR .....' N-FNR
+0960  /   'Type ....' N-DBTYPE
+0970/*
+0980IF ERR-MSG NE ' '
+0990  WRITE // 'Error:' (I) ERR-MSG (AD=I)
+1000END-IF
+1010END

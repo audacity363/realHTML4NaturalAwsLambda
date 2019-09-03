@@ -1,0 +1,15 @@
+0010&H View NATPROC-USERS
+0020&L
+0030&L
+0040#Purpose@: Display users logged on to ENTIRE SYSTEM SERVER.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : This view allows a user or application to retrieve
+0100           information relating to all users logged on to the
+0110           specified ENTIRE SYSTEM SERVER node.
+0120           Optionally information about internal tasks of
+0130           ENTIRE SYSTEM SERVER can also be retrieved.
+0140&L
+0150#Notes@  :

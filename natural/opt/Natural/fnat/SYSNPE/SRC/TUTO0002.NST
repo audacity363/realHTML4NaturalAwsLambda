@@ -1,0 +1,28 @@
+0010* Text-Member fuer den Aufbau des ENTIRE SYSTEM SERVER Tutorial Menu
+0020*                        PFKEY PFKEY PFKEY PFKEY PFKEY PFKEY
+0030* PF1-PF6                            Ende        Benu  Sys
+0040* PF7-PF12                -     +          Sprac       Node
+0050*
+0060* Das Format wurde fuer NPR321 geaendert.
+0070*
+0080* Die Benutzer bzw. Administratoren koennen eigene Eintraege fuer
+0090* das Tutorial in diesem Member 'TUTO002' definieren.
+0100* In den Membern 'TUTO#XXX' sollten keine Aenderungen durchgefuehrt
+0110* werden, da sie mit dem naechsten Release verloren gingen.
+0120*
+0130* Die Eintraege haben ein festes Format:
+0140*    View Name             (A16)
+0150*    Programm Name         (A8)
+0160*    Kennzeichen           (A1)                       .NPR321.
+0170*    Programm Beschreibung (A47)           (war A48)  .NPR321.
+0180*
+0190* Gueltige Werte fuer das Kennzeichen sind zur Zeit:
+0200*    leer  = Immer im Menu anzeigen, unabhaengig vom Maschinentyp
+0210*    E     = EBCDIC - Nur im Menu anzeigen fuer EBCDIC Maschinen
+0220*            (zur Zeit z/OS & OS/390, VSE/ESA, BS2000/OSD)
+0230*    I     = ISO-8859-1 (IASCII, ASCII)
+0240*            (zur Zeit PC's, *nixen, VAXen)
+0250*
+0260* COPY-FILE       COPYLIB MDateien von einem Knoten zum anderen kopieren
+0270*---+----1----+><---+-->X<---+----1----+----2----+----3----+----4----+->
+0280View            ProgrammMProgramm Beschreibung

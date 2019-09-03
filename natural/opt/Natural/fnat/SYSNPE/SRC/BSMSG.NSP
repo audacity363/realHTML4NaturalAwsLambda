@@ -1,0 +1,66 @@
+0010*
+0020* Send message to a USER-ID / terminal
+0030*
+0040DEFINE DATA GLOBAL USING TUTO
+0050            LOCAL  USING BSMSG--L
+0060            LOCAL
+0070*
+008001 #MESSAGE                 (A79)
+009001 #DESTINATION             (A8)
+010001 #PROCESSOR-NAME          (A8)
+011001 #TERMINAL-NAME           (A8)
+012001 #PREFIX                  (A3)
+0130*
+0140END-DEFINE
+0150PERFORM PF-KEY
+0160*
+0170* ------------------------------ MAIN LOOP ----------------------------
+0180*
+0190REPEAT
+0200  PERFORM SCREEN-IO
+0210  DECIDE FOR FIRST CONDITION
+0220    WHEN #DESTINATION NE ' ' AND #TERMINAL-NAME = ' ' AND
+0230         #PROCESSOR-NAME = ' '
+0240         PROCESS SEND-MESSAGE
+0250           USING NODE                  = ##NODE
+0260             ,   MESSAGE               = #MESSAGE
+0270             ,   DESTINATION           = #DESTINATION
+0280             ,   PREFIX                = #PREFIX
+0290          GIVING ERROR-CODE
+0300                 ERROR-TEXT
+0310                 SYSTEM-CODE
+0320    WHEN #TERMINAL-NAME NE ' ' AND #PROCESSOR-NAME NE ' '
+0330         PROCESS SEND-MESSAGE
+0340           USING NODE                  = ##NODE
+0350             ,   MESSAGE               = #MESSAGE
+0360             ,   PROCESSOR-NAME        = #PROCESSOR-NAME
+0370             ,   TERMINAL-NAME         = #TERMINAL-NAME
+0380             ,   PREFIX                = #PREFIX
+0390          GIVING ERROR-CODE
+0400                 ERROR-TEXT
+0410                 SYSTEM-CODE
+0420    WHEN ANY
+0430         IF ERROR-CODE NE 0
+0440            INCLUDE BERR---C
+0450           ELSE
+0460            ASSIGN ##MSG-NR = 1007
+0470         END-IF
+0480    WHEN NONE
+0490         ASSIGN ##MSG-NR = 1033
+0500  END-DECIDE
+0510END-REPEAT
+0520*
+0530* ------------------------------ SCREEN-IO ----------------------------
+0540*
+0550DEFINE SUBROUTINE SCREEN-IO
+0560INPUT WITH TEXT *##MSG-NR,
+0570                 ##MSG-TXT1,
+0580                 ##MSG-TXT2
+0590      USING MAP 'BSMSG--&'
+0600RESET ##MSG
+0610END-SUBROUTINE
+0620*
+0630* ------------------------------ PF-KEY -------------------------------
+0640*
+0650INCLUDE C-PFKEY
+0660END

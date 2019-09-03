@@ -1,0 +1,59 @@
+0010* Program   MUNIT
+0020* View      UNIT-ATTRIBUTES
+0030*
+0040* Function  DASD devices status display
+0050* 29.09.2011  WKK Use Class instead Series
+0060*
+0070* ----------------------------------------------------------------------
+0080*
+0090DEFINE DATA
+0100   GLOBAL USING TUTO
+0110   LOCAL USING UNIT-L
+0120END-DEFINE
+0130*
+0140WRITE TITLE ##TITLE (AD=I) /
+0150*
+0160ASSIGN UNIT-ATTRIBUTES.DEVICE-STATUS = 'ONLINE'
+0170ASSIGN UNIT-ATTRIBUTES.CLASS         = 'DASD  '
+0180*
+0190INPUT (AD=MIT)
+0200   // ##TITLE (AD=OI IP=OFF) //
+0210      '  Device status..:' UNIT-ATTRIBUTES.DEVICE-STATUS
+0220                           '(ONLINE,OFFLINE)'
+0230*   / '  Series.........:' UNIT-ATTRIBUTES.SERIES ' (3350,3380,...)'
+0240    / '  Class..........:' UNIT-ATTRIBUTES.CLASS  '   (DASD,TAPE,...)'
+0250*
+0260IF UNIT-ATTRIBUTES.SERIES = ' '
+0270   ASSIGN UNIT-ATTRIBUTES.SERIES = '*'
+0280END-IF
+0290*
+0300UNITS.
+0310FIND UNIT-ATTRIBUTES WITH NODE          = ##NODE
+0320*                     AND CLASS         = 'DASD'
+0330                      AND DEVICE-STATUS = UNIT-ATTRIBUTES.DEVICE-STATUS
+0340                      AND CLASS         = UNIT-ATTRIBUTES.CLASS
+0350*                     AND SERIES        = UNIT-ATTRIBUTES.SERIES
+0360*
+0370   IF ERROR-CODE NE 0
+0380      REINPUT ERROR-TEXT
+0390   END-IF
+0400*
+0410   DISPLAY (ZP=OFF)
+0420      'Unit/Adr'         UNIT
+0430      'Unit/Type'        SERIES
+0440      'avail./Unit'      DEVICE-STATUS
+0450      'Open/DCB''S'      DCB-COUNT
+0460      2X
+0470      'mounted/Volume'   VOLSER
+0480      'mount/Attributes' MOUNT-STATUS
+0490      'avail./of Volume' VOLUME-STATUS
+0500      'Free/Cyl'         FREE-CYLINDERS
+0510      'Free/Tracks'      FREE-TRACKS
+0520      'Free/Extents'     FREE-EXTENTS
+0530END-FIND
+0540*
+0550IF *NUMBER (UNITS.) = 0
+0560   REINPUT *1021
+0570END-IF
+0580*
+0590END

@@ -1,0 +1,57 @@
+0010/* RPC: Retrieve runtime settings of server
+0020/*
+0030/* Function ... Retrieve certain settings on server.
+0040/*
+0050/* This program serves as example how to design a user-defined
+0060/* program call 'USR4010N'.
+0070/*
+0080/* Parameter ..
+0090/*     INPUT
+0100/*             nothing required
+0110/*
+0120/*     OUTPUT
+0130/*             FUSER-DBID (N5)     - DBID of FUSER
+0140/*             FUSER-FNR  (N5)     - FNR  of FUSER
+0150/*             FNAT-DBID  (N5)     - DBID of FNAT
+0160/*             FNAT-FNR   (N5)     - FNR  of FNAT
+0170/*             FSEC-DBID  (N5)     - DBID of FSEC
+0180/*             FSEC-FNR   (N5)     - FNR  of FSEC
+0190/*
+0200/*             STEP-NAME  (A8/15)  - Name of STEPLIB
+0210/*             STEP-DBID  (N5/15)  - DBID of STEPLIB
+0220/*             STEP-FNR   (N5/15)  - FNR  of STEPLIB
+0230/***********************************************************************
+0240DEFINE DATA
+0250LOCAL
+02601 USR4010-PARM (A300)
+02701 REDEFINE USR4010-PARM
+0280  2 FUSER-DBID (N5)
+0290  2 FUSER-FNR  (N5)
+0300  2 FNAT-DBID  (N5)
+0310  2 FNAT-FNR   (N5)
+0320  2 FSEC-DBID  (N5)
+0330  2 FSEC-FNR   (N5)
+0340/* IF NSC:    MAX LIBS IN THE PATH = CURRENT-LIB + 8 STEPLIBS + *STEPLIB
+0350/*                                   + SYSTEM-FUSER + SYSTEM-FNAT
+0360/* IF NO NSC: MAX LIBS IN THE PATH = DEPENDING ON RUNSIZE
+0370  2 STEPLIB (1:15)
+0380    3 STEP-NAME  (A8)
+0390    3 STEP-DBID  (N5)
+0400    3 STEP-FNR   (N5)
+0410LOCAL
+04201 I  (I4)
+0430END-DEFINE
+0440/*
+0450CALLNAT 'USR4010N' USR4010-PARM
+0460  WRITE NOTITLE NOHDR (AD=I)
+0470     // 10X 'System file settings:'
+0480      / 10X '  FUSER ' (AD=I) '= (' FUSER-DBID ',' FUSER-FNR ')'
+0490      / 10X '  FNAT  ' (AD=I) '= (' FNAT-DBID  ',' FNAT-FNR  ')'
+0500      / 10X '  FSEC  ' (AD=I) '= (' FSEC-DBID  ',' FSEC-FNR  ')'
+0510     // 10X 'Steplib settings:'
+0520  FOR I 1 15
+0530    IF STEP-NAME(I) <= ' 'ESCAPE BOTTOM END-IF
+0540    WRITE (AD=I) 10X ' ' STEP-NAME (I) '(' STEP-DBID (I) ',' STEP-FNR (I) ')'
+0550  END-FOR
+0560/*
+0570END

@@ -1,0 +1,27 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Language Codes New Value
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180Up to 8 valid Natural language codes can be specified as new values
+0190for the language codes of the error messages.
+0200
+0210If more than 1 language code is specified, 'check value' must contain
+0220the same amount of language codes.
+0230
+0240In this case the language code in 'Check value' is replaced by the
+0250language code in the corresponding position of 'New value'.
+0260
+0270<HelpTextEnd>

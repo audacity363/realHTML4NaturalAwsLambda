@@ -1,0 +1,94 @@
+0010Read any error message from FNAT or FUSER
+0020.
+0030Documentation ......... USR0020T    /*  Text object
+0040Interface ............. USR0020N    /*  Cataloged subprogram
+0050Example Program ....... USR0020P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR MESSAGES
+0100.
+0110Keywords .............. *ERROR-NR, *LANGUAGE, ERROR, FNAT, FUSER,
+0120                        SYSERR
+0130.
+0140Function .............. Any Error Text which is defined with SYSERR
+0150                        utility can be read with interface USR0020N.
+0160                        Only the current FNAT or FUSER can be used.
+0170                        The texts are returned in arrays.
+0180.
+0190.
+0200Parameters
+0210----------
+0220Define the following parameters with the DEFINE DATA statement:
+0230.
+024001 PARM-AREA              /*  Control information
+0250   02 TYPE         (A01)  /*  May be 'U' or 'N' ('User' or 'Natural')
+0260   02 APPLICATION  (A08)  /*  Application name for TYPE='U'
+0270   02 ERROR-NUMBER (N04)  /*  May be 0001 to 9999
+0280   02 LANGUAGE     (A01)  /*  Language code
+0290   02 REDEFINE LANGUAGE   /*  enhanced functionality for Natural 2.2
+0300      03 LANG-I    (I01)  /*  same format as used with *LANGUAGE
+0310   02 RESPONSE     (N04)  /*  Error code
+0320.
+033001 RETURN-AREA            /*  Contains the message texts
+0340   02 SHORT        (L)    /*  TRUE means 'Short text found'
+0350   02 LONG         (L)    /*  TRUE means 'Long text found'
+0360   02 S-TEXT       (A65)  /*  Contains the short text
+0370   02 L-TEXT  (A78/1:20)  /*  Contains the long text
+0380.
+0390.
+0400Interface Call
+0410--------------
+0420Use the interface with the CALLNAT statement:
+0430.
+0440CALLNAT 'USR0020N' PARM-AREA RETURN-AREA
+0450.
+0460.
+0470Using the Application Programming Interface:
+0480--------------------------------------------
+0490Copy the subprogram USR0020N to the library SYSTEM or the steplib
+0500library respectively, or to the required library.
+0510.
+0520Following variables have to be filled before invoking the interface:
+0530.
+0540TYPE
+0550  'N' indicates Natural system error messages
+0560  'U' indicates user defined messages.
+0570.
+0580APPLICATION
+0590  If you specify TYPE = 'U', APPLICATION must be named.
+0600  Fill in the name of the application to which the text belongs to.
+0610.
+0620ERROR-NUMBER
+0630  May be any value from 0001 up to 9999.
+0640.
+0650LANGUAGE
+0660  Language code as explained in SYSERR-Utility.
+0670  We recommend the use of redefined variable LANG-I
+0680  for full Natural 2.2 functionality (up to sixty
+0690  languages are supported now).
+0700.
+0710.
+0720The interface tries to read the requested information on the
+0730Natural system file.
+0740.
+0750RESPONSE indicates whether fields in PARM-AREA were filled correctly.
+0760  0000 ........  No error found
+0770  0001 ........  TYPE is wrong
+0780  0002 ........  APPLICATION is invalid or missing
+0790  0003 ........  ERROR-NUMBER is invalid
+0800  0004 ........  LANGUAGE not correct
+0810  any other ...  Natural internal error
+0820.
+0830If SHORT is TRUE, the requested short text was found on system file
+0840and is returned in field S-TEXT.
+0850.
+0860If LONG is TRUE, the requested long text was found on system file
+0870.
+0880Remark: USR0020N uses about 6 kByte DATSIZE, because it gives
+0890        you full functionality. There are some other interfaces
+0900        similar to USR0020N, but with restricted functionality,
+0910        and they do not need such a big DATSIZE at runtime.
+0920        For example, USR0320N and USR0420N.
+0930.
+0940***** End of Description *****

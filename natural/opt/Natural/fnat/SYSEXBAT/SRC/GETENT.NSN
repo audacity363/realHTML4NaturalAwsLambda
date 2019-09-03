@@ -1,0 +1,61 @@
+0010* return the next XML Entity with no attributes
+0020* beginning form the current position.
+0030*
+0040* set start for the next search
+0050Define Data parameter
+00601 getEntity      ( A) dynamic            /* return Value
+00701 nextStart      (I4)                    /* Start search from here
+00801 xml            ( A) dynamic            /* XML String to be searched
+00901 objName        ( A) dynamic by value   /* Name of Entity
+0100Local
+01101 objStart       (I4)
+01201 objEnd         (I4)
+01301 objLen         (I4)
+01401 objStartName   ( A) dynamic
+01501 objEndName     ( A) dynamic
+0160end-define
+0170*
+0180* reset getEntity                        /* fill dynamic variable with blanks up to actual *length
+0190* getEntity := " "                       /* fill dynamic variable with one blank
+0200* compress ' ' into getEntity leaving no /* empty dynamic variable, do not release memory -> *length = 0
+0210  reduce dynamic getEntity to 0          /* empty dynamic variable, and release memory
+0220
+0230  If nextStart LE 0 Then
+0240     nextStart := 1
+0250  End-If
+0260*
+0270  compress "<" objName ">" into objStartName leaving no
+0280  examine substring(xml,nextStart) for objStartName giving position objStart
+0290*
+0300  If objStart gt 0 Then
+0310    if objstart gt 1 then
+0320      add objStart to nextStart
+0330    end-if
+0340*
+0350    examine substring(xml,nextStart) for ">" giving position objStart
+0360    objStart := objStart + nextStart
+0370*
+0380    compress "</" objName ">" into objEndName leaving no
+0390    examine substring(xml,objStart) for objEndName giving position objEnd
+0400*
+0410    If objEnd gt 0 Then
+0420      if objstart gt 1 then
+0430        add objStart to objEnd
+0440      end-if
+0450*
+0460      objLen := objEnd - objStart - 1
+0470      if objlen gt 0 then
+0480        getEntity := substring(xml, objStart, objLen)
+0490      else
+0500*       reset getEntity                        /* fill dynamic variable with blanks up to actual *length
+0510*       getEntity := " "                       /* fill dynamic variable with one blank
+0520*       compress ' ' into getEntity leaving no /* empty dynamic variable, do not release memory -> *length = 0
+0530        reduce dynamic getEntity to 0          /* empty dynamic variable, and release memory
+0540      end-if
+0550      nextStart := objEnd
+0560    End-If
+0570  Else
+0580    nextStart := 0
+0590  End-If
+0600*
+0610End

@@ -1,0 +1,12 @@
+0010** Example 'IACHAR': Input Assign character
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #A (A1)
+00501 #B (A1)
+0060END-DEFINE
+0070*
+0080INPUT #A #B
+0090*
+0100WRITE 'Field #A:' #A  / 'Field #B:' #B
+0110*
+0120END

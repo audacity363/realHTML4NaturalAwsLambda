@@ -1,0 +1,25 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Set user
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180Only applies if 'Use Predict set' is marked:
+0190The user ID for a retained set created with
+0200the Predict XRef save set option of the
+0210LIST XREF command.
+0220If no user ID is specified, the contents of
+0230the Natural system variable *USER are used.
+0240
+0250<HelpTextEnd>

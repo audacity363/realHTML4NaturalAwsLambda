@@ -1,0 +1,13 @@
+0010****NAT22       S
+0020*************** LASTPROG (User Exit) *********************************
+0030* The user may define his own final routine  h e r e  .
+0040* LASTPROG is invoked by program PSTOP.
+0050* When LASTPROG is started, there is the NATURAL Command 'RETURN'
+0060* on top of the STACK (if you are working under NATURAL Security,
+0070* a RETURN must not necessarily be on top of the stack).
+0080* You may modify LASTPROG according to your needs, and then
+0090* you should STOW it within application SYSERR or into the steplib,
+0100* respectively.
+0110*
+0120**********************************************************************
+0130END

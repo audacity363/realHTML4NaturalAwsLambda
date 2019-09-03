@@ -1,0 +1,14 @@
+0010**DV          0015     V1CATALOG                         CATALOG
+0020**DD          0018N 3.0 2ERROR-CODE                      /* Message code.
+0030**DD          0019A  58 2ERROR-TEXT                      /* Text describing message.
+0040**DD          0020N 5.0 2NODE                            /* Node ID (DBID).
+0050**DD          0021A  54 2DSNAME                          /* The data set prefix, or data
+0060**DD          0022A   6 2VOLSER                          /* Volume serial number where
+0070**DD          0023A   8 2TYPE                            /* Data set type:
+0080**DD          0024A   4 2CLASS                           /* Device class (e.g. 'DASD').
+0090**DD          0025A  44 2USER-CATALOG                    /* The name of the User Catalog
+0100**DD          0026B   4 2DEVICE                          /* The internal UCBTYP device
+0110**DD          0027A   7 2FILE-NAME                       /* File name as specified in
+0120**DD          0028A   8 2LABEL-AREA                      /* Indicates the LABEL AREA
+0130**DD          0029A   3 2LIBRARIAN                       /* YES  it is a LIBRARIAN
+0140**DD          0030A   8 2VSAM-CATALOG                    /* Label of VSAM catalog to be

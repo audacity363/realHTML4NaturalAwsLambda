@@ -1,0 +1,70 @@
+0010/*  EXAM-GS - GET small field list
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 GETSET-FIELD-NAME
+0070     02 GETSET-FIELD-VALUE
+0080     02 NATURAL-ERROR
+0090  01 PROC-NAME (A08)
+0100  01 IX (P7)
+0110  01 IY (P7)
+0120  01 FIELD-NAME (A16/01:11) CONST <
+0130       'NAME            ', 'LIBRARY         ', 'COUNTER         ',
+0140       'PF-KEY          ', 'UPPER-CASE      ', 'UQ-KEYWORDS     ',
+0150       'KEYWORD-SEQ     ', 'CURR-LOCATION   ', 'CURR-IKN1       ',
+0160       'CURR-IKN2       ', 'CURR-IKN3       '>
+0170  01 FIELD-TEXT (A32/01:11) CONST <
+0180       'Current Processor Name .........',
+0190       'Processor Library ..............',
+0200       'Runtime Access Counter .........',
+0210       'PF-KEY may be Command ..........',
+0220       'Keywords in Upper Case .........',
+0230       'Keywords are unique ............',
+0240       'Default Keyword Sequence .......',
+0250       'Current Location No. (IFN) .....',
+0260       'IKN1 of Current Location .......',
+0270       'IKN2 of Current Location .......',
+0280       'IKN3 of Current Location .......'
+0290       >
+0300  01 FIELD-CONTENTS (A10/01:11)
+0310END-DEFINE
+0320/**********************************************************************
+0330DEFINE WINDOW EXAM
+0340  SIZE 15 * 48
+0350  BASE IX / IX
+0360  TITLE ' (GS) Get small field list '
+0370  CONTROL SCREEN
+0380  FRAMED POSITION OFF
+0390SET KEY ALL
+0400IX := *LEVEL * 2
+0410/**********************************************************************
+0420FOR IY 1 11                                  /*  The whole table
+0430  MOVE FIELD-NAME (IY) TO GETSET-FIELD-NAME
+0440  /**************
+0450  PROCESS COMMAND ACTION GET USING
+0460    PROCESSOR-NAME = ' '                     /*  Current processor
+0470    GETSET-FIELD-NAME = GETSET-FIELD-NAME
+0480  /**************
+0490  IF NATURAL-ERROR NE 0
+0500    COMPRESS 'NAT' NATURAL-ERROR TO FIELD-CONTENTS (IY) LEAVING NO
+0510  ELSE
+0520    MOVE GETSET-FIELD-VALUE TO FIELD-CONTENTS (IY)
+0530  END-IF
+0540END-FOR
+0550/**********************************************************************
+0560INPUT WINDOW = 'EXAM' (AD=OD CD=NE IP=OFF SG=OFF ) /
+0570  FIELD-TEXT (01) FIELD-CONTENTS (01) (AD=OI) /
+0580  FIELD-TEXT (02) FIELD-CONTENTS (02) (AD=OI) /
+0590  FIELD-TEXT (03) FIELD-CONTENTS (03) (AD=OI) /
+0600  FIELD-TEXT (04) FIELD-CONTENTS (04) (AD=OI) /
+0610  FIELD-TEXT (05) FIELD-CONTENTS (05) (AD=OI) /
+0620  FIELD-TEXT (06) FIELD-CONTENTS (06) (AD=OI) /
+0630  FIELD-TEXT (07) FIELD-CONTENTS (07) (AD=OI) /
+0640  FIELD-TEXT (08) FIELD-CONTENTS (08) (AD=OI) /
+0650  FIELD-TEXT (09) FIELD-CONTENTS (09) (AD=OI) /
+0660  FIELD-TEXT (10) FIELD-CONTENTS (10) (AD=OI) /
+0670  FIELD-TEXT (11) FIELD-CONTENTS (11) (AD=OI) /
+0680SET WINDOW OFF
+0690/**********************************************************************
+0700END

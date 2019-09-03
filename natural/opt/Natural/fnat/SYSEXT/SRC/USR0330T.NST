@@ -1,0 +1,105 @@
+0010Read Natural object directory
+0020.
+0030Documentation ......... USR0330T    /*  Text object
+0040Interface ............. USR0330N    /*  Cataloged subprogram
+0050Example Program ....... USR0330P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL OBJECTS
+0100.
+0110Keywords .............. +PREVIOUS-VERSION,
+0120                        DIRECTORY
+0130.
+0140Interface Versions .... USR0330N, USR2018N
+0150.
+0160Function .............. Get directory information about a saved
+0170                        and/or cataloged Natural object.
+0180                        NOTE: For password protected system files
+0190                              use USR2018N.
+0200.
+0210.
+0220Parameters
+0230----------
+0240Define the following parameters with the DEFINE DATA statement:
+0250.
+026001 #CBDIR (B94)            /*  Object's name (plus some free bytes)
+027001 REDEFINE #CBDIR
+0280  02 FILLER1      1X
+0290  02 #CBDIR-OPT2 (A1)      /* Return object exactly or a list of objects
+0300  02 #CBDIR-RSP1 (I2)      /*  Is zero, if source found
+0310  02 #CBDIR-RSP2 (I2)      /*  Is zero, if cataloged found
+0320  02 FILLER 20X
+0330  02 #CBDIR-NAME (A16)     /*  Composite name
+0340  02 REDEFINE #CBDIR-NAME
+0350     03 #CBDIR-NLIB (A8)   /*  Object's library
+0360     03 #CBDIR-NNAM (A8)   /*  Object's name
+0370  02 #CBDIR-DBID       (B02)   /*  DBID of system file
+0380  02 REDEFINE #CBDIR-DBID
+0390     03 #CBDIR-DBID-H  (B01)
+0400     03 #CBDIR-DBID-L  (B01)
+0410  02 #CBDIR-FNR        (B02)   /*  FNR of system file
+0420  02 REDEFINE #CBDIR-DBID
+0430     03 #CBDIR-FNR-H   (B01)
+0440     03 #CBDIR-FNR-L   (B01)
+0450/*
+04601 #DIR-OB1 (B100/1:3)      /*  Directory of object's source form
+0470                           /*  Please see redefinition in USR0330P
+04801 #DIR-OB2 (B100/1:3)      /*  Directory of object's cataloged form
+0490                           /*  Please see redefinition in USR0330P
+0500.
+0510.
+0520Interface Call
+0530--------------
+0540Use the interface with the CALLNAT statement:
+0550.
+0560CALLNAT 'USR0330N'
+0570        #CBDIR #DIR-OB1 #DIR-OB2
+0580.
+0590.
+0600Using the Application Programming Interface:
+0610--------------------------------------------
+0620Copy the subprogram USR0330N to the library SYSTEM or the steplib
+0630library, or to the required library.
+0640.
+0650Please have a look at the correct redefinition in USR0330P.
+0660.
+0670Following variables have to be filled before invoking the interface:
+0680.
+0690#CBDIR-NLIB .........  Library where the Natural object is stored
+0700#CBDIR-NNAM .........  Name of the Natural object
+0710#CBDIR-DBID .........  DBID of the system file
+0720#CBDIR-FNR  .........  FNR of the system file
+0730#CBDIR-OPT2 .........  Search option:
+0740                       'E' - Read exactly the specified object
+0750                       'N' - Read next directory starting with
+0760                             #CBDIR-NNAM. You can build a list of
+0770                             objects if you call USR0330N in a loop
+0780                             without changing the parameters.
+0790.
+0800If #CBDIR-NLIB is <blank>, current library is assumed.
+0810If #CBDIR-NNAM is <blank>, name of the Natural object being located
+0820in the Natural program editor is assumed.
+0830If #CBDIR-DBID and #CBDIR-FNR are 0, the current system file is
+0840assumed.
+0850If OPT-NOC-STRING is specified, the NOC options that were set when the
+0860objects was cataloged are returned in this parameter.
+0870.
+0880.
+0890The interface tries to read the requested information on the
+0900Natural system file.
+0910.
+0920#CBDIR-RSP1 indicates whether the source object was found;
+0930#DIR-OB1 (*) is valid if #CBDIR-RSP1 = 0.
+0940#CBDIR-RSP1 = 4 states that no (more) data is available for the
+0950source object.
+0960.
+0970#CBDIR-RSP2 indicates whether the cataloged object was found;
+0980#DIR-OB2 (*) is valid if #CBDIR-RSP2 = 0.
+0990#CBDIR-RSP2 = 4 states that no (more) data is available for the
+1000source object.
+1010.
+1020USR0330N may also be used to find out whether a Natural object
+1030does exist, so that error NAT0082 can be avoided.
+1040.
+1050***** End of Description *****

@@ -1,0 +1,11 @@
+0010** Example 'INCEX31C': INCLUDE (copycode used by INCEX3)
+0020************************************************************************
+0030* Transferred parameters from INCEX3:
+0040*
+0050* &1& : #A
+0060* &2& : 5
+0070*
+0080*
+0090&1& := &2&
+0100*
+0110WRITE 'Copycode INCEX31C' '=' &1&

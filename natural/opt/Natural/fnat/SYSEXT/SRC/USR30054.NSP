@@ -1,0 +1,291 @@
+0010**  Example program for USR3005N
+0020**  This program shows, how data can be added to Predict.
+0030**  It adds an Adabas user view object and it's field list.
+0040**
+0050DEFINE DATA LOCAL
+00601 REQUEST-RESULT(A) DYNAMIC
+0070*
+0080LOCAL USING PARSER-X                /* Local Data Area is located
+0090                                    /* in Library SYSEXXT
+0100LOCAL
+01101 XML_PARSER_XPATH             (A) DYNAMIC
+01201 XML_PARSER_XPATH_TYPE        (A1)
+01301 XML_PARSER_CONTENT           (A) DYNAMIC
+01401 XML_PARSER_CONTENT_IS_EMPTY  (L)
+01501 XML_PARSER_ERROR_TEXT        (A253)
+01601 XML_PARSER_RESPONSE          (I2)
+01701 #XNAME (A) DYNAMIC
+01801 #XVALUE (A) DYNAMIC
+01901 #MSG-NR(I4)
+02001 #MSG-TEXT(A79)
+02101 #MSG-TYPE(A8)
+02201 #ADDITIONAL-MSG-NR(I4)
+02301 #ADDITIONAL-MSG-TEXT(A79)
+02401 #INVALID-ATTRIBUTE(A32)
+02501 #INDEX-IN-INVALID-ATTRIBUTE(I4)
+02601 #LINE-WITH-APOSTROPH(A30)
+02701 #LINE-WITHOUT-APOSTROPH(A50)
+0280END-DEFINE
+0290COMPRESS *USER '''s execution'  TO #LINE-WITH-APOSTROPH LEAVING NO
+0300INCLUDE USR3005Y '''1'''
+0310                 '#LINE-WITH-APOSTROPH' '#LINE-WITHOUT-APOSTROPH'
+0320**
+0330** With the above coding apostrophs in values are translated
+0340** so that a correct value clause can be assembled
+0350**
+0360PRINT 'Example program' *PROGRAM 'for USR3005N'
+0370/     'This program shows, how data can be added to Predict.'
+0380/     'It adds an Adabas user view object.'
+0390/
+0400**
+0410COMPRESS
+0420'<Predict>'
+0430  '<Request>'
+0440    '<Add>'
+0450      '<Object-type value=''FILE-U''/>'
+0460      '<Set>'
+0470        '<Row>'
+0480          '<Attribute name=''ID'' value=''Example-emp''/>'
+0490          '<Attribute Name=''HAS_MASTER_FILES'' '
+0500                     'Value=''employees-file'' />'
+0510          '<Structure Name=''Abstract''> '
+0520            '<Attribute Name=''Abstract-line'''
+0530                       'Value=''This file was''/>'
+0540            '<Attribute Name=''Abstract-line'' Value=''added by'' />'
+0550            '<Attribute Name=''Abstract-line'' Value='''
+0560                    #LINE-WITHOUT-APOSTROPH '''/>'
+0570            '<Attribute Name=''Abstract-line'' Value=''of'
+0580                        *PROGRAM '''/>'
+0590          '</Structure>'
+0600          '<Structure Name="ELEMENT-LIST-TAB">'
+0610            '<Group>'
+0620              '<Attribute Name="FIELD-TYPE" Value="" />'
+0630              '<Attribute Name="LEVEL" Value="1" />'
+0640              '<Attribute Name="FIELD-ID" Value="PERSONNEL-ID" />'
+0650              '<Attribute Name="FORMAT" Value="A" />'
+0660              '<Attribute Name="CHARACTER-SET" Value="" />'
+0670              '<Attribute Name="LENGTH" Value="800" />'
+0680              '<Attribute Name="OCCURRENCES" Value="0" />'
+0690              '<Attribute Name="DESCRIPTOR" Value="D" />'
+0700              '<Attribute Name="UNIQUE" Value="U" />'
+0710              '<Attribute Name="DB-SHORT-NAME" Value="AA" />'
+0720              '<Attribute Name="SUPPRESSION-NULL-VALUE" Value="" />'
+0730            '</Group>'
+0740            '<Group>'
+0750              '<Attribute Name="FIELD-TYPE" Value="GR" />'
+0760              '<Attribute Name="LEVEL" Value="1" />'
+0770              '<Attribute Name="FIELD-ID" Value="FULL-NAME" />'
+0780              '<Attribute Name="FORMAT" Value="" />'
+0790              '<Attribute Name="CHARACTER-SET" Value="" />'
+0800              '<Attribute Name="LENGTH" Value="0" />'
+0810              '<Attribute Name="OCCURRENCES" Value="0" />'
+0820              '<Attribute Name="DESCRIPTOR" Value="" />'
+0830              '<Attribute Name="UNIQUE" Value="" />'
+0840              '<Attribute Name="DB-SHORT-NAME" Value="AB" />'
+0850              '<Attribute Name="SUPPRESSION-NULL-VALUE" Value="" />'
+0860            '</Group>'
+0870            '<Group>'
+0880              '<Attribute Name="FIELD-TYPE" Value="" />'
+0890              '<Attribute Name="LEVEL" Value="2" />'
+0900              '<Attribute Name="FIELD-ID" Value="FIRST-NAME" />'
+0910              '<Attribute Name="FORMAT" Value="A" />'
+0920              '<Attribute Name="CHARACTER-SET" Value="" />'
+0930              '<Attribute Name="LENGTH" Value="2000" />'
+0940              '<Attribute Name="OCCURRENCES" Value="0" />'
+0950              '<Attribute Name="DESCRIPTOR" Value="" />'
+0960              '<Attribute Name="UNIQUE" Value="" />'
+0970              '<Attribute Name="DB-SHORT-NAME" Value="AC" />'
+0980              '<Attribute Name="SUPPRESSION-NULL-VALUE" Value="N" />'
+0990            '</Group>'
+1000            '<Group>'
+1010              '<Attribute Name="FIELD-TYPE" Value="" />'
+1020              '<Attribute Name="LEVEL" Value="2" />'
+1030              '<Attribute Name="FIELD-ID" Value="NAME" />'
+1040              '<Attribute Name="FORMAT" Value="A" />'
+1050              '<Attribute Name="CHARACTER-SET" Value="" />'
+1060              '<Attribute Name="LENGTH" Value="2000" />'
+1070              '<Attribute Name="OCCURRENCES" Value="0" />'
+1080              '<Attribute Name="DESCRIPTOR" Value="D" />'
+1090              '<Attribute Name="UNIQUE" Value="" />'
+1100              '<Attribute Name="DB-SHORT-NAME" Value="AE" />'
+1110              '<Attribute Name="SUPPRESSION-NULL-VALUE" Value="" />'
+1120            '</Group>'
+1130            '<Group>'
+1140              '<Attribute Name="FIELD-TYPE" Value="" />'
+1150              '<Attribute Name="LEVEL" Value="2" />'
+1160              '<Attribute Name="FIELD-ID" Value="MIDDLE-NAME" />'
+1170              '<Attribute Name="FORMAT" Value="A" />'
+1180              '<Attribute Name="CHARACTER-SET" Value="" />'
+1190              '<Attribute Name="LENGTH" Value="2000" />'
+1200              '<Attribute Name="OCCURRENCES" Value="0" />'
+1210              '<Attribute Name="DESCRIPTOR" Value="" />'
+1220              '<Attribute Name="UNIQUE" Value="" />'
+1230              '<Attribute Name="DB-SHORT-NAME" Value="AD" />'
+1240              '<Attribute Name="SUPPRESSION-NULL-VALUE" Value="N" />'
+1250            '</Group>'
+1260            '<Group>'
+1270              '<Attribute Name="FIELD-TYPE" Value="PE" />'
+1280              '<Attribute Name="LEVEL" Value="1" />'
+1290              '<Attribute Name="FIELD-ID" Value="INCOME" />'
+1300              '<Attribute Name="FORMAT" Value="" />'
+1310              '<Attribute Name="CHARACTER-SET" Value="" />'
+1320              '<Attribute Name="LENGTH" Value="0" />'
+1330              '<Attribute Name="OCCURRENCES" Value="40" />'
+1340              '<Attribute Name="DESCRIPTOR" Value="" />'
+1350              '<Attribute Name="UNIQUE" Value="" />'
+1360              '<Attribute Name="DB-SHORT-NAME" Value="AQ" />'
+1370              '<Attribute Name="SUPPRESSION-NULL-VALUE" Value="" />'
+1380            '</Group>'
+1390            '<Group>'
+1400              '<Attribute Name="FIELD-TYPE" Value="" />'
+1410              '<Attribute Name="LEVEL" Value="2" />'
+1420              '<Attribute Name="FIELD-ID" Value="CURR-CODE" />'
+1430              '<Attribute Name="FORMAT" Value="A" />'
+1440              '<Attribute Name="CHARACTER-SET" Value="" />'
+1450              '<Attribute Name="LENGTH" Value="300" />'
+1460              '<Attribute Name="OCCURRENCES" Value="0" />'
+1470              '<Attribute Name="DESCRIPTOR" Value="" />'
+1480              '<Attribute Name="UNIQUE" Value="" />'
+1490              '<Attribute Name="DB-SHORT-NAME" Value="AR" />'
+1500              '<Attribute Name="SUPPRESSION-NULL-VALUE" Value="N" />'
+1510            '</Group>'
+1520            '<Group>'
+1530              '<Attribute Name="FIELD-TYPE" Value="" />'
+1540              '<Attribute Name="LEVEL" Value="2" />'
+1550              '<Attribute Name="FIELD-ID" Value="SALARY" />'
+1560              '<Attribute Name="FORMAT" Value="P" />'
+1570              '<Attribute Name="CHARACTER-SET" Value="" />'
+1580              '<Attribute Name="LENGTH" Value="900" />'
+1590              '<Attribute Name="OCCURRENCES" Value="0" />'
+1600              '<Attribute Name="DESCRIPTOR" Value="" />'
+1610              '<Attribute Name="UNIQUE" Value="" />'
+1620              '<Attribute Name="DB-SHORT-NAME" Value="AS" />'
+1630              '<Attribute Name="SUPPRESSION-NULL-VALUE" Value="N" />'
+1640            '</Group>'
+1650            '<Group>'
+1660              '<Attribute Name="FIELD-TYPE" Value="MU" />'
+1670              '<Attribute Name="LEVEL" Value="2" />'
+1680              '<Attribute Name="FIELD-ID" Value="BONUS" />'
+1690              '<Attribute Name="FORMAT" Value="P" />'
+1700              '<Attribute Name="CHARACTER-SET" Value="" />'
+1710              '<Attribute Name="LENGTH" Value="900" />'
+1720              '<Attribute Name="OCCURRENCES" Value="12" />'
+1730              '<Attribute Name="DESCRIPTOR" Value="" />'
+1740              '<Attribute Name="UNIQUE" Value="" />'
+1750              '<Attribute Name="DB-SHORT-NAME" Value="AT" />'
+1760              '<Attribute Name="SUPPRESSION-NULL-VALUE" Value="N" />'
+1770            '</Group>'
+1780            '<Group>'
+1790              '<Attribute Name="FIELD-TYPE" Value="PH" />'
+1800              '<Attribute Name="LEVEL" Value="1" />'
+1810              '<Attribute Name="FIELD-ID" Value="PHONETIC-NAME" />'
+1820              '<Attribute Name="FORMAT" Value="A" />'
+1830              '<Attribute Name="CHARACTER-SET" Value="" />'
+1840              '<Attribute Name="LENGTH" Value="2000" />'
+1850              '<Attribute Name="OCCURRENCES" Value="0" />'
+1860              '<Attribute Name="DESCRIPTOR" Value="D" />'
+1870              '<Attribute Name="UNIQUE" Value="" />'
+1880              '<Attribute Name="DB-SHORT-NAME" Value="PH" />'
+1890              '<Attribute Name="SUPPRESSION-NULL-VALUE" Value="" />'
+1900            '</Group>'
+1910            '<Group>'
+1920              '<Attribute Name="FIELD-TYPE" Value="SP" />'
+1930              '<Attribute Name="LEVEL" Value="1" />'
+1940              '<Attribute Name="FIELD-ID" Value="LEAVE-LEFT" />'
+1950              '<Attribute Name="FORMAT" Value="B" />'
+1960              '<Attribute Name="CHARACTER-SET" Value="" />'
+1970              '<Attribute Name="LENGTH" Value="400" />'
+1980              '<Attribute Name="OCCURRENCES" Value="0" />'
+1990              '<Attribute Name="DESCRIPTOR" Value="D" />'
+2000              '<Attribute Name="UNIQUE" Value="" />'
+2010              '<Attribute Name="DB-SHORT-NAME" Value="H1" />'
+2020              '<Attribute Name="SUPPRESSION-NULL-VALUE" Value="N" />'
+2030            '</Group>'
+2040            '<Group>'
+2050              '<Attribute Name="FIELD-TYPE" Value="SB" />'
+2060              '<Attribute Name="LEVEL" Value="1" />'
+2070              '<Attribute Name="FIELD-ID" Value="DEPARTMENT" />'
+2080              '<Attribute Name="FORMAT" Value="A" />'
+2090              '<Attribute Name="CHARACTER-SET" Value="" />'
+2100              '<Attribute Name="LENGTH" Value="400" />'
+2110              '<Attribute Name="OCCURRENCES" Value="0" />'
+2120              '<Attribute Name="DESCRIPTOR" Value="D" />'
+2130              '<Attribute Name="UNIQUE" Value="" />'
+2140              '<Attribute Name="DB-SHORT-NAME" Value="S1" />'
+2150              '<Attribute Name="SUPPRESSION-NULL-VALUE" Value="" />'
+2160            '</Group>'
+2170          '</Structure>'
+2180        '</Row>'
+2190      '</Set>'
+2200    '</Add>'
+2210  '</Request>'
+2220'</Predict>'
+2230*
+2240TO REQUEST-RESULT
+2250*
+2260PRINT 'Request passed to USR3005N' /
+2270PRINT REQUEST-RESULT
+2280*
+2290CALLNAT 'USR3005N' REQUEST-RESULT
+2300*
+2310PRINT / 'Result returned from USR3005N' /
+2320PRINT REQUEST-RESULT
+2330*
+2340INCLUDE PARSER_X                    /* Copy Code is located
+2350                                    /* in Library SYSEXXT
+2360                                    /*
+2370  'REQUEST-RESULT'                  /* XML FILE TO BE PARSED
+2380  'XML_PARSER_XPATH'                /* XPATH TO REPESENT ELEMENT...
+2390  'XML_PARSER_XPATH_TYPE'           /* TYPE OF CALLBACK
+2400  'XML_PARSER_CONTENT'              /* CONTENT OF FOUND ELEMENT
+2410  'XML_PARSER_CONTENT_IS_EMPTY'     /* IS TRUE IF ELEMENT IS EMPTY
+2420  'XML_PARSER_ERROR_TEXT'           /* ERROR MESSAGE
+2430  'XML_PARSER_RESPONSE'             /* ERROR NR; 0 = OK
+2440*
+2450DEFINE SUBROUTINE CALLBACK
+2460*
+2470EXAMINE XML_PARSER_XPATH TRANSLATE INTO UPPER
+2480DECIDE ON FIRST VALUE OF XML_PARSER_XPATH
+2490*
+2500  VALUE 'PREDICT/RESULT/MESSAGE/?NUMBER'
+2510    #MSG-NR := VAL(XML_PARSER_CONTENT)
+2520*
+2530  VALUE 'PREDICT/RESULT/MESSAGE/?TEXT'
+2540    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#MSG-TEXT'
+2550*
+2560  VALUE 'PREDICT/RESULT/MESSAGE/?TYPE'
+2570    #MSG-TYPE := XML_PARSER_CONTENT
+2580    EXAMINE #MSG-TYPE TRANSLATE INTO UPPER
+2590    IF #MSG-TYPE NE 'SUCCESS'
+2600**
+2610** Possible Values of ?TYPE are SUCCESS, ERROR and WARNING
+2620**
+2630      PRINT #MSG-NR
+2640      PRINT #MSG-TEXT
+2650    END-IF
+2660  VALUE 'PREDICT/RESULT/MESSAGE/?ADDITIONAL-MSG-NUMBER'
+2670    #ADDITIONAL-MSG-NR := VAL(XML_PARSER_CONTENT)
+2680*
+2690  VALUE 'PREDICT/RESULT/MESSAGE/?ADDITIONAL-MSG-TEXT'
+2700    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#ADDITIONAL-MSG-TEXT'
+2710    PRINT #ADDITIONAL-MSG-NR
+2720    PRINT #ADDITIONAL-MSG-TEXT
+2730 VALUE 'PREDICT/RESULT/MESSAGE/?INVALID-ATTRIBUTE'
+2740    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#INVALID-ATTRIBUTE'
+2750    PRINT #INVALID-ATTRIBUTE 'is invalid'
+2760  VALUE 'PREDICT/RESULT/MESSAGE/?INDEX-IN-INVALID-ATTRIBUTE'
+2770    #INDEX-IN-INVALID-ATTRIBUTE := VAL(XML_PARSER_CONTENT)
+2780    PRINT 'Occurrence' #INDEX-IN-INVALID-ATTRIBUTE
+2790    'of' #INVALID-ATTRIBUTE 'is invalid'
+2800*
+2810  NONE IGNORE
+2820*
+2830END-DECIDE
+2840END-SUBROUTINE /* CALLBACK
+2850*
+2860DEFINE SUBROUTINE PARSER_ERROR
+2870   PRINT 'Parser Error'
+2880   PRINT XML_PARSER_ERROR_TEXT
+2890 END-SUBROUTINE
+2900*
+2910END

@@ -1,0 +1,65 @@
+0010* >Natural Source Header 000000
+0020* :Mode S
+0030* :CP
+0040* <Natural Source Header
+0050* Name: Single Controls/Menu /*<RO>
+0060*
+0070DEFINE DATA LOCAL
+00801 INFOPAGENAME (U) DYNAMIC INIT <'html/ctrlmenuwithinactiveitems.html'>
+00901 METHODCALLED (U) DYNAMIC
+01001 TOPDYN (1:*)
+0110  2 ID (U) DYNAMIC
+0120  2 IMAGEURL (U) DYNAMIC /* <== image that is associated with the node
+0130  2 INACTIVE (L)
+0140  2 LEVEL (I4) /* level starts with 1
+0150  2 METHOD (U) DYNAMIC /* <== event that is associated with the end node
+0160  2 OPENED (I4) /* <== 0: normal node; 2: end node
+0170  2 TEXT (U) DYNAMIC /* <== text of the node
+0180*
+0190END-DEFINE
+0200*
+0210/*( INIT
+0220EXPAND ARRAY TOPDYN TO (1:4)
+0230TOPDYN.LEVEL(1) := 1
+0240TOPDYN.TEXT(1)  := 'Active Menu 1'
+0250*
+0260TOPDYN.LEVEL(2)  := 2
+0270TOPDYN.TEXT(2)   := 'I am active...'
+0280TOPDYN.METHOD(2) := 'onSubitem11'
+0290TOPDYN.OPENED(2) := 2 /* 2: end node
+0300*
+0310TOPDYN.LEVEL(3)  := 2
+0320TOPDYN.TEXT(3)   := 'I am inactive...'
+0330TOPDYN.INACTIVE(3):=TRUE
+0340TOPDYN.METHOD(3) := 'onSubitem12'
+0350TOPDYN.OPENED(3) := 2 /* 2: end node
+0360*
+0370TOPDYN.LEVEL(4) := 1
+0380TOPDYN.TEXT(4)  := 'Inactive Menu 2'
+0390TOPDYN.INACTIVE(4) := TRUE
+0400*
+0410/*)
+0420*
+0430PROCESS PAGE USING "CTRMED-A"
+0440*
+0450/*( DEFINE EVENT HANDLER
+0460DECIDE ON FIRST *PAGE-EVENT
+0470  VALUE U'nat:page.end'
+0480    /* Page closed.
+0490    IGNORE
+0500  VALUE U'doToggleInactive'
+0510    IF TOPDYN.INACTIVE(3)
+0520       TOPDYN.INACTIVE(3) := TOPDYN.INACTIVE(4) := FALSE
+0530    ELSE
+0540       TOPDYN.INACTIVE(3) := TOPDYN.INACTIVE(4) := TRUE
+0550    END-IF
+0560    PROCESS PAGE UPDATE FULL
+0570  VALUE U'on' : U'on'-UH'FFF0' /* all events that start with 'on'
+0580    METHODCALLED := *PAGE-EVENT
+0590    PROCESS PAGE UPDATE FULL
+0600  NONE VALUE
+0610    /* Unhandled events.
+0620    PROCESS PAGE UPDATE
+0630END-DECIDE
+0640/*) END-HANDLER
+0650END

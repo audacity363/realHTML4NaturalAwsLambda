@@ -1,0 +1,21 @@
+0010**C           0   * Second PDA for general message
+0020**C           0   * handling (optional).
+0030**C           0   * It describes the field in error.
+0040**C           0   **********************************
+0050**DS          0         1NAD-FLD
+0060**DK          0   A  32 2FIELD-STRUCTURE                 /* Name of structure the field
+0070**C           0   *                                      /* in error belongs to.
+0080**DK          0   A  32 2FIELD-NAME                      /* Name of field in error
+0090**DK          0   I   4 2FIELD-POSITION                  /* Result of the POS function
+0100**DK          0   I   4 2FIELD-INDEX1                    /* These indexes are used if the
+0110**DK          0   I   4 2FIELD-INDEX2                    /* field in error is an element
+0120**DK          0   I   4 2FIELD-INDEX3                    /* of an array.
+0130DEFINE DATA PARAMETER
+01401 NAD-FLD
+01502 FIELD-STRUCTURE(A32)
+01602 FIELD-NAME(A32)
+01702 FIELD-POSITION(I4)
+01802 FIELD-INDEX1(I4)
+01902 FIELD-INDEX2(I4)
+02002 FIELD-INDEX3(I4)
+0210END-DEFINE

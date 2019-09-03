@@ -1,0 +1,77 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1043N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 CONTROL-BLOCK  (A80)
+0070 1 REDEFINE CONTROL-BLOCK
+0080   2 CB-RESERVED  (B02)     /* Reserved
+0090   2 REDEFINE CB-RESERVED
+0100     3 FIRST-BYTE (B01)     /* h'30' for 2 byte files
+0110   2 CB-CMD       (A02)     /* Command code
+0120   2 CB-CID       (A04)     /* Command ID
+0130   2 CB-DBID      (B01)     /* Data base ID
+0140   2 CB-FNR       (B01)     /* File number
+0150   2 CB-RSP       (B02)     /* Response code
+0160   2 CB-ISN       (B04)     /* ISN
+0170   2 CB-ISL       (B04)     /* ISN lower limit
+0180   2 CB-ISQ       (B04)     /* ISN quantity
+0190   2 CB-FBL       (B02)     /* Format buffer length
+0200   2 CB-RBL       (B02)     /* Record buffer length
+0210   2 CB-SBL       (B02)     /* Search buffer length
+0220   2 CB-VBL       (B02)     /* Value  buffer length
+0230   2 CB-IBL       (B02)     /* ISN    buffer length
+0240   2 CB-COP1      (A01)     /* Command option 1
+0250   2 CB-COP2      (A01)     /* Command option 2
+0260   2 CB-ADD1      (A08)     /* Additions 1
+0270   2 CB-ADD2      (A04)     /* Additions 2
+0280   2 CB-ADD3      (A08)     /* Additions 3
+0290   2 CB-ADD4      (A08)     /* Additions 4
+0300   2 CB-ADD5      (A08)     /* Additions 5
+0310   2 CB-CT        (A04)     /* Command time
+0320   2 CB-UA        (A04)     /* User area
+0330 /*
+0340 1 FORMAT-BUFFER (A80)      /* Length of buffer can be modified
+0350 1 REDEFINE FORMAT-BUFFER
+0360   2 FORMAT-ADDR (A01)
+0370 /*
+0380 1 RECORD-BUFFER (A80)      /* Length of buffer can be modified
+0390 1 REDEFINE RECORD-BUFFER
+0400   2 RECORD-ADDR (A01)
+0410 /*
+0420 1 SEARCH-BUFFER (A80)      /* Length of buffer can be modified
+0430 1 REDEFINE SEARCH-BUFFER
+0440   2 SEARCH-ADDR (A01)
+0450 /*
+0460 1 VALUE-BUFFER  (A80)      /* Length of buffer can be modified
+0470 1 REDEFINE VALUE-BUFFER
+0480   2 VALUE-ADDR  (A01)
+0490 /*
+0500 1 ISN-BUFFER    (A80)      /* Length of buffer can be modified
+0510 1 REDEFINE ISN-BUFFER
+0520   2 ISN-ADDR    (A01)
+0530 /*
+0540 1 RESPONSE      (I04)
+0550END-DEFINE
+0560/*
+0570/* Reset all binary fields and fill control block, ...
+0580/*
+0590RESET CB-DBID CB-FNR CB-RSP CB-ISN CB-ISL CB-ISQ CB-FBL
+0600      CB-RBL CB-SBL CB-VBL CB-IBL CB-RESERVED
+0610/*
+0620ASSIGN CB-CMD = 'RC'    /* Release command ID
+0630/*
+0640CALLNAT 'USR1043N'
+0650  CONTROL-BLOCK
+0660  FORMAT-ADDR
+0670  RECORD-ADDR
+0680  SEARCH-ADDR
+0690  VALUE-ADDR
+0700  ISN-ADDR
+0710  RESPONSE
+0720/*
+0730IF RESPONSE NE 0
+0740  WRITE 'ADABAS response code:' RESPONSE
+0750END-IF
+0760/*
+0770END

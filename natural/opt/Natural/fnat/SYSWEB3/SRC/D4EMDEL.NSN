@@ -1,0 +1,61 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - New Demo Application
+0030*
+0040*        D4EMDEL
+0050*
+0060* DESCRIPTION
+0070*               Delete a Person
+0080*
+0090* AUTHOR        SAG   08.09.1998
+0100*
+0110* Version       8.3
+0120*
+0130* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0140*
+0150* HISTORY
+0160* USER    DATE       REASON
+0170* ------+----------+----------------------------------------------
+0180*       ! --.--.-- !
+0190* ------+----------+----------------------------------------------
+0200*
+0210* ------ PARAMETER -----------------------------------------------
+0220DEFINE DATA
+0230PARAMETER
+02401 #P-NO     (A) DYNAMIC
+02501 #INOUT-MSG(A) DYNAMIC
+0260*
+0270LOCAL
+02801 EMPLOYEES-VIEW VIEW OF EMPLOYEES
+0290  2 PERSONNEL-ID
+0300  2 FIRST-NAME
+0310  2 NAME
+0320*
+03301 #ERROR      (I4)
+0340END-DEFINE
+0350IF #P-NO NE ' '
+0360*
+0370  F. FIND EMPLOYEES-VIEW WITH PERSONNEL-ID = #P-NO
+0380    IF NO
+0390      COMPRESS
+0400        'Sorry nothing found for personnel-id:' #P-NO
+0410        INTO #INOUT-MSG
+0420    END-NOREC
+0430    IF *NUMBER = 1
+0440      COMPRESS 'Delete on Object' EMPLOYEES-VIEW.PERSONNEL-ID
+0450        EMPLOYEES-VIEW.FIRST-NAME EMPLOYEES-VIEW.NAME 'performed'
+0460        INTO #INOUT-MSG
+0470      DELETE
+0480      END OF TRANSACTION
+0490    END-IF
+0500  END-FIND
+0510  IF *NUMBER(F.) > 1
+0520    COMPRESS
+0530      'Sorry' *NUMBER(F.) 'persons with personnel-id:' #P-NO 'found'
+0540      INTO #INOUT-MSG
+0550  END-IF
+0560ELSE
+0570  COMPRESS 'Please select a person' INTO #INOUT-MSG
+0580  ESCAPE ROUTINE
+0590END-IF
+0600*
+0610END

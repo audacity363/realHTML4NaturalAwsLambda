@@ -1,0 +1,259 @@
+0010 DB: 000 FILE: 027  - SAG-TOURS                        DEFAULT SEQUENCE:
+0020
+0030T L DB Name                              F Leng  S D Remark
+0040- - -- --------------------------------  - ----  - - ------------------------
+0050  1 AA PERSON-ID                         N  8.0  N D
+0060  1 AB BIRTH-DATE                        N  8.0  N
+0070  1 EH SEX                               A    1    D
+0080*      2 values: 'M' for 'male',  'F'
+0090*      for 'female'
+0100G 1 AC NAME
+0110  2 AD SURNAME                           A   20    D
+0120  2 AE FIRST-NAME-1                      A   20  N
+0130  2 AF FIRST-NAME-2                      A   20  N
+0140  2 AG TITLE                             A   20  N
+0150  2 AH FORM-OF-ADDRESS                   A    8  N
+0160G 1 AI ADDRESS
+0170M 2 AJ ADDRESS-ADDITION                  A   20
+0180  2 AK STREET-NUMBER                     A   20  N
+0190  2 AL COUNTRY                           A    3    D
+0200  2 AM ZIP-CODE                          A   10  N D
+0210  2 AN CITY                              A   20    D
+0220P 1 AO PHONE
+0230*      2 occ.:  1. phone private,  2.
+0240*      phone company
+0250  2 AP AREA-CODE                         A    6
+0260  2 AQ PHONE-NUMBER                      A   15
+0270G 1 AU CUSTOMER
+0280  2 AV CUSTOMER-FLAG                     A    1  N
+0290*      'Y'  if person = customer
+0300  2 AW DID-CUSTOMER                      A    8  N D
+0310G 1 AX OWNER
+0320  2 AY OWNER-FLAG                        A    1  N
+0330*      'Y'  if person = owner
+0340  2 AZ DID-OWNER                         A    8  N D
+0350G 1 A0 SKIPPER
+0360  2 A1 SKIPPER-FLAG                      A    1  N
+0370*      'Y'  if person = skipper
+0380  2 A2 DID-SKIPPER                       A    8  N D
+0390  2 A3 SKIPPER-SAILING-INSTRUCTOR        A    1  N
+0400*      'Y'  if skipper = sailing
+0410*      instructor
+0420  1 A4 SURNAME-PH                        A   20
+0430  1 A8 COMPANY-ID                        A    8  N D
+0440  1 A9 COMPANY-TYPE                      A    1  N
+0450*      2 values: 'A' for 'Agency',
+0460*      'C' for 'Company'
+0470  1 BA COMPANY-NAME                      A   30  N D
+0480G 1 BB COMPANY-MANAGEMENT
+0490  2 BC C-NAME                            A   20  N D
+0500  2 BD C-FIRST-NAME-1                    A   20  N
+0510  2 BE C-FIRST-NAME-2                    A   20  N
+0520  2 BF C-TITLE                           A   20  N
+0530  2 BG C-FORM-OF-ADDRESS                 A    8  N
+0540G 1 BH COMPANY-ADDRESS
+0550M 2 BI C-ADDRESS-ADDITION                A   20  N
+0560  2 BJ C-STREET-NUMBER                   A   20  N
+0570  2 BK C-COUNTRY                         A    3  N D
+0580  2 BL C-ZIP-CODE                        A   10  N D
+0590  2 BM C-CITY                            A   20  N D
+0600P 1 BN COMPANY-PHONE
+0610*      2 occ.:  1. phone-1,  2. phone-2
+0620  2 BO C-AREA-CODE                       A    6  N
+0630  2 BP C-PHONE-NUMBER                    A   15  N
+0640G 1 BT TELEX
+0650  2 BU AREA-CODE-TX                      A    6  N
+0660  2 BV PHONE-NUMBER-TX                   A   15  N
+0670G 1 BW TELEFAX
+0680  2 BX AREA-CODE-FAX                     A    6  N
+0690  2 BY PHONE-NUMBER-FAX                  A   15  N
+0700  1 BZ DID-BUSINESS-CONDITIONS           A    8  N D
+0710  1 B1 CONTRACT-ID                       P  6.0  N D
+0720  1 B2 CONTRACT-TYPE                     A    1  N
+0730*      'A' = 'charter contract',  'B'
+0740*      = 'Sailor contract'
+0750  1 B3 PRICE                             P 10.3  N
+0760  1 B4 DID-CONDITIONS                    A    8  N D
+0770*      ID of document including
+0780*      contract conditions
+0790  1 B5 DATE-RESERVATION                  N  8.0  N D
+0800  1 B6 DATE-BOOKING                      N  8.0  N D
+0810  1 B7 DATE-CANCELLATION                 N  8.0  N D
+0820G 1 B8 DEPOSIT
+0830  2 B9 DATE-D                            N  8.0  N
+0840  2 CA AMOUNT-D                          P 10.3  N
+0850G 1 CB PAYMENT-OF-BALANCE
+0860  2 CC DATE-P                            N  8.0  N
+0870  2 CD AMOUNT-P                          P 10.3  N
+0880  1 CE ID-CUSTOMER                       N  8.0  N D
+0890*      PERSON-ID of customer
+0900  1 CF ID-CRUISE                         N  8.0  N D
+0910*      CRUISE-ID, subject of contract
+0920  1 CG ID-AGENCY                         A    8  N D
+0930*      COMPANY-ID of agency, which
+0940*      regotiate the contract
+0950  1 DB YACHT-ID                          N  8.0  N D
+0960  1 DC YACHT-NAME                        A   30  N D
+0970  1 DE YACHT-BRANCH                      A    1  N
+0980*      'A' = 'charter yacht',  'B' =
+0990*      'sailor yacht'
+1000  1 DN ID-CH-BASE                        A    8  N D
+1010*      only for
+1020*      YACHT-BRANCHE='A'-COMPANY-ID of
+1030*      charter b
+1040  1 DP ID-S-OWNER                        N  8.0  N D
+1050*      only for
+1060*      YACHT-CRANCH='B'-PERSON-ID of
+1070*      yacht owner
+1080  1 DM DID-DESCRIPTION                   A    8  N D
+1090  1 DD YACHT-TYPE                        A   30  N D
+1100  1 DF LENGTH                            P  3.2  N
+1110*      in meters
+1120  1 DG WIDTH                             P  3.2  N
+1130*      in meters
+1140  1 DH DRAFT                             P  3.2  N
+1150*      in meters
+1160  1 DI SAIL-SURFACE                      P  3.0  N
+1170*      in square meters
+1180  1 DJ MOTOR                             P  3.0  N
+1190*      output in HP
+1200  1 DK HEAD-ROOM                         P  3.2  N
+1210*      headroom in saloon in meters
+1220  1 DL BUNKS                             P  3.0  N
+1230*      number of bunks
+1240  1 DQ YACHT-NAME-PH                     A   20  N
+1250  1 DS CH-YACHT-TYPE                     A   30  N D
+1260  1 DT CH-BASE-ID                        A    8  N D
+1270P 1 DU CH-SEASON
+1280  2 DV SEASON-START                      N  8.0  N D
+1290  2 DW SEASON-END                        N  8.0  N
+1300  2 DX PRICE-1W                          P 10.3  N
+1310*      price for one week
+1320  2 DY PRICE-2W                          P 10.3  N
+1330*      price for two weeks
+1340  2 DZ PRICE-3W                          P 10.3  N
+1350*      price for three weeks
+1360  2 C9 PRICE-STATUS                      A    1  N D
+1370P 1 D0 EXTRAS
+1380  2 D1 X-DESIGNATION                     A   20  N
+1390*      e.g. 'spinnaker'
+1400  2 D2 X-FLAG                            A    1  N
+1410*      'Y' = possible extras
+1420  2 D3 X-PRICE                           P 10.3  N
+1430*      additional price per week
+1440  1 D5 DID                               A    8  N D
+1450G 1 D6 CON-NECT
+1460  2 D7 CABINET                           A   20  N
+1470  2 D8 FOLDER                            A   20  N
+1480  2 D9 FILE                              A   20  N
+1490  2 EA DESIGNATION                       A   20  N D
+1500G 1 EB ABSTRACT-L1
+1510*      in English
+1520M 2 EC LINE-L1                           A   40  N
+1530G 1 ED ABSTRACT-L2
+1540*      in German
+1550M 2 EE LINE-L2                           A   40  N
+1560  1 CI CRUISE-ID                         N  8.0  N D
+1570  1 CJ CRUISE-TYPE                       A    1  N
+1580*      'A' = 'charter cruise',  'B'
+1590*      ='sailor cruise'
+1600  1 CK CRUISE-STATUS                     A    1  N
+1610*      0 = planned, 1 = available, 2 =
+1620*      sold, 3 = removed
+1630G 1 CL START
+1640  2 CM START-DATE                        N  8.0    D
+1650  2 CN START-TIME                        N  6.0  N
+1660G 1 CO END
+1670  2 CP END-DATE                          N  8.0  N D
+1680  2 CQ END-TIME                          N  6.0  N
+1690  1 CR START-HARBOR                      A   20    D
+1700  1 CS DESTINATION-HARBOR                A   20    D
+1710  1 CT ID-YACHT                          N  8.0  N D
+1720*      ID of yacht sailing cruise
+1730  1 CU ID-PREDECESSOR                    N  8.0  N D
+1740*      ID of predecessor cruise
+1750  1 CV ID-SUCCESSOR                      N  8.0  N D
+1760*      ID of successor cruise
+1770G 1 CW CHARTER-CRUISE
+1780*      only for CRUISE-TYPE = 'A'
+1790  2 CX CHARTER-YACHT-TYPE                A   30
+1800  2 CY ID-CHARTER-BASE                   A    8
+1810*      the combination of this two IDs
+1820*      defines the CH-PRI
+1830G 1 CZ SAILING-CRUISE
+1840*      only for CRUISE-TYP = 'B'
+1850  2 C0 ID-SKIPPER                        N  8.0  N D
+1860*      PERSON-ID of skipper
+1870  2 C1 CRUISE-PRICE                      P 10.3  N
+1880  2 C2 BUNK-NUMBER                       P  3.0  N
+1890P 1 C3 SAILOR
+1900  2 C4 AGE                               P  2.0  N
+1910  2 C5 S-NAME                            A   30  N
+1920  2 C6 EXPERIENCE                        A    1  N
+1930*      'Y' if sailor has sailor
+1940*      experience
+1950M 2 C7 LANGUAGES                         A    3  N
+1960  2 C8 ID-CONTRACT                       P  6.0  N D
+1970  1 T1 PERSON-TIMESTAMP                  T   12  N
+1980*      used for Natural Constract
+1990  1 T2 COMPANY-TIMESTAMP                 T   12  N
+2000*      used for Natural Constract
+2010  1 T3 CONTRACT-TIMESTAMP                T   12  N
+2020*      used for Natural Constract
+2030  1 T4 YACHT-TIMESTAMP                   T   12  N
+2040*      used for Natural Constract
+2050  1 T5 CH-PRICES-TIMESTAMP               T   12  N
+2060*      used for Natural Constract
+2070  1 T6 CRUISE-TIMESTAMP                  T   12  N
+2080*      used for Natural Constract
+2090  1 A5 CUSTOMER-SP                       A    9    S
+2100*      -------- SOURCE FIELD(S) -------
+2110*      CUSTOMER-FLAG(1-1)
+2120*      PERSON-ID(1-8)
+2130  1 A6 OWNER-SP                          A    9    S
+2140*      -------- SOURCE FIELD(S) -------
+2150*      OWNER-FLAG(1-1)
+2160*      PERSON-ID(1-8)
+2170  1 A7 SKIPPER-SP                        A    9    S
+2180*      -------- SOURCE FIELD(S) -------
+2190*      SKIPPER-FLAG(1-1)
+2200*      PERSON-ID(1-8)
+2210  1 EI SEX-SURNAME-SP                    A   21    S
+2220*      -------- SOURCE FIELD(S) -------
+2230*      SEX(1-1)
+2240*      SURNAME(1-20)
+2250  1 EJ COUNTRY-CITY-SP                   A   23    S
+2260*      -------- SOURCE FIELD(S) -------
+2270*      COUNTRY(1-3)
+2280*      CITY(1-20)
+2290  1 B0 COMPANY-TYPE-SP                   A    9    S
+2300*      -------- SOURCE FIELD(S) -------
+2310*      COMPANY-TYPE(1-1)
+2320*      COMPANY-ID(1-8)
+2330  1 CH CONTRACT-TYPE-SP                  A    7    S
+2340*      -------- SOURCE FIELD(S) -------
+2350*      CONTRACT-TYPE(1-1)
+2360*      CONTRACT-ID(1-4)
+2370  1 DR YACHT-BRANCH-SP                   A    9    S
+2380*      -------- SOURCE FIELD(S) -------
+2390*      YACHT-BRANCH(1-1)
+2400*      YACHT-ID(1-8)
+2410  1 D4 CH-PRICES-SP                      A   38    S
+2420*      -------- SOURCE FIELD(S) -------
+2430*      CH-YACHT-TYPE(1-30)
+2440*      CH-BASE-ID(1-8)
+2450  1 EG CRUISE-TYPE-SP                    A    9    S
+2460*      -------- SOURCE FIELD(S) -------
+2470*      CRUISE-TYPE(1-1)
+2480*      CRUISE-ID(1-8)
+2490  1 DA CHARTER-PRICES-SP                 A   38    S
+2500*      -------- SOURCE FIELD(S) -------
+2510*      CHARTER-YACHT-TYPE(1-30)
+2520*      ID-CHARTER-BASE(1-8)
+2530  1 EF START-DATE-DESTINATION            A   49    S
+2540*      -------- SOURCE FIELD(S) -------
+2550*      CRUISE-TYPE(1-1)
+2560*      START-HARBOR(1-20)
+2570*      START-DATE(1-8)
+2580*      DESTINATION-HARBOR(1-20)
+2590******DDM OUTPUT TERMINATED******

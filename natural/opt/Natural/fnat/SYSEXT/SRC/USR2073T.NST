@@ -1,0 +1,82 @@
+0010Ping or terminate an RPC server
+0020.
+0030Documentation ......... USR2073T    /*  Text object
+0040Interface ............. USR2073N    /*  Cataloged subprogram
+0050Example Program ....... USR2073P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC
+0100.
+0110Keywords .............. PING, RPC, SERVER, TERMINATE
+0120.
+0130Function .............. The interface sends a ping or terminate
+0140                        command to an RPC server specified by node
+0150                        name and server name. The returned message
+0160                        contains either the version of the running
+0170                        server (PING) or the acknowledgment of
+0180                        termination (TERMINATE) or an error message.
+0190.
+0200.
+0210Parameters
+0220----------
+0230Define the following parameters with the DEFINE DATA statement:
+0240.
+025001 PARM-AREA
+0260   02 FUNCTION   (A10)    /* 'PING' or 'TERMINATE'
+0270   02 SRVNODE    (A192)   /* Node name of EntireX Broker (A32)
+0280   02 SRVNAME    (A192)   /* Server name (A32)
+0290   02 LOGON      (A1)     /* Logon flag, indicates that a logon
+0300                          /* to an user library on server side
+0310                          /* has to be triggered.
+0320   02 USER-ID    (A8)     /* If LOGON='Y', user ID and password
+0330   02 PASSWORD   (A8)     /* are the logon data for NSC.
+0340                          /* Output:
+0350   02 MSG        (A79)    /* Message returned
+0360   02 RC         (I2)     /* Response code, possible values:
+0370                          /* 0 -  MSG contains a normal message
+0380                          /*        from RPC server or Broker
+0390                          /* 1 -  MSG contains an error message
+0400                          /*        from RPC server or Broker
+0410                          /* 2 -  MSG contains an error message
+0420                          /*        from the interface
+0430                          /* 3 -  Natural Security error
+0440.
+0450Interface Call
+0460--------------
+0470Use the interface with the CALLNAT statement:
+0480.
+0490CALLNAT 'USR2073N'  PARM-AREA
+0500.
+0510.
+0520Using the Application Programming Interface:
+0530--------------------------------------------
+0540Copy the subprogram USR2073N to the library SYSTEM or the steplib
+0550library respectively, or to the required library.
+0560.
+0570Following variables have to be filled before invoking the interface:
+0580.
+0590FUNCTION
+0600  'PING'      asks the Natural RPC server for its version.
+0610  'TERMINATE' initiates to finish the Natural RPC server process.
+0620.
+0630SRVNODE
+0640  EntireX Broker name.
+0650.
+0660SRVNAME
+0670  Server name.
+0680.
+0690LOGON, (USER-ID, PASSWORD)
+0700  'Y' indicates Logon data must be transmitted to the Natural RPC
+0710  server.
+0720  If the client does not run under Natural Security (NSC) and the
+0730  logon flag is set, user ID and password have to be specified,
+0740  if the data are not already entered by USR1071N.
+0750  In other words, logon data are sent to the server under the following
+0760  conditions:
+0770    1. UID .and. PWD are given, no matter how the LOGON flag is set.
+0780    2. LOGON='Y' but neither UID nor PWD are given. They may have been
+0790       already applied by NAT1071N or by logging on to Natural Security.
+0800.
+0810***** End of Description *****
+0820

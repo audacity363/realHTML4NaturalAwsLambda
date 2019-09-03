@@ -1,0 +1,94 @@
+0010DB: 148 FILE: 022  - ALLOCATIONS                      DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:19
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:19
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common MVS and VSE
+0230*
+0240  1 A5 DDNAME                            A    8    D Data definition name
+0250*      Data definition name.
+0260  1 A7 VOLSER                            A    6    D Volume on which DDNA
+0270*      Volume on which DDNAME is
+0280*      allocated.
+0290  1 A8 DSNAME                            A   54    D Data set name for DD
+0300*      Data set name for DDNAME.
+0310  1 A9 CLASS                             A    8    D Data set classificat
+0320*      Data set classification:
+0330*      DUMMY   dummy data set
+0340*      SYSIN   JES SYSIN data set
+0350*      SYSOUT  JES SYSOUT data set
+0360  1 AC ACCESS                            A    8    D Data set is currentl
+0370*      Data set is currently open as:
+0380*      blank   not open
+0390*      OUTPUT
+0400*      OUTIN
+0410*      UPDATE
+0420*      INOUT
+0430*      RDBACK
+0440*      INPUT
+0450*      VSAM
+0460  1 AE LRECL                             N  5.0    D Record length of dat
+0470*      Record length of data set
+0480*      (if it is open).
+0490  1 AF BLKSIZE                           N  5.0    D Block size of data s
+0500*      Block size of data set
+0510*      (if it is open).
+0520  1 AG DSORG                             A    4    D Organisation of data
+0530*      Organisation of data set
+0540*      (if it is open).
+0550*
+0560*      MVS fields
+0570*
+0580  1 A2 JOB-NAME                          A    8    D Name of job.
+0590*      Name of job.
+0600  1 A3 STEP-NAME                         A    8      Current step name.
+0610*      Current step name.
+0620  1 A4 PROC-NAME                         A    8      Current procedure na
+0630*      Current procedure name.
+0640  1 A6 UNIT                              A    4    D Unit on which DDNAME
+0650*      Unit on which DDNAME is
+0660*      allocated.
+0670  1 AA MEMBER                            A   10    D Member name used for
+0680*      Member name used for DDNAME
+0690*      (e.g. DSNAME(MEMBER)).
+0700  1 AB IO-COUNT                          N 11.0    D Number of I/O operat
+0710*      Number of I/O operations
+0720*      performed so far.
+0730  1 AD CCHHR                             B    5    D Absolute address of
+0740*      Absolute address of data set
+0750*      (format cccchhhhrr) where
+0760*      cccc specifies the hexadecimal
+0770*      cylinder number
+0780*      hhhh specifies the hexadecimal
+0790*      head (track) number
+0800*      of the track
+0810*      rr   specifies the hexadecimal
+0820*      record number
+0830  1 AH RECFM                             A    5    D Record format of dat
+0840*      Record format of data set
+0850*      (if it is open).
+0860  1 A1 TCB-ADDRESS                       B    4    D TCB address of the r
+0870*      TCB address of the requested
+0880*      job.
+0890  1 AP PATH-NAME                         A  253    D Path name of a z/OS
+0900*      Path name of a z/OS UNIX file.
+0910*
+0920*      End of ALLOCATIONS
+0930*
+0940******DDM OUTPUT TERMINATED******

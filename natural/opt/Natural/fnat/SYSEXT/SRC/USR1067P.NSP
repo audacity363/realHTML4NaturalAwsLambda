@@ -1,0 +1,37 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1067N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR1067L
+0070   2 INPUTS
+0080     3 LIBRARY        (A32)
+0090   2 OUTPUTS
+0100     3 ERROR-POSITION (I04)
+0110     3 RESPONSE       (I04)
+0120 /*
+0130 1 USR1067N
+0140   2 VERSION          (I01)     INIT <0>
+0150 1 REDEFINE USR1067N
+0160   2 EXTENDED-PARMS
+0170     3 EXTENDED-DATA  (A01/1:1)
+0180END-DEFINE
+0190/*
+0200SET KEY ALL
+0210/*
+0220REPEAT
+0230  INPUT (AD=OIL IP=OFF ZP=ON SG=ON)
+0240  /// 18T 'Check Library ID:' (I)
+0250    / 18T '-' (17) (I) /
+0260    / 18T 'Library ID .......' LIBRARY    (AD=MIT'_')
+0270    / 18T 'Error position ...' ERROR-POSITION
+0280   // 18T 'Response .........' RESPONSE
+0290  /// 18T 'Press any PF-Key to stop.'
+0300  /*
+0310  IF *PF-KEY NE 'ENTR'
+0320    ESCAPE ROUTINE
+0330  END-IF
+0340  /*
+0350  CALLNAT 'USR1067N' USR1067L USR1067N.EXTENDED-PARMS
+0360END-REPEAT
+0370END

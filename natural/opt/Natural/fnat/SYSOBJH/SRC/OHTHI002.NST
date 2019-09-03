@@ -1,0 +1,31 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> SYSOBJH Internal Commands
+0080<Header2> Part 2
+0090/* <Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>OHTHI001
+0140<Successor>OHTHI003
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170EXIT, QUIT, BYE or .
+0180  Leave Object Handler
+0190
+0200FIN
+0210  Leave Object Handler and end Natural session
+0220
+0230GO HOME
+0240  Go to the main menu
+0250
+0260GO UNLOAD
+0270  Go to the unload menu
+0280
+0290GO UNLOAD END
+0300  End the current unload function
+0310<HelpTextEnd>

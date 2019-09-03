@@ -1,0 +1,52 @@
+0010Generate codepage translation table
+0020.
+0030Documentation ......... USR8221T          /* Text object
+0040Interface ............. USR8221N          /* Cataloged subprogram
+0050Example Program ....... USR8221P          /* Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATA HANDLING
+0100.
+0110Keywords .............. +NEW-NAT-8.3.8, ASCII, CODEPAGE, EBCDIC,
+0120                        TRANSLATE, TRANSLATION TABLE
+0130.
+0140Function .............. Generate a translation table which maps all
+0150                        codepoints of the source codepage to the
+0160                        corresponding value of the target codepage.
+0170                        The sample program USR8221P formats the
+0180                        translation tables in the mainframe and
+0190                        UNIX/Windows layout. For further information,
+0200                        see the description in the program USR8221P.
+0210                        Note:
+0220                        The API USR8221N supports only 1-byte encoded
+0230                        character sets.
+0240.
+0250.
+0260Parameters
+0270----------
+0280Define the following parameters with the DEFINE DATA statement:
+0290.
+0300 1 P_CODEPAGE_SOURCE (A64) /* BY VALUE /* Input:  source codepage
+0310 1 P_CODEPAGE_TARGET (A64) /* BY VALUE /* Input:  target codepage
+0320 1 P_TABLE           (A2/0:255)        /* Output: translation table
+0330 1 P_SUBSTITUTE      (A2)              /* Output: substitution character
+0340                                       /*         of target codepage
+0350 1 P_RETURN          (I4)              /* Output: conversion return code
+0360.
+0370Interface Call
+0380--------------
+0390Use the interface with the CALLNAT statement:
+0400.
+0410CALLNAT 'USR8221N'  P_CODEPAGE_SOURCE P_CODEPAGE_TARGET
+0420                    P_TABLE (*) P_SUBSTITUTE P_RETURN
+0430.
+0440.
+0450Using the Application Programming Interface:
+0460--------------------------------------------
+0470Copy the subprogram USR8221N to the library SYSTEM, to the appropriate
+0480steplib library, or to the required library.
+0490.
+0500.
+0510.
+0520***** End of Description *****

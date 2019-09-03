@@ -1,0 +1,77 @@
+0010* MAP2: PROTOTYPE
+0020* INPUT USING MAP 'XXXXXXXX'
+0030*     ##TITLE #CVAR #DSNAME #PASSWORD #SCAN #SCAN-COLUMN-FROM
+0040*     #SCAN-COLUMN-TO #SCAN-LENGTH #SCAN-LIMIT #SCAN-TYPE #SCAN-VALUE
+0050*     #TIME-LIMIT #VOLSER
+0060DEFINE DATA PARAMETER
+00701 ##TITLE (A078)
+00801  #CVAR (C)
+00901 #DSNAME (A054)
+01001 #PASSWORD (A008)
+01101 #SCAN (A003)
+01201 #SCAN-COLUMN-FROM (N05.0)
+01301 #SCAN-COLUMN-TO (N05.0)
+01401 #SCAN-LENGTH (N03.0)
+01501 #SCAN-LIMIT (N07.0)
+01601 #SCAN-TYPE (A001)
+01701 #SCAN-VALUE (A060)
+01801 #TIME-LIMIT (N05.0)
+01901 #VOLSER (A006)
+0200END-DEFINE
+0210FORMAT PS=021 LS=080 ZP=OFF SG=OFF KD=ON  IP=OFF
+0220* MAP2: MAP PROFILES *****************************        410***********
+0230* .TTAAAMMOO   D I D I N D I D I        ?_)¬&:+(                       *
+0240* 023079        N0NNUCN             X        01 SYSPROF YL   #CVAR   1 *
+0250************************************************************************
+0260INPUT          (     CV=#CVAR                                         /*
+0270                                                                       )
+0280 002T ##TITLE  (AD=ODL ) /*.01D078 A078 .
+0290/
+0300/
+0310/
+0320 002T 'Dsname ........'
+0330 018T #DSNAME  (AD=MILT'_' CD=NE ) /*.99D054 A054 .
+0340/
+0350 002T 'Volser ........'
+0360 018T #VOLSER  (AD=MILT'_' CD=NE ) /*.99D006 A006 .
+0370/
+0380 002T 'Password ......'
+0390 018T #PASSWORD  (AD=MNLT'_' CD=NE ) /*.99U008 A008 .
+0400/
+0410/
+0420 002T 'Scan'
+0430/
+0440 004T 'Option ......'
+0450 018T #SCAN  (AD=MILT'_' CD=NE ) /*.99D003 A003 .
+0460 026T '( YES: continue search after first hit )'
+0470/
+0480 004T 'Value .......'
+0490 018T #SCAN-VALUE  (AD=MILT'_' CD=NE ) /*.99D060 A060 .
+0500/
+0510 004T 'Line Limit ..'
+0520 018T #SCAN-LIMIT  (AD=MILT'_' CD=NE ) /*.99D007 N07.0.
+0530/
+0540 004T 'Time Limit ..'
+0550 018T #TIME-LIMIT  (AD=MILT'_' CD=NE ) /*.99D005 N05.0.
+0560/
+0570 004T 'Type ........'
+0580 018T #SCAN-TYPE  (AD=MILT'_' CD=NE ) /*.99D001 A001 .
+0590 026T '( A: absolute scan )'
+0600/
+0610 004T 'Length ......'
+0620 018T #SCAN-LENGTH  (AD=MILT'_' CD=NE ) /*.99D003 N03.0.
+0630 026T '( type A only )'
+0640/
+0650 004T 'column from .'
+0660 018T #SCAN-COLUMN-FROM  (AD=MILT'_' CD=NE ) /*.99D005 N05.0.
+0670/
+0680 004T 'column to ...'
+0690 018T #SCAN-COLUMN-TO  (AD=MILT'_' CD=NE ) /*.99D005 N05.0.
+0700/
+0710/
+0720/
+0730/
+0740/
+0750* MAP2: VALIDATION *****************************************************
+0760* MAP2: END OF MAP *****************************************************
+0770END

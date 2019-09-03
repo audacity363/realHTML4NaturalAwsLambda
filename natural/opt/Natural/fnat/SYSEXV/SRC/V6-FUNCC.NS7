@@ -1,0 +1,34 @@
+0010*
+0020* Function .. V6-FUNCC
+0030* Library ... SYSEXV
+0040* Version ... 6.1
+0050*
+0060* Functionality: External function with optional parameters
+0070************************************************************************
+0080*
+0090Define Function Fct-Optional      /* Function with optional parameters
+0100  Returns #Sum (I4)
+0110  Define Data Parameter
+0120    1 #Parm1 (I4) BY VALUE OPTIONAL
+0130    1 #Parm2 (I4) BY VALUE
+0140    1 #Parm3 (I4) BY VALUE OPTIONAL
+0150    1 #Parm4 (I4) BY VALUE OPTIONAL
+0160  Local
+0170    1 #Add1  (I4)
+0180    1 #Add3  (I4)
+0190    1 #Add4  (I4)
+0200  End-define
+0210  Reset #Add1 #Add3 #Add4
+0220  If #Parm1 SPECIFIED
+0230    #Add1 := #Parm1
+0240  End-if
+0250  If #Parm3 SPECIFIED
+0260    #Add3 := #Parm3
+0270  End-if
+0280  If #Parm4 SPECIFIED
+0290    #Add4 := #Parm4
+0300  End-if
+0310  #Sum := #Add1 + #Parm2 + #Add3 + #Add4
+0320End-Function
+0330*
+0340End

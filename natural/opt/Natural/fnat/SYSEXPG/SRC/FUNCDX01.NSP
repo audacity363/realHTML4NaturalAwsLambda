@@ -1,0 +1,19 @@
+0010** Example 'FUNCDX01': Using a function as a statement (Program)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+0040  1 #A (I4) INIT <1>
+0050  1 #B (I4) INIT <2>
+0060END-DEFINE
+0070*
+0080*
+0090WRITE 'Write:' #A #B
+0100F#PRINT-ADD(< 2,3 >)     /* Function call belongs to operand list
+0110                         /* immediately preceding it.
+0120*
+0130WRITE // '*************************' //
+0140*
+0150WRITE 'Write:' #A #B;    /* Semicolon separates operands and function.
+0160F#PRINT-ADD(< 2,3 >)     /* Function call doesn't belong to the
+0170                         /* operand list.
+0180*
+0190END

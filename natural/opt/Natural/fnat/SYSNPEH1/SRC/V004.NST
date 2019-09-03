@@ -1,0 +1,14 @@
+0010&H View VTOC
+0020&L
+0030&L
+0040#Purpose@: List VTOC of specific disk.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : This view allows the user or application to list the VTOC
+0100           of the specified disk with related information e.g. Volser,
+0110           Dataset name, File Size, Number of extents, Expiration date,
+0120           Last reference date etc.
+0130&L
+0140#Notes@  :

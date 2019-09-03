@@ -1,0 +1,66 @@
+0010/*  Get data of member in source area
+0020/*  This program serves as an example how to design a user-defined
+0030/*  program to call 'USR6008N'
+0040/**********************
+0050DEFINE DATA LOCAL
+006001 PARM-AREA         (A253)   /* Contains Parameters
+007001 REDEFINE PARM-AREA
+0080  02 #LIBRARY        (A8)     /* Lib currently linked to member in SA
+0090  /* The library is only different to *LIBRARY-ID, when a member will
+0100  /* be loaded into the source area from a library different than
+0110  /* *LIBRARY-ID (e.g. with with READ <mem> <lib>) and there is no
+0120  /* LOGON (implicit or explicit) before running USR6008N.
+0130  02 #MEMBER         (A8)     /* Name of member in SA
+0140  02 #TYPE           (A1)     /* Type of member in SA
+0150  02 #MODE           (A1)     /* Mode of member in SA
+0160                              /*  R Reporting Mode
+0170                              /*  S Structured Mode
+0180  02 #BYTES-SA       (P20)    /* Bytes in SA used, the value differs
+0190                              /* from the source size of the module.
+0200  02 #EMPTY          (L)      /* TRUE if SA is empty, FALSE otherwise
+0210  02 #RESPONSE       (N04)    /* Error during execution
+0220                              /*  0 ok
+0230                              /*  4 Type cannot be found.
+0240  02 #ERR-TXT        (A65)    /* Short text
+0250/*
+026001 TYPE-TEXT         (A12)    /* Explanation to #TYPE
+027001 MODE-TEXT         (A15)    /* Explanation to #MODE
+0280END-DEFINE
+0290/**********************
+0300SET KEY ALL
+0310/*
+0320CALLNAT 'USR6008N' PARM-AREA
+0330/*
+0340DECIDE ON FIRST #TYPE
+0350  VALUE 'P' MOVE 'Program'     TO TYPE-TEXT
+0360  VALUE 'S' MOVE 'Subroutine'  TO TYPE-TEXT
+0370  VALUE 'H' MOVE 'Helproutine' TO TYPE-TEXT
+0380  VALUE 'N' MOVE 'Subprogram'  TO TYPE-TEXT
+0390  VALUE 'C' MOVE 'Copycode'    TO TYPE-TEXT
+0400  VALUE 'T' MOVE 'Text'        TO TYPE-TEXT
+0410  VALUE 'G' MOVE 'GDA'         TO TYPE-TEXT
+0420  VALUE 'L' MOVE 'LDA'         TO TYPE-TEXT
+0430  VALUE 'A' MOVE 'PDA'         TO TYPE-TEXT
+0440  VALUE 'M' MOVE 'Map'         TO TYPE-TEXT
+0450  VALUE '3' MOVE 'Dialog'      TO TYPE-TEXT /* not on Mainframe !
+0460  VALUE '4' MOVE 'Class'       TO TYPE-TEXT
+0470  VALUE 'O' MOVE 'Macro'       TO TYPE-TEXT /* only for ISPF/MF !
+0480  VALUE '7' MOVE 'Function'    TO TYPE-TEXT /* not on Mainframe !
+0490  VALUE 'V' MOVE 'DDM'         TO TYPE-TEXT
+0500  NONE      MOVE '?'           TO TYPE-TEXT
+0510END-DECIDE
+0520DECIDE ON FIRST #MODE
+0530  VALUE 'R' MOVE 'Reporting Mode'  TO MODE-TEXT
+0540  VALUE 'S' MOVE 'Structured Mode' TO MODE-TEXT
+0550  NONE      MOVE '?'               TO MODE-TEXT
+0560END-DECIDE
+0570/*
+0580WRITE 'Library ............' #LIBRARY /
+0590      'Member .............' #MEMBER /
+0600      'Type ...............' TYPE-TEXT /
+0610      'Mode ...............' MODE-TEXT /
+0620      'Bytes in SA used ...' #BYTES-SA (AD=L) /
+0630      'Source area empty ..' #EMPTY (EM=NO/YES) /
+0640      'Response ...........' #RESPONSE (AD=L) /
+0650      'Error text .........' #ERR-TXT (AL=50)
+0660END

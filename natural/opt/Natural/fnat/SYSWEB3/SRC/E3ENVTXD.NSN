@@ -1,0 +1,91 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3ENVTXD
+0050*
+0060* DESCRIPTION   Setup Text Area to be read by E3ENVTX2
+0070*
+0080* AUTHOR        SAG   08.09.1998
+0090*
+0100* Version       8.3
+0110*
+0120* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0130*
+0140* HISTORY
+0150* USER    DATE       REASON
+0160* ------+----------+----------------------------------------------
+0170*       ! --.--.-- !
+0180* ------+----------+----------------------------------------------
+0190*
+0200* ------ PARAMETER -----------------------------------------------
+0210DEFINE DATA
+0220PARAMETER USING W3PARM
+0230LOCAL USING W3CONST
+0240LOCAL
+02501 W3VALUE            (A) DYNAMIC
+02601 II                 (I4)
+0270END-DEFINE
+0280* --- ERROR HANDLING ---
+0290ON ERROR
+0300  PERFORM W3ERROR ##W3ERROR
+0310  PERFORM W3END ##RPC
+0320  ESCAPE ROUTINE
+0330END-ERROR
+0340*
+0350* --- INITIALIZE Web Interface ---
+0360PERFORM W3INIT ##RPC
+0370*
+0380* --- SET TYPE OF RETURN-PAGE ---
+0390PERFORM W3CONTENT-TYPE 'text/html'
+0400* --- WRITE THE HEAD OF THE DOCUMENT ---
+0410PERFORM W3TEXTLINE "<!DOCTYPE 'HTML PUBLIC -//W3C//DTD HTML 3.2//EN'>"
+0420PERFORM W3TEXTLINE '<HTML><HEAD><META HTTP-EQUIV="Content-Type" '-
+0430  'CONTENT="text/html; charset=iso-8859-1"><TITLE>'
+0440* --- THE TITLE OF THE PAGE ---
+0450PERFORM W3TEXTLINE 'Basic Routines - Read Environment Text '-
+0460  'Area Variables'
+0470PERFORM W3TEXTLINE '</TITLE></HEAD><BODY>'
+0480* --- THE FIRST HEADERLINE ---
+0490PERFORM W3TEXTLINE '<H2>Read Environment Text Area Variables</H2>'
+0500*
+0510PERFORM W3TEXTLINE 'Set a text area:'
+0520*
+0530PERFORM W3TEXTLINE "<FORM METHOD='POST' ACTION='E3ENVTX2'>"
+0540PERFORM W3TEXT "<TEXTAREA ROWS='5' COLS='300' NAME='TEXT'>"
+0550FOR II = 1 TO 5
+0560  COMPRESS 'this is line' II "-020"
+0570    'this is line' II "-040"
+0580    'this is line' II "-060"
+0590    'this is line' II "-080"
+0600    'this is line' II "-100"
+0610    'this is line' II "-120"
+0620    'this is line' II "-140"
+0630    'this is line' II "-160"
+0640    'this is line' II "-180"
+0650    'this is line' II "-200"
+0660    'this is line' II "-220"
+0670    'this is line' II "-240"
+0680    'this is line' II "-260"
+0690    'this is line' II "-280"
+0700    'this is line' II "-300." INTO W3VALUE
+0710  PERFORM W3TEXTLINEDYNAMIC W3VALUE
+0720END-FOR
+0730*
+0740COMPRESS "</TEXTAREA><BR>" ##HTTP_NEWLINE
+0750  "<INPUT TYPE='SUBMIT' VALUE='SUBMIT WITH POST'>"
+0760  "</FORM>" INTO W3VALUE
+0770PERFORM W3TEXTLINE W3VALUE
+0780*
+0790* --- END THE HTML PAGE ---
+0800COMPRESS "<TABLE BORDER='0' WIDTH='100%' CELLSPACING='0' "-
+0810  "CELLPADDING='5'>"
+0820  '<TR BGCOLOR="#00cc66"><TD>' *PROGRAM '&#32;-&#32;' *DATE '&#32;' *TIME
+0830  "</TD><TD ALIGN='RIGHT'>" 'Natural'
+0840  "</TD></TR></TABLE>"
+0850  '</BODY></HTML>' INTO W3VALUE LEAVING NO
+0860PERFORM W3TEXTDYNAMIC W3VALUE
+0870*
+0880* --- END Web Interface ---
+0890PERFORM W3END ##RPC
+0900*
+0910END

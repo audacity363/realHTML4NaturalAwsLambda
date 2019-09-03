@@ -1,0 +1,142 @@
+0010************************************************************************
+0020* Application: SYSEDM (Adabas/Natural Data Collector for Optimize)
+0030* Object: PROFILE
+0040* Date: 2011-02-10 16:00
+0050************************************************************************
+0060* Function:    Source of the SYSEDM Profile PROFILES.
+0070*
+0080*    To activate save as 'PROFILES' in the Library SYSEDM.
+0090*
+0100*    Define a parameter profile for the Adabas/Natural Data Collector.
+0110*
+0120*    Parameters can be set for the following components:
+0130*
+0140*       Component                   PARM                    Note
+0150*       --------------------------- ----------------------- ---------
+0160*       Adabas Servers              ADABAS
+0170*       Collector Trace             TRACE
+0180*       Entire Operations           NOP
+0190*       Entire Output Management    NOM
+0200*       File Name for System Files  FILE-NAME
+0210*       Natural Security            NSC
+0220*
+0230* Notes:
+0240* - Empty lines or lines starting with '*' are ignored.
+0250* - Blanks in front of an entry are ignored. But there should be no
+0260*   blanks in front of a PARM line.
+0270* - A parameter block starts with PARM=parm where 'parm' is any of the
+0280*   parameters listed above. Unused parameters can be removed
+0290*   completely. In this case the default value will be used (if any).
+0300* - The parameter block consists of any number (can be zero) of lines,
+0310*   each containing one parameter entry.
+0320***********************************************************************
+0330
+0340* Adabas Server
+0350* Parameter: ADABAS
+0360
+0370* Specify the DBID of each Adabas Server to be monitored.
+0380* In general, Adabas Server are discovered automatically and need not to
+0390* be specified here. See the documentation for more info.
+0400
+0410PARM=ADABAS
+0420* dbid
+0430* 14
+0440* --------------------------------------------------------------------
+0450
+0460* Collector Trace
+0470* Parameter: TRACE
+0480
+0490* Specify the trace level for a server followed by the server name,
+0500* the client name and IDC port.
+0510* Separate the values by a blank; client and port by a colon (:).
+0520* Possible trace levels are in the range from 0 to 10.
+0530* If you specify '*' (star) as server, client name or port number or if
+0540* you leave the last values empty, the given trace level is used as
+0550* default trace level for all servers, clients or ports, rsp.
+0560* A trace level specified here overwrites the trace level selected in
+0570* Optimize. If you do not specify a trace level here, the Optimize
+0580* trace level is used.
+0590* The Optimize trace level is also used, if you specify 'OP' as
+0600* trace level. In this case a default trace level will not be used for
+0610* the given server/client/port.
+0620* IMPORTANT: The trace level will be used after the next discovery.
+0630
+0640PARM=TRACE
+0650* tracelevel server client:port
+0660* 4 OPTRPC client:1234
+0670
+0680* Write by default only errors and warnings
+0690* 2
+0700
+0710* Overwrite default with value from Optimize
+0720* OP RPC-SERVER client
+0730* --------------------------------------------------------------------
+0740
+0750* Entire Operations
+0760* Parameter: NOP
+0770
+0780* Specify the DBID and file number of the Entire Operations
+0790* system file (LFILE 216) of each Entire Operations
+0800* environment to be monitored.
+0810* Separate the DBID and file number by a slash '/'.
+0820* If an Entire Operations system file is used with the
+0830* Natural RPC server, the file is discovered by default and need
+0840* not to be specified.
+0850
+0860PARM=NOP
+0870* dbid/fnr
+0880* 111/222
+0890
+0900* --------------------------------------------------------------------
+0910
+0920* Entire Output Management
+0930* Parameter: NOM
+0940
+0950* Specify the DBID and file number of the Entire Output Management
+0960* active data file (LFILE 91) of each Entire Output Management
+0970* environment to be monitored.
+0980* Separate the DBID and file number by a slash '/'.
+0990* If an Entire Output Management active data file is used with the
+1000* Natural RPC server, the file is discovered by default and need
+1010* not to be specified.
+1020
+1030PARM=NOM
+1040* dbid/fnr
+1050* 111/333
+1060
+1070* --------------------------------------------------------------------
+1080
+1090* File Name for System Files
+1100* Parameter: FILE-NAME
+1110
+1120* Specify whether the file name is added to instances
+1130* which are identified by a Natural system file.
+1140* This affects the following components:
+1150*  - Entire Operations
+1160*  - Entire Output Management
+1170*  - Natural Security
+1180
+1190* Possible Values
+1200* YES - Instances are identified by the file number and name.
+1210* NO  - Instances are identified by the file number only.
+1220* Default: YES
+1230
+1240PARM=FILE-NAME
+1250* Use the file number and name to identify the instances
+1260YES
+1270
+1280* Use only the file number to identify the instances
+1290* NO
+1300* --------------------------------------------------------------------
+1310
+1320* Natural Security
+1330* Parameter: NSC
+1340
+1350* Specify the DBID and file number of each FSEC to be monitored.
+1360* Separate the DBID and file number by a slash '/'.
+1370* The FSEC which is used with the Natural RPC server is discovered by
+1380* default and need not to be specified.
+1390
+1400PARM=NSC
+1410* dbid/fnr-of-FSEC
+1420* 1/6

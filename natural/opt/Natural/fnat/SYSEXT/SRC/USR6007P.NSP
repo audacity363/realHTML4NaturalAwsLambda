@@ -1,0 +1,53 @@
+0010/* USR6007P: Read information about last Tamino DB error
+0020/* This program serves as example how to design a user-defined
+0030/* program to call 'USR6007N'
+0040/* Attention: This example produces a Tamino database error.
+0050/*            It uses the Tamino Demo database which has to be
+0060/*            installed. Employees data can be loaded with SYSEXINS
+0070/*            on Windows or with SYSEXTDB on UNIX.
+0080/*            The DBID 102 is used for DDM Employees-Tamino.
+0090/*
+0100/**********************
+0110DEFINE DATA LOCAL
+0120  01 TAMINO_PARMS
+0130     02 TAMINO_ERROR_NUM       (I4)
+0140     02 TAMINO_ERROR_TEXT      (A70)
+0150     02 TAMINO_ERROR_LINE      (A253)
+0160*
+0170  01 Line                      (A253)
+0180  01 Redefine Line
+0190     02 Line_Array             (A60/1:4)
+0200*
+0210  01 Tamino-Record View of Employees-Tamino
+0220     02 Name
+0230     02 City
+0240END-DEFINE
+0250/*
+0260/*
+0270Name := 'NELSON'
+0280City := 'LONDON'
+0290*
+0300STORE Tamino-Record
+0310*
+0320* This STORE statement results into the error NAT8400 with subcode 7712:
+0330* 'Required attribute missing'
+0340*
+0350*
+0360On Error
+0370  CALLNAT 'USR6007N' TAMINO_PARMS
+0380  /*
+0390  Move TAMINO_ERROR_LINE to LINE
+0400  /*
+0410  INPUT (AD=OIT IP=OFF CD=TU SG=OFF)
+0420  /// 5T 'Information of last occurred error in Tamino DB'
+0430   // 5T 'Error number:' TAMINO_ERROR_NUM
+0440    / 5T 'Error text:'
+0450    / 5T  TAMINO_ERROR_TEXT
+0460    / 5T 'Error line:'
+0470    / 5T  LINE_ARRAY(1)
+0480    / 5T  LINE_ARRAY(2)
+0490    / 5T  LINE_ARRAY(3)
+0500    / 5T  LINE_ARRAY(4)
+0510/*
+0520End-error
+0530END

@@ -1,0 +1,23 @@
+0010/*
+0020/* This program serves as example how to design a user-defined
+0030/* program to call 'USR8301N'
+0040/**********************''''''
+0050DEFINE DATA
+0060LOCAL
+00701 #HF-NAME-A         (A13/1:*)
+00801 #IX                (I2)
+0090END-DEFINE
+0100/*
+0110/*
+0120/*
+0130CALLNAT 'USR8301N' #HF-NAME-A(*)
+0140/*
+0150IF *OCCURRENCE(#HF-NAME-A) > 0 THEN
+0160  FOR #IX = 1 TO *OCCURRENCE(#HF-NAME-A)
+0170    WRITE #HF-NAME-A(#IX)
+0180  END-FOR
+0190ELSE
+0200  WRITE 'No hotfix found.'
+0210END-IF
+0220/*
+0230END

@@ -1,0 +1,63 @@
+0010DB: 148 FILE: 023  - LOADED-MODULES                   DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:23
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:23
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      MVS fields
+0230*
+0240  1 A1 TCB-ADDRESS                       B    4    D Address of Task Cont
+0250*      Address of Task Control Block.
+0260  1 A3 MODULE                            A    8    D Name of load module,
+0270*      Name of load module,
+0280*      interpreted in the fields
+0290*      TYPE, LOAD-ADDRESS and LENGTH.
+0300  1 A7 TYPE                              A    4    D Module type:
+0310*      Module type:
+0320*      LOAD  module was loaded
+0330*      PRB   module is an active
+0340*      program
+0350*      IRB   interrupt request
+0360*      TIRB  interrupt request
+0370*      SIRB  interrupt request
+0380*      SVRB  supervisor SVC
+0390  1 A8 LOAD-ADDRESS                      B    4    D Load address of modu
+0400*      Load address of module.
+0410  1 A9 LENGTH                            B    3    D Length of module.
+0420*      Length of module.
+0430  1 A2 JOB-NAME                          A    8    D Name of job.
+0440*      Name of job.
+0450  1 A4 ENTRY-POINT                       B    4    D Entry point of modul
+0460*      Entry point of module.
+0470  1 A5 USE-COUNT                         N  3.0    D Use count of module.
+0480*      Use count of module.
+0490  1 A6 PSW                               B    4      Current Program Stat
+0500*      Current Program Status Word
+0510*      for a program (when TYPE is
+0520*      anything except LOAD).
+0530  1 AA STATE                             A    7    D Run state of program
+0540*      Run state of program (TYPE is
+0550*      anything except LOAD):
+0560*      WAIT     program is in
+0570*      wait state
+0580*      RUN      program is running
+0590*      SUSPEND  program is suspended
+0600*
+0610*      End of LOADED-MODULES
+0620*
+0630******DDM OUTPUT TERMINATED******

@@ -1,0 +1,99 @@
+0010* Program   MLOADMI
+0020* View      LOAD-MODULE
+0030*
+0040* Function  Return information on applied zaps and linkedit date/
+0050*           version
+0060*
+0070* ----------------------------------------------------------------------
+0080* Maintenance..:
+0090* hka 97-12-12   NPE213:   make it y2000 compliant
+0100* ======================================================================
+0110DEFINE DATA GLOBAL USING TUTO
+0120            LOCAL  USING LOADMODL
+0130            LOCAL
+014001  #DISPLAY (14)
+0150    02 IDR-DATA     (A40)
+0160    02 IDR-DATX     (D)
+0170    02 IDR-TYPE     (A4)
+0180*
+019001  #DSNAME         (A54)
+020001  #VOLSER         (A6)
+021001  #MEMBER         (A10)
+022001  #PASSWORD       (A8)
+023001  #DATA           (A40)
+024001  #TYPE           (A4)
+0250*
+026001  #I              (P2)
+027001  #COUNT          (P8)
+028001  #CVAR           (C)
+0290END-DEFINE
+0300ASSIGN #CVAR = (AD=I)
+0310PERFORM PF-KEY
+0320PERFORM SCREEN-IO
+0330* --------------------------------------- main ------------------------
+0340REPEAT
+0350FND.
+0360FIND LOAD-MODULE
+0370     WITH NODE     =  ##NODE
+0380     AND  FUNCTION =  'IDR'
+0390     AND  DSNAME   =  #DSNAME
+0400     AND  VOLSER   =  #VOLSER
+0410     AND  MEMBER   =  #MEMBER
+0420     AND  PASSWORD =  #PASSWORD
+0430     AND  IDR-DATA =  #DATA
+0440     AND  IDR-TYPE =  #TYPE
+0450*
+0460  IF ERROR-CODE NE 0
+0470     ASSIGN ##MSG-NR = 1000
+0480     ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0490     ESCAPE BOTTOM (FND.)
+0500  END-IF
+0510*
+0520  IF #I = 14
+0530     PERFORM SCREEN-IO
+0540     IF #CVAR MODIFIED
+0550        ESCAPE BOTTOM (FND.)
+0560     END-IF
+0570  END-IF
+0580*
+0590  ADD 1 TO #I
+0600  ADD 1 TO #COUNT
+0610  MOVE BY NAME LOAD-MODULE TO #DISPLAY (#I)
+0620END-FIND
+0630*
+0640DECIDE FOR FIRST CONDITION
+0650  WHEN ##MSG-NR NE 0                     /* ERROR OCCURED
+0660       IGNORE
+0670  WHEN #I > 0
+0680       ASSIGN ##MSG-NR = 1030            /* BOTTOM OF DATA
+0690  WHEN #COUNT = 0
+0700       ASSIGN ##MSG-NR = 1031            /* NOTHING FOUND
+0710  WHEN ANY
+0720       PERFORM SCREEN-IO
+0730  WHEN NONE
+0740       IGNORE
+0750END-DECIDE
+0760RESET #COUNT
+0770END-REPEAT
+0780* ------------------------------ screen io ----------------------------
+0790DEFINE SUBROUTINE SCREEN-IO
+0800INPUT WITH TEXT *##MSG-NR,
+0810                 ##MSG-TXT1,
+0820                 ##MSG-TXT2
+0830      USING MAP 'MLOADMI&'
+0840*
+0850DECIDE FOR EVERY CONDITION
+0860  WHEN #DATA = ' '
+0870       ASSIGN #DATA = '*'
+0880  WHEN #TYPE = ' '
+0890       ASSIGN #TYPE = '*'
+0900  WHEN NONE
+0910       IGNORE
+0920END-DECIDE
+0930RESET ##MSG
+0940RESET #DISPLAY (*)
+0950RESET #I
+0960END-SUBROUTINE
+0970* ------------------------------ pf key -------------------------------
+0980INCLUDE C-PFKEY
+0990END

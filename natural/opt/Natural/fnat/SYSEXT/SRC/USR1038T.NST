@@ -1,0 +1,100 @@
+0010Get platform-specific information
+0020.
+0030Documentation ......... USR1038T    /*  Text object
+0040Interface ............. USR1038N    /*  Cataloged subprogram
+0050Example Program ....... USR1038P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL ENVIRONMENT
+0100.
+0110Keywords .............. ASCII, BYTE SWAPPING, CHECK, EBCDIC,
+0120                        ENVIRONMENT, GUI, PLATFORM
+0130.
+0140Function .............. This routine retrieves some characteristica of
+0150                        the platform you are currently running on.
+0160.
+0170.
+0180Parameters
+0190----------
+0200Define the following parameters with the DEFINE DATA statement:
+0210.
+0220 1 USR1038L
+0230   2 OUTPUTS
+0240     3 PLATFORM-DATA    (A16)
+0250     3 REDEFINE PLATFORM-DATA
+0260       4 NAT-IMPL       (A01)   /* Natural implementation
+0270       4 CHAR-SET       (A01)   /* Internally used character set
+0280       4 OP-SYSTEM      (A01)   /* Operating system
+0290       4 USER-INTERFACE (A01)   /* Type of user interface
+0300       4 BYTE-SWAPPING  (A01)   /* Byte swapping machine
+0310       4 FILLER         (A11)   /* For future use
+0320 /*
+0330 1 USR1038N
+0340   2 VERSION            (I01)     INIT <0>
+0350 1 REDEFINE USR1038N
+0360   2 EXTENDED-PARMS
+0370     3 EXTENDED-DATA    (A01/1:1)
+0380.
+0390Interface Call
+0400--------------
+0410Use the interface with the CALLNAT statement:
+0420.
+0430CALLNAT 'USR1038N' USR1038L USR1038N.EXTENDED-PARMS
+0440.
+0450.
+0460Using the Application Programming Interface:
+0470--------------------------------------------
+0480Copy the subprogram USR1038N to the library SYSTEM or the steplib
+0490library respectively, or to the required library.
+0500.
+0510Description of the parameters:
+0520.
+05301 PLATFORM-DATA (Output)
+0540  2 NAT-IMPL (A01)
+0550        Implementation of the Natural nucleus.
+0560        Possible values are:
+0570        'C' - Implemented in C
+0580        'A' - Implemented in /370 Assembler
+0590.
+0600  2 CHAR-SET (A01)
+0610        Character set internally used by Natural on
+0620        this platform.
+0630        Possible values are:
+0640        'A' - ASCII
+0650        'E' - EBCDIC
+0660.
+0670  2 OP-SYSTEM (A01)
+0680        If Natural is implemented in C, the operating
+0690        system will be returned.
+0700        Possible values are:
+0710        'U' - UNIX
+0720        'D' - MS-DOS
+0730        'O' - OS/2
+0740        'V' - OpenVMS
+0750        'N' - WINDOWS/NT
+0760.
+0770  2 USER-INTERFACE (A01)
+0780        Indicates the type of user interface.
+0790        Possible values are:
+0800        'G' - Graphical user interface
+0810        'C' - Character mode
+0820        'B' - Block mode
+0830.
+0840  2 BYTE-SWAPPING (A01)
+0850        Indicator, if you are running on a byte
+0860        swapping machine.
+0870        Possible values are:
+0880        'Y' - Byte swapping machine
+0890        'N' - No byte swapping machine
+0900.
+0910  2 FILLER (A11)
+0920        Reserved for future use.
+0930.
+0940  1 USR1038T.VERSION (I01)
+0950        Version number of the subprogram.
+0960        0 is the version number for the original
+0970        parameter layout.
+0980.
+0990.
+1000*****  End of Description  *****

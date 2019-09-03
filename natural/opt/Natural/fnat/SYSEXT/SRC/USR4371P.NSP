@@ -1,0 +1,103 @@
+0010/*  Client RPC: Set User Id and ETID for RPC request
+0020/*
+0030/*  Function ... Set User Id and ETID for RPC request for Natural RPC
+0040/*               servers which were configured with
+0050/*               Impersonation = A (automatic logon).
+0060/*
+0070/*  This program serves an example of how to design a user-defined
+0080/*  program call to 'USR4371N'.
+0090/**********************
+0100/*
+0110/*  Parameter
+0120/*    INPUT
+0130/*          FUNCTION  (A02)  - 'ST'
+0140/*          USERID    (A08)  - User ID. If this is not filled,
+0150/*                             *USER will be used instead.
+0160/*          PASSWORD  (A08)  - This is unsupported in this version.
+0170/*          ETID      (A08)  - ETID to be used.
+0180/*
+0190/*
+0200/*    OUTPUT
+0210/*          PRC       (N04)   - Return value
+0220/*                                0     ok
+0230/*                                4     Internal error
+0240/*                               1x     Error in Exp. crit. handling
+0250/*                               2x     Error in write handling
+0260/*                               3x     Error in read handling
+0270/*                             9999     Invalid function code
+0280/*
+0290DEFINE DATA LOCAL
+03001 PARM-USR4371N
+0310  2 FUNCTION         (A02)
+0320  2 E-CRITERIA       (A20)
+0330  2 USERID           (A08)
+0340  2 PASSWORD         (A08)
+0350  2 ETID             (A08)
+0360  2 USER-DATA        (A32)
+0370  2 MSG-TEXT         (A79)
+0380  2 REDEFINE MSG-TEXT
+0390    3 MSG-TEXT-A25     (A25/3)
+0400  2 PRC              (N04)
+04101 #A8               (A08)
+04201 #SW_ESCAPE        (L)
+04301 #SW_MIXED_CASE    (A1) INIT<'Y'>
+04401 C_ETID            (C)
+0450END-DEFINE
+0460/*
+0470/*
+0480DEFINE WINDOW RPC-CLIENT SIZE 12*55 BASE 5/15
+0490  TITLE ' RPC Client Set User Id and ETID' CONTROL SCREEN
+0500/*
+0510SET KEY ALL
+0520SET CONTROL 'L'
+0530/*
+0540REPEAT
+0550/*
+0560  IF *DATA > 0 #SW_ESCAPE := TRUE END-IF
+0570/*
+0580  INPUT WINDOW='RPC-CLIENT'  (AD=MI'_' IP=OFF ZP=ON SG=OFF)
+0590    /    'User ID ........... :' PARM-USR4371N.USERID
+0600**  /    'Password (mixedCase):' PARM-USR4371N.PASSWORD  (AD=NO)
+0610    /    'ETID .............. :' PARM-USR4371N.ETID  (CV=C_ETID AD=MI)
+0620**  /    'Mixed case .....(Y) :' #SW_MIXED_CASE (AD=TO)
+0630    /    'Return code ....... :' PARM-USR4371N.PRC (AD=OIL ZP=ON)
+0640    /    PARM-USR4371N.MSG-TEXT (AD=OI)
+0650    // 15T 'Press any PF-Key to stop.'
+0660  IF *PF-KEY NE 'ENTR'
+0670    ESCAPE BOTTOM
+0680  END-IF
+0690/*
+0700  IF PARM-USR4371N.USERID = #A8
+0710    PARM-USR4371N.USERID := *USER
+0720  END-IF
+0730/*
+0740  EXAMINE PARM-USR4371N.USERID   TRANSLATE INTO UPPER
+0750  IF NOT PARM-USR4371N.PASSWORD =  #A8
+0760    RESET PARM-USR4371N.PASSWORD
+0770    PARM-USR4371N.MSG-TEXT := 'Password is unsupported in this version'
+0780    ESCAPE TOP
+0790  END-IF
+0800  IF NOT (#SW_MIXED_CASE = 'N' OR = 'n')
+0810    EXAMINE PARM-USR4371N.PASSWORD TRANSLATE INTO UPPER
+0820  END-IF
+0830/*
+0840/* If ETID is not filled, set ETID to low value. The low value
+0850/* means that the NSC defined value of the user ID will be taken
+0860/*
+0870  IF C_ETID NOT MODIFIED
+0880    PARM-USR4371N.ETID := H'00'
+0890  END-IF
+0900/*
+0910  PARM-USR4371N.FUNCTION := 'ST'
+0920/*
+0930  CALLNAT 'USR4371N' PARM-USR4371N
+0940/*
+0950  IF #SW_ESCAPE
+0960    IF PRC NE 0
+0970      STACK TOP DATA PRC MSG-TEXT
+0980    END-IF
+0990    ESCAPE BOTTOM
+1000  END-IF
+1010/*
+1020END-REPEAT
+1030END

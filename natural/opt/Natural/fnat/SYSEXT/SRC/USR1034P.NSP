@@ -1,0 +1,51 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1034N'.
+0030/***********************************************************************
+0040DEFINE DATA LOCAL
+0050 1 PARM-USR1034N
+0060   2 MAX-INDEX         (P03)       /* Number of entries to be returned
+0070   2 OLD-DBID          (N05/1:20)  /* Original DBID
+0080   2 OLD-FNR           (N05/1:20)  /* Original FNR
+0090   2 NEW-DBID          (N05/1:20)  /* Translated DBID
+0100   2 NEW-FNR           (N05/1:20)  /* Translated FNR
+0110   2 NUMBER-ACTIVE     (P03)       /* Number of entries in NTTF table
+0120   2 RESPONSE          (N04)       /* Error code
+0130/*
+0140LOCAL
+0150 1 INFOTEXT            (A35)
+0160 1 IX                  (I04)
+0170END-DEFINE
+0180/*
+0190/* Set up some defaults:
+0200/*
+0210SET KEY ALL
+0220ASSIGN MAX-INDEX = 10         /* Number of occurences to be returned
+0230/*
+0240REPEAT
+0250  /*
+0260  INPUT (AD=OIL IP=OFF ZP=ON SG=OFF CD=TU) WITH TEXT INFOTEXT
+0270  /// 18T 'Retrieve NTTF entries:' (YEI)
+0280    / 18T '-' (22) (YEI) /
+0290    / 18T 'Occurences ..........' (TU) MAX-INDEX (AD=MIT'_' CD=NE)
+0300    / 18T 'Number of entries ...' (TU) NUMBER-ACTIVE
+0310    / 18T 'Response ............' (TU) RESPONSE
+0320  /// 18T 'Press any PF-Key to stop.' (TU)
+0330  /*
+0340  RESET INFOTEXT
+0350  IF *PF-KEY NE 'ENTR'
+0360    ESCAPE BOTTOM
+0370  END-IF
+0380  /*
+0390  CALLNAT 'USR1034N' PARM-USR1034N
+0400  /*
+0410  IF RESPONSE = 4 THEN
+0420    ASSIGN INFOTEXT = 'No entry found.'
+0430  END-IF
+0440  /*
+0450  FOR IX = 1 TO NUMBER-ACTIVE
+0460    DISPLAY (CD=TU ZP=OFF)
+0470    OLD-DBID (IX) OLD-FNR (IX) NEW-DBID (IX) NEW-FNR (IX)
+0480  END-FOR
+0490  /*
+0500END-REPEAT
+0510END

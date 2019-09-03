@@ -1,0 +1,39 @@
+0010/* Check 'wildcarded' field
+0020/*
+0030/* This program serves as example how to design a user-defined
+0040/* program to call 'USR1011N'
+0050/**********************
+0060DEFINE DATA
+0070LOCAL
+00801 FIELD    (A08)
+00901 MASK     (A08)
+01001 MATCH    (A01)
+01101 WILDCARD (A01)
+01201 ASTERISK (A01)
+01301 #MSG     (A72)
+0140END-DEFINE
+0150/*
+0160SET KEY ALL
+0170MOVE 'WINTEST' TO FIELD
+0180MOVE 'W*T' TO MASK
+0190REPEAT
+0200  INPUT (AD=MI IP=F) WITH TEXT #MSG
+0210    /  'Field to be checked ...' FIELD
+0220    /  'Mask ..................' MASK
+0230    /  'Wildcard char. ........' WILDCARD
+0240    /  'Asterisk char. ........' ASTERISK
+0250/*
+0260  IF *PF-KEY NE 'ENTR'
+0270    Escape Routine
+0280  END-IF
+0290  RESET #MSG
+0300/*
+0310  CALLNAT 'USR1011N' FIELD MASK MATCH WILDCARD ASTERISK
+0320  IF MATCH = 'Y'
+0330    #MSG := 'Matches.'
+0340  ELSE
+0350    #MSG := 'Does not match.'
+0360  END-IF
+0370END-REPEAT
+0380/*
+0390END

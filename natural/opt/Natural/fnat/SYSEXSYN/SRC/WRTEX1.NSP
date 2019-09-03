@@ -1,0 +1,23 @@
+0010** Example 'WRTEX1': WRITE (with '=', 'text', '/')
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 EMPL-VIEW VIEW OF EMPLOYEES
+0050  2 FULL-NAME
+0060    3 FIRST-NAME
+0070    3 MIDDLE-I
+0080    3 NAME
+0090  2 CITY
+0100  2 COUNTRY
+0110END-DEFINE
+0120*
+0130LIMIT 1
+0140READ EMPL-VIEW BY NAME
+0150  /*
+0160  WRITE NOTITLE
+0170        '=' NAME '=' FIRST-NAME '=' MIDDLE-I //
+0180        'L O C A T I O N' /
+0190        'CITY:   ' CITY    /
+0200        'COUNTRY:' COUNTRY //
+0210  /*
+0220END-READ
+0230END

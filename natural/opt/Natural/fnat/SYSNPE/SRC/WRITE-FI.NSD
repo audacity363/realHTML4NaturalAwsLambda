@@ -1,0 +1,242 @@
+0010DB: 148 FILE: 204  - WRITE-FILE                       DEFAULT SEQUENCE:
+0020                              Cataloged by STL      on 2013-08-28 10:28:33
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2013-08-28 10:10:03
+0080*      by user ESY353
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 FN FUNCTION                          A    8    D Function to be perfo
+0250*      Function to be performed:
+0260*      blank   write a record
+0270*      (default)
+0280*      CLOSE   all records have
+0290*      been written
+0300  1 A1 DSNAME                            A   54    D Fully qualified data
+0310*      Fully qualified data set name.
+0320*      For BS2000, fully qualified
+0330*      file name. Enter &TEMP.name
+0340*      to select a temporary data set
+0350*      or file as specified in the
+0360*      ENTIRE SYSTEM SERVER startup
+0370*      parameter module. These
+0380*      temporary data sets are freed
+0390*      when the user logs off. (Not
+0400*      supported in BS2000.)
+0410  1 A4 RECORD                            A  253    D Record to be written
+0420*      Record to be written.
+0430  1 A5 RECORD-LENGTH                     N  5.0    D Length of record (us
+0440*      Length of record (used only
+0450*      if record format is variable).
+0460*      May be ommitted in BS2000.
+0470  1 A6 SEGMENT-NUMBER                    N  5.0    D Number of segment.
+0480*      Number of segment.
+0490*      (If SEGMENT-NUMBER = 1,
+0500*      new logical record is started;
+0510*      if SEGMENT-NUMBER > 1,
+0520*      segment is a continuation.)
+0530  1 AB SEGMENT-LENGTH                    N  3.0    D Length of segment.
+0540*      Length of segment.
+0550  1 AX UPDATE-INPLACE                    A    3    D YES = perform UPDATE
+0560*      YES = perform UPDATE-INPLACE
+0570*      function.
+0580  1 ID IDENTIFIER                        A    8    D Needed if multiple W
+0590*      Needed if multiple WRITE-FILE
+0600*      calls are executing in
+0610*      parallel, as requests for the
+0620*      same file must have the same
+0630*      identifier.
+0640  1 AU DISP                              A    3    D Disposition of data
+0650*      Disposition of data set /file.
+0660*      MOD = Add records at end of
+0670*      data set /file
+0680*      NEW = Create new data set /
+0690*      file (MVS/BS2000)
+0700*      Overwrite existing file
+0710*      contents(VSE SAM ESDS)
+0720*      OLD = Same as MOD
+0730*      (VSE SAM ESDS Default)
+0740*
+0750*      Fields common to MVS and VSE
+0760*
+0770  1 A2 VOLSER                            A    6    D Volume serial number
+0780*      Volume serial number.
+0790*      (Required if data set is not
+0800*      cataloged.)
+0810  1 A3 MEMBER                            A   10    D Member name.
+0820*      Member name.
+0830  1 AM LRECL                             B    2    D Logical record lengt
+0840*      Logical record length.
+0850*      Under MVS:
+0860*      needed only for tape data sets
+0870*      which do not have a standard
+0880*      label.
+0890*      Under VSE:
+0900*      needed if RECFM=F;
+0910*      the default value is 80
+0920  1 AN BLKSIZE                           B    2    D Block size for data
+0930*      Block size for data set.
+0940*      Under MVS needed only for tape
+0950*      data sets which do not have
+0960*      a standard label.
+0970  1 AO RECFM                             A    2    D Record format of the
+0980*      Record format of the data set
+0990*      Under MVS:
+1000*      needed only for tape data sets
+1010*      which do not have a standard
+1020*      label.
+1030*      Under VSE:
+1040*      The default value is 'F'.
+1050  1 AS REPLACE                           A    3    D 'YES' - Add/replace
+1060*      'YES' - Add/replace module
+1070*      'NO'  - Add module. If it
+1080*      exists, error.
+1090*      'REP' - Replace module. If it
+1100*      does not exist, error.
+1110*
+1120*      Fields common to MVS and BS2000
+1130*
+1140  1 AA PASSWORD                          A    8    D Password for protect
+1150*      Password for protected data
+1160*      set / file
+1170  1 AL PRODUCT                           A    1    D 'P' if access method
+1180*      'P' if access method is
+1190*      PANVALET.
+1200*      'M' for LMS (BS2000).
+1210*      'L' for Librarian.
+1220  1 B4 KEY                               A  253    D ISAM / VSAM key.
+1230*      ISAM / VSAM key.
+1240  1 AY TAPE-UNLOAD                       A    3    D Unload TAPE during C
+1250*      Unload TAPE during CLOSE:
+1260*      YES   unload tape
+1270*      NO    tape is rewound and
+1280*      positioned to begin of
+1290*      tape (default)
+1300*
+1310*      MVS fields
+1320*
+1330  1 AV USER-DATA-LENGTH                  N  3.0    D Length of data for P
+1340*      Length of data for PDS member.
+1350*      (FUNCTION = 'CLOSE')
+1360  1 AW USER-DATA                         A  120    D User data for PDS me
+1370*      User data for PDS member.
+1380*      (FUNCTION = 'CLOSE')
+1390*      e.g. save date, size etc.
+1400  1 AW USER-DATA-HEX                     B  120    D User data for member
+1410*      User data for member
+1420*      in hexadecimal format.
+1430  1 AG BLOCK-TTR                         B    3    D Track value to start
+1440*      Track value to start writing.
+1450  1 AG BLOCK-TOKEN                       B    4    D Token of block to be
+1460*      Token of block to be written.
+1470  1 AP PRODUCT-OPTIONS                   A   80    D Options for LIBRARIA
+1480*      Options for LIBRARIAN access
+1490*      method.
+1500*
+1510*      VSE fields
+1520*
+1530  1 AH LIBRARY                           A    8    D Name of library.
+1540*      Name of library.
+1550  1 AI SUB-LIBRARY                       A    8    D Name of sublibrary.
+1560*      Name of sublibrary.
+1570  1 AJ MEMBER-TYPE                       A    8    D Member type.
+1580*      Member type.
+1590  1 AK VSAM-CATALOG                      A    8    D Name of the VSAM cat
+1600*      Name of the VSAM catalog where
+1610*      the library is kept.
+1620  1 A7 INLINE-DATA                       A    3    D For catalogued proce
+1630*      For catalogued procedures :
+1640*      (See LIBR CATALOG,DATA=YES|NO)
+1650*      YES - Input contains SYSIPT
+1660*      data.
+1670*      NO  - Input contains no SYSIPT
+1680*      data (DEFAULT).
+1690*      OFF - Switch off SYSIPT data
+1700*      flag for existing
+1710*      member.
+1720  1 A7 SYSIPT                            A    3    D For catalogued proce
+1730*      For catalogued procedures :
+1740*      (See LIBR CATALOG,DATA=YES|NO)
+1750*      YES - Input contains SYSIPT
+1760*      data.
+1770*      NO  - Input contains no SYSIPT
+1780*      data (Default).
+1790*      OFF - Switch off SYSIPT data
+1800*      flag for existing
+1810*      member.
+1820  1 A8 MSHP                              A    3    D As EXEC LIBR,PARM='M
+1830*      As EXEC LIBR,PARM='MSHP'
+1840*      YES - MSHP protection will
+1850*      be bypassed.
+1860*      NO  - MSHP protection will not
+1870*      be bypassed (DEFAULT).
+1880  1 A9 MEMBER-VIF                        A    3    D
+1890*
+1900*      BS2000 fields
+1910*
+1920  1 ES SYSTEM-CODE                       B    2      System error code.
+1930*      System error code.
+1940  1 A3 ELEMENT                           A   64    D Name of LMS element
+1950*      Name of LMS element to be
+1960*      written.
+1970  1 AJ ELEMENT-TYPE                      A    8    D Type of LMS element
+1980*      Type of LMS element to be
+1990*      written.
+2000  1 B3 ELEMENT-PASSWORD                  A    8    D Password for protect
+2010*      Password for protected LMS
+2020*      element. (LMS V2 or above)
+2030  1 B6 ELEMENT-VERSION                   A   24    D Version of LMS eleme
+2040*      Version of LMS element to be
+2050*      written.
+2060  1 BE RECORD-NUMBER                     N  9.0    D Number of record to
+2070*      Number of record to be written
+2080  1 B8 LMS-RESET-FLAG                    A    3    D If this field is spe
+2090*      If this field is specified
+2100*      with function CLOSE, all
+2110*      previous writes for this LMS
+2120*      element will be reset.
+2130  1 B9 ELEMENT-USER-DATE                 A   14    D Will be written as e
+2140*      Will be written as element
+2150*      information into LMS library.
+2160*      Format: YYYY-MM-DDaaaa
+2170*      where 'aaaa' can be
+2180*      any 4 character string
+2190  1 BA ELEMENT-USER-TIME                 A    8    D Will be written as e
+2200*      Will be written as element
+2210*      information into LMS library.
+2220*      Format: hh:mm:ss
+2230  1 BB DUPLICATE-KEY                     A    3    D Only for ISAM:
+2240*      Only for ISAM:
+2250*      YES   duplicate keys allowed
+2260*      NO    no duplicate keys
+2270*      allowed (default)
+2280  1 BD PAD                               N  2.0    D Only for ISAM:
+2290*      Only for ISAM:
+2300*      Padding factor (default = 15)
+2310  1 BZ ELEMENT-RECORD-TYPE               N  3.0    D Record type (LMS onl
+2320*      Record type (LMS only).
+2330  1 AT EXPIRATION-DATE                   A    5    D The file's new expir
+2340*      The file's new expiration
+2350*      date (YYDDD).
+2360  1 DT EXPIRATION-DATX                   D    6    D  Expiration date in
+2370*      Expiration date in NATURAL
+2380*      format.
+2390*
+2400*      End of WRITE-FILE
+2410*
+2420******DDM OUTPUT TERMINATED******

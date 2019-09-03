@@ -1,0 +1,193 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Utilities
+0030*
+0040*        NAT-DIRR
+0050*
+0060* DESCRIPTION
+0070*               This Program returnes all resource of a NATURAL
+0080*               LIBRARY
+0090*
+0100* AUTHOR        SAG   18.02.2004
+0110*
+0120* Version       8.3
+0130*
+0140* Copyright (c) 2004-2016 Software AG, Germany.  All rights reserved.
+0150*
+0160* HISTORY
+0170* USER    DATE       REASON
+0180* ------+------------+----------------------------------------------
+0190* SAG   ! 21.12.2004 ! Remove restrictions for binary types
+0200* ------+------------+----------------------------------------------
+0210*
+0220DEFINE DATA
+0230* ------------------------------------------- standard PDA for HTTP Api
+0240PARAMETER USING W3PARM
+0250* -------------------------------------------- definitions for HTTP Api
+0260LOCAL  USING W3CONST
+0270LOCAL  USING W3PINFO
+0280* ---------------------------------------------- parameter for USR1055N
+0290LOCAL
+03001 #VALUE              (A) DYNAMIC
+03101 #VALUE2             (A) DYNAMIC
+0320* ---------------------------------------------------- parameter W3FREE
+03301 #W3COUNT            (I4)
+03401 #W3COUNT-MAX        (I4)
+03501 #W3FREE             (I4)
+0360* -------------------------------------------------- internal parameter
+03701 #COL                (L)
+03801 IX                  (I4)
+03901 #FIRST              (N8) INIT <1>
+04001 #COUNT              (N8) INIT <99999999>
+04101 #OUTLINE            (N8) INIT <0>
+0420* --------------------------------------------------------- set exprire
+04301 #EXPIRES            (A29)
+04401 REDEFINE #EXPIRES
+0450  2 RDATE             (A17)
+0460  2 RTIME             (A8)
+0470  2 RZONE             (A4)
+04801 ATIME               (T)
+04901 ADATE               (D)
+05001 #ADDDAY             (I4) INIT <0>
+05101 LANG                (I4)
+0520* ------------------------------------------- parameter W3LIST-RESOURCE
+05301 #LIBRARY            (A) DYNAMIC      /* i /   name of the Library
+05401 #OBJECT-FROM        (A) DYNAMIC      /* i /m  name of the file
+05501 #LIST               (A/1:*) DYNAMIC  /*  o/   array of filenames
+0560* ----------------------------------------------- not binary Mime Types
+05701 II                  (I4)
+0580END-DEFINE
+0590* ------------------------------------------------------ error handling
+0600ON ERROR
+0610  PERFORM W3ERROR ##W3ERROR
+0620  PERFORM W3END ##RPC
+0630  ESCAPE ROUTINE
+0640END-ERROR
+0650* ======================================================== Main Program
+0660* ------------------------------------------------------- init HTML API
+0670PERFORM W3INIT ##RPC
+0680* --------------------------------------------- Library to be displayed
+0690PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC 'LIB' " " #LIBRARY
+0700IF #LIBRARY = " " THEN
+0710  #LIBRARY  := *LIBRARY-ID
+0720ELSE
+0730  EXAMINE #LIBRARY TRANSLATE INTO UPPER
+0740END-IF
+0750* --------------------------------------------------------- Start Value
+0760PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC 'START' " " #OBJECT-FROM
+0770IF #OBJECT-FROM EQ " " THEN
+0780  #OBJECT-FROM := '*.*'
+0790END-IF
+0800* ----------------------------------------- Start from this Line Number
+0810PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "FIRST" " " #VALUE
+0820IF *LENGTH(#VALUE) > 0 AND #VALUE IS (N8) THEN
+0830  #FIRST := VAL(#VALUE)
+0840ELSE
+0850  #FIRST := 1
+0860END-IF
+0870* ------------------------------------------ Read this ammount of Lines
+0880PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "COUNT" " " #VALUE
+0890IF *LENGTH(#VALUE) > 0 AND #VALUE IS (N8) THEN
+0900  #COUNT := VAL(#VALUE)
+0910ELSE
+0920  #COUNT := 99999999
+0930END-IF
+0940* ----------------------------------------------------- Set expire Date
+0950PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "EXPIRE" "P" #VALUE
+0960IF *LENGTH(#VALUE) > 0 THEN
+0970  IF #VALUE IS (N8) THEN
+0980    #ADDDAY := VAL(#VALUE)
+0990  END-IF
+1000*
+1010  ADATE := *DATX + #ADDDAY
+1020  ATIME := *TIMX
+1030  LANG  := *LANGUAGE
+1040   *LANGUAGE := 1
+1050  MOVE EDITED ADATE (EM=NNN', 'DD' 'LLL' 'YYYY) TO RDATE
+1060  MOVE EDITED ATIME (EM=HH:II:SS) TO RTIME
+1070  MOVE " GMT" TO RZONE
+1080   *LANGUAGE := LANG
+1090END-IF
+1100* --------------------------------------------- Set type of return Page
+1110PERFORM W3CONTENT-TYPE 'text/html'
+1120* ------------------------------------------- Set head of the HTML page
+1130#VALUE := "<!DOCTYPE 'HTML PUBLIC -//W3C//DTD HTML 3.2//EN'>"
+1140IF #ADDDAY > 0 THEN
+1150  COMPRESS #VALUE '<HTML><HEAD>' ##HTTP_NEWLINE
+1160    '<META HTTP-EQUIV="Expires" CONTENT="' #EXPIRES'">' ##HTTP_NEWLINE
+1170    '<TITLE>' INTO #VALUE LEAVING NO
+1180ELSE
+1190  COMPRESS #VALUE '<HTML><HEAD><TITLE>' INTO #VALUE
+1200END-IF
+1210*
+1220* --------------------------------- Page heading and start output table
+1230COMPRESS #VALUE 'List Resources From NATURAL Library</TITLE>'-
+1240  '<META HTTP-EQUIV="Content-Type" '-
+1250  'CONTENT="text/html; charset=iso-8859-1"></HEAD>'
+1260  ##HTTP_NEWLINE '<BODY BGCOLOR="#FFFFFF"><P>&nbsp;'-
+1270  "<H2 ALIGN='CENTER'><FONT COLOR='NAVY'>"-
+1280  'List Resources from NATURAL Library</FONT></H2>'-
+1290  "<BR><TABLE WIDTH='100%' BORDER='0' CELLPADDING='5' CELLSPACING='3'>"
+1300  ##HTTP_NEWLINE '<TR BGCOLOR="#999999"><TH COLSPAN="3">Library:'
+1310  #LIBRARY '- Start Value:' #OBJECT-FROM "</TH></TR>" ##HTTP_NEWLINE
+1320* ---------------------------------------- Headline of the output table
+1330  '<TR BGCOLOR="#999999"><TH>Resource</TH></TR>'
+1340  ##HTTP_NEWLINE INTO #VALUE
+1350PERFORM W3TEXTDYNAMIC #VALUE
+1360* ------------------------------------------------ CALL W3LIST-RESOURCE
+1370PERFORM W3LIST-RESOURCE #LIBRARY #OBJECT-FROM #LIST(*)
+1380*
+1390* ---------------------------------------------- Return library objects
+1400FOR IX = #FIRST TO *OCC(#LIST)
+1410* ------------------------------------------------- Display this 'page'
+1420  IF #OUTLINE <= #COUNT THEN
+1430    ADD 1 TO #OUTLINE
+1440* ------------------------------------------------------ Display source
+1450    IF #COL = TRUE THEN
+1460      #VALUE2 := "<TR BGCOLOR='#CCCCCC'><TD>"
+1470      #COL := FALSE
+1480    ELSE
+1490      #VALUE2 := "<TR><TD>"
+1500      #COL := TRUE
+1510    END-IF
+1520* --------------------------------------- Create link to display source
+1530    COMPRESS  #VALUE2 "<A HREF='NAT-RES?LIB=" #LIBRARY
+1540        "&SOURCE=" #LIST(IX) "'>" #LIST(IX) "</A></TD></TR>"
+1550      INTO #VALUE LEAVING NO
+1560*
+1570    PERFORM W3TEXTDYNAMIC #VALUE
+1580* -------------------------------------------- Check the written Output
+1590    PERFORM W3COUNTER #W3COUNT #W3COUNT-MAX #W3FREE
+1600    IF #W3FREE < 1500 THEN
+1610      #COUNT := #OUTLINE - 1
+1620    END-IF
+1630  ELSE
+1640    ESCAPE BOTTOM
+1650  END-IF
+1660END-FOR
+1670* -------------------------------------------------- close output table
+1680COMPRESS "</TABLE><BR>" ##HTTP_NEWLINE INTO #VALUE
+1690* -------------------------- Output to large, create 'next pages' index
+1700IF #COUNT < #OUTLINE OR #FIRST NE 1 THEN
+1710  COMPRESS #VALUE '<P ALIGN="CENTER"><I>Next Pages: ' INTO #VALUE
+1720  FOR IX = 1 TO *OCC(#LIST) STEP #COUNT
+1730    COMPRESS #VALUE "<A HREF='NAT-DIRR?LIB="
+1740      #LIBRARY "&FIRST=" IX "&COUNT=" #COUNT '">' IX
+1750      "</A>" ##HTTP_NEWLINE INTO #VALUE LEAVING NO
+1760  END-FOR
+1770  COMPRESS #VALUE '</I><BR>&nbsp;' ##HTTP_NEWLINE INTO #VALUE
+1780END-IF
+1790* -------------------------- Display current time/date and program name
+1800* ------------------------------------------------- and close HTML page
+1810PERFORM W3INFO ##W3INFO
+1820COMPRESS #VALUE "<TABLE BORDER='0' WIDTH='100%' CELLSPACING='0' "-
+1830  "CELLPADDING='5'>"
+1840  '<TR BGCOLOR="#00cc66"><TD>' *PROGRAM '&#32;-&#32;' ##W3INFO.LOG-TIME
+1850  "</TD><TD>" *OCC(#LIST) '&#32;objects found</TD>'
+1860  "<TD ALIGN='RIGHT'>" 'Natural'
+1870  "</TD></TR></TABLE></BODY></HTML>"
+1880INTO #VALUE LEAVING NO
+1890PERFORM W3TEXTDYNAMIC #VALUE
+1900* ------------------------------------------------------ close HTTP Api
+1910PERFORM W3END ##RPC
+1920* ================================================================= End
+1930END

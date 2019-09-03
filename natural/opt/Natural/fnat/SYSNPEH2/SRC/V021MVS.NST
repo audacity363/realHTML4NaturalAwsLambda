@@ -1,0 +1,13 @@
+0010&H View ADDRESS-SPACE
+0020&L
+0030&L
+0040#Zweck@    : Anzeige von Informationen aller aktiven Adressraeume.
+0050&L
+0060#System@   : z/OS.
+0070&L
+0080&L
+0090#Anwendung@: Dieser View kann zur Ueberwachung der Systemaktivitaeten
+0100             benutzt werden. Er liefert Informationen ueber alle AK-
+0110             TIVEN Adressraeume.
+0120&L
+0130#Anmerkung@:

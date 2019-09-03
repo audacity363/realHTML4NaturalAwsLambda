@@ -1,0 +1,62 @@
+0010Initialize the Natural Reporter interface
+0020.
+0030Documentation ......... USR1059T    /*  Text object
+0040Interface ............. USR1059N    /*  Cataloged subprogram
+0050Example Program ....... USR1059P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. REPORTER
+0100.
+0110Keywords .............. +MOD-NAT-8.3.8, INITIALIZE, REPORTER
+0120.
+0130Function .............. This interface initializes the Natural Reporter
+0140                        interface and must be called before any
+0150                        interface is using this interface.
+0160.
+0170.
+0180Parameters
+0190----------
+0200Define the following parameters with the DEFINE DATA statement:
+0210.
+0220Output ..... RETURN-CODE (I4)
+0230                    Return code. Set to zero if the interface
+0240                    succeeded, otherwise set to a non-zero
+0250                    error code, which can be one of the
+0260                    following:
+0270
+0280                    -2  : file not found. Indicates that a
+0290                          support library needed for the
+0300                          initialization could not be
+0310                          dynamically loaded, and is most
+0320                          probably the symptom of an
+0330                          incomplete or incorrect NATURAL
+0340                          installation
+0350.
+0360                    -3  : proc not found. Indicates that a
+0370                          procedure in a dynamically-loaded
+0380                          support library cannot be found.
+0390                          Possible cause: version mismatch.
+0400                          (check executable file search path)
+0410.
+0420                    -11 : general error. Indicates non-specific
+0430                          error in dynamically-loaded support
+0440                          library
+0450.
+0460                    -99 : unsupported machine class. The reporter
+0470                          runs only under Windows.
+0480.
+0490.
+0500Interface Call
+0510--------------
+0520Use the interface with the CALLNAT statement:
+0530.
+0540CALLNAT 'USR1059N' RETURN-CODE
+0550.
+0560.
+0570Using the Application Programming Interface:
+0580--------------------------------------------
+0590Copy the subprogram USR1059N to the library SYSTEM or the steplib
+0600library respectively, or to the required library.
+0610.
+0620*****  End of description  *****

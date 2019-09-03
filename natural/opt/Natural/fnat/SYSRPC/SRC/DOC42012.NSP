@@ -1,0 +1,250 @@
+0010/*( Documentation for RPC42012
+0020/*
+0030/* Function ... Evaluate the parameters of a GP (generated program)
+0040/*
+0050/* Keywords ... GP, parameter
+0060/*
+0070/* Products ... NAT42, NUX62, NGU62
+0080/*
+0090/* Resp. ...... NAu
+0100/*
+0110/* Created .... March 2006
+0120/* Modified ... 13.Apr.2007
+0130/*
+0140/**************
+0150/*
+0160/* Interface Program Description:
+0170/* ------------------------------
+0180/*  The interface returns the number and format/length of parameters
+0190/*  as well as dimensions information from an object of type Subprogram
+0200/*  or Parameter-Data-Area.
+0210/*
+0220/* Parameter Description:
+0230/* ----------------------
+0240/*  Parameter:
+0250/*   Input ... LIB     (A8)   *  - library name
+0260/*             DBID    (I4)      - database ID
+0270/*             FNR     (I4)      - file number
+0280/*             PASSWD  (A8)      - password for DB file
+0290/*             CIPHER  (N8)      - cipher code for DB file
+0300/*             PNAME   (A8)   *  - name of subprogram
+0310/*             MAXDATA (I4)   *  - max. number parameters to be returned
+0320/*
+0330/*  Output ... MAXDATA (I4)      - number of parameters returned
+0340/*             SHOWP   (1:*)     - found parameters (no redefines)
+0350/*              .VATTR     (A1)  - attributes: D - Dynamic
+0360/*                                             G - Group
+0370/*                                             N - Normal
+0380/*                                             V - variable array (in subprograms only
+0390/*                                             X - X-array of static var.
+0400/*                                             Y - X-array of dyn. var.)
+0410/*              .VTYP      (A1)  - type (A, N, P, I, ...)
+0420/*              .VLEN      (I4)  - length (1 ... 2?30, depends on type)
+0430/*              .VPREC     (I4)  - precision (0 ... 7, depends on type)
+0440/*              .VDIMA     (I4)  - occurrences for dimension 1
+0450/*              .VDIMB     (I4)  - occurrences for dimension 2
+0460/*              .VDIMC     (I4)  - occurrences for dimension 3
+0470/*              .LEVEL     (I1)  - level
+0480/*              .CALL-TYPE (A1)  - call type direction (M,I)
+0490/*              .DIMA-LB   (I4)  - lower bound for dimension 1
+0500/*              .DIMB-LB   (I4)  - lower bound for dimension 2
+0510/*              .DIMC-LB   (I4)  - lower bound for dimension 3
+0520/*              .DIMA-UB   (I4)  - upper bound for dimension 1
+0530/*              .DIMB-UB   (I4)  - upper bound for dimension 2
+0540/*              .DIMC-LB   (I4)  - upper bound for dimension 3
+0550/*              .VNAME (A) DYN.  - group name or variable name
+0560/*             TEXT (A) DYNAMIC  - message: "OK" if no error occurred
+0570/*                                 error message text in case of an error
+0580/*             PRET (I4)         - return code
+0590/*
+0600/*  Description:
+0610/*             The input parameters marked with '*' are evaluated on
+0620/*             mainframe NAT41 or higher only.
+0630/*             DBID and FNR are returned, if they are not specified.
+0640/*             PASSWD and CIPHER are for future use on OpenSystems.
+0650/*             MAXDATA is input to indicate how many parameters are
+0660/*               expected by the calling program. However the data is
+0670/*               returned anyway but the OK-Message has an additional
+0680/*               part, unless MAXDATA=0, indicating MAXDATA in output
+0690/*               is bigger than expected.
+0700/*             TEXT contains 'OK' if all parameters could be returned
+0710/*               and no error occurred.
+0720/*
+0730/*             .VDIM: there is a special meaning of negative indices
+0740/*               -1: array is of type (1:V)
+0750/*               -2: array is of type (*: .DIM-UB)
+0760/*               -3: array is of type (.DIM-LB :*)
+0770/*             .DIM-LB, .DIM-UB the characters 'V', '*' are coded as -1
+0780/*
+0790/*  Possible errors on both mainframes or open systems:
+0800/*      Code  Message
+0810/*        0   'OK'
+0820/*       24   'CMGCNP4 returned unknown code:' PRET
+0830/*            or 'Unknown error.'
+0840/*
+0850/*  Possible error messages on mainframes:
+0860/*        2   'Invalid option.'
+0870/*        3   'No entries found.'
+0880/*        4   'No symbol table.'
+0890/*        7   'Output buffer missing.'
+0900/*        8   'Unable  load/locate symbol table.'
+0910/*        9   'Unable  load object.'
+0920/*       10   'Line not in module.'
+0930/*       11   'Invalid system file version.'
+0940/*
+0950/* Possible error messages on open systems:
+0960/*       16   'CMGCNP4: illegal parameter (MAXDATA invalid).'
+0970/*       17   'GP does not exist.'
+0980/*       18   'Wrong object type (only subprogram or PDA are supported).'
+0990/*       19   'CMGCNP4: internal error (bad GP).'
+1000/*       20   'More data than' MAXDATA 'are available (overflow).'
+1010/*       21   'CMGCNP4: bad object version.'
+1020/*       22   'CMGCNP4: wrong number of parameters.'
+1030/*       23   'CMGCNP4: parameter' #RET-N2 'has wrong type/length.'
+1040/*
+1050/* Messages prefixed with 'CMGCNP4:' are usually not seen within an
+1060/* application.
+1070/***********************************************************************
+1080/*)
+1090DEFINE DATA
+1100LOCAL
+11101 P#INTERFACE
+1120  2 LIB     (A8)    /* IN
+1130  2 DBID    (I4)    /* INOUT
+1140  2 FNR     (I4)    /* INOUT
+1150  2 PASSWD  (A8)    /* IN
+1160  2 CIPHER  (N8)    /* IN
+1170  2 PNAME   (A8)    /* IN  name of subprogram or PDA
+1180  2 MAXDATA (I4)    /* I/O, IN: max. parameters;
+1190                    /*     OUT: parameters found
+1200  2 SHOWP(1:*)      /* OUT parameters found (no redefines)
+1210    3 VATTR    (A1) /* OUT variable attributes (normal/dynamic/group...)
+1220    3 VTYP     (A1) /* OUT variable type (A, N, P, I, ...)
+1230    3 VLEN     (I4) /* OUT variable length (1 ... 2?30, depends on type)
+1240    3 VPREC    (I4) /* OUT variable precision (0 ... 7, depends on type)
+1250    3 VDIMA    (I4) /* OUT occurrences for dimension 1
+1260    3 VDIMB    (I4) /* OUT occurrences for dimension 2
+1270    3 VDIMC    (I4) /* OUT occurrences for dimension 3
+1280    3 LEVEL    (I1) /* OUT level
+1290    3 CALL-TYPE(A1) /* OUT call type direction
+1300    3 DIMA-LB  (I4) /* OUT lower bound for dimension 1
+1310    3 DIMB-LB  (I4) /* OUT lower bound for dimension 2
+1320    3 DIMC-LB  (I4) /* OUT lower bound for dimension 3
+1330    3 DIMA-UB  (I4) /* OUT upper bound for dimension 1
+1340    3 DIMB-UB  (I4) /* OUT upper bound for dimension 2
+1350    3 DIMC-UB  (I4) /* OUT upper bound for dimension 3
+1360    3 VNAME    (A) DYNAMIC /* OUT variable/group name
+1370  2 TEXT    (A) DYNAMIC  /* OUT (error) message text
+1380  2 PRET    (I4)    /* OUT return code
+1390/*
+1400LOCAL /*************************************************
+14101 #I  (I4)
+14201 #A  (A40)
+14301 #A1 (A)  DYNAMIC
+14401 #A2 (A)  DYNAMIC
+14501 #A3 (A)  DYNAMIC
+1460/*
+14701 C_IDX_V  (N2) CONST <-1> /* var. index for V-array
+14801 C_IDX_X_L(N2) CONST <-2> /* var. lower index for X-array
+14901 C_IDX_X_U(N2) CONST <-3> /* var. upper index for X-array
+1500END-DEFINE
+1510*
+1520DEFINE WINDOW ASK-PARM
+1530  SIZE 12*40
+1540  BASE 12/21
+1550  CONTROL SCREEN
+1560*
+1570*  initialize input values
+1580*
+1590MOVE *LIBRARY-ID TO LIB
+1600*
+1610REPEAT
+1620  RESET TEXT
+1630  INPUT WINDOW='ASK-PARM' (AD=MT )
+1640    'Generate Client Stub Routine'
+1650    /  '    Please enter'
+1660    // '      Program Name ' PNAME
+1670    /  '      Library      ' LIB
+1680    /  '      DBID         ' DBID
+1690    /  '      File number  ' FNR
+1700    /  '      Password     ' PASSWD (AD=N)
+1710    // 'Enter %% to exit.'
+1720  /*
+1730  /* read the symbol table
+1740  /*
+1750  CALLNAT 'RPC42012' P#INTERFACE
+1760  /*
+1770  IF  TEXT NE SCAN 'OK'
+1780  THEN
+1790    IF TEXT = ' '
+1800    THEN
+1810      WRITE 'No parameter found, module could be ' -
+1820        'from a newer Natural version.'
+1830    ELSE
+1840      WRITE 'Error reading parameter definition:' TEXT(AL=50)
+1850    END-IF
+1860    ESCAPE TOP
+1870  END-IF
+1880  /*
+1890  WRITE TITLE LEFT  'DOC42012: Symbol Table Output'(AD=I)
+1900    // 'PNAME    LIB        DBID    FNR MAXDATA  Ret. TEXT'(AD=I)
+1910    /  PNAME LIB DBID(NL=5) FNR(NL=5) MAXDATA(NL=6) PRET(NL=4) TEXT(AL=30)
+1920    // ' (L=Level, A=Attribute, D=Call-type direction, T=Var.type)'
+1930    /  '  L A D T      Length   Precision Name (Dimensions)'(AD=I)
+1940  FOR #I 1 MAXDATA
+1950    RESET #A
+1960    REDUCE DYNAMIC #A1 TO 0
+1970    REDUCE DYNAMIC #A2 TO 0
+1980    REDUCE DYNAMIC #A3 TO 0
+1990    /* 1
+2000    IF VDIMA(#I) NE 0
+2010    THEN
+2020      DECIDE ON FIRST VALUE OF VDIMA(#I)
+2030        VALUE C_IDX_V   COMPRESS '1:V'                    INTO #A1 LEAVING NO SPACE
+2040        VALUE C_IDX_X_L COMPRESS NUMERIC '*:' DIMA-UB(#I) INTO #A1 LEAVING NO SPACE
+2050        VALUE C_IDX_X_U COMPRESS NUMERIC DIMA-LB(#I) ':*' INTO #A1 LEAVING NO SPACE
+2060        NONE VALUE
+2070             COMPRESS NUMERIC DIMA-LB(#I) ':' DIMA-UB(#I) INTO #A1 LEAVING NO SPACE
+2080      END-DECIDE
+2090      /* 2
+2100      IF VDIMB(#I) NE 0
+2110      THEN
+2120        COMPRESS #A1 ',' INTO #A1 LEAVING NO SPACE
+2130        DECIDE ON FIRST VALUE OF VDIMB(#I)
+2140          VALUE C_IDX_V   COMPRESS '1:V'                    INTO #A2 LEAVING NO SPACE
+2150          VALUE C_IDX_X_L COMPRESS NUMERIC '*:' DIMB-UB(#I) INTO #A2 LEAVING NO SPACE
+2160          VALUE C_IDX_X_U COMPRESS NUMERIC DIMB-LB(#I) ':*' INTO #A2 LEAVING NO SPACE
+2170          NONE VALUE
+2180              COMPRESS NUMERIC DIMB-LB(#I) ':' DIMB-UB(#I) INTO #A2 LEAVING NO SPACE
+2190        END-DECIDE
+2200        /* 3
+2210        IF VDIMC(#I) NE 0
+2220        THEN
+2230          COMPRESS #A2 ',' INTO #A2 LEAVING NO SPACE
+2240          DECIDE ON FIRST VALUE OF VDIMC(#I)
+2250            VALUE C_IDX_V   COMPRESS '1:V'                    INTO #A3 LEAVING NO SPACE
+2260            VALUE C_IDX_X_L COMPRESS NUMERIC '*:' DIMC-UB(#I) INTO #A3 LEAVING NO SPACE
+2270            VALUE C_IDX_X_U COMPRESS NUMERIC DIMC-LB(#I) ':*' INTO #A3 LEAVING NO SPACE
+2280            NONE VALUE
+2290                COMPRESS NUMERIC DIMC-LB(#I) ':' DIMC-UB(#I) INTO #A3 LEAVING NO SPACE
+2300          END-DECIDE
+2310        END-IF /* 3
+2320      END-IF /* 2
+2330      COMPRESS '(' #A1 #A2 #A3 ')' INTO #A LEAVING NO SPACE
+2340    END-IF /* 1
+2350    /*
+2360    COMPRESS VNAME(#I) #A INTO #A
+2370    /*
+2380    WRITE
+2390      LEVEL  (#I)(NL=2)  /* OUT level
+2400      VATTR  (#I)        /* OUT var. attributes
+2410                         /* (Normal/Dynamic/V-array/X-array)
+2420      CALL-TYPE (#I)
+2430      VTYP   (#I)        /* OUT var. type (A, N, P, I, ...)
+2440      VLEN   (#I)        /* OUT var. length (1 ... 2?30, depends on type)
+2450      VPREC  (#I)        /* OUT var. precision (0 ... 7, depends on type)
+2460      #A                 /* contains dimensions, if any
+2470  END-FOR
+2480END-REPEAT
+2490END
+2500

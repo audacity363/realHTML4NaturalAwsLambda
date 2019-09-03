@@ -1,0 +1,17 @@
+0010&H View IDCAMS
+0020&L
+0030&L
+0040#Purpose@: Run IDCAMS utility
+0050&L
+0060&L
+0070#OpSys@  : z/OS
+0080&L
+0090&L
+0100#USAGE@  : Retrieve information regarding datasets using IDCAMS.
+0110
+0120&L
+0130&L
+0140#Notes@  :
+0150
+0160
+0170

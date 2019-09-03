@@ -1,0 +1,100 @@
+0010* Copy Spool Data Set to Library Member
+0020*
+0030DEFINE DATA
+0040   GLOBAL USING TUTO
+0050   LOCAL  USING RSPOOL-L
+0060   LOCAL 1 WRITE-FILE VIEW OF WRITE-FILE
+0070            2 ERROR-CODE
+0080            2 ERROR-TEXT
+0090            2 LIBRARY
+0100            2 SUB-LIBRARY
+0110            2 VSAM-CATALOG
+0120            2 MEMBER
+0130            2 MEMBER-TYPE
+0140            2 RECORD
+0150            2 MSHP
+0160            2 VOLSER
+0170            2 DSNAME
+0180   LOCAL  1 #JOBN      (N5)
+0190          1 #JOB       (A8)
+0200          1 #TYPE      (A2)
+0210          1 #DS        (N3)
+0220          1 #SEL       (A1/1:5)
+0230          1 #CODE      (A2/1:5) CONST (1) <'CC'>
+0240                                      (2) <'RD'>
+0250                                      (3) <'LS'>
+0260                                      (4) <'PU'>
+0270                                      (5) <'XM'>
+0280          1 #I         (I1)
+0290END-DEFINE
+0300*
+0310REPEAT
+0320*
+0330   INPUT (AD=MILT'_' IP=OFF ZP=OFF)
+0340     // ##TITLE (AD=OI IP=OFF)
+0350      / 'from' (I)
+0360      / '  Job name.........:' #JOB
+0370      / '  Job number.......:' #JOBN
+0380      / '  Mark spool type..:' #SEL(1) 'CC' (I) 'completion codes'
+0390                         / 21X #SEL(2) 'RD' (I) 'reader queue'
+0400                         / 21X #SEL(3) 'LS' (I) 'list queue'
+0410                         / 21X #SEL(4) 'PU' (I) 'punch queue'
+0420                         / 21X #SEL(5) 'XM' (I) 'transmit queue'
+0430      / '  Data set number..:' #DS
+0440      / 'to' (I)
+0450      / '  Dsname.........:' WRITE-FILE.DSNAME
+0460      / '  Library........:' WRITE-FILE.LIBRARY
+0470      / '  Sub library....:' WRITE-FILE.SUB-LIBRARY
+0480      / '  Member.........:' WRITE-FILE.MEMBER
+0490      / '  Member type....:' WRITE-FILE.MEMBER-TYPE
+0500      / '  Volser ........:' WRITE-FILE.VOLSER
+0510      / '  VSAM catalog...:' WRITE-FILE.VSAM-CATALOG
+0520      / '  MSHP bypass ...:' WRITE-FILE.MSHP
+0530*
+0540   IF SELECTION NOT UNIQUE #SEL (*)
+0550      REINPUT *1011 MARK *#SEL (1)
+0560   ELSE
+0570      FOR #I = 1 TO 5
+0580          IF #SEL (#I) NE ' '
+0590             ASSIGN #TYPE = #CODE (#I)
+0600             ESCAPE BOTTOM
+0610          END-IF
+0620      END-FOR
+0630   END-IF
+0640*
+0650   FIND READ-SPOOL WITH JOB-NAME   = #JOB
+0660                    AND JOB-NUMBER = #JOBN
+0670                    AND TYPE       = #TYPE
+0680                    AND DATA-SET   = #DS
+0690                    AND NODE       = ##NODE
+0700      IF ERROR-CODE > 0
+0710         REINPUT ERROR-TEXT
+0720      END-IF
+0730*
+0740      PROCESS WRITE-FILE USING LIBRARY      = WRITE-FILE.LIBRARY
+0750                           ,   SUB-LIBRARY  = WRITE-FILE.SUB-LIBRARY
+0760                           ,   VSAM-CATALOG = WRITE-FILE.VSAM-CATALOG
+0770                           ,   MEMBER       = WRITE-FILE.MEMBER
+0780                           ,   MEMBER-TYPE  = WRITE-FILE.MEMBER-TYPE
+0790                           ,   RECORD       = READ-SPOOL.RECORD
+0800                           ,   NODE         = ##NODE
+0810                           ,   MSHP         = WRITE-FILE.MSHP
+0820                           ,   VOLSER       = WRITE-FILE.VOLSER
+0830                           ,   DSNAME       = WRITE-FILE.DSNAME
+0840      IF WRITE-FILE.ERROR-CODE NE 0
+0850         REINPUT WRITE-FILE.ERROR-TEXT
+0860      END-IF
+0870*
+0880   END-FIND
+0890*
+0900   PROCESS WRITE-FILE USING FUNCTION = 'CLOSE'
+0910                        ,   NODE     = ##NODE
+0920   IF WRITE-FILE.ERROR-CODE NE 0
+0930      REINPUT WRITE-FILE.ERROR-TEXT
+0940   ELSE
+0950      REINPUT *1028
+0960   END-IF
+0970*
+0980END-REPEAT
+0990*
+1000END

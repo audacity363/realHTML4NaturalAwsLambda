@@ -1,0 +1,274 @@
+0010Maintain data area sources
+0020.
+0030Documentation ......... USR4201T    /*  Text object
+0040Interface ............. USR4201N    /*  Cataloged subprogram
+0050Example Program ....... USR4201P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. EDITOR
+0100.
+0110Keywords .............. +MOD-NAT-6.3.14,
+0120                        DATA AREA, GDA, FSEC ENABLED, LDA, PDA,
+0130                        SOURCE, SOURCE AREA
+0140.
+0150Function .............. This interface reads a data area source from
+0160                        the system file and writes it (as Copycode)
+0170                        into the source area (in DEFINE DATA or LAYOUT
+0180                        format) where it can be processed with
+0190                        e.g. USR1035N
+0200                        or
+0210                        reads the source area contents and writes it in
+0220                        internal data area format into system file.
+0230                        With OS6.3.14: support for FSEC switch
+0240.
+0250.
+0260Parameters
+0270----------
+0280Define the following parameters with the DEFINE DATA statement:
+0290.
+0300Input:
+0310P-Function (A1)              R = Read data area from the system file,
+0320                                 convert and write into source area
+0330                                 as copycode
+0340                             W = Read source from the source area,
+0350                                 convert it into internal data area
+0360                                 format and write it into the system
+0370                                 file as LDA, PDA or GDA
+0380P-Format (A1)                Target format for P-Function = 'R' and
+0390                             source format for P-Function = 'W':
+0400                             D = use DEFINE DATA format
+0410                             L = Use LAYOUT format (see below)
+0420                             For P-Function = 'W' and P-Format = 'D'
+0430                             the first line in the source area must
+0440                             start with 'DEFINE DATA'
+0450P-Object-Type        (A1)    For P-Function = 'W' only:
+0460                             Natural object type for the internal
+0470                             format (L/A/G)
+0480P-Object-Name        (A8)    Name of the data area
+0490P-Object-Library     (A8)    Library name for the data area
+0500P-Library-DBID       (N5)    DBID for the library or 0
+0510P-Library-FNR        (N5)    FNR for the library or 0
+0520P-Library-Password   (A8)    Adabas password for the library
+0530P-Library-Cipher     (A8)    Adabas cipher code for the library
+0540P-Write-Error-Mode   (A1)    For P-Function = 'W' only:
+0550                             Error processing for errors during
+0560                             conversion into internal format:
+0570                             E = return an error message only
+0580                             T = return an error message and save
+0590                                 source area as a Natural Text member
+0600Output:
+0610P-Return-Code        (I4)    Result:
+0620                                0 = OK
+0630                                1 = Invalid function code
+0640                                2 = Object name missing
+0650                                3 = Library name missing
+0660                                4 = Invalid DBID/FNR combination
+0670                                5 = Source is not a data area source
+0680                                6 = Invalid object name
+0690                                7 = Invalid format
+0700                                8 = Invalid object type
+0710                             1000 = Source not found in library
+0720                             1100 = First line in source area must
+0730                                    start with 'DEFINE DATA'
+0740                             1101 = First line in source area is
+0750                                    not in LAYOUT format.
+0760                             2000 = Error during conversion
+0770                             2001 = Error during conversion, source
+0780                                    area could not be saved
+0790                             3000 = Error during write into source
+0800                                    area
+0810                             3100 = Natural runtime error during
+0820                                    write into source area
+0830                             4000 = Error during read from source
+0840                                    area
+0850                             4100 = Natural runtime error during
+0860                                    read from source area
+0870                             5000 = Error during save source area
+0880                                    as Text member
+0890                               <0 = Natural runtime errors
+0900                                    NSC check
+0910                                    -0106
+0920                                    -0806
+0930                                    -0807
+0940                                    -0839
+0950                                    -0972
+0960                                    -4891
+0970P-Return-Message     (A250)  Filled when P-Return-Code <> 0
+0980.
+0990Input:
+1000P-Fsec-DBID          (N05) OPTIONAL Fsec-dbid
+1010P-Fsec-FNR           (N05) OPTIONAL Fsec-fnr
+1020P-Fsec-PSW           (A08) OPTIONAL Fsec password
+1030P-Fsec-CIP           (N08) OPTIONAL Fsec ciphercode
+1040.
+1050.
+1060Description of the LAYOUT format:
+1070---------------------------------
+1080The LAYOUT format has a fixed structure with a line size of 96 bytes.
+1090The first byte indicates the kind of source line:
+1100  'D'  = data definition line
+1110  'C'  = comment line
+1120  'A'  = array index line
+1130  'F'  = free format init line
+1140  'S'  = single value init line
+1150  'X'  = Edit mask and header definition line
+1160.
+1170The structure of the remaining line depends on the kind of source line.
+1180.
+1190Structure of a data definition line
+1200-----------------------------------
+12101 Data-Definition-Line
+1220  2 Record-Type (A1) /* = 'D'
+1230  2 INDIC (A1)       /* Indicator, possible values:
+1240                     /* ' ' = default
+1250                     /* 'I' = init value defined in subsequent line(s)
+1260                     /* 'M' = EM/HD defined in subsequent line(s)
+1270                     /* 'S' = init value and EM/HD defined in subsequent
+1280                     /*       line(s)
+1290                     /* 'V' = call by value
+1300                     /* 'W' = call by value - result
+1310                     /* 'X' = call by value optional
+1320                     /* 'Y' = call by value - result optional
+1330                     /* 'Z' = call by reference optional
+1340  2 Type-of-Definition (A1)
+1350                     /* Type of this variable:
+1360                     /* O - handle
+1370                     /* B - block
+1380                     /* C - constant/counter variable
+1390                     /* R - redefine
+1400                     /* V - view
+1410                     /* P - periodic group
+1420                     /* G - group
+1430                     /* M - multiple field
+1440                     /* * - comment line
+1450  2 Level (A2)       /* Two byte level number
+1460  2 Variable-Name (A32)
+1470                     /* Name of the variable
+1480  2 Variable-Format (A1)
+1490                     /* Format of the variable
+1500  2 Variable-Length (A10)
+1510                     /* Length of the variable or 'DYNAMIC'
+1520  2 Miscellaneous-Field (A32)
+1530                     /* May contain (in this sequence):
+1540                     /* - array index and/or
+1550                     /* - init value and/or
+1560                     /* - EM/HD definition and/or
+1570                     /* - comment
+1580.
+1590A data definition line may be followed by
+1600  - one array index line
+1610  - free format init lines or
+1620    single value init lines (when INDIC = 'I' or = 'S')
+1630  - one Edit mask and header definition line (when INDIC = 'M' or = 'S')
+1640.
+1650Structure of a comment line
+1660---------------------------
+16701 Comment-Line
+1680  2 Record-Type (A1)            /* = 'C'
+1690  2 INDIC (A1)                  /* = ' '
+1700  2 Type-of-Definition (A1)     /* = '*'
+1710  2 Level (A2)                  /* 1st part of comment line
+1720  2 Variable-Name (A32)         /* 2nd part of comment line
+1730  2 Variable-Length (A10)       /* 3rd part of comment line
+1740  2 Miscellaneous-Field (A32)   /* 4th part of comment line
+1750.
+1760Structure of an array index line
+1770--------------------------------
+17801 Array-Index-Line
+1790  2 Record-Type (A1)   /* = 'A'
+1800  2 Array-Index (A75)  /* Array index definition without brackets
+1810.
+1820Structure of a free format init line
+1830------------------------------------
+18401 Free-Format-Init-Line
+1850  2 Record-Type (A1)      /* = 'F'
+1860  2 Free-Area (A22)       /* Not used
+1870  2 Free-Init-Value (A50) /* Init value
+1880.
+1890Note: Longer init values may be spread over several lines of type
+1900      Free-Format-Init-Line
+1910.
+1920Structure of a single value init line
+1930-------------------------------------
+19401 Single-Value-Init-Line
+1950  2 Record-Type (A1)      /* = 'S'
+1960  2 Array-Index (A22)     /* Array index or ' '
+1970  2 Free-Init-Value (A50) /* Init value
+1980.
+1990Note: Longer init values may be spread over several lines of type
+2000      Single-Value-Init-Line
+2010.
+2020Example for the LAYOUT format:
+2030------------------------------
+2040.
+2050D   1DATA-DEFINITION-VAR             A 123456789
+2060C *Comment-Line
+2070D   1ARRAY-INDEX-VAR                 A         1
+2080A(100000001:100000002,200000001:200000003)
+2090DI  1FREE-FORMAT-INIT                A       100
+2100F                      INIT
+2110F                      <'This is a free format init value'>
+2120DI  1SINGLE-VALUE-INIT               A       100
+2130F                      INIT
+2140F                      <'This is a single value init value'>
+2150DI  1FREE-FORMAT-ARRAY-INIT          A        10
+2160A(1:2)
+2170F                      INIT
+2180F                      (1) <'Free 1'>
+2190F                      (2) <'Free 2'>
+2200DI  1SINGLE-VALUE-ARRAY-INIT         A        10
+2210A(1:2)
+2220S(1)                   Single 1
+2230S(2)                   Single 2
+2240DM  1EDID-MASK-VARIABLE              A      1234
+2250XX¬¬¬¬¬X¬¬¬¬¬X¬¬¬¬¬X¬¬¬¬¬X¬¬¬¬¬X¬¬¬¬¬X
+2260.
+2270Example for the DEFINE DATA format:
+2280-----------------------------------
+2290.
+2300DEFINE DATA LOCAL
+2310 1 DATA-DEFINITION-VAR (A123456789)
+2320/* Comment-Line
+2330 1 ARRAY-INDEX-VAR (A1/100000001:100000002,200000001:200000003)
+2340 1 FREE-FORMAT-INIT (A100)
+2350INIT
+2360<'This is a free format init value'>
+2370 1 SINGLE-VALUE-INIT (A100)
+2380INIT
+2390<'This is a single value init value'>
+2400 1 FREE-FORMAT-ARRAY-INIT (A10/1:2)
+2410INIT
+2420(1) <'Free 1'>
+2430(2) <'Free 2'>
+2440 1 SINGLE-VALUE-ARRAY-INIT (A10/1:2) INIT
+2450(1) <'Single 1'>
+2460(2) <'Single 2'>
+2470 1 EDID-MASK-VARIABLE (A1234)  (EM=X¬¬¬¬¬X¬¬¬¬¬X¬¬¬¬¬X¬¬¬¬¬X¬¬¬¬¬X¬¬¬¬¬X)
+2480END-DEFINE
+2490.
+2500.
+2510.
+2520Interface Call
+2530--------------
+2540Use the interface with the CALLNAT statement:
+2550.
+2560 CALLNAT 'USR4201N'
+2570          P-Function         P-Format
+2580          P-Object-Type
+2590          P-Object-Name      P-Object-Library
+2600          P-Library-DBID     P-Library-FNR
+2610          P-Library-Password P-Library-Cipher
+2620          P-Write-Error-Mode
+2630          P-Return-Code      P-Return-Message
+2640          P-Fsec-DBID        P-Fsec-FNR
+2650          P-Fsec-PSW         P-Fsec-CIP
+2660.
+2670.
+2680Using the Application Programming Interface:
+2690--------------------------------------------
+2700Copy the subprogram USR4201N to the library SYSTEM or the steplib
+2710library respectively, or to the required library.
+2720.
+2730.
+2740*****  End of Description  *****

@@ -1,0 +1,52 @@
+0010* PROGRAM .. V841REI
+0020* Library .. SYSEXV
+0030* Version .. 8.4.1
+0040*
+0050* Functionality: Enhanced feature of the REINPUT Statement with MARK
+0060*                option.
+0070*
+0080************************************************************************
+0090DEFINE DATA LOCAL
+01001 #A (A20) INIT <'HELLO'>
+01101 #B (A20) INIT <'MARK STAMP'>
+01201 #REINPUT-DONE (L)
+0130END-DEFINE
+0140*
+0150FORMAT KD=ON
+0160SET KEY PF3  NAMED 'Exit'
+0170  PF12 NAMED 'Canc'
+0180*
+0190INPUT (IP=OFF PS=100 LS=200 AD=MI)
+0200  01T *TIMX  (AD=OTD)
+0210  21T '***** NATURAL 8.4.1 ENHANCEMENTS *****'
+0220  70T *DATX  (AD=OTD DF=L)
+0230  /
+0240  01T 'User'
+0250  06T *USER  (AD=OILT )
+0260  26T '- Statement Enhancements -'(I)
+0270  64T 'Program'
+0280  72T *PROGRAM (AD=OI)
+0290  ///
+0300  02T 'The MARK option in REINPUT specify a field in which the cursor'-
+0310  ' is to be placed' (I)
+0320  //
+0330  02T 'REINPUT ''Retype value'' MARK POSITION 3 IN *#B'
+0340  ///
+0350  02T '#A:' #A
+0360  //
+0370  02T '#B:' #B
+0380  ///
+0390  02T 'Press Enter to perform the REINPUT or PF3 to exit'
+0400IF *PF-KEY = 'PF3'
+0410  ESCAPE ROUTINE
+0420END-IF
+0430IF (*PF-KEY = 'PF12' OR= 'CLR')
+0440  CALLNAT 'UTILSTOP'
+0450END-IF
+0460*
+0470IF NOT #REINPUT-DONE
+0480  #REINPUT-DONE := TRUE
+0490  REINPUT 'Retype value' MARK POSITION 3 IN *#B
+0500END-IF
+0510
+0520END

@@ -1,0 +1,7 @@
+0010**DV          0008     V1DEVICE-NAMES                    DEVICE-NAMES
+0020**DD          0011N 3.0 2ERROR-CODE
+0030**DD          0012A  58 2ERROR-TEXT
+0040**DD          0013N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0014A   8 2NAME
+0060**DD          0015B   4 2TYPE
+0070**DD          0016B   2 2ADDRESS

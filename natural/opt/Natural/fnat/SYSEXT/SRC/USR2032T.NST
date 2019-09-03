@@ -1,0 +1,56 @@
+0010Support commit for CLOSE CONVERSATION
+0020.
+0030Documentation ......... USR2032T    /*  Text object
+0040Interface ............. USR2032N    /*  Cataloged subprogram
+0050Example Program ....... USR2032P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC
+0100.
+0110Keywords .............. CLIENT, CLOSE, CONVERSATION, RPC
+0120.
+0130Function .............. Set commit option for next CLOSE CONVERSATION
+0140.
+0150.
+0160Parameters
+0170----------
+0180Define the following parameters with the DEFINE DATA statement:
+0190.
+0200  None
+0210.
+0220.
+0230Interface Call
+0240--------------
+0250Use the interface with the CALLNAT statement:
+0260.
+0270CALLNAT 'USR2032N'
+0280.
+0290.
+0300Using the Application Programming Interface:
+0310--------------------------------------------
+0320Copy the subprogram USR2032N to the library SYSTEM or the steplib
+0330library respectively, or to the required library.
+0340.
+0350.
+0360The interface has to be called before the next CLOSE CONVERSATION
+0370statement is executed.
+0380.
+0390Functionality:
+0400--------------
+0410The commit option is set for the next CLOSE CONVERSATION statement.
+0420This means that an implicit END TRANSACTION is issued on the server
+0430side when the conversation is closed.
+0440.
+0450Notes:
+0460- By default a CLOSE CONVERSATION statement will cause an implicit
+0470  BACKOUT TRANSACTION on the server side.
+0480- The commit option applies to the next CLOSE CONVERSATION statement
+0490  executed by the client application. After the conversation(s) has
+0500  (have) been closed the default option is used again.
+0510- The Natural profile parameter setting ETEOP=ON (MF environments)
+0520  respectively OPRB=OFF (non-MF environments) must not be used on
+0530  the server side. These settings cause an implicit END TRANSACTION
+0540  at the end of each CALLNAT executed as part of a conversation.
+0550.
+0560***** End of Description *****

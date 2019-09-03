@@ -1,0 +1,64 @@
+0010* MAP2: PROTOTYPE
+0020* INPUT USING MAP 'XXXXXXXX'
+0030*     ##TITLE #DS #JOB #JOBN #SEL(*) #STRING
+0040DEFINE DATA PARAMETER
+00501 ##TITLE (A078)
+00601 #DS (N03.0)
+00701 #JOB (A008)
+00801 #JOBN (N07.0)
+00901 #SEL (A001/00001:00006)
+01001 #STRING (A050)
+0110END-DEFINE
+0120FORMAT PS=021 LS=080 ZP=OFF SG=OFF KD=ON  IP=OFF
+0130* MAP2: MAP PROFILES *****************************        410***********
+0140* .TTAAAMMOO   D I D I N D I D I        ?_)¬&:+(                       *
+0150* 023079        N0NNUCN             X        01 SYSPROF YL           1 *
+0160************************************************************************
+0170INPUT          (     IP=OFF                                           /*
+0180                                                                       )
+0190 002T ##TITLE  (AD=ODL ) /*.01D078 A078 .
+0200/
+0210/
+0220/
+0230 004T 'Job name ..........'
+0240 024T #JOB  (AD=MILT'_' CD=NE ) /*.99D008 A008 .
+0250/
+0260 004T 'Job number ........'
+0270 024T #JOBN  (AD=MILT'_' CD=NE ) /*.99U007 N07.0.
+0280/
+0290/
+0300 004T 'Mark Type .........'
+0310 024T #SEL (001)  (AD=MILT'_' CD=NE ) /*.99D001 A001 .
+0320   /* A1000060000100001000010000100001100006001000001H
+0330 026T 'SI SYSIN Data'
+0340/
+0350 024T #SEL (002)  (AD=MILT'_' CD=NE ) /*.99D001 A001 .
+0360 026T 'JL Input JCL'
+0370/
+0380 024T #SEL (003)  (AD=MILT'_' CD=NE ) /*.99D001 A001 .
+0390 026T 'SM System Messages'
+0400/
+0410 024T #SEL (004)  (AD=MILT'_' CD=NE ) /*.99D001 A001 .
+0420 026T 'SO SYSOUT Data'
+0430/
+0440 024T #SEL (005)  (AD=MILT'_' CD=NE ) /*.99D001 A001 .
+0450 026T 'CC Completion-Codes'
+0460/
+0470 024T #SEL (006)  (AD=MILT'_' CD=NE ) /*.99D001 A001 .
+0480 026T 'AL All'
+0490/
+0500/
+0510 004T 'Data set number ...'
+0520 024T #DS  (AD=MILT'_' CD=NE SG=ON ) /*.99D004 N03.0.
+0530/
+0540/
+0550 004T 'Search for ........'
+0560 024T #STRING  (AD=MILT'_' CD=NE ) /*.99D050 A050 .
+0570/
+0580/
+0590/
+0600/
+0610/
+0620* MAP2: VALIDATION *****************************************************
+0630* MAP2: END OF MAP *****************************************************
+0640END

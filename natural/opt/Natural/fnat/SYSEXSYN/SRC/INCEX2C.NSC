@@ -1,0 +1,28 @@
+0010** Example 'INCEX2C': INCLUDE (copycode used by INCEX2)
+0020************************************************************************
+0030* Transferred parameters from INCEX2:
+0040*
+0050* &1& : EMPL-VIEW
+0060* &2& : NAME
+0070* &3& : 'ARCHER'
+0080* &4& : 20
+0090* &5& : 'BAILLET'
+0100*
+0110*
+0120READ (&4&) &1&  BY &2&  = &3&
+0130  DISPLAY &2&
+0140  IF &2& = &5&
+0150    WRITE 5X 'LAST RECORD FOUND' &2&
+0160    STOP
+0170  END-IF
+0180END-READ
+0190*
+0200* Statements above will be completed to:
+0210*
+0220* READ (20) EMPL-VIEW  BY NAME  = 'ARCHER'
+0230*   DISPLAY NAME
+0240*   IF NAME = 'BAILLET'
+0250*     WRITE 5X 'LAST RECORD FOUND' NAME
+0260*     STOP
+0270*   END-IF
+0280* END-READ

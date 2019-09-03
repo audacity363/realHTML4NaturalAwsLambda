@@ -1,0 +1,15 @@
+0010**DV          0016     V1SEND-EMAIL                      SEND-EMAIL
+0020**DD          0019N 3.0 2ERROR-CODE                      /* Message code.
+0030**DD          0020A  58 2ERROR-TEXT                      /* Text describing message.
+0040**DD          0021N 5.0 2NODE                            /* Node ID (DBID).
+0050**DD          0022A  16 2NODE-NAME
+0060**DD          0023B   2 2SYSTEM-CODE                     /* System error code.
+0070**DD          0024A  10 2SYSTEM-MESSAGE-CODE
+0080**DD          0025A   8 2FUNCTION                        /* Function to be performed:
+0090**DD          0026A 128 2SUBJECT                         /* Subject of Email.
+0100**DD          0027A 253 2RECORD                          /* Record to be written.
+0110**DD I1 C     0028A 128M2RECIPIENT                       (1:20) /* Array of max. 20 recip
+0120**DD I1 C     0029A 128M2CC-RECIPIENT                    (1:20) /* Array of max. 20 recip
+0130**DD          0030A 128 2REPLY-TO                        /* Mail address for reply.
+0140**DD          0031A  54 2DSNAME                          /* Fully qualified data set name
+0150**DD          0032A   8 2IDENTIFIER                      /* Needed if multiple SEND-EMAIL

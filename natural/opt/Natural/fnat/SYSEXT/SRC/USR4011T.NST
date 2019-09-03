@@ -1,0 +1,67 @@
+0010Create A20 hash value for variable input
+0020.
+0030Documentation ......... USR4011T    /*  Text object
+0040Interface ............. USR4011N    /*  Cataloged subprogram
+0050Example Program ....... USR4011P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATA HANDLING
+0100.
+0110Keywords .............. HASH, NATSHA1, SECURITY
+0120.
+0130Function .............. This interface creates an A20 hash value for
+0140                        variable input
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+0210Input ......... FUNC    (I4) - Function code
+0220                               0 - Calc hash value of text
+0230                               1 - Init work area
+0240                               2 - Update hash value
+0250                               3 - Get hash value
+0260Input/Output .. CTX   (B156) - Work area; must not be changed
+0270.
+0280Input ......... H-TEXT   (A) - Text to be hashed (dynamic)
+0290                               H-TEXT may also be (B) DYNAMIC,
+0300                               because callnat is done by value
+0310.
+0320Output ........ HASH   (B20) - Hash value
+0330.
+0340.
+0350Interface Call
+0360--------------
+0370Use the interface with the CALLNAT statement:
+0380.
+0390CALLNAT 'USR4011N' FUNC CTX H-TEXT HASH
+0400.
+0410.
+0420Using the Application Programming Interface:
+0430--------------------------------------------
+0440Copy the subprogram USR4011N to the library SYSTEM or the steplib
+0450library respectively, or to the required library.
+0460.
+0470This interface creates an A20 hash value for variable input.
+0480A SHA-1 (secure hash algorithm 1) will be used. USR4011N calls a 3gl
+0490program NATSHA1. The SHA-1 implementation conforms to FIPS-180-1.
+0500It can be used to check if input (a string, a whole file, etc.)
+0510has been changed since the last generation of the A20 hash value.
+0520.
+0530There are 2 ways to use USR4011N, depending on the
+0540kind or amount of input (text) you want to hash.
+0550  1. Hashing of one piece of text (one call)
+0560     - Call function 0, the hash value will be
+0570       returned immediately.
+0580  2. Hashing of more than one piece of text
+0590     - Call function 1, to initialize calculation
+0600       of hash value. NOTE: Do not modify work
+0610       area (CTX) after init call.
+0620     - Call function 2 for each portion of text.
+0630     - Call function 3 to get the resulting
+0640       hash value.
+0650.
+0660.
+0670*****  End of Description  *****

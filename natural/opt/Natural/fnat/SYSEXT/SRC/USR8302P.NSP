@@ -1,0 +1,21 @@
+0010/* This program serves as example how to design a user-defined
+0020/* program to call 'USR8302N'
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+006001 WAIT-INTERVAL       (N5.3)
+0070END-DEFINE
+0080**********************
+0090SET KEY ALL
+0100/*
+0110INPUT (AD=MITL'_' IP=OFF)
+0120/// 18T 'Define a wait interval:' (I)
+0130  / 18T '-' (23) (I) /
+0140  / 18T 'Wait interval ..'  WAIT-INTERVAL
+0150/// 18T 'Press any PF-key to stop.'
+0160/*
+0170IF *PF-KEY = 'ENTR'
+0180  CALLNAT 'USR8302N' WAIT-INTERVAL
+0190END-IF
+0200/*
+0210END

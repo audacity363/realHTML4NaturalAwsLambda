@@ -1,0 +1,65 @@
+0010DB: 148 FILE: 020  - MAIN-STORAGE                     DEFAULT SEQUENCE:
+0020                              Cataloged by ESY352   on 2012-03-19 14:40:20
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2012-03-19 14:40:20
+0080*      by user ESY352
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A1 ADDRESS                           B    4    D Starting main storag
+0250*      Starting main storage address.
+0260*      For BS2000: address relative
+0270*      to memory pool start.
+0280  1 A2 LENGTH                            N  3.0    D Length of main stora
+0290*      Length of main storage to be
+0300*      retrieved (max is 250).
+0310  1 A3 OFFSET                            B    4    D Offset related to ad
+0320*      Offset related to address to
+0330*      be displayed.
+0340*      (Actual address accessed is
+0350*      ADDRESS + OFFSET.)
+0360  1 A4 AREA                              A  250    D Location to which st
+0370*      Location to which storage
+0380*      block will be returned.
+0390*
+0400*      MVS fields
+0410*
+0420  1 A5 JOB-NAME                          A    8    D Name of job which se
+0430*      Name of job which serves as
+0440*      address space identifier.
+0450*      (If omitted or blank,
+0460*      addresses in the common area
+0470*      are accessed.)
+0480  1 A1 ADDRESS-64BIT                     B    8    D Starting main storag
+0490*      Starting main storage address
+0500*      in 64-bit format (for z/OS).
+0510*
+0520*      BS2000 fields
+0530*
+0540  1 ES SYSTEM-CODE                       B    2      System error code.
+0550*      System error code.
+0560  1 B1 POOL-ID                           A   54    D Name of the MEMORY P
+0570*      Name of the MEMORY POOL.
+0580  1 B5 SCOPE                             A    6    D Scope of memory pool
+0590*      Scope of memory pool. Possible
+0600*      values: GLOBAL (default),
+0610*      GROUP, LOCAL.
+0620*
+0630*      End of MAIN-STORAGE
+0640*
+0650******DDM OUTPUT TERMINATED******

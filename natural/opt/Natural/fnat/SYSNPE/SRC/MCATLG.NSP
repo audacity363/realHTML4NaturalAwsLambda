@@ -1,0 +1,39 @@
+0010* Program   MCATLG
+0020* View      CATALOG
+0030*
+0040* Function  List Catalog Information
+0050*
+0060* ----------------------------------------------------------------------
+0070*
+0080DEFINE DATA
+0090   GLOBAL USING TUTO
+0100   LOCAL  USING CATALOGL
+0110   LOCAL
+012001  #DSNAME                    (A44)
+013001  #VOLSER                    (A6)
+0140END-DEFINE
+0150*
+0160REPEAT
+0170   INPUT  (AD=MIT'_')
+0180            ##TITLE (AD=OI IP=OFF)
+0190         // 'Dsname/Prefix :' (I) #DSNAME
+0200          / 'Volser .......:' (I) #VOLSER
+0210   IF #VOLSER = ' '
+0220      ASSIGN #VOLSER = '*'
+0230   END-IF
+0240*
+0250   WRITE TITLE ##TITLE (AD=OI) /
+0260*
+0270   FIND CATALOG WITH DSNAME = #DSNAME
+0280                AND  VOLSER = #VOLSER
+0290                 AND NODE   = ##NODE
+0300                 AND PREFIX = 'YES'
+0310      IF ERROR-CODE > 0
+0320         REINPUT ERROR-TEXT
+0330      END-IF
+0340*
+0350      DISPLAY DSNAME VOLSER CLASS SERIES
+0360*
+0370   END-FIND
+0380END-REPEAT
+0390END

@@ -1,0 +1,163 @@
+0010/*  Call external XSLT Processor
+0020/*  This program serves as an example how to design a user-defined
+0030/*  program to call 'USR6001N'
+0040/**********************************************************************
+0050DEFINE DATA LOCAL
+0060*
+00701 USR6001L
+0080  2 XML         (A) DYNAMIC
+0090  2 XSL         (A) DYNAMIC
+0100  2 RESULT      (A) DYNAMIC
+0110  2 RESPONSE    (I4)
+0120END-DEFINE
+0130/*( XML Person
+0140USR6001L.XML :=
+0150  '<?xml version="1.0" encoding="ISO-8859-1" ?>'-
+0160  '<Group>'-
+0170  '<Person Id="3">'-
+0180  '<Name>Abellan</Name>'-
+0190  '<First-Name>Kepa</First-Name>'-
+0200  '</Person>'-
+0210  '<Person Id="2">'-
+0220  '<Name>Achieson</Name>'-
+0230  '<First-Name>Robert</First-Name>'-
+0240  '</Person>'-
+0250  '<Person Id="1">'-
+0260  '<Name>Baum</Name>'-
+0270  '<First-Name>Marta</First-Name>'-
+0280  '</Person>'-
+0290  '<Person Id="4">'-
+0300  '<Name>Jonson</Name>'-
+0310  '<First-Name>Frida</First-Name>'-
+0320  '</Person>'-
+0330  '<Person Id="5">'-
+0340  '<Name>Schmidt</Name>'-
+0350  '<First-Name>Enriko</First-Name>'-
+0360  '</Person>'-
+0370  '<Person Id="7">'-
+0380  '<Name>Adkinson</Name>'-
+0390  '<First-Name>Fred</First-Name>'-
+0400  '</Person>'-
+0410  '<Person Id="8">'-
+0420  '<Name>Schmitt</Name>'-
+0430  '<First-Name>Marta</First-Name>'-
+0440  '</Person>'-
+0450  '<Person Id="3">'-
+0460  '<Name>Baum</Name>'-
+0470  '<First-Name>Rita</First-Name>'-
+0480  '</Person>'-
+0490  '</Group>'
+0500/*)
+0510WRITE "1. CONVERT XML TO HTML"
+0520WRITE "----------------------"
+0530/*( Stylesheet 1
+0540USR6001L.XSL :=
+0550  '<?xml version="1.0" encoding="ISO-8859-1" ?>'-
+0560  '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" '-
+0570  'version="1.0">'-
+0580  '<xsl:output encoding="ISO-8859-1" method="html" '-
+0590  'standalone="yes" indent="yes"/>'-
+0600  '<xsl:template match="/Group">'-
+0610  '<html><body><table>'-
+0620  '<tr><th>Id</th><th>First-Name</th><th>Name</th></tr>'-
+0630  '<xsl:for-each select="Person">'-
+0640  '<tr><td><xsl:value-of select="@Id"/></td>'-
+0650  '<td><xsl:value-of select="First-Name"/></td>'-
+0660  '<td><xsl:value-of select="Name"/></td></tr>'-
+0670  '</xsl:for-each>'-
+0680  '</table></body></html>'-
+0690  '</xsl:template>'-
+0700  '</xsl:stylesheet>'
+0710*
+0720CALLNAT 'USR6001N' USR6001L
+0730* PRINT "=" USR6001L.RESPONSE
+0740EXAMINE USR6001L.RESULT FOR H'0D' DELETE
+0750EXAMINE USR6001L.RESULT FOR H'0A' DELETE
+0760PRINT USR6001L.RESULT
+0770/*)
+0780WRITE / '2. Select only 2nd Person'
+0790WRITE   '---------------------------'
+0800/*( Stylesheet 2
+0810USR6001L.XSL :=
+0820  '<?xml version="1.0" encoding="ISO-8859-1" ?>'-
+0830  '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" '-
+0840  'version="1.0">'-
+0850  '<xsl:output method="text" encoding="ISO-8859-1"/>'-
+0860  '<xsl:template match="/">'-
+0870  'Id: <xsl:value-of select="/Group/Person[position()=2]/@Id" />'-
+0880  '<xsl:text> | </xsl:text>'-
+0890  'Name: <xsl:value-of select="/Group/Person[position()=2]/Name" />'-
+0900  '<xsl:text> | </xsl:text>'-
+0910  'First-Name: '-
+0920  '<xsl:value-of select="/Group/Person[position()=2]/First-Name" />'-
+0930  '</xsl:template>'-
+0940  '</xsl:stylesheet>'
+0950*
+0960CALLNAT 'USR6001N' USR6001L
+0970* PRINT "=" USR6001L.RESPONSE
+0980PRINT USR6001L.RESULT
+0990/*)
+1000WRITE / '3. Select Person with attribute id="3"'
+1010WRITE   '----------------------------------------'
+1020/*( Stylesheet 3
+1030USR6001L.XSL :=
+1040  '<?xml version="1.0" encoding="ISO-8859-1" ?>'-
+1050  '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" ' -
+1060  'version="1.0">'-
+1070  '<xsl:output method="xml" encoding="ISO-8859-1" '-
+1080  'omit-xml-declaration="yes" standalone="no" />'-
+1090  '<xsl:template match="/">'-
+1100  '<xsl:copy-of select="/Group/Person[@Id=3]" />'-
+1110  '</xsl:template>'-
+1120  '</xsl:stylesheet>'
+1130*
+1140CALLNAT 'USR6001N' USR6001L
+1150* PRINT "=" USR6001L.RESPONSE
+1160PRINT USR6001L.RESULT
+1170/*)
+1180WRITE / '4. Count number of Persons'
+1190WRITE   '--------------------------'
+1200/*( Stylesheet 4
+1210USR6001L.XSL :=
+1220  '<?xml version="1.0" encoding="ISO-8859-1" ?>'-
+1230  '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" ' -
+1240  'version="1.0">'-
+1250  '<xsl:output method="xml" encoding="ISO-8859-1" '-
+1260  'omit-xml-declaration="yes" standalone="yes" />'-
+1270  '<xsl:template match="/" >'-
+1280  '<xsl:variable name="n" select="/Group/Person" />'-
+1290  'Persons: <xsl:value-of select="count($n)" />'-
+1300  '</xsl:template>'-
+1310  '</xsl:stylesheet>'
+1320*
+1330CALLNAT 'USR6001N' USR6001L
+1340* PRINT "=" USR6001L.RESPONSE
+1350PRINT USR6001L.RESULT
+1360/*)
+1370WRITE / '5. Sort persons descending by name'
+1380WRITE   '----------------------------------'
+1390/*( Stylesheet 5
+1400USR6001L.XSL :=
+1410  '<?xml version="1.0" encoding="ISO-8859-1" ?>'-
+1420  '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" '-
+1430  'version="1.0">'-
+1440  '<xsl:output encoding="ISO-8859-1" method="html" '-
+1450  'standalone="yes" indent="yes"/>'-
+1460  '<xsl:template match="/Group">'-
+1470  '<xsl:for-each select="Person">'-
+1480  '<xsl:sort select="Name" data-type = "text" '-
+1490* 'order="ascending"/>'-
+1500  'order="descending"/>'-
+1510  '<xsl:value-of select="position()" />'-
+1520  ' Name: <xsl:value-of select="Name"/>'-
+1530  '<xsl:text> | </xsl:text>'-
+1540  '</xsl:for-each>'-
+1550  '</xsl:template>'-
+1560  '</xsl:stylesheet>'
+1570*
+1580CALLNAT 'USR6001N' USR6001L
+1590* PRINT "=" USR6001L.RESPONSE
+1600PRINT USR6001L.RESULT
+1610/*)
+1620END
+1630

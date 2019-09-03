@@ -1,0 +1,150 @@
+0010*
+0020*  Member ......... EXT-MENK
+0030*  Type ........... Program
+0040*  Library ........ SYSEXTC
+0050*
+0060*  Function ....... List all keywords of selected application
+0070*                   programming interface (line command 'K')
+0080*
+0090*
+0100************************************************************************
+0110*
+0120DEFINE DATA LOCAL
+0130  01 NAME          (A08)            /* Data via STACK
+0140  01 MAX-KEYWORD   (I04)            /* Number of keywords of sel. API
+0150  01 API-KEYWORDS  (A20/1:80)       /* Array of keywords of sel. API
+0160*
+0170  01 M-KEYWORD     (A20/1:12)       /* Map fields
+0180  01 CV-KEYWORD    (C/1:12)
+0190  01 ERR-TEXT      (A72)
+0200  01 MAP-TITLE     (A25)
+0210*
+0220  01 START-POS     (I04)
+0230  01 END-POS       (I04)
+0240  01 IX            (I04)
+0250  01 IY            (I04)
+0260  01 #NUM          (N6.4)
+0270END-DEFINE
+0280*
+0290DEFINE WINDOW KEYWORD-MAP
+0300  SIZE 16 * 30
+0310  BASE 04 / 25
+0320  TITLE MAP-TITLE
+0330  CONTROL SCREEN
+0340*
+0350SET KEY
+0360  TREQ NAMED ' '
+0370  PF1  = HELP NAMED 'Help'
+0380  PF3  NAMED 'Exit'
+0390  PF4  NAMED OFF
+0400  PF5  NAMED OFF
+0410  PF6  NAMED '--'
+0420  PF7  NAMED '-'
+0430  PF8  NAMED '+'
+0440  PF9  NAMED '++'
+0450  PF10 NAMED OFF
+0460  PF11 NAMED OFF
+0470  PF12 NAMED 'Canc'
+0480  PF2
+0490  PF13 PF14 PF15 PF16 PF17 PF18
+0500  PF19 PF20 PF21 PF22 PF23 PF24
+0510*
+0520*
+0530CALLNAT 'USR1002N' 'S'    /* Save current environment
+0540SET CONTROL 'K00'
+0550SET CONTROL 'M-4'
+0560SET CONTROL 'YB'
+0570FORMAT KD=ON
+0580/*
+0590/*  Get all keyword data of API
+0600/*
+0610INPUT 'List keywords associated to object name ..' NAME /
+0620      MAX-KEYWORD / API-KEYWORDS(*)
+0630*
+0640COMPRESS ' Keywords for' NAME ' ' INTO MAP-TITLE
+0650START-POS := 1
+0660*
+0670REPEAT
+0680  MOVE (AD=D) TO CV-KEYWORD(*)
+0690  /*
+0700  /* Set start and end value for array
+0710  /*
+0720  END-POS   := START-POS + 11
+0730  IF END-POS > MAX-KEYWORD
+0740    END-POS := MAX-KEYWORD
+0750  END-IF
+0760  /*
+0770  /* Read keywords from XML list
+0780  /*
+0790  RESET M-KEYWORD(*) IY
+0800  FOR IX = START-POS TO END-POS
+0810    ADD 1 TO IY
+0820    MOVE API-KEYWORDS(IX) TO M-KEYWORD (IY)
+0830  END-FOR
+0840  /*
+0850  /*  Highlight map fields (reserved keywords)
+0860  /*
+0870  FOR IX 1 12
+0880    IF M-KEYWORD (IX) = MASK ('+')
+0890      MOVE (AD=I) TO CV-KEYWORD (IX)
+0900    END-IF
+0910  END-FOR
+0920  /*
+0930  /*********************************************************************
+0940  INPUT WINDOW = 'KEYWORD-MAP' (AD=OD CD=TU IP=OFF HE='EXT-HE10')
+0950  WITH TEXT ERR-TEXT
+0960      / 1X  M-KEYWORD (01) (CV=CV-KEYWORD(1))
+0970      / 1X  M-KEYWORD (02) (CV=CV-KEYWORD(2))
+0980      / 1X  M-KEYWORD (03) (CV=CV-KEYWORD(3))
+0990      / 1X  M-KEYWORD (04) (CV=CV-KEYWORD(4))
+1000      / 1X  M-KEYWORD (05) (CV=CV-KEYWORD(5))
+1010      / 1X  M-KEYWORD (06) (CV=CV-KEYWORD(6))
+1020      / 1X  M-KEYWORD (07) (CV=CV-KEYWORD(7))
+1030      / 1X  M-KEYWORD (08) (CV=CV-KEYWORD(8))
+1040      / 1X  M-KEYWORD (09) (CV=CV-KEYWORD(9))
+1050      / 1X  M-KEYWORD (10) (CV=CV-KEYWORD(10))
+1060      / 1X  M-KEYWORD (11) (CV=CV-KEYWORD(11))
+1070      / 1X  M-KEYWORD (12) (CV=CV-KEYWORD(12))
+1080  /*********************************************************************
+1090  /*
+1100  DECIDE ON FIRST *PF-KEY
+1110    /***********
+1120    VALUE 'PF3'  /* Exit
+1130                 ESCAPE BOTTOM
+1140    /***********
+1150    VALUE 'PF6'  /* '--'
+1160                 MOVE 1 TO START-POS
+1170    /***********
+1180    VALUE 'PF7'  /* '-'
+1190                 SUBTRACT 12 FROM START-POS
+1200                 IF START-POS < 1
+1210                   START-POS := 1
+1220                 END-IF
+1230    /***********
+1240    VALUE 'PF8'  /* '+'
+1250                 IF START-POS + 12 LE MAX-KEYWORD
+1260                   ADD 12 TO START-POS
+1270                 END-IF
+1280    /***********
+1290    VALUE 'PF9'  /* '++'
+1300                 IF MAX-KEYWORD > 0
+1310                   #NUM := MAX-KEYWORD / 12.0
+1320                   IF FRAC(#NUM) NE 0
+1330                     START-POS := (INT(#NUM) * 12) + 1
+1340                   ELSE
+1350                     START-POS := (INT(#NUM) * 12) - 11
+1360                   END-IF
+1370                 END-IF
+1380    /***********
+1390    VALUE 'PF12' /* Exit
+1400                 ESCAPE BOTTOM
+1410    /***********
+1420    NONE         IGNORE
+1430  END-DECIDE
+1440*
+1450END-REPEAT
+1460**
+1470SET WINDOW OFF
+1480CALLNAT 'USR1002N' 'R'   /* Restore environment
+1490/*
+1500END

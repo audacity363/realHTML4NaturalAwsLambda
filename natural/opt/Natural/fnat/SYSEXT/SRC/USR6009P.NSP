@@ -1,0 +1,335 @@
+0010/*  Natural Buffer Pool Interface #6009
+0020DEFINE DATA LOCAL
+00301 P-FUNCTION            (A1)    /* (I)   function code:
+0040                                /*       D - Delete objects
+0050                                /*             Selection with P-KEY
+0060                                /*       G - Global statistics
+0070                                /*             (status,param)
+0080                                /*       S - Display directory of buffer
+0090                                /*             Selection with P-KEY
+0100                                /*       C - Display a list of all
+0110                                /*             corpses; No selection
+0120                                /*             Returned from 1st to last
+0130                                /*       N - Return buffer pool name
+0140                                /*
+01501 P-KEY                 (A64)   /* (I/O) buffer pool key
+0160                                /* Do not change between two 'S' calls!
+01701 REDEFINE P-KEY
+0180  2 P-KEY-LIB           (A8)    /* (I/O) library name
+0190  2 P-KEY-NAME          (A32)   /* (I/O) object name
+0200                                /*       Numbers and @ indicate chunks
+0210                                /*       of FILEDIR.SAG for the
+0220                                /*       currently loaded library
+0230  2 P-KEY-KIND          (A1)    /* (I/O) object kind
+0240                                /*       G - generated object module
+0250                                /*       S - source
+0260                                /*       D - part of FILEDIR.SAG
+0270                                /*       R - resource
+0280  2 P-KEY-TYPE          (A1)    /* (I/O) object type
+0290                                /*       blank for P-KIND = D
+0300  2 P-KEY-DBID          (I4)    /* (I/O) database id
+0310  2 P-KEY-FNR           (I4)    /* (I/O) filenumber
+0320  2 P-KEY-LANGUAGE      (I4)    /* (I/O) language (must be zero)
+0330                                /*
+03401 P-NUMBER              (I2)    /* (O)   number of attached objects
+03501 P-RESPONSE1           (I2)    /* (O)   response code1
+0360                                /*    -2 bufferpool returns error
+0370                                /*         in bpcberr; bpcberr error is
+0380                                /*         in P-RESPONSE2
+0390                                /*    -1 bufferpool returns internal
+0400                                /*         error;
+0410                                /*         RET('CMNCBP') in P-RESPONSE2
+0420                                /*     0 ok
+0430                                /*    >0 response from Natural part
+0440                                /*         of user exit
+0450                                /*     4 invalid function code
+0460                                /*     8 invalid dbid
+0470                                /*    12 invalid fnr
+0480                                /*    16 invalid kind
+0490                                /*    20 invalid type
+0500                                /*    24 For P-FUNCTION 'N': Optional
+0510                                /*       parameter P-BPNAME missing
+0520                                /*   100 function 'S': end of list
+05301 P-RESPONSE2           (I2)    /* (O)   response code2
+0540                                /*       if P-RESPONSE1 = -2: bpcberr
+0550                                /*       if P-RESPONSE1 = -1:
+0560                                /*         RET('CMNCBP')
+0570/*
+05801 P-DIRECTORY-BUFFER (10)      /* (O)   10 * 384
+0590  2 P-LIB               (A8)   /* (O)   library name
+0600  2 P-NAME              (A32)  /* (O)   object name
+0610  2 P-KIND              (A1)   /* (O)   object kind
+0620  2 P-TYPE              (A1)   /* (O)   object type
+0630  2 P-DBID              (I4)   /* (O)   database id
+0640  2 P-FNR               (I4)   /* (O)   filenumber
+0650  2 P-LANGUAGE          (I4)   /* (O)   language (must be zero)
+0660  2 P-BPCBOBST          (I4/1:16) /* (O) OBJECT STATUS
+0670  2 REDEFINE P-BPCBOBST
+0680    3 P-BPCBNTAB        (I4)   /* (O)   NUMBER OF TABLES
+0690    3 P-BPCBTOTL        (I4)   /* (O)   TOTAL SIZE OF OBJECT
+0700    3 P-BPCBNUSR        (I4)   /* (O)   CURRENT NUMBER OF USERS
+0710    3 P-BPCBMAXP        (I4)   /* (O)   PEAK PARALLEL USAGE
+0720    3 P-BPCBNUSG        (I4)   /* (O)   NUMBER OF ACTIVATIONS
+0730    3 P-BPCBFLGS        (I4)   /* (O)   OBJECT FLAGS
+0740    3 P-BPCBGENO        (I4)   /* (O)   TRUE IF GENERATING
+0750  2 P-BPCBOTSZ          (I4/1:64) /* (O) TABLE SIZES
+07601 REDEFINE P-DIRECTORY-BUFFER
+0770  /* General Statistics 'G'        184
+0780  2 P-BPCBMJR           (I4)   /* (O)   MAJOR RELEASE NUMBER
+0790  2 P-BPCBMIR           (I4)   /* (O)   MINOR RELEASE NUMBER
+0800  2 P-BPCBVSN           (I4)   /* (O)   VERSION NUMBER of buffer pool
+0810  2 P-BPCBDAT           (A32)  /* (O)   GENERATION DATE
+0820  2 P-BPCBUPT           (A32)  /* (O)   UPTIME OF POOL
+0830    /*
+0840  2 P-BPCBMAXU          (I4)   /* (O)   MAX NUMBER OF USERS
+0850  2 P-BPCBMEMS          (I4)   /* (O)   MEMORY SIZE OF POOL
+0860  2 P-BPCBDORM          (I4)   /* (O)   DORMANT OBJECTS
+0870  2 P-BPCBACTV          (I4)   /* (O)   ACTIVE OBJECTS
+0880  2 P-BPCBGENBP         (I4)   /* (O)   GENERATING OBJECTS
+0890  2 P-BPCBTBDL          (I4)   /* (O)   OBSOLETE OBJECTS
+0900  2 P-BPCBNPUR          (I4)   /* (O)   PURGED OBJECTS
+0910  2 P-BPCBALC           (I4)   /* (O)   LOCATES
+0920  2 P-BPCBAFLC          (I4)   /* (O)   FAST LOCATES
+0930  2 P-BPCBSFLC          (I4)   /* (O)   SUCCESFUL FAST LOCATES
+0940  2 P-BPCBSTOR          (I4)   /* (O)   STORES
+0950  2 P-BPCBPKPR          (I4)   /* (O)   PEAK PAR USAGE
+0960  2 P-BPCBACT           (I4)   /* (O)   ACTIVATIONS
+0970  2 P-BPCBLDS           (I4)   /* (O)   OBJECT LOADS
+0980  2 P-BPCBALDS          (I4)   /* (O)   ABORTED LOADS
+0990  2 P-BPCBCUSR          (I4)   /* (O)   CURRENT USERS
+1000  2 P-BPCBPUSR          (I4)   /* (O)   PEAK USERS
+1010  2 P-BPCBDUSR          (I4)   /* (O)   DEAD PURGED USERS
+1020    /*
+1030  2 P-BPCBOSMN          (I4)   /* (O)   MINIMUM
+1040  2 P-BPCBOSMX          (I4)   /* (O)   MAXIMUM
+1050  2 P-BPCBOSTL          (I4)   /* (O)   TOTAL
+1060    /*
+1070  2 P-BPCBAMMN          (I4)   /* (O)   MINIMUM
+1080  2 P-BPCBAMMX          (I4)   /* (O)   MAXIMUM
+1090  2 P-BPCBAMTL          (I4)   /* (O)   TOTAL
+1100    /*
+1110  2 P-BPCBFMMN          (I4)   /* (O)   MINIMUM
+1120  2 P-BPCBFMMX          (I4)   /* (O)   MAXIMUM
+1130  2 P-BPCBFMTL          (I4)   /* (O)   TOTAL
+1140/*
+11501 P-WORKAREA                   /* (I/O) Do not change
+1160  /*       between two 'S' or 'C' calls
+1170  2 P-INDEX             (I4)   /*
+1180  2 P-BPCBPAT           (A64)  /*
+11901 P-BPNAME              (A8)   /* bufferpool name
+1200/*
+12101 I                     (P3)
+12201 #TOTAL                (I2)
+12301 P-KEY-DBID-P5         (P5)
+12401 P-KEY-FNR-P5          (P5)
+12501 P-DBID-P5             (P5)
+12601 P-FNR-P5              (P5)
+12701 #PERC-SUCC            (N3.7)
+12801 #N10-7-1              (N10.7)
+12901 #N10-7-2              (N10.7)
+13001 #OBJ-REUSE            (N10.2)
+1310END-DEFINE
+1320/**********************************************************************
+1330SET KEY ALL
+1340P-FUNCTION := 'S'
+1350/*
+1360REPEAT
+1370  /*
+1380  INPUT (IP=OFF) WITH TEXT 'Natural Buffer Pool Interface #6009'
+1390    / 'Code' (TU) P-FUNCTION (AD=MILT'_' CD=NE)
+1400      '.=Exit  D=Delete G=Stats N=BP-Name S=Dir C=Corps' (TU)
+1410    /
+1420    / 'Library ....' P-KEY-LIB  (AD=MILT'_' CD=NE)
+1430    / 'Object .....' P-KEY-NAME (AD=MILT'_' CD=NE)
+1440    / 'Kind .......' P-KEY-KIND (AD=MILT'_' CD=NE)
+1450    / 'Type .......' P-KEY-TYPE (AD=MILT'_' CD=NE)
+1460    / 'DBID .......' P-KEY-DBID-P5 (AD=MILT'_' CD=NE)
+1470    / 'FNR ........' P-KEY-FNR-P5  (AD=MILT'_' CD=NE)
+1480    /
+1490    / 'Response1 ..' P-RESPONSE1 (AD=OIL CD=YE)
+1500    / 'Response2 ..' P-RESPONSE2 (AD=OIL CD=YE)
+1510    / 'Number .....' P-NUMBER   (AD=OIL CD=YE)
+1520   // 'Press any PF key to stop.'
+1530  IF (*PF-KEY <> 'ENTR')
+1540    ESCAPE BOTTOM
+1550  END-IF
+1560  /*
+1570  /*
+1580  DECIDE ON FIRST VALUE OF P-FUNCTION
+1590    VALUE '.' ESCAPE ROUTINE
+1600    VALUE 'S', 'C' /* S = directory, C = corpses
+1610      RESET #TOTAL P-WORKAREA
+1620      P-KEY-DBID := P-KEY-DBID-P5
+1630      P-KEY-FNR := P-KEY-FNR-P5
+1640      S-REPEAT.
+1650      REPEAT
+1660        CALLNAT 'USR6009N'
+1670                P-FUNCTION   P-KEY       P-NUMBER
+1680                P-RESPONSE1  P-RESPONSE2
+1690                P-DIRECTORY-BUFFER(*)    P-WORKAREA
+1700        IF P-NUMBER GT 0
+1710          #TOTAL := #TOTAL + P-NUMBER
+1720          FOR I = 1 TO P-NUMBER
+1730            P-DBID-P5 := P-DBID(I)
+1740            P-FNR-P5 := P-FNR(I)
+1750            DISPLAY
+1760              'Library' P-LIB(I)
+1770              'Object'  P-NAME(I) (AL=8)
+1780              'DBID'    P-DBID-P5
+1790              'FNR'     P-FNR-P5
+1800              'K'       P-KIND(I)
+1810              'T'       P-TYPE(I)
+1820              'Use'     P-BPCBNUSR(I) (ZP=OFF)
+1830              'Max'     P-BPCBMAXP(I) (ZP=OFF)
+1840              'Total'   P-BPCBNUSG(I) (ZP=OFF)
+1850            /* 'ObjSize' P-BPCBTOTL(I) (ZP=OFF)
+1860            /*  3 P-BPCBNTAB        (I4)   /* 1 NUMBER OF TABLES
+1870            /*  3 P-BPCBFLGS        (I4)   /* 6 OBJECT FLAGS
+1880            /*  3 P-BPCBGENO        (I4)   /* 7 TRUE IF GENERATING
+1890            /* 2 P-BPCBOTSZ          (I4/1:64) /*TABLE SIZES
+1900            IF (*PF-KEY <> 'ENTR')
+1910              ESCAPE BOTTOM (S-REPEAT.)
+1920            END-IF
+1930          END-FOR
+1940        END-IF
+1950        UNTIL P-RESPONSE1 NE 0
+1960      END-REPEAT
+1970      P-NUMBER := #TOTAL
+1980      EJECT
+1990    VALUE 'G' /* Statistics
+2000      CALLNAT 'USR6009N'
+2010              P-FUNCTION     P-KEY          P-NUMBER
+2020              P-RESPONSE1    P-RESPONSE2
+2030              P-DIRECTORY-BUFFER(*)
+2040              P-WORKAREA     P-BPNAME
+2050      IF (P-RESPONSE1 EQ 0) THEN
+2060        /* General Statistics
+2070        IF P-BPCBAFLC NE 0 THEN
+2080          #N10-7-1 := P-BPCBSFLC
+2090          #N10-7-2 := P-BPCBAFLC
+2100          #PERC-SUCC := #N10-7-1 / #N10-7-2 * 100
+2110        END-IF
+2120        IF P-BPCBLDS NE 0 THEN
+2130          #N10-7-1 := P-BPCBACT
+2140          #N10-7-2 := P-BPCBLDS
+2150          #OBJ-REUSE := #N10-7-1 / #N10-7-2
+2160        END-IF
+2170        WRITE NOHDR
+2180          023T '- General Information - Status -' (YEI)
+2190          /
+2200          001T 'BP Name .................'(TU)
+2210          027T P-BPNAME  (AD=OD CD=TU )
+2220          041T 'Version .................' (TU)
+2230          P-BPCBVSN  (AD=OD CD=TU ZP=OFF)
+2240          /
+2250          001T 'Active since ............' (TU)
+2260          027T P-BPCBUPT  (AL=20 AD=OD CD=TU)
+2270          /
+2280          001T 'Generation date .........' (TU)
+2290          028T P-BPCBDAT  (AD=OD CD=TU)
+2300          /
+2310          001T 'Allocated memory ........'(TU)
+2320          027T P-BPCBAMTL  (AD=OD CD=TU )
+2330          041T 'Max users ...............'(TU)
+2340          067T P-BPCBMAXU  (AD=OD CD=TU ZP=ON )
+2350          /
+2360          001T 'Smallest allocation .....'(TU)
+2370          027T P-BPCBAMMN  (AD=OD CD=TU )
+2380          041T 'Current users ...........'(TU)
+2390          067T P-BPCBCUSR  (AD=OD CD=TU ZP=ON )
+2400          /
+2410          001T 'Largest allocation ......'(TU)
+2420          027T P-BPCBAMMX  (AD=OD CD=TU )
+2430          041T 'Peak users ..............'(TU)
+2440          067T P-BPCBPUSR  (AD=OD CD=TU ZP=ON )
+2450          /
+2460          001T 'Free memory .............'(TU)
+2470          027T P-BPCBFMTL  (AD=OD CD=TU )
+2480          041T 'Dead users purged .......'(TU)
+2490          067T P-BPCBDUSR  (AD=OD CD=TU ZP=ON )
+2500          /
+2510          001T 'Smallest contiguous .....'(TU)
+2520          027T P-BPCBFMMN (AD=OD CD=TU ZP=ON )
+2530          /
+2540          001T 'Largest contiguous ......'(TU)
+2550          027T P-BPCBFMMX (AD=OD CD=TU ZP=ON )
+2560          /
+2570          /
+2580          001T 'Dormant objects .........'(TU)
+2590          027T P-BPCBDORM  (AD=OD CD=TU )
+2600          041T 'Smallest object (byte) ..'(TU)
+2610          067T P-BPCBOSMN  (AD=OD CD=TU ZP=ON )
+2620          /
+2630          001T 'Active objects ..........'(TU)
+2640          027T P-BPCBACTV  (AD=OD CD=TU )
+2650          041T 'Largest object (byte) ...'(TU)
+2660          067T P-BPCBOSMX  (AD=OD CD=TU ZP=ON )
+2670          /
+2680          001T 'Generating objects ......'(TU)
+2690          027T P-BPCBGENBP  (AD=OD CD=TU )
+2700          041T 'Total object sizes ......'(TU)
+2710          067T P-BPCBOSTL  (AD=OD CD=TU ZP=ON )
+2720          /
+2730          001T 'Obsolete objects ........'(TU)
+2740          027T P-BPCBTBDL  (AD=OD CD=TU )
+2750          /
+2760          /
+2770          001T 'Attempted locates .......'(TU)
+2780          027T P-BPCBALC  (AD=OD CD=TU )
+2790          041T 'Stored objects ..........'(TU)
+2800          067T P-BPCBSTOR  (AD=OD CD=TU ZP=ON )
+2810          /
+2820          001T 'Attempted fast locates ..'(TU)
+2830          027T P-BPCBAFLC  (AD=OD CD=TU )
+2840          041T 'Loaded objects ..........'(TU)
+2850          067T P-BPCBLDS  (AD=OD CD=TU ZP=ON )
+2860          /
+2870          001T 'Successful fast locates .'(TU)
+2880          027T P-BPCBSFLC  (AD=OD CD=TU )
+2890          041T 'Activated objects .......'(TU)
+2900          067T P-BPCBACT  (AD=OD CD=TU ZP=ON )
+2910          /
+2920          001T 'Percent successful ......'(TU)
+2930          027T #PERC-SUCC  (AD=OD CD=TU EM='      'ZZ9.99)
+2940          041T 'Aborted loads ...........'(TU)
+2950          067T P-BPCBALDS  (AD=OD CD=TU ZP=ON )
+2960          /
+2970          001T 'Dormant object purged ...'(TU)
+2980          027T P-BPCBNPUR  (AD=OD CD=TU )
+2990          041T 'Peak parallel activa. ...'(TU)
+3000          067T P-BPCBPKPR  (AD=OD CD=TU ZP=ON )
+3010        /*
+3020        NEWPAGE
+3030        WRITE NOHDR
+3040          023T '- General Information - Parameters -' (YEI)
+3050          /
+3060          001T 'Object reuse factor .....'(TU)
+3070          027T #OBJ-REUSE  (AD=OD CD=TU EM=ZZZZZZZ9.99)
+3080          /
+3090          001T 'Memory size .............'(TU)
+3100          027T P-BPCBMEMS  (AD=OD CD=TU )
+3110          041T 'Maximum users ...........'(TU)
+3120          067T P-BPCBMAXU  (AD=OD CD=TU ZP=ON )
+3130      END-IF
+3140    VALUE 'N' /* Return BP name
+3150      CALLNAT 'USR6009N'
+3160              P-FUNCTION     P-KEY       P-NUMBER
+3170              P-RESPONSE1    P-RESPONSE2
+3180              P-DIRECTORY-BUFFER(*)
+3190              P-WORKAREA     P-BPNAME
+3200      IF (P-RESPONSE1 EQ 0) THEN
+3210        WRITE NOHDR
+3220          'Buffer Pool name:' (TU)
+3230          P-BPNAME  (AD=OD CD=TU)
+3240          /
+3250      END-IF
+3260    VALUE 'D' /* Delete
+3270      P-KEY-DBID := P-KEY-DBID-P5
+3280      P-KEY-FNR := P-KEY-FNR-P5
+3290      CALLNAT 'USR6009N' P-FUNCTION P-KEY P-NUMBER P-RESPONSE1
+3300        P-RESPONSE2 P-DIRECTORY-BUFFER(*) P-WORKAREA
+3310    NONE VALUE
+3320      IGNORE
+3330  END-DECIDE
+3340END-REPEAT
+3350END

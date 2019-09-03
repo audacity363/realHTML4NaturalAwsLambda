@@ -1,0 +1,84 @@
+0010*
+0020* Library update
+0030*
+0040DEFINE DATA GLOBAL USING TUTO
+0050            LOCAL  USING BLIBU--L
+0060            LOCAL
+0070*
+008001 #FUNCTION                 (A8)
+009001 #DSNAME                   (A54)
+010001 #VOLSER                   (A6)
+011001 #PASSWORD                 (A8)
+012001 #ELEMENT                  (A64)
+013001 #ELEMENT-PASSWORD         (A8)
+014001 #ELEMENT-VERSION          (A24)
+015001 #ELEMENT-TYPE             (A8)
+016001 #NEWNAME-ELEMENT          (A64)
+017001 #NEWNAME-ELEMENT-VERSION  (A24)
+018001 #NEWNAME-ELEMENT-TYPE     (A8)
+019001 #NEWNAME-ELEMENT-PASSWORD (A8)
+020001 #OVERWRITE                (A3)
+0210END-DEFINE
+0220PERFORM PF-KEY
+0230*
+0240* ------------------------------ MAIN LOOP ----------------------------
+0250*
+0260REPEAT
+0270  PERFORM SCREEN-IO
+0280  DECIDE ON FIRST #FUNCTION
+0290    VALUE 'SCRATCH'
+0300          PROCESS LIB-UPDATE
+0310            USING NODE                    = ##NODE
+0320              ,   FUNCTION                = #FUNCTION
+0330              ,   DSNAME                  = #DSNAME
+0340              ,   VOLSER                  = #VOLSER
+0350              ,   PASSWORD                = #PASSWORD
+0360              ,   ELEMENT                 = #ELEMENT
+0370              ,   ELEMENT-TYPE            = #ELEMENT-TYPE
+0380              ,   ELEMENT-VERSION         = #ELEMENT-VERSION
+0390              ,   NEWNAME-ELEMENT-VERSION = #NEWNAME-ELEMENT-VERSION
+0400           GIVING ERROR-CODE
+0410                  ERROR-TEXT
+0420                  SYSTEM-CODE
+0430    VALUE 'RENAME'
+0440          PROCESS LIB-UPDATE
+0450            USING NODE                     = ##NODE
+0460              ,   FUNCTION                 = #FUNCTION
+0470              ,   DSNAME                   = #DSNAME
+0480              ,   VOLSER                   = #VOLSER
+0490              ,   PASSWORD                 = #PASSWORD
+0500              ,   ELEMENT                  = #ELEMENT
+0510              ,   ELEMENT-TYPE             = #ELEMENT-TYPE
+0520              ,   ELEMENT-VERSION          = #ELEMENT-VERSION
+0530              ,   ELEMENT-PASSWORD         = #ELEMENT-PASSWORD
+0540              ,   NEWNAME-ELEMENT          = #NEWNAME-ELEMENT
+0550              ,   NEWNAME-ELEMENT-TYPE     = #NEWNAME-ELEMENT-TYPE
+0560              ,   NEWNAME-ELEMENT-VERSION  = #NEWNAME-ELEMENT-VERSION
+0570              ,   NEWNAME-ELEMENT-PASSWORD = #NEWNAME-ELEMENT-PASSWORD
+0580              ,   OVERWRITE                = #OVERWRITE
+0590           GIVING ERROR-CODE
+0600                  ERROR-TEXT
+0610                  SYSTEM-CODE
+0620    ANY   IF ERROR-CODE NE 0
+0630             INCLUDE BERR---C
+0640            ELSE
+0650             ASSIGN ##MSG-NR = 1007
+0660          END-IF
+0670    NONE  ASSIGN ##MSG-NR = 1033
+0680  END-DECIDE
+0690END-REPEAT
+0700*
+0710* ------------------------------ SCREEN-IO ----------------------------
+0720*
+0730DEFINE SUBROUTINE SCREEN-IO
+0740INPUT WITH TEXT *##MSG-NR,
+0750                 ##MSG-TXT1,
+0760                 ##MSG-TXT2
+0770      USING MAP 'BLIBU--&'
+0780RESET ##MSG
+0790END-SUBROUTINE
+0800*
+0810* ------------------------------ PF-KEY -------------------------------
+0820*
+0830INCLUDE C-PFKEY
+0840END

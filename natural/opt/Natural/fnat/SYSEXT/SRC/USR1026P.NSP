@@ -1,0 +1,47 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1026N'.
+0030/***********************************************************************
+0040DEFINE DATA LOCAL
+0050 1 RETURN-OCC      (P3)       /* Number of occurences to be returned
+0060 1 RETURN-LIBRARY  (A08/1:20) /* Library ID of return point
+0070 1 RETURN-COMMAND  (A60/1:20) /* Command which is to be executed
+0080 1 RETURN-NUMBER   (P3)       /* Number of return points
+0090END-DEFINE
+0100/*
+0110/* Set up some defaults:
+0120/*
+0130SET KEY ALL
+0140RETURN-OCC := 10              /* Display 10 return points
+0150/*
+0160REPEAT
+0170  /*
+0180  INPUT (AD=OIL IP=OFF ZP=ON SG=ON CD=TU)
+0190      'Display RETURN Information:' (YEI)
+0200    / '-' (27) (YEI) /
+0210    / 'Occurences requested ......' (TU) RETURN-OCC (AD=MIT'_' CD=NE)
+0220   // 'Number of return points ...' (TU) RETURN-NUMBER
+0230   // '    Library  Command' (YE)
+0240    / ' 1.' (TU) RETURN-LIBRARY(01) RETURN-COMMAND(01)
+0250    / ' 2.' (TU) RETURN-LIBRARY(02) RETURN-COMMAND(02)
+0260    / ' 3.' (TU) RETURN-LIBRARY(03) RETURN-COMMAND(03)
+0270    / ' 4.' (TU) RETURN-LIBRARY(04) RETURN-COMMAND(04)
+0280    / ' 5.' (TU) RETURN-LIBRARY(05) RETURN-COMMAND(05)
+0290    / ' 6.' (TU) RETURN-LIBRARY(06) RETURN-COMMAND(06)
+0300    / ' 7.' (TU) RETURN-LIBRARY(07) RETURN-COMMAND(07)
+0310    / ' 8.' (TU) RETURN-LIBRARY(08) RETURN-COMMAND(08)
+0320    / ' 9.' (TU) RETURN-LIBRARY(09) RETURN-COMMAND(09)
+0330    / '10.' (TU) RETURN-LIBRARY(10) RETURN-COMMAND(10)
+0340    /// 'Press any PF-Key to stop.' (TU)
+0350    /*
+0360  IF *PF-KEY NE 'ENTR'
+0370    ESCAPE ROUTINE
+0380  END-IF
+0390  /*
+0400  RESET RETURN-LIBRARY(*) RETURN-COMMAND(*)
+0410  /*
+0420  CALLNAT 'USR1026N'
+0430    RETURN-OCC  RETURN-LIBRARY(1:RETURN-OCC)
+0440    RETURN-COMMAND(1:RETURN-OCC)  RETURN-NUMBER
+0450  /*
+0460END-REPEAT
+0470END

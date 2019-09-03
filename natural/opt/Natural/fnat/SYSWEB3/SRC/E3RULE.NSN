@@ -1,0 +1,62 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3RULE
+0050*
+0060* DESCRIPTION   Creates a horizontal rule with a width specified in
+0070*               percentage points.
+0080*
+0090* AUTHOR        SAG   08.09.1998
+0100*
+0110* Version       8.3
+0120*
+0130* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0140*
+0150* HISTORY
+0160* USER    DATE       REASON
+0170* ------+----------+----------------------------------------------
+0180*       ! --.--.-- !
+0190* ------+----------+----------------------------------------------
+0200*
+0210* ------ PARAMETER -----------------------------------------------
+0220DEFINE DATA
+0230PARAMETER USING W3PARM
+0240LOCAL USING W3CONST
+0250LOCAL
+02601 H3VALUE            (A) DYNAMIC
+02701 H3WIDTH            (N4) INIT <0>
+0280END-DEFINE
+0290* --- ERROR HANDLING ---
+0300ON ERROR
+0310  PERFORM W3ERROR ##W3ERROR
+0320  PERFORM W3END ##RPC
+0330  ESCAPE ROUTINE
+0340END-ERROR
+0350*
+0360* --- INITIALIZE Web Interface ---
+0370PERFORM W3INIT ##RPC
+0380*
+0390* --- START HTML Generation ---
+0400PERFORM H3-OPEN-HTML 'HTML Generation - Horizontal Rule' " " ' '
+0410* --- THE LEVEL 2 HEADER ---
+0420PERFORM H3-HEADER 2 'Horizontal Rule'
+0430*
+0440COMPRESS 'Horizontal rule, width := ' H3WIDTH
+0450  '(width not generated)' INTO H3VALUE
+0460PERFORM H3-PARAGRAPH " " H3VALUE
+0470* PERFORM H3-RULE 0
+0480*
+0490FOR H3WIDTH = 10 TO 100 STEP 10
+0500  COMPRESS 'Horizontal rule, width := ' H3WIDTH INTO H3VALUE
+0510  PERFORM H3-PARAGRAPH "L" H3VALUE
+0520  PERFORM H3-RULE H3WIDTH
+0530END-FOR
+0540*
+0550PERFORM E3-EXAMPLE-END
+0560*
+0570* --- END HTML Generation ---
+0580PERFORM H3-CLOSE-HTML
+0590* --- END Web Interface ---
+0600PERFORM W3END ##RPC
+0610*
+0620END

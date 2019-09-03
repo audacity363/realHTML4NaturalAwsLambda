@@ -1,0 +1,13 @@
+0010/* ---------------------------------------------------------------------
+0020/* Program:        PARAM
+0030/* Library:        SYSEXBAT (Batch mode samples)
+0040/*
+0050/* Functionality:  Output parameters
+0060/*
+0070/* Description:    Used to show the difference behaviour on
+0080/*                 some batch mode specific output parameters
+0090/* ---------------------------------------------------------------------
+0100**
+0110WRITE NOTITLE "TESTPROGRAM executed on" *DATV "at" *TIMX
+0120**
+0130END

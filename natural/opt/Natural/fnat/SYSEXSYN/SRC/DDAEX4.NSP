@@ -1,0 +1,16 @@
+0010** Example 'DDAEX4': DEFINE DATA (global and local data area definition)
+0020************************************************************************
+0030DEFINE DATA
+0040GLOBAL
+0050  USING DDAEX4G
+0060LOCAL
+00701 #FIELD1 (A10)
+00801 #FIELD2 (N5)
+0090END-DEFINE
+0100*
+0110MOVE 'HELLO' TO #FIELD1
+0120MOVE 123     TO #FIELD2
+0130*
+0140CALLNAT 'DDAEX4N' #FIELD1 #FIELD2
+0150*
+0160END

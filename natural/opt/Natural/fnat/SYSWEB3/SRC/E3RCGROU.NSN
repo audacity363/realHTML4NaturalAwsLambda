@@ -1,0 +1,77 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3RCGROU
+0050*
+0060* DESCRIPTION   Creates a checkbox group.
+0070*
+0080* AUTHOR        SAG   08.09.1998
+0090*
+0100* Version       8.3
+0110*
+0120* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0130*
+0140* HISTORY
+0150* USER    DATE       REASON
+0160* ------+----------+----------------------------------------------
+0170*       ! --.--.-- !
+0180* ------+----------+----------------------------------------------
+0190*
+0200* ------ PARAMETER -----------------------------------------------
+0210DEFINE DATA
+0220PARAMETER USING W3PARM
+0230LOCAL USING W3CONST
+0240LOCAL
+02501 V                  (I4) CONST <10>
+02601 H3ARRAYNAME        (A/1:V) DYNAMIC
+02701 H3ARRAYVALUE       (A/1:V) DYNAMIC
+02801 H3ARRAYLABLE       (A/1:V) DYNAMIC
+02901 H3ARRAYCHECKED     (L/1:V)
+0300*
+03101 II                 (I1)
+03201 #H3VALUE (A) DYNAMIC
+0330END-DEFINE
+0340* --- ERROR HANDLING ---
+0350ON ERROR
+0360  PERFORM W3ERROR ##W3ERROR
+0370  PERFORM W3END ##RPC
+0380  ESCAPE ROUTINE
+0390END-ERROR
+0400*
+0410* --- INITIALIZE Web Interface ---
+0420PERFORM W3INIT ##RPC
+0430*
+0440* --- START HTML Generation ---
+0450PERFORM H3-OPEN-HTML 'HTML Generation - Checkbox Group' " " ' '
+0460* --- THE LEVEL 2 HEADER ---
+0470PERFORM H3-HEADER 2 'Checkbox Group '
+0480*
+0490* --- Form with GET -> Parameter will be added after a ? at the URL ---
+0500PERFORM H3-OPEN-FORM "G" "NAT-ENV"
+0510*
+0520FOR II = 1 TO V
+0530    COMPRESS "NAME" II INTO H3ARRAYNAME(II) LEAVING NO
+0540    COMPRESS "TEST" II INTO H3ARRAYVALUE(II) LEAVING NO
+0550    COMPRESS "TEST" II INTO H3ARRAYLABLE(II)
+0560END-FOR
+0570*
+0580H3ARRAYCHECKED(5) := TRUE
+0590*
+0600PERFORM H3-CHECKBOX-GROUP 10 H3ARRAYNAME(*) H3ARRAYVALUE(*)
+0610  H3ARRAYLABLE(*) H3ARRAYCHECKED(*) FALSE 3 0
+0620* -------------------------------------------------
+0630*
+0640PERFORM H3-LINE-BREAK
+0650* --- Submit button ---
+0660PERFORM H3-BUTTON "S" " " 'Submit with GET'  ' '
+0670*
+0680PERFORM H3-CLOSE-FORM
+0690*
+0700PERFORM E3-EXAMPLE-END
+0710*
+0720* --- END HTML Generation ---
+0730PERFORM H3-CLOSE-HTML
+0740* --- END Web Interface ---
+0750PERFORM W3END ##RPC
+0760*
+0770END

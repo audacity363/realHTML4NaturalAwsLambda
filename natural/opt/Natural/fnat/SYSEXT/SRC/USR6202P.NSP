@@ -1,0 +1,71 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR6202N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR6202L
+0070   2 INPUTS
+0080     3 FUNCTION        (A01)
+0090     3 ENV-VARIABLE    (A80)
+0100     3 CHAR-STRING     (A253)
+0110   2 OUTPUTS
+0120     3 RESPONSE        (I04)
+0130 1 ANSWER              (A1)
+0140 1 SET-CHAR-STRING     (A253)
+0150END-DEFINE
+0160/*
+0170SET KEY ALL
+0180SET CONTROL 'L'        /* Accept lower case
+0190/*
+0200USR6202L.FUNCTION     := 'G'
+0210USR6202L.ENV-VARIABLE := 'MY-ENVIRONMENT'
+0220USR6202L.CHAR-STRING  := ' '
+0230/*
+0240REPEAT
+0250  INPUT (AD=OIL IP=OFF)
+0260   // 'Get/set the value of an environment variable:' (I)
+0270    / '-' (45) (I) /
+0280    / 'Function ..............' USR6202L.FUNCTION     (AD=MIT'_')
+0290      ' (Get/Set)'
+0300    / 'Environment variable ..' USR6202L.ENV-VARIABLE (AD=MIW'_' AL=32)
+0310    / 'Character string ......' USR6202L.CHAR-STRING  (AD=MIW'_' AL=32)
+0320   // 'Response ..............' USR6202L.RESPONSE
+0330  /*
+0340  IF *PF-KEY NE 'ENTR'
+0350    ESCAPE ROUTINE
+0360  END-IF
+0370  /*
+0380  RESET ANSWER
+0390  IF USR6202L.FUNCTION = 'S'               /* Set environment variable
+0400    /*
+0410    /* Read variable first
+0420    USR6202L.FUNCTION := 'G'
+0430    SET-CHAR-STRING   := USR6202L.CHAR-STRING
+0440    /*
+0450    CALLNAT 'USR6202N'  USR6202L
+0460    /*
+0470    IF USR6202L.RESPONSE = 0 AND USR6202L.CHAR-STRING ne ' '
+0480      INPUT (AD=OIL IP=OFF)
+0490        // 'Environment variable already exists:'
+0500         /  USR6202L.ENV-VARIABLE (AD=OI AL=32)
+0510        // 'Do you really want to overwrite?' ANSWER (AD=MIT'_')
+0520           ' (Yes/No)'
+0530      /*
+0540      IF *PF-KEY NE 'ENTR'
+0550        ESCAPE ROUTINE
+0560      END-IF
+0570    ELSE
+0580      ANSWER := 'Y'
+0590    END-IF
+0600    USR6202L.FUNCTION    := 'S'
+0610    USR6202L.CHAR-STRING := SET-CHAR-STRING
+0620  ELSE                                      /* Get environment variable
+0630    ANSWER := 'Y'
+0640  END-IF
+0650  /*
+0660  IF ANSWER = 'Y'
+0670    CALLNAT 'USR6202N'  USR6202L
+0680  END-IF
+0690  /*
+0700END-REPEAT
+0710END

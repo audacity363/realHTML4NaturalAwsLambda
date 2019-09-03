@@ -1,0 +1,123 @@
+0010* Program   MACCOUNT
+0020* View      ACCOUNTING
+0030*
+0040* Function  Display accounting Information
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* hka 97-12-03   NPE213:   make it y2000 compliant
+0090* wkk 08-09-24   NPE2342   handle error 5544 and reset dsname
+0100* ======================================================================
+0110*
+0120DEFINE DATA GLOBAL USING TUTO
+0130            LOCAL  USING ACCOUNTL
+0140            LOCAL
+015001  #DISPLAY (13)
+0160    02 JOB-NAME     (A8)
+0170    02 CC           (B2)
+0180    02 SRB          (T)
+0190    02 TCB          (T)
+0200    02 START        (T)
+0210    02 STOP         (T)
+0220*
+023001  #DSNAME         (A44)
+024001  #VOLSER         (A6)
+025001  #FILE-ID        (A4)
+0260*
+027001  #I              (P2)
+028001  #COUNT          (P8)
+029001  #CVAR           (C)
+030001  #CV-CC          (C/1:13)
+0310END-DEFINE
+0320ASSIGN #CVAR = (AD=I)
+0330PERFORM PF-KEY
+0340*
+0350* ------------------------------ MAIN LOOP ----------------------------
+0360*
+0370REPEAT
+0380IF #DSNAME = ' '
+0390   FIND ACCOUNTING WITH NODE    = ##NODE
+0400                    AND FILE-ID = 'LIST'
+0410                    AND ACTIVE  = 'YES'
+0420     MOVE FILE-ID TO #FILE-ID
+0430     MOVE DSNAME  TO #DSNAME
+0440   END-FIND
+0450 ELSE
+0460   RESET #FILE-ID
+0470END-IF
+0480*
+0490FND.
+0500FIND ACCOUNTING
+0510     WITH NODE         =  ##NODE
+0520      AND DSNAME       =  #DSNAME
+0530      AND VOLSER       =  #VOLSER
+0540      AND FILE-ID      =  #FILE-ID
+0550      AND RECORD-TYPE  = 5   /* Job termination
+0560      AND DIRECTION    = 'B'
+0570*
+0580  IF ERROR-CODE NE 0
+0590     ASSIGN ##MSG-NR = 1000
+0600     ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0610     ESCAPE BOTTOM (FND.)
+0620  END-IF
+0630*
+0640  IF #I = 13
+0650     PERFORM SCREEN-IO
+0660     IF #CVAR MODIFIED
+0670        ESCAPE BOTTOM (FND.)
+0680     END-IF
+0690  END-IF
+0700  ADD 1 TO #I
+0710  ADD 1 TO #COUNT
+0720*
+0730  ASSIGN #DISPLAY.JOB-NAME (#I) = JOB-NAME (FND.)
+0740  CALLNAT 'ACCOUNTN' #START-TIME #START-DATE #START
+0750  ASSIGN #DISPLAY.START (#I) = #START
+0760  CALLNAT 'ACCOUNTN' #STOP-TIME #STOP-DATE #STOP
+0770  ASSIGN #DISPLAY.STOP  (#I) = #STOP
+0780  ASSIGN #CPU = #CPU-SRB
+0790  CALLNAT 'ACCOUNTN' #CPU #DUMMY-P7 #SRB
+0800  ASSIGN #DISPLAY.SRB   (#I) = #SRB
+0810  ASSIGN #CPU = #CPU-TCB
+0820  CALLNAT 'ACCOUNTN' #CPU #DUMMY-P7 #TCB
+0830  ASSIGN #DISPLAY.TCB   (#I) = #TCB
+0840  ASSIGN #DISPLAY.CC    (#I) = #CC
+0850  IF #CC NE 0
+0860     #CV-CC (#I) := (AD=I)
+0870  ELSE
+0880     #CV-CC (#I) := (AD=D)
+0890  END-IF
+0900END-FIND
+0910*
+0920DECIDE FOR FIRST CONDITION
+0930  WHEN ##MSG-NR NE 0                     /* ERROR OCCURED
+0940       IGNORE
+0950  WHEN #I > 0
+0960       ASSIGN ##MSG-NR = 1030            /* BOTTOM OF DATA
+0970  WHEN #COUNT = 0
+0980       ASSIGN ##MSG-NR = 1031            /* NOTHING FOUND
+0990  WHEN ANY
+1000       PERFORM SCREEN-IO
+1010  WHEN NONE
+1020       IGNORE
+1030END-DECIDE
+1040RESET #COUNT
+1050RESET #DSNAME                            /* wkk: List DSNAME again
+1060END-REPEAT
+1070*
+1080* ------------------------------ SCREEN-IO ----------------------------
+1090*
+1100DEFINE SUBROUTINE SCREEN-IO
+1110INPUT WITH TEXT *##MSG-NR,
+1120                 ##MSG-TXT1,
+1130                 ##MSG-TXT2
+1140      USING MAP 'MACCOUN&'
+1150RESET ##MSG
+1160RESET #DISPLAY (*)
+1170RESET #I
+1180END-SUBROUTINE
+1190*
+1200* ------------------------------ PF-KEY -------------------------------
+1210*
+1220INCLUDE C-PFKEY
+1230END

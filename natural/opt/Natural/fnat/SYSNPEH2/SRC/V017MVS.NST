@@ -1,0 +1,13 @@
+0010&H View IEBCOPY
+0020&L
+0030&L
+0040#Zweck@    : Durchfuehrung des Programms IEBCOPY.
+0050&L
+0060#System@   : z/OS.
+0070&L
+0080&L
+0090#Anwendung@: Dieser View wird genauso wie das Programm IEBCOPY be-
+0100             nutzt. Die Syntax ist zu der von IEBCOPY voellig trans-
+0110             parent.
+0120&L
+0130#Anmerkung@:

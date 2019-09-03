@@ -1,0 +1,55 @@
+0010*
+0020* BS2000 inter Task communication
+0030*
+0040DEFINE DATA GLOBAL USING TUTO
+0050            LOCAL  USING BITC---L
+0060            LOCAL
+0070*
+008001 #FUNCTION                (A8)
+009001 #ITC-NAME                (A8)
+010001 #ERASE                   (A3)
+011001 #EVENT-SHORT-NAME        (A4)
+012001 #MESSAGE-LENGTH          (N6)
+013001 #MESSAGE-TEXT            (A250)
+014001 REDEFINE #MESSAGE-TEXT
+0150   02 #MSG-TEXT             (A50/1:5)
+016001 #WAITING-TIME-ALLOWED    (B4)
+017001 #POINTER-TO-WORKAREA     (B4)
+0180END-DEFINE
+0190PERFORM PF-KEY
+0200*
+0210* ------------------------------ MAIN LOOP ----------------------------
+0220*
+0230REPEAT
+0240  PERFORM SCREEN-IO
+0250  DECIDE ON FIRST #FUNCTION
+0260    VALUE 'OPEN'    PROCESS ITC
+0270                      USING NODE                     = ##NODE
+0280                        ,   FUNCTION                 = #FUNCTION
+0290                        ,   INTER-TASK-COMMUNICATION-NAME = #ITC-NAME
+0300                     GIVING ERROR-CODE
+0310                            ERROR-TEXT
+0320                            SYSTEM-CODE
+0330    ANY            IF ERROR-CODE NE 0
+0340                      INCLUDE BERR---C
+0350                     ELSE
+0360                      ASSIGN ##MSG-NR = 1007
+0370                   END-IF
+0380    NONE           ASSIGN ##MSG-NR = 1033
+0390  END-DECIDE
+0400END-REPEAT
+0410*
+0420* ------------------------------ SCREEN-IO ----------------------------
+0430*
+0440DEFINE SUBROUTINE SCREEN-IO
+0450INPUT WITH TEXT *##MSG-NR,
+0460                 ##MSG-TXT1,
+0470                 ##MSG-TXT2
+0480      USING MAP 'BITC---1'
+0490RESET ##MSG
+0500END-SUBROUTINE
+0510*
+0520* ------------------------------ PF-KEY -------------------------------
+0530*
+0540INCLUDE C-PFKEY
+0550END

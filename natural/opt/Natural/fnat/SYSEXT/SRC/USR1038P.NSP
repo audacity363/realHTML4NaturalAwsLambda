@@ -1,0 +1,36 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1038N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR1038L
+0070   2 OUTPUTS
+0080     3 PLATFORM-DATA    (A16)
+0090     3 REDEFINE PLATFORM-DATA
+0100       4 NAT-IMPL       (A01)
+0110       4 CHAR-SET       (A01)
+0120       4 OP-SYSTEM      (A01)
+0130       4 USER-INTERFACE (A01)
+0140       4 BYTE-SWAPPING  (A01)
+0150       4 FILLER         (A11)
+0160 /*
+0170 1 USR1038N
+0180   2 VERSION            (I01)     INIT <0>
+0190 1 REDEFINE USR1038N
+0200   2 EXTENDED-PARMS
+0210     3 EXTENDED-DATA    (A01/1:1)
+0220 /*
+0230END-DEFINE
+0240/*
+0250CALLNAT 'USR1038N'  USR1038L  USR1038N.EXTENDED-PARMS
+0260/*
+0270WRITE (AD=OIL)
+0280 // 18T 'Characteristica of the current platform:' (I)
+0290  / 18T '-' (40) (I) /
+0300  / 18T 'Implementation .........'  NAT-IMPL
+0310  / 18T 'Character set ..........'  CHAR-SET
+0320  / 18T 'Operating system .......'  OP-SYSTEM
+0330  / 18T 'User interface .........'  USER-INTERFACE
+0340  / 18T 'Byte swapping machine ..'  BYTE-SWAPPING
+0350/*
+0360END

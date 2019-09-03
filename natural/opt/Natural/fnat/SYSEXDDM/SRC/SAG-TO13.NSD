@@ -1,0 +1,43 @@
+0010 DB: 000 FILE: 027  - SAG-TOURS-G-YACHT                DEFAULT SEQUENCE:
+0020
+0030T L DB Name                              F Leng  S D Remark
+0040- - -- --------------------------------  - ----  - - ------------------------
+0050  1 DB YACHT-ID                          N  8.0  N D
+0060  1 DC YACHT-NAME                        A   30  N D
+0070  1 DE YACHT-SPARTE                      A    1  N
+0080*      'A' wenn Charter-Yacht, 'B'
+0090*      wenn Mitsegler-Yacht
+0100  1 DN ID-CH-BASIS                       A    8  N D
+0110*      nur fuer
+0120*      YACHT-SPARTE='A'=FIRMA-ID der
+0130*      Charterbas
+0140  1 DP ID-MS-EIGNER                      N  8.0  N D
+0150*      nur fuer
+0160*      YACHT-SPARTE='B''PERSON-ID
+0170*      Yacht-Eigner
+0180  1 DM DID-BESCHREIBUNG                  A    8  N D
+0190*      Dokumenten-ID fuer besondere
+0200*      Merkmale der Yacht
+0210  1 DD YACHT-TYP                         A   30  N D
+0220  1 DF LAENGE                            P  3.2  N
+0230*      in Metern
+0240  1 DG BREITE                            P  3.2  N
+0250*      in Metern
+0260  1 DH TIEFGANG                          P  3.2  N
+0270*      in Metern
+0280  1 DI SEGELFLAECHE                      P  3.0  N
+0290*      in Quadratmetern
+0300  1 DJ MOTOR                             P  3.0  N
+0310*      Leistung in PS
+0320  1 DK STEHHOEHE                         P  3.2  N
+0330*      Höhe im Salon in Meter
+0340  1 DL KOJEN                             P  3.0  N
+0350*      Anzahl
+0360  1 T4 YACHT-TIMESTAMP                   T   12  N
+0370*      used for Natural Constract
+0380  1 DQ YACHT-NAME-PH                     A   20  N P
+0390  1 DR YACHT-SPARTE-SP                   A    9  N S
+0400*      -------- SOURCE FIELD(S) -------
+0410*      YACHT-BRANCH(1-1)
+0420*      YACHT-ID(1-8)
+0430******DDM OUTPUT TERMINATED******

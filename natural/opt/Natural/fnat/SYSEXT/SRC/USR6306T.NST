@@ -1,0 +1,81 @@
+0010Get status of UOWs of current EntireX Broker user
+0020.
+0030Documentation ......... USR6306T    /*  Text object
+0040Interface ............. USR6306N    /*  Cataloged subprogram
+0050Example Program ....... USR6306P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC - RELIABLE RPC
+0100.
+0110Keywords .............. CLIENT, RELIABLE, RPC, UOW
+0120.
+0130Function .............. Status of UOWs of current EntireX Broker user
+0140.
+0150.
+0160Parameters
+0170----------
+0180Define the following parameters with the DEFINE DATA statement:
+0190.
+0200INPUT
+0210       UOW-ID-IN    (A16)  UOWID for UOW to be retrieved
+0220                             ID of an UOW
+0230                             'ALL' or blank
+0240                             'LAST'
+0250OUTPUT
+0260       USER-ID      (A32)  creator of UOW
+0270       BROKER-ID    (A32)  Broker  of UOW
+0280       UOW-COUNT    (I4)   number  of UOWs
+0290       UOW-INFO     (/*)   Info about UOWs
+0300        UOW-ID      (A16)  ID of UOW
+0310        UOW-STATUS  (A10)  status of UOW
+0320        USER-STATUS (A32)  user information about UOW
+0330        CREATE-TIME (A32)  creation time of UOW
+0340       RC           (N04)  return value
+0350                             0    ok
+0360                             1    user not logged on
+0370                             2    no UOW created in session
+0380                             101  CIS version can't be determined
+0390                             110  Invalid restart information
+0400                             111  API version can't be determined
+0410                             112  PSF info call failed
+0420                             9999 Broker error (see MESSAGE)
+0430       MESSAGE      (A80)  message text
+0440.
+0450Interface Call
+0460--------------
+0470Use the interface with the CALLNAT statement:
+0480.
+0490CALLNAT 'USR6306N' UOW-ID-IN
+0500                   USER-ID
+0510                   BROKER-ID
+0520                   UOW-COUNT
+0530                   UOW-INFO(*)
+0540                   RC
+0550                   MESSAGE
+0560.
+0570.
+0580Using the Application Programming Interface:
+0590--------------------------------------------
+0600Copy the subprogram USR6306N to the library SYSTEM or the steplib
+0610library respectively, or to the required library.
+0620.
+0630Functionality:
+0640--------------
+0650Retrieve the status of UOWs that have been created by the user who
+0660is currently logged on to the EntireX Broker by a previous call to
+0670USR2071N.
+0680.
+0690UOW-ID-IN determines for which UOWs the status is to be retrieved:
+0700- ID of an UOW = UOW with the given UOWID
+0710- ALL or blank = all UOWs of user
+0720- LAST         = last created UOW of user in session
+0730.
+0740LAST will only retrieve information about the last UOW created in the
+0750same Natural session.
+0760.
+0770If the size of the UOW-INFO array is zero the array is RESIZEd to hold
+0780all information. Otherwise the size of the array determines the amount
+0790of data to be returned.
+0800.
+0810***** End of Description *****

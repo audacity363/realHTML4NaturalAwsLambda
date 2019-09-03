@@ -1,0 +1,19 @@
+0010/* RPC: Support of commit for CLOSE CONVERSATION.
+0020/*
+0030/* Function ... Set commit option for next CLOSE CONVERSATION.
+0040/*
+0050/* This program serves as example how to design a user-defined
+0060/* program call 'USR2032N'.
+0070/*
+0080/* Parameter ..
+0090/*     INPUT
+0100/*             none
+0110/*
+0120/*     OUTPUT
+0130/*             none
+0140/***********************************************************************
+0150*
+0160CALLNAT 'USR2032N'
+0170WRITE 'COMMIT option set for next CLOSE CONVERSATION statement.'
+0180*
+0190END

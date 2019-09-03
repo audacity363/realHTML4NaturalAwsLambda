@@ -1,0 +1,23 @@
+0010** Example 'DISPLX16': DISPLAY  (with '/', 'text', 'text/text')
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 EMPLOY-VIEW VIEW OF EMPLOYEES
+0050  2 FIRST-NAME
+0060  2 NAME
+0070  2 ADDRESS-LINE (1)
+0080  2 CITY
+0090  2 TELEPHONE
+0100    3 AREA-CODE
+0110    3 PHONE
+0120END-DEFINE
+0130*
+0140READ (5) EMPLOY-VIEW BY NAME STARTING FROM 'E'
+0150  DISPLAY NOTITLE
+0160    '/'          NAME       (AL=12) /* suppressed header
+0170    'FIRST/NAME' FIRST-NAME (AL=10) /* two-line user-defined header
+0180    'ADDRESS'    CITY /             /* user-defined header
+0190    ' '          ADDRESS-LINE(1)    /* 'blank' header
+0200                 TELEPHONE (HC=L)   /* default header
+0210  SKIP 1
+0220END-READ
+0230END

@@ -1,0 +1,36 @@
+0010/*  EXAM-GTX - GET TIMESTMP
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  1 COMMAND VIEW OF COMMAND
+0050    2 PROCESSOR-NAME
+0060    2 GETSET-FIELD-NAME
+0070    2 GETSET-FIELD-VALUE
+0080    2 NATURAL-ERROR
+0090  1 IX (P7)
+0100  1 MSG (A72)
+0110END-DEFINE
+0120/**********************************************************************
+0130DEFINE WINDOW EXAM
+0140  SIZE 06 * 48
+0150  BASE IX / IX
+0160  TITLE ' (GTX) Get TIMESTMP '
+0170  CONTROL SCREEN
+0180  FRAMED POSITION OFF
+0190SET KEY ALL
+0200IX := *LEVEL * 2
+0210/**********************************************************************
+0220PROCESS COMMAND ACTION GET USING
+0230  PROCESSOR-NAME = ' '                     /*  Current processor
+0240  GETSET-FIELD-NAME = 'TIMESTMP'
+0250/**********************************************************************
+0260IF NATURAL-ERROR NE 0
+0270  CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0280  MOVE ALL H'00' TO GETSET-FIELD-VALUE
+0290END-IF
+0300/********************************************************************
+0310INPUT WINDOW = 'EXAM' (IP=OFF AD=OI) WITH TEXT MSG /
+0320  'Field name ......' GETSET-FIELD-NAME  /
+0330  'Field value .....' GETSET-FIELD-VALUE (EM=HHHHHHHH)
+0340/********************************************************************
+0350SET WINDOW OFF
+0360END

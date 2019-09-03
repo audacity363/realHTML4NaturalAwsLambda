@@ -1,0 +1,59 @@
+0010* MAP2: PROTOTYPE
+0020* INPUT USING MAP 'XXXXXXXX'
+0030*     ##TITLE NATPROC-LOGON.ACCOUNTING NATPROC-LOGON.FUNCTION
+0040*     NATPROC-LOGON.LOGON-ID NATPROC-LOGON.PASSWORD
+0050DEFINE DATA PARAMETER
+00601 ##TITLE (A078)
+00701 NATPROC-LOGON.ACCOUNTING (A020)
+00801 NATPROC-LOGON.FUNCTION (A008)
+00901 NATPROC-LOGON.LOGON-ID (A008)
+01001 NATPROC-LOGON.PASSWORD (A008)
+0110END-DEFINE
+0120FORMAT PS=021 LS=080 ZP=OFF SG=OFF KD=ON  IP=OFF
+0130* MAP2: MAP PROFILES *****************************        410***********
+0140* .TTAAAMMOO   D I D I N D I D I        ?_)¬&:+(                       *
+0150* 023079        N0NNUCN             X        01 SYSPROF YL           1 *
+0160************************************************************************
+0170INPUT          (     IP=OFF                                           /*
+0180                                                                       )
+0190 002T ##TITLE  (AD=ODL ) /*.01D078 A078 .
+0200/
+0210/
+0220/
+0230 002T 'Funktion .......'
+0240 019T NATPROC-LOGON.FUNCTION  (AD=MILT'_' CD=NE ) /*.99D008 A008 .
+0250 028T '(logon/logoff)'
+0260/
+0270/
+0280 002T 'Logon ID .......'
+0290 019T NATPROC-LOGON.LOGON-ID  (AD=MILT'_' CD=NE ) /*.99D008 A008 .
+0300/
+0310 002T 'Account-# ......'
+0320 019T NATPROC-LOGON.ACCOUNTING  (AD=MILT'_' CD=NE AL=008  ) /*.99D008 A020 .
+0330/
+0340 002T 'Passwort .......'
+0350 019T NATPROC-LOGON.PASSWORD  (AD=MNT'_' CD=NE ) /*.99D008 A008 .
+0360/
+0370/
+0380/
+0390/
+0400/
+0410/
+0420/
+0430/
+0440/
+0450/
+0460/
+0470/
+0480/
+0490* MAP2: VALIDATION *****************************************************
+0500RULEVAR D01NATPROC-LOGON.FUNCTION
+0510INCDIR NATPROC-LOGON                    FUNCTION                        ;
+0520RULEVAR D01NATPROC-LOGON.LOGON-ID
+0530INCDIR NATPROC-LOGON                    LOGON-ID                        ;
+0540RULEVAR D01NATPROC-LOGON.ACCOUNTING
+0550INCDIR NATPROC-LOGON                    ACCOUNTING                      ;
+0560RULEVAR D01NATPROC-LOGON.PASSWORD
+0570INCDIR NATPROC-LOGON                    PASSWORD                        ;
+0580* MAP2: END OF MAP *****************************************************
+0590END

@@ -1,0 +1,45 @@
+0010Get type of database
+0020.
+0030Documentation ......... USR2023T    /*  Text object
+0040Interface ............. USR2023N    /*  Cataloged subprogram
+0050Example Program ....... USR2023P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATABASE
+0100.
+0110Keywords .............. +CURRENT-VERSION,
+0120                        DATABASE, DBID, LFILE, TYPE
+0130.
+0140Interface Versions .... USR1022N, USR2023N
+0150.
+0160Function .............. Returns types of all available data bases
+0170                        With USR2023N, the DBID can be defined to get
+0180                        the data base type.
+0190.
+0200.
+0210Parameters
+0220----------
+0230Define the following parameters with the DEFINE DATA statement:
+0240.
+0250  DB-TYPE (A1/1:257)  /* type of the db
+0260                      /* output
+0270  DBID    (N5/1:257)  /* number of the db ( 0 - 65535 )
+0280                      /* input
+0290                         The type of the DB in DBID(1) is delivered
+0300                         in DB-TYPE(1) and so on.
+0310.
+0320Interface Call
+0330--------------
+0340Use the interface with the CALLNAT statement:
+0350.
+0360CALLNAT 'USR2023N' DB-TYPE(*) DBID(*)
+0370.
+0380.
+0390Using the Application Programming Interface:
+0400--------------------------------------------
+0410Copy the subprogram USR2023N to the library SYSTEM or the steplib
+0420library respectively, or to the required library.
+0430.
+0440.
+0450***** End of Description *****

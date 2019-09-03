@@ -1,0 +1,92 @@
+0010************************************************************************
+0020* Application: SYSOBJH (Object Handler)
+0030* Program:     SRC-EX03
+0040* Platforms:   Mainframe 4.2
+0050**----------------------------------------------------------------------
+0060* Function:    Source of the user exit OBJHEX03;
+0070*              User Exit interface of SYSOBJH
+0080*              To activate this exit catalog or stow as OBJHEX03 in
+0090*              library SYSOBJH
+0100**----------------------------------------------------------------------
+0110* Remarks: This Exit is invoked before a command is processed by
+0120*          SYSOBJH. It can be used to set default values for certain
+0130*          parameters/options.
+0140*
+0150*          OBJHEX03-Settings (input/output)
+0160*                   defined as variable array and redefined as:
+0170*
+0180*             PC-Cmd-File-Number (N2)
+0190*                   Work file number to be used for Entire Connection
+0200*                   commands, the default number is 8.
+0210*                   Valid values are 1 to 6 and 8 to 32.
+0220*                   Work file 7 is reserved for the unload/load
+0230*                   work file.
+0240*
+0250*             Blank-Name-allowed-internal-Fmt (A1)
+0260*                   Defines whether sources with name ' ' (blank) are
+0270*                   allowed when processing a work file in
+0280*                   internal format.
+0290*                   Valid values are 'Y' and 'N', where
+0300*                   'Y' = source name ' ' (blank) is allowed
+0310*                   'N' = source name ' ' (blank) is not allowed
+0320*
+0330*             Blank-Name-allowed-Transfer-Fmt (A1)
+0340*                   Defines whether sources with name ' ' (blank) are
+0350*                   allowed when processing a work file in
+0360*                   Transfer format.
+0370*                   Valid values are 'Y' and 'N', where
+0380*                   'Y' = source name ' ' (blank) is allowed
+0390*                   'N' = source name ' ' (blank) is not allowed
+0400*
+0410*          CONTROL must be returned to SYSOBJH.
+0420************************************************************************
+0430/*---------------------------------------------------------------------
+0440/*---------------- Compiler options -----------------------------------
+0450/*---------------------------------------------------------------------
+0460OPTIONS LOWSRCE=ON
+0470/*---------------------------------------------------------------------
+0480/*---------------- Data definitions -----------------------------------
+0490/*---------------------------------------------------------------------
+0500Define Data Parameter
+05101 OBJHEX03-Parameters
+0520  2 OBJHEX03-Settings                 (A1/1:V)
+0530/*---------------------------------------------------------------------
+0540/*---------------- Local data -----------------------------------------
+0550/*---------------------------------------------------------------------
+0560Local
+05701 Settings                            (A1/1:4)
+05801 Redefine Settings
+0590  2 PC-Cmd-File-Number                (N2)
+0600  2 Blank-Name-allowed-internal-Fmt   (A1)
+0610  2 Blank-Name-allowed-Transfer-Fmt   (A1)
+06201 Array-Size                          (I2)
+06301 Size-Settings                       (I2)
+0640END-DEFINE
+0650/*---------------------------------------------------------------------
+0660/*---------------------------------------------------------------------
+0670Array-Size := *Occurrence (OBJHEX03-Settings)
+0680If Array-Size < 2
+0690  Escape Routine
+0700End-If
+0710Size-Settings := *Occurrence (Settings)
+0720If Array-Size > Size-Settings
+0730  Array-Size := Size-Settings
+0740End-If
+0750/* Copy parameter variable to local variable
+0760Settings (1:Array-Size) := OBJHEX03-Settings (1:Array-Size)
+0770/* Check or change the settings
+0780/*
+0790/* Sample code:
+0800If *Init-User = 'SAG'
+0810  PC-Cmd-File-Number              := 8      /* default value
+0820  Blank-Name-allowed-internal-Fmt := 'N'    /* default value
+0830  Blank-Name-allowed-Transfer-Fmt := 'N'    /* default value
+0840End-If
+0850/* End of sample code
+0860/*
+0870/* Copy back local variable to parameter variable
+0880OBJHEX03-Settings (1:Array-Size) := Settings (1:Array-Size)
+0890/*
+0900Escape Routine                /* return to calling program
+0910/*---------------------------------------------------------------------
+0920END

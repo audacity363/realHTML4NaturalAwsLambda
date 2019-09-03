@@ -1,0 +1,48 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR4007N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 01 FUNCTION       (A01)  /* Function code: 'G' get, 'S' set
+0070 01 ERROR-CODE     (N04)  /* Error during execution of USR4007N
+0080 01 ERROR-TEXT     (A79)  /* Short error text
+0090 01 SYNERR-CUR     (A03)  /* SYNERR: Compilation errors are sent to the
+0100                          /* error transaction program (ON/OFF)
+0110LOCAL
+0120 01 #MSG           (A79)
+0130END-DEFINE
+0140/*
+0150SET KEY ALL
+0160/*
+0170FUNCTION := 'G'
+0180CALLNAT 'USR4007N' FUNCTION ERROR-CODE ERROR-TEXT SYNERR-CUR
+0190/*
+0200REPEAT
+0210  /*
+0220  INPUT (AD=MITL'_' IP=OFF ) WITH TEXT #MSG ///
+0230    12T  'Get/Set the Value of Parameter:' (I) //
+0240    15T  'Function code ........' FUNCTION   48T '(G-Get,S-Set)' /
+0250    15T  'SYNERR ...............' SYNERR-CUR 48T '(ON,OFF)'     //
+0260    15T  'Response .............' ERROR-CODE (AD=OI) ////
+0270    12T  'Press ENTER to receive the information.'   //
+0280    12T  'Press any PF-key to stop.'
+0290    /*
+0300  /*
+0310  RESET #MSG
+0320  IF *PF-KEY NE 'ENTR'
+0330    ESCAPE BOTTOM
+0340  END-IF
+0350  /*
+0360  CALLNAT 'USR4007N' FUNCTION ERROR-CODE ERROR-TEXT SYNERR-CUR
+0370  /*
+0380  IF ERROR-CODE > 0
+0390    MOVE ERROR-TEXT TO #MSG
+0400  END-IF
+0410  /*
+0420  RESET ERROR-CODE
+0430  /*
+0440  FUNCTION := 'G'  /* Get data
+0450  CALLNAT 'USR4007N' FUNCTION ERROR-CODE ERROR-TEXT SYNERR-CUR
+0460  /*
+0470END-REPEAT
+0480END

@@ -1,0 +1,59 @@
+0010/*  EXAM-ST - Set TRACE mode
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 GETSET-FIELD-NAME
+0070     02 GETSET-FIELD-VALUE
+0080     02 NATURAL-ERROR
+0090  01 IX (P7)
+0100  01 #TRACE (A1)
+0110  01 MSG (A72)
+0120  01 MOD (C)
+0130END-DEFINE
+0140DEFINE WINDOW EXAM
+0150  SIZE 04 * 42
+0160  BASE IX /IX
+0170  TITLE ' (ST) Set Trace Mode '
+0180  CONTROL SCREEN
+0190  FRAMED POSITION OFF
+0200SET KEY ALL
+0210IX := *LEVEL * 2
+0220/**********************************************************************
+0230REPEAT
+0240  PROCESS COMMAND ACTION GET USING
+0250    PROCESSOR-NAME = ' '                     /*  Current processor
+0260    GETSET-FIELD-NAME = 'TRACE'
+0270  /*
+0280  IF NATURAL-ERROR NE 0
+0290    CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0300  END-IF
+0310  /*
+0320  MOVE GETSET-FIELD-VALUE TO #TRACE
+0330  /********************************************************************
+0340  INPUT WINDOW = 'EXAM' (AD=MI CD=NE IP=OFF SG=OFF CV=MOD )
+0350  WITH TEXT MSG
+0360     'Current setting of TRACE mode ....' #TRACE
+0370  SET WINDOW OFF
+0380  RESET MSG
+0390  /********************************************************************
+0400  IF *PF-KEY NE 'ENTR'
+0410  OR MOD NOT MODIFIED
+0420    ESCAPE ROUTINE
+0430  END-IF
+0440  /********************************************************************
+0450  IF #TRACE = ' ' OR = '1' OR = '2' OR = '3'
+0460    IGNORE
+0470  ELSE
+0480    REINPUT 'Please enter " ", "1", "2" or "3" here.'
+0490  END-IF
+0500  /********************************************************************
+0510  PROCESS COMMAND ACTION SET USING
+0520    PROCESSOR-NAME = ' '                     /*  Current processor
+0530    GETSET-FIELD-NAME = 'TRACE'
+0540    GETSET-FIELD-VALUE = #TRACE
+0550  /*
+0560  MOVE 'Setting is now valid.' TO MSG
+0570  /*
+0580END-REPEAT
+0590END

@@ -1,0 +1,13 @@
+0010&H View SPOOL-QUEUE
+0020&L
+0030&L
+0040#Zweck@    : Anzeige der SPOOL-Queue.
+0050&L
+0060#System@   : z/OS, z/VSE, BS2000/OSD.
+0070&L
+0080&L
+0090#Anwendung@: Die Informationen, die dieser View liefert, entsprechen
+0100             denen, die das BS2000 Kommando '/STA L' bzw.
+0110             '/SHOW-USER-STATUS JOB-TYPE=ANY' ausgibt.
+0120&L
+0130#Anmerkung@:

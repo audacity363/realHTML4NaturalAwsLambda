@@ -1,0 +1,31 @@
+0010** Example 'OUTPUX01': Several sections of output
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 EMP-VIEW VIEW OF EMPLOYEES
+0050  2 NAME
+0060  2 FIRST-NAME
+0070  2 BIRTH
+0080END-DEFINE
+0090*
+0100WRITE TITLE   '********** Page Title **********'
+0110WRITE TRAILER '********** Page Trailer **********'
+0120*
+0130AT TOP OF PAGE
+0140  WRITE '===== Top of Page ====='
+0150END-TOPPAGE
+0160AT END OF PAGE
+0170  WRITE '===== End of Page ====='
+0180END-ENDPAGE
+0190*
+0200READ (10) EMP-VIEW BY NAME
+0210  /*
+0220  DISPLAY NAME FIRST-NAME BIRTH (EM=YYYY-MM-DD)
+0230  /*
+0240  AT START OF DATA
+0250    WRITE '>>>>> Start of Data >>>>>'
+0260  END-START
+0270  AT END OF DATA
+0280    WRITE '<<<<< End of Data <<<<<'
+0290  END-ENDDATA
+0300END-READ
+0310END

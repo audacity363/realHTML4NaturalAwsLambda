@@ -1,0 +1,14 @@
+0010/* This program serves as example how to code an user-defined program
+0020/* to call 'USR1016N'
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060  1 PARMS
+0070    2 PGMNAME  (A16/1:10)
+0080    2 LINE     (A04/1:10)
+0090    2 COUNTER  (I02)
+0100END-DEFINE
+0110/***********************************
+0120CALLNAT 'USR1016N' PARMS
+0130DISPLAY PGMNAME (*) LINE (*) COUNTER
+0140END

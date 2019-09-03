@@ -1,0 +1,15 @@
+0010&H View HELP-INFO
+0020&L
+0030&L
+0040#Zweck@    : Meldungstext zu BS2000 Meldungsschluesseln anzeigen.
+0050&L
+0060&L
+0070#System@   : BS2000/OSD.
+0080&L
+0090&L
+0100#Anwendung@: Mit Hilfe dieses Views koennen Sie sich zu einem bestimmten
+0110             BS2000 Meldungsschluessel, wie er z.B. in dem Feld
+0120             SYSTEM-MESSAGE-CODE von einigen Views geliefert wird,
+0130             den ausfuehrlichen Text (inkl. Erklaerung und ggfs. Ma~-
+0140             nahmen) anzeigen lassen.
+0150#Anmerkung@:

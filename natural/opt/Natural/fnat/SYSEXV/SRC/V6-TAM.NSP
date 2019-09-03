@@ -1,0 +1,126 @@
+0010*
+0020* Program .. V6-TAM
+0030* Library .. SYSEXV
+0040* Version .. 6.1
+0050*
+0060* Functionality: Show READ access on Tamino database
+0070*
+0080* NOTE: Functionality is not available under openVMS
+0090************************************************************************
+0100*
+0110DEFINE DATA
+0120LOCAL
+013001 EMPLOYEES-VIEW VIEW OF EMPLOYEES-TAMINO
+0140  02 FIRST-NAME
+0150  02 NAME
+0160  02 BIRTH
+0170  02 CITY
+018001 J      (I2)
+019001 #FIRST (A10/1:7)
+020001 #NAME  (A15/1:7)
+021001 #BIRTH (A10/1:7)
+022001 #CITY  (A20/1:7)
+0230END-DEFINE
+0240*
+0250*
+0260FORMAT KD=ON
+0270SET KEY PF3   NAMED 'Exit'
+0280  PF12  NAMED 'Canc'
+0290*
+0300INPUT (IP=OFF AD=OI)
+0310  01T *TIMX  (AD=OTD)
+0320  21T '***** NATURAL 6.1 ENHANCEMENTS *****'
+0330  70T *DATX  (AD=OTD DF=L)
+0340  /
+0350  01T 'User'
+0360  06T *USER  (AD=OILT)
+0370  30T '- Tamino Access -'(I)
+0380  64T 'Program'
+0390  72T *PROGRAM (AD=OI)
+0400  / / /
+0410  02T 'This example demonstrates a database access on a Tamino' (I)
+0420  'database.' (I)
+0430  //
+0440  02T 'Therefore you need to install the Tamino Demo database'
+0450  '(from version 4.1.4)'
+0460  /
+0470  02T 'and you need to load Employees data with the utility'
+0480  'SYSEXTDB.'
+0490  //
+0500  02T 'For the Employees data start library'
+0510  'SYSEXTDB,'(I) 'call MENU and execute'
+0520  /
+0530  02T 'the first four functions on the menu.'
+0540  /
+0550  02T 'For more information please read the help information'
+0560  'in library SYSEXTDB.'
+0570  //
+0580  02T 'When the Employees data are loaded on the Tamino database,'
+0590  'define the'
+0600  /
+0610  02T 'Tamino Url with the collection name in the DBMS'
+0620  'assignments of the'
+0630  /
+0640  02T 'NATPARM utility. The delivered' 'DDM Employees-Tamino' (I)
+0650  'must point to'
+0660  /
+0670  02T 'this database.'
+0680  //
+0690  05T 'If everything is done, continue and press ENTER.'(I)
+0700
+0710*
+0720IF *PF-KEY = 'PF3'
+0730  ESCAPE ROUTINE
+0740END-IF
+0750IF (*PF-KEY = 'PF12' OR= 'CLR')
+0760  CALLNAT 'UTILSTOP'
+0770END-IF
+0780RESET J
+0790READ (7) EMPLOYEES-VIEW WITH NAME = 'K'
+0800  ADD 1 TO J
+0810  MOVE EMPLOYEES-VIEW.NAME       TO #NAME (J)
+0820  MOVE EMPLOYEES-VIEW.FIRST-NAME TO #FIRST (J)
+0830  MOVE EMPLOYEES-VIEW.BIRTH      TO #BIRTH (J)
+0840  MOVE EMPLOYEES-VIEW.CITY       TO #CITY (J)
+0850END-READ
+0860*
+0870*
+0880*
+0890INPUT (IP=OFF AD=OI)
+0900  01T *TIMX  (AD=OTD)
+0910  21T '***** NATURAL 6.1 ENHANCEMENTS *****'
+0920  70T *DATX  (AD=OTD DF=L)
+0930  /
+0940  01T 'User'
+0950  06T *USER  (AD=OILT)
+0960  30T '- Tamino Access -'(I)
+0970  64T 'Program'
+0980  72T *PROGRAM (AD=OI)
+0990  / / /
+1000  02T 'READ statement on Tamino database' (I)
+1010  ///
+1020  05T 'Name            First Name     Birth        City' (I)
+1030  /
+1040  05T #NAME (1) #FIRST(1) 5X #BIRTH (1) 3X #CITY (1)
+1050  /
+1060  05T #NAME (2) #FIRST(2) 5X #BIRTH (2) 3X #CITY (2)
+1070  /
+1080  05T #NAME (3) #FIRST(3) 5X #BIRTH (3) 3X #CITY (3)
+1090  /
+1100  05T #NAME (4) #FIRST(4) 5X #BIRTH (4) 3X #CITY (4)
+1110  /
+1120  05T #NAME (5) #FIRST(5) 5X #BIRTH (5) 3X #CITY (5)
+1130  /
+1140  05T #NAME (6) #FIRST(6) 5X #BIRTH (6) 3X #CITY (6)
+1150  /
+1160  05T #NAME (7) #FIRST(7) 5X #BIRTH (7) 3X #CITY (7)
+1170  ///
+1180IF *PF-KEY = 'PF3'
+1190  ESCAPE ROUTINE
+1200END-IF
+1210IF (*PF-KEY = 'PF12' OR= 'CLR')
+1220  CALLNAT 'UTILSTOP'
+1230END-IF
+1240*
+1250*
+1260END

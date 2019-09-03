@@ -1,0 +1,158 @@
+0010Send data to Optimize for Infrastructure
+0020.
+0030Documentation ......... USR4217T    /*  Text object
+0040Interface ............. USR4217N    /*  Cataloged subprogram
+0050Example Program ....... USR4217P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. OPTIMIZE FOR INFRASTRUCTURE
+0100.
+0110Keywords .............. +NEW-NAT-6.3.8,
+0120                        DATA COLLECTOR, OPTIMIZE
+0130.
+0140Function .............. Allows to send data to the webMethods
+0150                        Optimize for Infrastructure data collector.
+0160.
+0170.
+0180Parameters
+0190----------
+0200Define the following parameters with the DEFINE DATA statement:
+0210.
+0220Note: On mainframes, XML must be activated; start session with
+0230====  parameter 'XML=(ON,RDOC=ON,PARSE=ON)' or set corresponding
+0240      values in your NATPARM module.
+0250.
+02601 P-Target                   (A) Dynamic (Input)
+0270                                 URL of the Optimize Web Service
+0280                                 Data Collector
+02901 P-Event-Type               (A) Dynamic (Input)
+0300                                 Type of the event (for example,
+0310                                 'OrderProcess').
+03201 P-Array-of-Data            (1:*) (Input)
+0330  2 P-Array-of-Data-Name     (A) Dynamic
+0340                                 Attribute name (for example, 'Revenue')
+0350  2 P-Array-of-Data-Value    (A) Dynamic
+0360                                 Attribute value (for example, 500)
+03701 P-Time-A                   (A) Dynamic (Input)
+0380                                 Time to associate with P-Event-Type;
+0390                                 the time must be in the following
+0400                                 format: YYYY-MM-DDTHH:II:SS,
+0410                                 reflecting the local time.
+0420                                 Note: If left blank, the current date
+0430                                 and time will be used.
+04401 P-Return-Msg               (A) Dynamic (output)
+0450                                 Filled when P-Return-Code <> 0;
+04601 P-Return-Code              (I4) (output)
+0470                                 Return code:
+0480                                 < 0 : Natural runtime errors
+0490                                   1  Target must not be blank
+0500                                   2  Event Type must not be blank
+0510                                   3  Data array must not be empty
+0520                                   4  Data array must be filled
+0530                                      completely
+0540                                   5  Time value must be blank or in
+0550                                      format YYYY-MM-DDTHH:II:SS
+0560                                 200  Request completed
+0570                                 others are return codes from the
+0580                                 REQUEST DOCUMENT statement
+05901 P-Return-Soapmsg           (A) Dynamic Optional (output)
+0600                                 SOAP message ('faultstring')
+06101 P-Return-Soapcode          (A) Dynamic Optional (output)
+0620                                 SOAP return code ('faultcode')
+0630.
+0640Interface Call
+0650--------------
+0660Use the interface with the CALLNAT statement:
+0670.
+0680CALLNAT 'USR4217N'
+0690        P-Target
+0700        P-Event-Type
+0710        P-Array-of-Data (*)
+0720        P-Time-A
+0730        P-Return-Msg
+0740        P-Return-Code
+0750        P-Return-Soapmsg   /* Optional parameter
+0760        P-Return-Soapcode  /* Optional parameter
+0770.
+0780.
+0790Using the Application Programming Interface:
+0800--------------------------------------------
+0810Copy the subprogram USR4217N to the library SYSTEM or the steplib
+0820library, or to the required library.
+0830.
+0840The parameters P-Return-Soapmsg and P-Return-Soapcode are optional.
+0850The call was successfull if P-Return-Code = 200.
+0860.
+0870The first attribute(s) in P-Array-of-Data must contain the dimension
+0880names and values followed by the facts (KPIs). You can use existing or
+0890new dimension names. KPI names must be unique in Optimize.
+0900.
+0910.
+0920How to Configure KPIs in Optimize:
+0930----------------------------------
+0940See also chapter 'Configuring KPIs' in the Administrating webMethods
+0950Optimize manual.
+0960.
+0970--- Event Map ---
+0980After the interface 'USR4217N' has been called, the event map specified
+0990in P-Event-Type can be found in Optimize at
+1000  Applications -> Administration -> Analytics -> KPIs -> System Data
+1010as an element of 'Unmapped Event Types'.
+1020.
+1030Click on the new event type to receive the list of fields.
+1040Edit each field.
+1050Select the type of the field:
+1060  Dimension for dimensions (as part of the hierarchy)
+1070  Transaction for generic fields (containing alphanumeric text)
+1080  Fact for KPIs (containing numeric values)
+1090  Date for date fields
+1100.
+1110Dimension:
+1120Specify whether it is an existing or a new dimension. For a new
+1130dimension, you may use the field name as Dimension and as Attribute.
+1140.
+1150Fact:
+1160Select the Calculation Type and specify the unit of measurement (UOM),
+1170e.g. count, ms (milliseconds), percent, seconds, state.
+1180.
+1190As soon as all fields are configured, specify the name of the event
+1200information (use the Event Type).
+1210Save the event map.
+1220.
+1230The event map is now an element of 'Event Maps not categorized'.
+1240.
+1250--- Hierarchy ---
+1260If the event map does not use an existing hierarchy, you must add a new
+1270hierarchy at
+1280  Applications -> Administration -> Analytics -> KPIs -> KPI Hierarchies
+1290Press 'Add Hierarchy...'.
+1300- Specify a unique name for the hierarchy.
+1310- Select the root dimension of your hierarchy, i.e. the one which was
+1320  send in P-Array-of-Data-Name(1).
+1330- Add a child (dimension) for each further dimension of your hierarchy.
+1340Save the hierarchy.
+1350.
+1360--- KPIs ---
+1370Add a KPI for each fact at
+1380  Applications -> Administration -> Analytics -> KPIs -> System Data
+1390Press 'Add KPI...'.
+1400In the KPI Definition
+1410- Select Definition Type 'Individual'.
+1420- Select the Event Mapping (if not already selected).
+1430- Select the Fact.
+1440- Select the Hierarchy.
+1450- Select the Dimension. Use the highest dimension, ie. the last child
+1460  added to the hierarchy.
+1470In the KPI Information
+1480- Specify the Name (use the fact name).
+1490- Specify the Naming Template. The Naming Template is used in the
+1500  Analytics Overview. If desired, insert the dimension variables as
+1510  prefix of the Naming Template.
+1520Save the KPI.
+1530.
+1540If desired, add 'composite' KPIs which are derived from the new KPIs.
+1550Add rules for the new KPIs.
+1560.
+1570.
+1580***** End of Description *****

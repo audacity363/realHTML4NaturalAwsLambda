@@ -1,0 +1,104 @@
+0010Read all current PF-key settings
+0020.
+0030Documentation ......... USR4005T    /*  Text object
+0040Interface ............. USR4005N    /*  Cataloged subprogram
+0050Example Program ....... USR4005P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL ENVIRONMENT
+0100.
+0110Keywords .............. KEY SETTING, PF-KEY
+0120.
+0130Function .............. Read all current key settings or
+0140                        the current settings for a specified key
+0150                        (PF keys PF1-PF24, PA keys PA1-PA3, Clear
+0160                         and Enter key)
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+023001 P-Function (A1) : (Input)
+0240.
+0250                'S' = Get single key setting incl. command-data
+0260                'A' = Get all key settings
+0270.
+0280.
+029001 P-Key-Settings (A39/1:29) : (In/Output)
+0300.
+0310                Contains all informations of key setting
+0320.
+0330                1 REDEFINE P-Key-Settings
+0340                  2 P-Keys             (1:29)
+0350                    3 P-Key-ID         (A04) : In/Out
+0360                    3 P-Key-Type       (A01) : Out
+0370                    3 P-Key-Label      (A10) : Out
+0380                    3 P-Key-Cmd-Length (I02) : Out
+0390                    3 P-Key-Cmd        (A22) : Out
+0400.
+0410                P-Key-ID
+0420                  Input field for P-Function='S'
+0430                  values :
+0440                  'PF1'-'PF24','PA1'-'PA3','CLR','ENTR'
+0450.
+0460                P-Key-Type
+0470                  'N' - not active
+0480                  'P' - program-sensitive
+0490                  'C' - command assigned
+0500                  'T' - terminal command assigned
+0510                  'D' - data assigned
+0520                  'H' - help assigned
+0530.
+0540                P-Key-Label
+0550                  Assigned key label
+0560.
+0570                P-Key-Cmd-Length
+0580                  Command length
+0590.
+0600                P-Key-Cmd
+0610                  Assigned command/data for P-Key-Type 'C','T','D'
+0620.
+0630.
+064001 P-Command-Data (A250) : (Output)
+0650.
+0660                only filled for P-Function='S'
+0670.
+0680.
+069001 P-Return-Code (I2) : (Output)
+0700.
+0710                0   = OK
+0720              < 0   = Natural errors
+0730                1   = Invalid function code
+0740                2   = Invalid key ID
+0750                3   = Size of P-Additionals too small
+0760                4   = Invalid version for P-Additionals
+0770                5   = No key settings found
+0780                6-8 = Internal error found in interface
+0790.
+0800.
+081001 P-Message-Line (A79) : (Output)
+0820                Contains the error message when P-Return-Code ne 0
+0830.
+084001 P-Additionals (A1/1:V) : (Output)
+0850                For Future use. Redefined as follows:
+0860                  2 L-Additionals-Version (N2)
+0870                    Must be 0 for the initial version
+0880.
+0890.
+0900Interface Call
+0910--------------
+0920Use the interface with the CALLNAT statement:
+0930.
+0940CALLNAT 'USR4005N' P-FUNCTION P-KEY-SETTINGS(*) P-COMMAND-DATA
+0950                   P-RETURN-CODE P-MESSAGE-LINE P-ADDITIONALS(*)
+0960.
+0970.
+0980Using the Application Programming Interface:
+0990--------------------------------------------
+1000Copy the subprogram USR4005N to the library SYSTEM or the steplib
+1010library respectively, or to the required library.
+1020.
+1030.
+1040***** End of Description *****

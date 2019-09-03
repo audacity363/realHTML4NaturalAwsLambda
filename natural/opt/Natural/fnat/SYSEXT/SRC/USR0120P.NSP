@@ -1,0 +1,68 @@
+0010/*  Read NATURAL Short Error Message
+0020/*  This program serves as example how to design a user-defined
+0030/*  program to call 'USR0120N'.
+0040/**********************
+0050DEFINE DATA LOCAL
+0060  01 PARAM                   /* Parameters for CALLNAT
+0070     02 ERROR-NUMBER (N04)   /* 1 thru 9999
+0080     02 LANG-NUMB    (I01)   /* 1 thru 60 , similar to *LANGUAGE
+0090     02 RESPONSE     (N04)   /* Error during execution of USR0120N
+0100     02 SHORT-TEXT   (A65)   INIT <'<<< Short text not found >>>'>
+0110  01 TYPE            (A01)   /*  See 'USR0040T'
+0120  01 NUMBER          (P07)   /*  Error Number
+0130  01 #MSG            (A72)
+0140  01 #MARK           (N4)
+0150END-DEFINE
+0160/*
+0170/* Set up some defaults:
+0180/*
+0190CALLNAT 'USR0040N' TYPE NUMBER  /*  GET LAST ERROR
+0200/*
+0210IF TYPE = 'S'
+0220  MOVE NUMBER TO ERROR-NUMBER
+0230ELSE
+0240  RESET ERROR-NUMBER
+0250END-IF
+0260/*
+0270MOVE *LANGUAGE  TO LANG-NUMB       /* Current language number
+0280SET KEY ALL
+0290/*
+0300REPEAT
+0310  /*
+0320  MOVE 0 TO RESPONSE
+0330  RESET INITIAL SHORT-TEXT
+0340  /*
+0350  INPUT (AD=MITL'_' IP=OFF ZP=ON SG=OFF) WITH TEXT #MSG MARK #MARK ///
+0360    15T  'Read NATURAL Short Error Message'    /
+0370    15T  '     from System File FNAT:'         /
+0380    15T  '-' (33)                              //
+0390    18T  'Error number .....' ERROR-NUMBER     /
+0400    18T  'Language number ..' LANG-NUMB        ///
+0410    15T  'Press ENTER to receive the text.'    /
+0420    15T  'Press any PF-Key to stop.'
+0430    /*
+0440  RESET #MSG #MARK
+0450  IF *PF-KEY NE 'ENTR'
+0460    ESCAPE BOTTOM
+0470  END-IF
+0480  /*
+0490  CALLNAT 'USR0120N' PARAM
+0500  /*
+0510  DECIDE ON FIRST VALUE OF RESPONSE
+0520    VALUE  0 INPUT NO ERASE (AD=OI IP=OFF) 17/1 SHORT-TEXT
+0530    VALUE -1 #MSG := 'Error Number does not exist.'
+0540             #MARK := 1
+0550    VALUE -2 #MSG := 'Short text not available'
+0560                   - ' with given language number.'
+0570             #MARK := 2
+0580             INPUT NO ERASE (AD=OI IP=OFF) WITH TEXT #MSG 17/1 SHORT-TEXT
+0590             RESET #MSG
+0600    VALUE  3 #MSG := 'Invalid Error Number.'
+0610             #MARK := 1
+0620    VALUE  4 #MSG := 'Invalid Language Number.'
+0630             #MARK := 2
+0640    NONE VALUE
+0650      INPUT 'Response code from USR0120N:' (I) RESPONSE (AD=OIL)
+0660  END-DECIDE
+0670END-REPEAT
+0680END

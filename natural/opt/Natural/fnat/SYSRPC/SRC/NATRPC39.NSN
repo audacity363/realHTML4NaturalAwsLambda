@@ -1,0 +1,46 @@
+0010***********************************************************************
+0020*
+0030*    THIS SUBROUTINE IS CALLED WHEN THE SERVER RETURNS FROM
+0040*    LISTEN WITHOUT A CALLNAT TO EXECUTE.
+0050*
+0060*    ACCESS ALL USED DATABASES TO AVOID NAT3009 ERROR MESSAGES.
+0070*
+0080*    FNAT AND FUSER ARE ALREADY ACCESSED.
+0090*
+0100***********************************************************************
+0110DEFINE DATA LOCAL
+012001  ACB
+0130  02  ACB-TYPE                      (B1) INIT<H'30'>
+0140  02  ACB-FILL                      (B1)
+0150  02  ACB-COMMAND                   (A2) INIT<'RC'>
+0160  02  ACB-CID                       (A4) INIT<H'FFFFFFFF'>
+0170  02  ACB-FILEID                    (B2)
+0180  02  ACB-RSP                       (B2)
+0190  02  ACB-ISN                       (B4)
+0200  02  ACB-ISNL                      (B4)
+0210  02  ACB-ISNQ                      (B4)
+0220  02  ACB-FBL                       (B2)
+0230  02  ACB-RBL                       (B2)
+0240  02  ACB-SBL                       (B2)
+0250  02  ACB-VBL                       (B2)
+0260  02  ACB-IBL                       (B2)
+0270  02  ACB-COP1                      (A1)
+0280  02  ACB-COP2                      (A1)
+0290  02  ACB-ADD1                      (A8)
+0300  02  ACB-ADD2                      (A4)
+0310  02  ACB-ADD3                      (A8)
+0320  02  ACB-ADD4                      (A8)
+0330  02  ACB-ADD5                      (A8)
+0340  02  ACB-CMDT                      (B4)
+0350  02  ACB-USER                      (A4)
+036001  REDEFINE  ACB
+0370  02 ACB-80                         (A80)
+0380END-DEFINE
+0390*
+0400*
+0410* ADD HERE ACCESS TO ALL DATABASES USED (PING).
+0420*
+0430*
+0440ACB-RSP        := 1           /* DBID to PING
+0450CALL 'CMADA' ACB-80           /* PING
+0460END

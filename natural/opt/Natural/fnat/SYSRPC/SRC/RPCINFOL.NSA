@@ -1,0 +1,18 @@
+0010/*DS      0019                       1SERVER-PARMS                                                    DA:00.00ED:00.00PF:MNV:09010100
+0020/*DK      0021          A         1  2S-BIKE
+0030/*DKW     0022          A        32  2S-NODE
+0040/*DKW     0023          A        32  2S-NAME
+0050/*DK      0024          A        80  2S-ERROR-TEXT
+0060/*DK      0025          I         4  2S-CON-ID
+0070/*DK      0026          L            2S-CON-OPEN
+0080/*DS      0027                       1CLIENT-PARMS
+0090/*DK      0028          A         1  2C-BIKE
+0100/*DKW     0029          A        32  2C-NODE
+0110/*DKW     0030          A        32  2C-NAME
+0120/*DK      0031          A        80  2C-ERROR-TEXT
+0130/*DK      0032          I         4  2C-CON-ID
+0140/*DK      0033          L            2C-CON-OPEN
+0150/*DKZ     0034          A   DYNAMIC  2C-ENTIREX-RPC-ERROR-TEXT
+0160/*DS      0035                       1COMMON-PARMS
+0170/*DKZ     0036          A        16  2S-ENTIREX-CONV-ID
+0180/*DKZ     0037          A        16  2C-ENTIREX-CONV-ID

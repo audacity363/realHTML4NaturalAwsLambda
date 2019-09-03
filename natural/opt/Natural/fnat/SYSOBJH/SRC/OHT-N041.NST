@@ -1,0 +1,24 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Set number
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180If this field is filled:
+0190The number of the retained set created with
+0200the Predict XRef save set option of the
+0210LIST XREF command that is used for the
+0220selection of the objects to be unloaded.
+0230
+0240<HelpTextEnd>

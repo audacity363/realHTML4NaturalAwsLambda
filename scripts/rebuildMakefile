@@ -1,0 +1,4 @@
+#!/bin/bash
+
+#cmake .. -DCMAKE_PREFIX_PATH=/root/aws/out/ -DCMAKE_BUILD_TYPE=Debug
+cmake .. -DCMAKE_PREFIX_PATH=~/Documents/kub/aws/cmake_out -DCMAKE_BUILD_TYPE=Debug

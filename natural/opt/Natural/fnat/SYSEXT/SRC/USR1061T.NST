@@ -1,0 +1,89 @@
+0010Open an existing report layout
+0020.
+0030Documentation ......... USR1061T    /*  Text object
+0040Interface ............. USR1061N    /*  Cataloged subprogram
+0050Example Program ....... USR1061P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. REPORTER
+0100.
+0110Keywords .............. +MOD-NAT-8.3.8, OPEN, REPORTER
+0120.
+0130Function .............. This interface opens an existing report layout,
+0140                        starting the Reporter if it is not already
+0150                        active, and returning a report id which
+0160                        can be used to identify the report in
+0170                        subsequent Natural Reporter interface calls.
+0180.
+0190.
+0200Parameters
+0210----------
+0220Define the following parameters with the DEFINE DATA statement:
+0230.
+0240Input ...... REPORT-NAME (A8)
+0250                    Name of the report to be opened (without the .RPT
+0260                    extension). The report should exist in the standard
+0270                    location for non-Natural objects, specified by the
+0280                    NATGUI_BMP path (so named because bitmaps were the
+0290                    first objects of this type). If the name is supplied
+0300                    wholly in lower-case, the lower-case extension .rpt
+0310                    will be appended to the name automatically. Likewise,
+0320                    if the name is supplied wholly in upper-case, a .RPT
+0330                    extension will be appended. If the supplied name is
+0340                    in mixed case, the case used for the extension is
+0350                    not defined, and could change in future releases.
+0360Output ..... REPORT-ID (I4)
+0370                    Report id. Set to zero if the interface failed,
+0380                    otherwise set to a non-zero value which can
+0390                    be used to identify the report for subsequent
+0400                    Natural Reporter interface calls.
+0410Output ..... RETURN-CODE (I4)
+0420                    Return code. Set to zero if the interface
+0430                    succeeded, otherwise set to a non-zero
+0440                    error code, which can be one of the
+0450                    following:
+0460.
+0470                    -3  : proc not found. Indicates that a
+0480                          procedure in a dynamically-loaded
+0490                          support library cannot be found.
+0500                          Possible cause: version mismatch.
+0510                          (check executable file search path)
+0520.
+0530                    -4  : initialization error. Possible causes:
+0540                             - the interface which initializes
+0550                               the Natural Reporter interface has
+0560                               NOT yet been called
+0570                             - the interface which initializes
+0580                               the Natural Reporter interface
+0590                               was called, but did not succeed
+0600                               (non-zero return code)
+0610                             - the interface which terminates
+0620                               the Natural Reporter interface has
+0630                               been called
+0640.
+0650                    -10 : too many reports already open
+0660.
+0670                    -11 : general error. Indicates non-specific
+0680                          error in dynamically-loaded support
+0690                          library
+0700.
+0710                    -12 : report not found
+0720.
+0730                    -99 : unsupported machine class. The reporter
+0740                          runs only under Windows.
+0750.
+0760.
+0770Interface Call
+0780--------------
+0790Use the interface with the CALLNAT statement:
+0800.
+0810CALLNAT 'USR1061N' REPORT-NAME REPORT-ID RETURN-CODE
+0820.
+0830.
+0840Using the Application Programming Interface:
+0850--------------------------------------------
+0860Copy the subprogram USR1061N to the library SYSTEM or the steplib
+0870library respectively, or to the required library.
+0880.
+0890*****  End of description  *****

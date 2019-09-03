@@ -1,0 +1,59 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR6204N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR6204L
+0070   2 INPUTS
+0080     3 PROGRAM-NAME  (A12)
+0090     3 REDEFINE PROGRAM-NAME   /* For Mainframes:
+0100       4 KEYWORD     (A03)     /* name gets only length A8
+0110       4 DELIMITER   (A01)
+0120       4 TRANS-ID    (A04)
+0130       4 DUMMY       (A04)
+0140   2 OUTPUTS
+0150     3 RESPONSE-CODE (I04)
+0160*
+0170 1 RESPONSE-TEXT     (A40)
+0180 1 BLANK             (A01)
+0190END-DEFINE
+0200/*
+0210SET KEY ALL
+0220/*
+0230RESET BLANK
+0240/*
+0250PROGRAM-NAME := 'MYPGM.EXE'
+0260/*
+0270REPEAT
+0280  INPUT (AD=OIL IP=OFF)
+0290   // 'Set profile parameter PROGRAM:' (I)
+0300    / '-' (30) (I) /
+0310    / 'PROGRAM name ..' PROGRAM-NAME (AD=MI'_')
+0320   // 'Response ......' RESPONSE-CODE RESPONSE-TEXT
+0330  /*
+0340  IF *PF-KEY NE 'ENTR'
+0350    ESCAPE ROUTINE
+0360  END-IF
+0370  /*
+0380  CALLNAT 'USR6204N'  USR6204L
+0390  /*
+0400  IF BLANK = H'40'     /* Response codes for Mainframes
+0410    DECIDE ON FIRST VALUE OF RESPONSE-CODE
+0420      VALUE  2  RESPONSE-TEXT := 'Invalid length of program name(A8).'
+0430      VALUE  4  RESPONSE-TEXT := 'Program name invalid.'
+0440      VALUE  8  COMPRESS 'Program' PROGRAM-NAME 'not found.'
+0450                INTO RESPONSE-TEXT
+0460      VALUE 12  COMPRESS 'Transaction ID' TRANS-ID ' not found.'
+0470                INTO RESPONSE-TEXT
+0480      NONE      RESET RESPONSE-TEXT
+0490    END-DECIDE
+0500  ELSE                  /* Response codes for OpenSystems
+0510    DECIDE ON FIRST VALUE RESPONSE-CODE
+0520      VALUE 8  COMPRESS 'Program' PROGRAM-NAME 'not found.'
+0530               INTO RESPONSE-TEXT
+0540      VALUE 12 RESPONSE-TEXT := 'Execution rights not available.'
+0550      NONE     RESET RESPONSE-TEXT
+0560    END-DECIDE
+0570  END-IF
+0580END-REPEAT
+0590END

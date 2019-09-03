@@ -1,0 +1,67 @@
+0010* Issue System command
+0020*
+0030DEFINE DATA GLOBAL USING TUTO
+0040            LOCAL  USING BSYSCMDL
+0050            LOCAL
+0060*
+007001  #CMD                      (A78/1:10) INIT
+0080 (01) <'TRANSFER-FILE                                       '>
+0090 (02) <'TRANSFER-DIRECTION = TO-PARTNER,                    '>
+0100 (03) <'PARTNER-NAME       = <PARTNER>,                     '>
+0110 (04) <'LOCAL-PARAMETER    = *PARAMETERS                    '>
+0120 (05) <'   (FILE-NAME      = <FILE-NAME>),                  '>
+0130 (06) <'REMOTE-PARAMETER   = *BS2000                        '>
+0140 (07) <'   (FILE-NAME      = <FILE-NAME>,                   '>
+0150 (08) <'    TRANSFER-ADM   = *PARAMETERS                    '>
+0160 (09) <'       (USER-ID    = <USER-ID>,                     '>
+0170 (10) <'        ACCOUNT    = <ACCOUNT))                     '>
+018001  #RESULT                   (A78/1:5)
+019001  #I                        (I4)
+0200END-DEFINE
+0210* ------------------------------------- MAIN ---------------------------
+0220*
+0230PERFORM PF-KEY
+0240*
+0250REPEAT
+0260*
+0270  PERFORM SCREEN-IO
+0280*
+0290  RESET #I #RESULT (*)
+0300*
+0310FND.
+0320  FIND (5) SYSTEM-COMMAND
+0330       WITH NODE          = ##NODE
+0340        AND COMMAND       = #CMD (01)
+0350        AND COMMAND       = #CMD (02)
+0360        AND COMMAND       = #CMD (03)
+0370        AND COMMAND       = #CMD (04)
+0380        AND COMMAND       = #CMD (05)
+0390        AND COMMAND       = #CMD (06)
+0400        AND COMMAND       = #CMD (07)
+0410        AND COMMAND       = #CMD (08)
+0420        AND COMMAND       = #CMD (09)
+0430        AND COMMAND       = #CMD (10)
+0440*
+0450    IF ERROR-CODE NE 0
+0460       INCLUDE BERR---C
+0470       ESCAPE BOTTOM (FND.)
+0480    END-IF
+0490*
+0500    COMPUTE #I = #I + 1
+0510    ASSIGN #RESULT (#I) = LINE
+0520*
+0530  END-FIND
+0540END-REPEAT
+0550* ------------------------------------- SCREEN IO ----------------------
+0560DEFINE SUBROUTINE SCREEN-IO
+0570INPUT WITH TEXT *##MSG-NR,
+0580                 ##MSG-TXT1,
+0590                 ##MSG-TXT2
+0600      USING MAP 'BSYSCMD&'
+0610*
+0620RESET ##MSG
+0630*
+0640END-SUBROUTINE
+0650* ------------------------------------- SCREEN IO ----------------------
+0660INCLUDE C-PFKEY
+0670END

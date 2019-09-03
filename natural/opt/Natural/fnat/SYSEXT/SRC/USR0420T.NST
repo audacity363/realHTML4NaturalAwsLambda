@@ -1,0 +1,48 @@
+0010Read user long error message from FUSER
+0020.
+0030Documentation ......... USR0420T    /*  Text object
+0040Interface ............. USR0420N    /*  Cataloged subprogram
+0050Example Program ....... USR0420P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR MESSAGES
+0100.
+0110Keywords .............. *ERROR-NR, ERROR, FUSER, SYSERR
+0120.
+0130Function .............. Any long user error text may be read from
+0140                        Natural system file FUSER.
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+021001 PARM-AREA              /*  Control information
+0220   02 APPLICATION  (A08)  /*  Application name must not be <blank>
+0230   02 ERROR-NUMBER (N04)  /*  1 thru 9999
+0240   02 LANG-CODE    (I01)  /*  similar to *LANGUAGE (1 ... 60)
+0250   02 RESPONSE     (N04)  /*  Error during execution of USR0420N:
+0260                          /*  0   -   okay
+0270                          /*  2   -   Enter Library.
+0280                          /*  3   -   Invalid Error Number.
+0290                          /*  4   -   Invalid Language Number.
+0300                          /*  5   -   Text not found.
+0310                          /*  6   -   Text is empty.
+0320                          /*  12   -  Invalid Libary.
+0330   02 LONG-TEXT    (A78/1:20)   /* Long  USR  text
+0340.
+0350Interface Call
+0360--------------
+0370Use the interface with the CALLNAT statement:
+0380.
+0390CALLNAT 'USR0420N' PARM-AREA
+0400.
+0410.
+0420Using the Application Programming Interface:
+0430--------------------------------------------
+0440Copy the subprogram USR0420N to the library SYSTEM or the steplib
+0450library respectively, or to the required library.
+0460.
+0470.
+0480***** End of Description *****

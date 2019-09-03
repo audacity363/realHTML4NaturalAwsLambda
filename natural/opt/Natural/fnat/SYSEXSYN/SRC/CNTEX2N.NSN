@@ -1,0 +1,18 @@
+0010** Example 'CNTEX2N': CALLNAT  (called by CNTEX2)
+0020************************************************************************
+0030DEFINE DATA
+0040PARAMETER
+00501 #ARRAY (N4/1:4,1:10)
+0060LOCAL
+00701 I      (I2)
+0080END-DEFINE
+0090*
+0100*
+0110FOR I 1 10
+0120  #ARRAY(1,I) := I
+0130  #ARRAY(2,I) := 100 + I
+0140  #ARRAY(3,I) := 200 + I
+0150  #ARRAY(4,I) := 300 + I
+0160END-FOR
+0170*
+0180END

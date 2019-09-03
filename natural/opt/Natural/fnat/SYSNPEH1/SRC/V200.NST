@@ -1,0 +1,13 @@
+0010&H View SUBMIT
+0020&L
+0030&L
+0040#Purpose@: Submit job to Operating System.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : This view allows the user or application to submit
+0100           jobs to the Operating System. The job to be submitted
+0110           can reside either on disk or in storage.
+0120&L
+0130#Notes@  :

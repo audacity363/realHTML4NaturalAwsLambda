@@ -1,0 +1,32 @@
+0010**DV          0033     V1PRINT-DOCUMENT                  PRINT-DOCUMENT
+0020**DD          0036N 5.0 2NODE                            /* Node ID (DBID).
+0030**DD          0037N 3.0 2ERROR-CODE                      /* Message code.
+0040**DD          0038B   2 2SYSTEM-CODE                     /* System error code.
+0050**DD          0039A  58 2ERROR-TEXT                      /* Text describing message.
+0060**DD          0040A  16 2NODE-NAME
+0070**DD          0041A  10 2SYSTEM-MESSAGE-CODE             /* System message code.
+0080**DD          0042A   8 2IDENTIFIER                      /* Needed if multiple update
+0090**DD          0043A   8 2FUNCTION                        /* Function to be performed:
+0100**DD          0044A 253 2RECORD                          /* Record to be printed.
+0110**DD          0045N 3.0 2RECORD-LENGTH                   /* Length of record.
+0120**DD          0046A  54 2DSNAME                          /* Name of file to print out.
+0130**DD          0047A  64 2ELEMENT                         /* Name of LMS element to be
+0140**DD          0048A   8 2PASSWORD                        /* Password of protected file.
+0150**DD          0049A   8 2ELEMENT-PASSWORD                /* Password for protected LMS
+0160**DD          0050A   8 2ELEMENT-TYPE                    /* LMS element type.
+0170**DD          0051A  24 2ELEMENT-VERSION                 /* LMS element version.
+0180**DD          0052A   3 2ADDITIONAL-COPIES               /* Number of additional copies.
+0190**DD          0053A   8 2CHARACTER-SETS                  /* Name of fonts or font pools.
+0200**DD          0054A   3 2DELETE-AFTER-PRINT              /* Delete file after print:
+0210**DD          0055A   8 2FACE-SIDE                       /* Face side ident.
+0220**DD          0056A   8 2FORM-NAME                       /* Name of form.
+0230**DD          0057A  32 2HEADER-PAGE-TEXT                /* Used for system exits.
+0240**DD          0058A   8 2JOB-NAME                        /* Name of job under which
+0250**DD          0059A   4 2LEFT-MARGIN                     /* Left margin of text.
+0260**DD          0060A  64 2LINE-SPACING                    /* File contains ASA print
+0270**DD          0061A   8 2PAGE-DEFINITION                 /* Page definition to be used
+0280**DD          0062A  54 2USER-RESOURCES-FILE             /* Fully qualified name of a
+0290**DD          0063A 253 2PARAMETER-SET-1                 /* Extra operands for command
+0300**DD          0064A 253 2PARAMETER-SET-2                 /* Extra operands for command
+0310**DD          0065A 253 2COMMAND-RESPONSE                /* Unformatted command response.
+0320**DD          0066A   5 2JOB-ID                          /* TSN of print job.

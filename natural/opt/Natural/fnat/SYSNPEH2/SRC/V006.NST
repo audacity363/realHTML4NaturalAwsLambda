@@ -1,0 +1,14 @@
+0010&H View UNIT-ATTRIBUTES
+0020&L
+0030&L
+0040#Zweck@    : Listet Geraete und Geraeteattribute.
+0050&L
+0060#System@   : z/OS, z/VSE.
+0070&L
+0080&L
+0090#Anwendung@: Dieser View ermoeglicht dem Benutzer oder der Anwendung den
+0100             Zugriff auf geraetespezifische Informationen der Rechner-
+0110             peripherie. Dazu gehoeren u.a. Geraeteadresse, Geraetetyp,
+0120             Status, Anzahl freier Zylinder usw.
+0130&L
+0140#Anmerkung@:

@@ -1,0 +1,19 @@
+0010** Example 'PCDIEX1': DISPLAY and WRITE to PC
+0020**
+0030** NOTE: Example requires that Natural Connection is installed.
+0040************************************************************************
+0050DEFINE DATA LOCAL
+006001 PERS VIEW OF EMPLOYEES
+0070  02 PERSONNEL-ID
+0080  02 NAME
+0090  02 CITY
+0100END-DEFINE
+0110*
+0120FIND PERS WITH CITY = 'NEW YORK'               /* Data selection
+0130  WRITE (7) TITLE LEFT 'List of employees in New York' /
+0140  DISPLAY (7)          /* (7) designates the output file (here the PC).
+0150    'Location'  CITY
+0160    'Surname'   NAME
+0170    'ID'        PERSONNEL-ID
+0180END-FIND
+0190END

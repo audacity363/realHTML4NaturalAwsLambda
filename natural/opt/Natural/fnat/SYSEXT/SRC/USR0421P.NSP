@@ -1,0 +1,76 @@
+0010/*  Save long error message to system file FUSER
+0020/*  ATTENTION:   Natural Security check intentionally bypassed
+0030/**********************
+0040DEFINE DATA LOCAL
+0050  01 PARM-AREA                /* Parameters for CALLNAT
+0060     02 LIBRARY      (A08)    /* Must not be blank
+0070     02 ERR-NUMB     (N04)    /* 1 thru 9999
+0080     02 LANG-NUMB    (I01)    /* *LANGUAGE (1 thru 60)
+0090     02 RESPONSE     (N04)    /* Error during execution of USR0421N
+0100     02 LONG-TEXT    (A78/1:20)
+0110  01 LAYOUT-CHECK    (A01)    /* Check SYSERR LAYOUT for LIBRARY
+0120  01 MSG             (A78)
+0130END-DEFINE
+0140/*
+0150/* Set up some defaults:
+0160/*
+0170MOVE *USER      TO LIBRARY         /* Private library
+0180MOVE *LANGUAGE  TO LANG-NUMB       /* Current language number
+0190MOVE 1 TO ERR-NUMB
+0200MOVE 'X' TO LAYOUT-CHECK
+0210SET KEY ALL
+0220/*
+0230REPEAT
+0240  /*
+0250  INPUT (AD=MIL'_' IP=OFF SG=ON)  WITH TEXT MSG   /
+0260     'Save Long Error Text to System File FUSER:' /
+0270     '-' (42) //
+0280     'Library ............' LIBRARY    /
+0290     'Error number .......' ERR-NUMB   /
+0300     'Language number ....' LANG-NUMB  /
+0310     'Layout check .......' LAYOUT-CHECK //
+0320     '01'   LONG-TEXT (01) (AL=72) /
+0330     '02'   LONG-TEXT (02) (AL=72) /
+0340     '03'   LONG-TEXT (03) (AL=72) /
+0350     '04'   LONG-TEXT (04) (AL=72) /
+0360     '05'   LONG-TEXT (05) (AL=72) /
+0370     '06'   LONG-TEXT (06) (AL=72) /
+0380     '07'   LONG-TEXT (07) (AL=72) /
+0390     '08'   LONG-TEXT (08) (AL=72) /
+0400     '09'   LONG-TEXT (09) (AL=72) /
+0410     '10'   LONG-TEXT (10) (AL=72) /
+0420     '11'   LONG-TEXT (11) (AL=72) /
+0430     '12'   LONG-TEXT (12) (AL=72) //
+0440     'Press ENTER to save the text.   Press any PF-Key to stop.' (I)
+0450    /*
+0460  IF *PF-KEY NE 'ENTR'
+0470    ESCAPE BOTTOM
+0480  END-IF
+0490  /*
+0500  CALLNAT 'USR0421N' PARM-AREA LAYOUT-CHECK
+0510  /*
+0520  IF RESPONSE NE 0
+0530    IF RESPONSE < 0
+0540      COMPRESS 'Natural Error from USR0421N:' RESPONSE TO MSG
+0550    ELSE
+0560      DECIDE ON FIRST VALUE OF RESPONSE
+0570        VALUE 1  MOVE 'Short text not found.'          TO MSG
+0580        VALUE 2  MOVE 'Please enter Library.'          TO MSG
+0590        VALUE 3  MOVE 'Invalid Error Number.'          TO MSG
+0600        VALUE 4  MOVE 'Invalid Language Number.'       TO MSG
+0610        VALUE 5  MOVE 'Text has been added.'           TO MSG
+0620        VALUE 6  MOVE '"SYS" Libraries not supported.' TO MSG
+0630        VALUE 7  MOVE 'Text has been modified.'        TO MSG
+0640        VALUE 8  MOVE 'Text cannot be deleted.'        TO MSG
+0650        VALUE 9  MOVE 'Text has been deleted.'         TO MSG
+0660        VALUE 10 MOVE 'Text cannot be added.'          TO MSG
+0670        VALUE 11 MOVE 'Function disabled by layout definition.' TO MSG
+0680        NONE VALUE
+0690          COMPRESS 'Response code from USR0421N:' RESPONSE TO MSG
+0700      END-DECIDE
+0710    END-IF
+0720  ELSE
+0730    RESET MSG
+0740  END-IF
+0750END-REPEAT
+0760END

@@ -1,0 +1,21 @@
+0010/* ---------------------------------------------------------------------
+0020/* Program:        REINPUT
+0030/* Library:        SYSEXBAT (Batch mode samples)
+0040/*
+0050/* Functionality:  REINPUT feature
+0060/*
+0070/* Description:    The REINPUT feature is disabled in batch mode.
+0080/*                 Natural will display the error 1109 with contents
+0090/*                 "NAT1109 REINPUT cannot be executed in batch mode"
+0100/* ---------------------------------------------------------------------
+0110DEFINE DATA LOCAL
+01201 #name  (A10)
+0130END-DEFINE
+0140**
+0150INPUT (IP=OFF AD=M) #name
+0160IF #name = " " THEN
+0170  REINPUT "Please enter a name"
+0180END-IF
+0190**
+0200DISPLAY #name
+0210END

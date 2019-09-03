@@ -1,0 +1,15 @@
+0010&H View NATPROC-USERS
+0020&L
+0030&L
+0040#Zweck@    : Anzeige der beim ENTIRE SYSTEM SERVER angemeldeten
+0050             Benutzer.
+0060&L
+0070&L
+0080#System@   : z/OS, z/VSE, BS2000/OSD.
+0090&L
+0100&L
+0110#Anwendung@: Dieser View erlaubt dem Benutzer oder der Anwendung das
+0120             Lesen von Informationen zu allen beim ENTIRE SYSTEM SERVER-
+0130             Knoten angemeldeten Benutzer oder internen Tasks.
+0140&L
+0150#Anmerkung@:

@@ -1,0 +1,18 @@
+0010&H View SPOOL-FILES
+0020&L
+0030&L
+0040#Zweck@    : Lesen von Informationen der JOB-SPOOL-Dateien.
+0050&L
+0060&L
+0070#System@   : z/OS, BS2000/OSD.
+0080&L
+0090&L
+0100#Anwendung@: Ein einzelner Job kann verschiedene SPOOL-Dateien mit
+0110             unterschiedlichen internen Strukturen beinhalten. Die-
+0120             ser View gibt eine Liste aller SPOOL-Dateien zurueck,
+0130             die zu einem bestimmten Job gehoeren.
+0140&L
+0150&L
+0160#Anmerkung@: Benutzen Sie SPOOL-FILES vor Ausfuehrung von READ-SPOOL,
+0170             um herauszufinden, welche Dateien fuer einen bestimmten
+0180             Job vorhanden sind.

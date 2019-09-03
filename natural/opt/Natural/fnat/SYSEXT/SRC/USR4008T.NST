@@ -1,0 +1,41 @@
+0010Set library for RPC execution
+0020.
+0030Documentation ......... USR4008T    /*  Text object
+0040Interface ............. USR4008N    /*  Cataloged subprogram
+0050Example Program ....... USR4008P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC
+0100.
+0110Keywords .............. LOGON, RPC, SERVER
+0120.
+0130Function .............. Set library for RPC execution.
+0140.
+0150                        NOTE: The Logon-Indicator of RPC needs to be
+0160                        set, in order that setting of library for
+0170                        execution can become effective.
+0180.
+0190.
+0200Parameters
+0210----------
+0220Define the following parameters with the DEFINE DATA statement:
+0230.
+0240   1  P-FUNC (A01)         /* IN:    G= GET, P= PUT
+0250   1  P-LIB  (A08)         /* INOUT: Library for RPC execution
+0260.
+0270.
+0280Interface Call
+0290--------------
+0300Use the interface with the CALLNAT statement:
+0310.
+0320CALLNAT 'USR4008N' P-FUNC P-LIB
+0330.
+0340.
+0350Using the Application Programming Interface:
+0360--------------------------------------------
+0370Copy the subprogram USR4008N to the library SYSTEM or the steplib
+0380library respectively, or to the required library.
+0390.
+0400.
+0410***** End of Description *****

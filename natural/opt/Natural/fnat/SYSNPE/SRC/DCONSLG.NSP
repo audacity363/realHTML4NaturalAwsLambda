@@ -1,0 +1,159 @@
+0010* Program   DCONSLG
+0020* View      CONSOLE-LOG
+0030*
+0040* Function  Display Console Log
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* hka 97-12-08   NPE213:   make it y2000 compliant
+0090* ======================================================================
+0100*
+0110DEFINE DATA
+0120   GLOBAL USING TUTO
+0130   LOCAL  USING CONSLOGL
+0140   LOCAL
+0150   1 #LINES            (N7)  INIT <19>
+0160   1 #REC-TOP          (N7)  INIT <-19>
+0170   1 #SW-LEFT          (L)   INIT <TRUE>
+0180   1 #SW-SCAN          (L)   INIT <FALSE>
+0190   1 #SW-DATX-TIMX     (L)   INIT <FALSE>
+0200   1 #CV-SCAN          (C)   INIT <(AD=I)>
+0210   1 #SCAN-VALUE       (A66)
+0220END-DEFINE
+0230*
+0240FORMAT KD=ON PS=21
+0250*
+0260SET KEY ON
+0270SET KEY PF4  NAMED 'DatTim'  /* toggle show DATX + TIMX
+0280        PF5  NAMED 'Rfind'
+0290        PF6  NAMED 'Top'
+0300        PF7  NAMED 'Up'
+0310        PF8  NAMED 'Down'
+0320        PF9  NAMED 'Bot'
+0330        PF10 NAMED 'Left'
+0340        PF11 NAMED 'Right'
+0350        PF12 NAMED 'Node'
+0360        PF2  NAMED ' '
+0370*
+0380RESET ##MSG
+0390WRITE TITLE '-' (23) (I) ' Console Log ' (I) '-' (23) (I)
+0400*
+0410REPEAT
+0420*
+0430   IF #REC-TOP = -19 THRU 0
+0440      RESET INITIAL #REC-TOP
+0450   END-IF
+0460*
+0470   LOG.
+0480   FIND CONSOLE-LOG WITH NODE           = ##NODE
+0490                     AND RECORD-NUMBER >= #REC-TOP
+0500*
+0510      IF *COUNTER = 1
+0520         ASSIGN #REC-TOP = RECORD-NUMBER
+0530      END-IF
+0540*
+0550      IF ERROR-CODE NE 0
+0560         ASSIGN ##MSG-NR   = 1000
+0570         ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0580         STOP
+0590      END-IF
+0600*
+0610      IF #SW-SCAN
+0620         DECIDE FOR FIRST CONDITION
+0630            WHEN #RECORD-LEFT-PART = SCAN #SCAN-VALUE
+0640               ASSIGN #SW-LEFT = TRUE
+0650            WHEN #RECORD-RIGHT-PART = SCAN #SCAN-VALUE
+0660               ASSIGN #SW-LEFT = FALSE
+0670            WHEN ANY
+0680               RESET #SW-SCAN
+0690            WHEN NONE
+0700               IGNORE
+0710         END-DECIDE
+0720      END-IF
+0730      IF #SW-LEFT
+0740         IF #SW-DATX-TIMX
+0750           PRINT NOTITLE LOG-DATX (EM=YYYY-MM-DD) LOG-TIMX (EM=HH:II:SS)
+0760                          #RECORD-1-59
+0770         ELSE
+0780            PRINT NOTITLE #RECORD-LEFT-PART
+0790         END-IF
+0800      ELSE
+0810         IF #SW-DATX-TIMX
+0820           PRINT NOTITLE LOG-DATX (EM=YYYY-MM-DD) LOG-TIMX (EM=HH:II:SS)
+0830                          #RECORD-60-118
+0840         ELSE
+0850            PRINT NOTITLE #RECORD-RIGHT-PART
+0860         END-IF
+0870      END-IF
+0880*
+0890      AT END OF PAGE
+0900         INPUT NO ERASE (AD=OIL SG=OFF IP=OFF)
+0910               TEXT *##MSG-NR,##MSG-TXT1,##MSG-TXT2
+0920             1/1 *TIME (AL=8) 1/72 *DATI
+0930            21/1 'Scan for ==>' (I) RECORD (AD=AY'_' AL=66 CV=#CV-SCAN)
+0940*
+0950         RESET ##MSG
+0960*
+0970         IF #CV-SCAN MODIFIED OR *PF-KEY = 'PF5'
+0980            ASSIGN #SW-SCAN = TRUE
+0990            IF RECORD NE ' '
+1000               ASSIGN #SCAN-VALUE = RECORD
+1010            END-IF
+1020            COMPRESS '*' #SCAN-VALUE '*' TO RECORD LEAVING NO
+1030            SCAN.
+1040            FIND (1) CONSOLE-LOG WITH NODE          = ##NODE
+1050                                  AND RECORD        = RECORD
+1060                                  AND RECORD-NUMBER > #REC-TOP
+1070                                  AND SCAN          = 'YES'
+1080                ASSIGN #REC-TOP = RECORD-NUMBER (SCAN.)
+1090                ASSIGN RECORD-NUMBER (LOG.) = RECORD-NUMBER (SCAN.)
+1100                ESCAPE BOTTOM (LOG.)
+1110            END-FIND
+1120            IF *NUMBER (SCAN.) = 0
+1130               RESET #SW-SCAN
+1140               ASSIGN ##MSG-NR = 1004
+1150               ASSIGN ##MSG-TXT1 = #SCAN-VALUE
+1160               ESCAPE BOTTOM
+1170            END-IF
+1180         END-IF
+1190*
+1200         DECIDE ON FIRST VALUE *PF-KEY
+1210            VALUE 'PF3'
+1220               STOP
+1230            VALUE 'PF4'
+1240               IF #SW-DATX-TIMX
+1250                  #SW-DATX-TIMX := FALSE
+1260               ELSE
+1270                  #SW-DATX-TIMX := TRUE
+1280               END-IF
+1290            VALUE 'PF6'
+1300               ASSIGN #REC-TOP = 1
+1310            VALUE 'PF7'
+1320               COMPUTE #REC-TOP = #REC-TOP - #LINES
+1330               IF RECORD-NUMBER > 0
+1340                  IF #REC-TOP < 1
+1350                     ASSIGN #REC-TOP = 1
+1360                  END-IF
+1370               END-IF
+1380            VALUE 'PF8','ENTR'
+1390               COMPUTE #REC-TOP = #REC-TOP + #LINES
+1400            VALUE 'PF9'
+1410               COMPUTE #REC-TOP = - #LINES
+1420            VALUE 'PF10'
+1430               ASSIGN #SW-LEFT = TRUE
+1440            VALUE 'PF11'
+1450               ASSIGN #SW-LEFT = FALSE
+1460            VALUE 'PF12'
+1470               CALLNAT 'TUTODB' ##NODE ##MSG ##TUTO
+1480               RESET #REC-TOP
+1490               ESCAPE BOTTOM
+1500            ANY VALUE
+1510               ESCAPE BOTTOM
+1520            NONE VALUE
+1530               COMPUTE #REC-TOP = CONSOLE-LOG.RECORD-NUMBER
+1540               ESCAPE BOTTOM
+1550         END-DECIDE
+1560      END-ENDPAGE
+1570   END-FIND
+1580END-REPEAT
+1590END

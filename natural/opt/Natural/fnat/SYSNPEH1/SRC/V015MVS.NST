@@ -1,0 +1,13 @@
+0010&H View NET-OPER
+0020&L
+0030&L
+0040#Purpose@: Issue and retrieve VTAM commands and messages.
+0050&L
+0060#OpSys@  : z/OS
+0070&L
+0080&L
+0090#Usage@  : This view allows a user or application to issue VTAM
+0100           commands and to retrieve VTAM messages.
+0110&L
+0120#Notes@  : Commands and messages will not be logged to the
+0130           System Console.

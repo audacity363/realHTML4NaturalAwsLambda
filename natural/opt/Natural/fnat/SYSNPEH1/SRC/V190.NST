@@ -1,0 +1,12 @@
+0010&H View NATPROC-LOGON
+0020&L
+0030&L
+0040#Purpose@: Logon to ENTIRE SYSTEM SERVER.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : This view allows a user to logon to the requested
+0100           ENTIRE SYSTEM SERVER node.
+0110&L
+0120#Notes@  :

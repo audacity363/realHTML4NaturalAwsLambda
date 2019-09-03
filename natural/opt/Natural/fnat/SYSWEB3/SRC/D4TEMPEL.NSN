@@ -1,0 +1,221 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - New Demo Application
+0030*
+0040*        D4TEMPEL
+0050*
+0060* DESCRIPTION
+0070*               RETURN a Template source as HTML page
+0080*
+0090*               The output is text/html
+0100*               following Strings will be replaced:
+0110*
+0120*               $SCRIPT_NAME
+0130*               $PICTURES
+0140*               $META_DATE
+0150*               $JAVASCRIPT
+0160*
+0170* AUTHOR        SAG   28.07.97
+0180*
+0190* Version       8.3
+0200*
+0210* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0220*
+0230* HISTORY
+0240* USER    DATE       REASON
+0250* ------+----------+----------------------------------------------
+0260*       ! --.--.-- !
+0270* ------+----------+----------------------------------------------
+0280*
+0290DEFINE DATA
+0300* ------------------------------------------- standard PDA for HTTP Api
+0310PARAMETER USING W3PARM
+0320* -------------------------------------------- definitions for HTTP Api
+0330LOCAL  USING W3CONST
+0340* -------------------------------------------------- parameter USR1057N
+0350LOCAL USING USR-MSG   /* Data for message exchange
+0360LOCAL USING USR-FLD   /* Description of the field in error
+0370LOCAL
+03801 V                  (I2)  CONST <100>
+03901 USR1057L
+0400  2 OBJECT-KEY
+0410    3 LIBRARY        (A8)
+0420    3 OBJECT-NAME    (A32)
+0430    3 OBJECT-TYPE    (A2)
+0440*
+0450  2 INPUTS
+0460    3 OPT-ACCESS     (A01)
+0470    3 OPT-UNUSED-1   (L)
+0480    3 OPT-UNUSED-2   (A01)
+0490    3 OPT-LINE-NUM   (A01)
+0500    3 OPT-UNUSED-3   (L)
+0510    3 OPT-REDEF-DIR  (L)
+0520    3 OPT-UNUSED-4   (A01)
+0530    3 OPT-AMOUNT     (I02)
+0540    3 OPT-LINESIZE   (I02)
+0550*
+0560  2 INPUT-OUTPUTS
+0570    3 INT-HANDLE     (I04)
+0580    3 NEXT-SEQ       (I04)
+0590    3 NEXT-NUM       (I02)
+0600*
+0610  2 OUTPUTS
+0620    3 RETURNED       (I02)
+0630    3 SRC-NUM        (I02/1:V)
+0640    3 SRC-TEXT       (A01/1:V,1:92)
+0650    3 REDEFINE SRC-TEXT
+0660      4 SRC-GROUP    (1:V)
+0670        5 SRC-LINE   (A92)
+0680    3 REDEFINE SRC-TEXT
+0690      4 DIR-OBJNAME      (A32)    /* Object Name
+0700      4 DIR-LIBRARY      (A08)    /* Library ID
+0710      4 DIR-OBJTYPE      (A02)    /* Object Type
+0720      4 DIR-OBJKIND      (A01)    /* Source or Module
+0730      4 DIR-DBID         (A05)    /* DBID of System File
+0740      4 DIR-FNR          (A05)    /* FNR of System File
+0750      4 DIR-DATN         (A08)    /* Date in Format (YYYYMMDD)
+0760      4 DIR-TIMN         (A07)    /* Time in Format (HHIISST)
+0770      4 DIR-USERID       (A08)    /* User ID
+0780      4 DIR-PROGMODE     (A01)    /* Programming Mode
+0790      4 DIR-SRCSIZE      (A10)    /* Source Area Size
+0800      4 DIR-GPSIZE       (A10)    /* Size of Module
+0810      4 DIR-UNIQUE-ID    (A32)    /* Unique ID
+0820      4 DIR-DDM-DBID     (A05)    /* DBID the DDM is cataloged with
+0830      4 DIR-DDM-FNR      (A05)    /* FNR the DDM is cataloged with
+0840      4 DIR-NATVERS      (A04)    /* NATURAL Version
+0850      4 DIR-NATSM        (A02)    /* NATURAL SM Level
+0860      4 DIR-INIT-USER    (A08)    /* Init User ID
+0870      4 DIR-TID          (A08)    /* Terminal ID
+0880      4 DIR-TRANS-NAME   (A08)    /* TP Transcation Name
+0890      4 DIR-OPSYS        (A08)    /* Operating System
+0900      4 DIR-TPSYS        (A08)    /* TP System
+0910      4 DIR-USED-GDA     (A08)    /* Used GDA
+0920*
+0930    3 SRC-SEQ        (I4/1:V)
+0940    3 SRC-LONG       (A1/1:V)
+0950*
+09601 USR1057N
+0970  2 VERSION          (I1)     INIT <0>
+09801 REDEFINE USR1057N
+0990  2 EXTENDED-PARMS
+1000    3 EXTENDED-DATA   (A1/1:1)
+1010* ----------------------------------------------
+10201 IX                  (I2)
+10301 IV                  (I2)
+1040* -------------------------------------------------- parmeter W3READENV
+10501 #VALUE              (A) DYNAMIC
+10601 #PICTURES           (A) DYNAMIC
+10701 #JAVASCRIPT         (A) DYNAMIC
+10801 #EXPIRES            (A29)
+10901 REDEFINE #EXPIRES
+1100  2 RDATE             (A17)
+1110  2 RTIME             (A8)
+1120  2 RZONE             (A4)
+1130*
+11401 ATIME               (T)
+11501 ADATE               (D)
+1160*
+11701 LANG                (I4)
+1180END-DEFINE
+1190* ------------------------------------------------------ error handling
+1200ON ERROR
+1210  PERFORM W3ERROR ##W3ERROR
+1220  PERFORM W3END ##RPC
+1230  ESCAPE ROUTINE
+1240END-ERROR
+1250* ======================================================== Main Program
+1260ADATE := *DATX + 30
+1270ATIME := *TIMX
+1280*
+1290LANG := *LANGUAGE
+1300*LANGUAGE := 1
+1310MOVE EDITED ADATE (EM=NNN', 'DD' 'LLL' 'YYYY) TO RDATE
+1320MOVE EDITED ATIME (EM=HH:II:SS) TO RTIME
+1330MOVE " GMT" TO RZONE
+1340*LANGUAGE := LANG
+1350* ------------------------------------------------------- init HTML API
+1360PERFORM W3INIT ##RPC
+1370* ------------------------------------------------- Name of the source
+1380PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "SOURCE" "P" #VALUE
+1390IF *LENGTH(#VALUE) = 0 THEN
+1400  OBJECT-NAME  := ' '
+1410ELSE
+1420  OBJECT-NAME   := #VALUE
+1430END-IF
+1440EXAMINE OBJECT-NAME TRANSLATE INTO UPPER
+1450* ------------------------------------------------ Name of the library
+1460PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "LIB" " " #VALUE
+1470IF *LENGTH(#VALUE) = 0 THEN
+1480  LIBRARY  := *LIBRARY-ID
+1490ELSE
+1500  LIBRARY  := #VALUE
+1510END-IF
+1520EXAMINE LIBRARY TRANSLATE INTO UPPER
+1530* ---------------------------------------------- Name of the directory
+1540PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "PICTURES" " " #VALUE
+1550IF *LENGTH(#VALUE) = 0 THEN
+1560  #PICTURES   := '/pictures'
+1570ELSE
+1580  #PICTURES     := #VALUE
+1590END-IF
+1600*
+1610PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "JAVASCRIPT" " " #VALUE
+1620IF *LENGTH(#VALUE) = 0 THEN
+1630  #JAVASCRIPT     := '/javascript'
+1640ELSE
+1650  #JAVASCRIPT     := #VALUE
+1660END-IF
+1670* ------------------------------ for MF only linesize of 92 is possible
+1680* ------------------------- error at userexit, more then 92 may not run
+1690* IF "A" EQ H'41' THEN
+1700*  OPT-LINESIZE  := 250
+1710* ELSE
+1720OPT-LINESIZE  := 92
+1730* END-IF
+1740* ----------------------------------------- Set Interface to 'USR1057N'
+1750OPT-LINE-NUM  := 'Y'
+1760OPT-REDEF-DIR := TRUE
+1770OPT-AMOUNT    := V
+1780OPT-ACCESS   := "O"
+1790* ------------------------------------------- Set header for HTML page
+1800PERFORM W3CONTENT-TYPE 'text/html'
+1810* ----------------------------------------------------- Read all lines
+1820REPEAT
+1830  CALLNAT 'USR1057N' USR1057L  USR1057N.EXTENDED-PARMS NAD-MSG NAD-FLD
+1840  OPT-ACCESS := "R"
+1850  IF MSG-NR NE 0 AND MSG-NR NE 100 THEN
+1860    IF MSG-NR EQ 1006 THEN
+1870      COMPRESS '<FONT COLOR="RED">' MSG-NR MSG 'or is locked.</FONT>'
+1880        INTO #VALUE LEAVING NO
+1890*
+1900      COMPRESS "SOURCE='" OBJECT-NAME "'" INTO OBJECT-NAME LEAVING NO
+1910      EXAMINE #VALUE FOR ":1:" REPLACE WITH OBJECT-NAME
+1920      PERFORM W3TEXTLINEDYNAMIC #VALUE
+1930    ELSE
+1940      COMPRESS '<FONT COLOR="RED">' MSG-NR MSG'.</FONT>'
+1950        INTO #VALUE LEAVING NO
+1960      PERFORM W3TEXTLINEDYNAMIC #VALUE
+1970    END-IF
+1980  END-IF
+1990* ------------------------------------------------------- display lines
+2000  FOR IX = 1 TO RETURNED
+2010    IF SRC-NUM(IX) NE 0 THEN
+2020      COMPRESS SRC-LINE(IX) INTO #VALUE LEAVING NO
+2030      PERFORM W3TEXTLINEDYNAMIC #VALUE
+2040    END-IF
+2050  END-FOR
+2060* ------------------------------------------------- Error from USR1057N
+2070  IF MSG-NR NE 0
+2080    ESCAPE BOTTOM
+2090  END-IF
+2100END-REPEAT
+2110* ------------------------------------------------------ close USR1057N
+2120OPT-ACCESS := 'C'
+2130CALLNAT 'USR1057N' USR1057L USR1057N.EXTENDED-PARMS NAD-MSG NAD-FLD
+2140* ------------------------------------------------------ close HTTP Api
+2150PERFORM W3REPLACE "URL" "$PICTURES$"   #PICTURES
+2160PERFORM W3REPLACE " "   "$META_DATE$"  #EXPIRES
+2170PERFORM W3REPLACE "URL" "$JAVASCRIPT$" #JAVASCRIPT
+2180*
+2190PERFORM W3END ##RPC
+2200* ================================================================= End
+2210END

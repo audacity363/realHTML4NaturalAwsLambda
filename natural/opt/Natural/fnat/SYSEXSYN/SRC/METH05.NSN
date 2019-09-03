@@ -1,0 +1,13 @@
+0010** Example 'METH05': Method ADDRESS (used by METH01)
+0020************************************************************************
+0030DEFINE DATA
+0040  OBJECT USING METHO
+0050END-DEFINE
+0060*
+0070* Method ADDRESS of class STUDENTS
+0080*
+0090IF NAME = 'John Smith'
+0100  STREET := 'Oxford street'
+0110  CITY   := 'London'
+0120END-IF
+0130END

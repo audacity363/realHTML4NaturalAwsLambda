@@ -1,0 +1,13 @@
+0010**DV          0014     V1ADDRESS-SPACE                   ADDRESS-SPACE
+0020**DD          0017N 3.0 2ERROR-CODE
+0030**DD          0018A  58 2ERROR-TEXT
+0040**DD          0019N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0020B   4 2ADDRESS
+0060**DD          0021A   8 2JOB-NAME
+0070**DD          0022B   4 2TCB
+0080**DD          0023N 4.0 2ASID
+0090**DD          0024A   8 2STATUS
+0100**DD          0025A   3 2DISP
+0110**DD          0026A   3 2TYPE
+0120**DD          0027N 5.2 2CPU
+0130**DD          0028N 5.0 2REGION

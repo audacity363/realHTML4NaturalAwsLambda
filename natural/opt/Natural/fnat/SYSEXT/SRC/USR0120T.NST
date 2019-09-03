@@ -1,0 +1,60 @@
+0010Read Natural short error message
+0020.
+0030Documentation ......... USR0120T    /*  Text object
+0040Interface ............. USR0120N    /*  Cataloged subprogram
+0050Example Program ....... USR0120P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR MESSAGES
+0100.
+0110Keywords .............. *ERROR-NR, *LANGUAGE, ERROR, FNAT, SYSERR
+0120.
+0130Function .............. Read Natural Short Error Texts
+0140.
+0150.
+0160Parameters
+0170----------
+0180Define the following parameters with the DEFINE DATA statement:
+0190.
+020001 USR0120L
+0210   02 ERROR-NUMBER (N04)  /*  Can be 1 thru 9999
+0220   02 LANGUAGE     (I01)  /*  Can be 1 thru 60
+0230   02 RESPONSE     (N04)  /*  Indicates Error with Contents of USR0120L
+0240   02 S-TEXT       (A65)  /*  Contains the Error Text
+0250.
+0260Interface Call
+0270--------------
+0280Use the interface with the CALLNAT statement:
+0290.
+0300CALLNAT 'USR0120N'  USR0120L
+0310.
+0320.
+0330Using the Application Programming Interface:
+0340--------------------------------------------
+0350Copy the subprogram USR0120N to the library SYSTEM or the steplib
+0360library respectively, or to the required library.
+0370.
+0380The following variables have to be filled before calling the interface:
+0390.
+0400ERROR-NUMBER ...
+0410  Can be any value from 0001 to 9999
+0420.
+0430LANGUAGE .......
+0440  Language number (*LANGUAGE, for example).
+0450  If LANGUAGE is set to 0, then USR0120N assumes *LANGUAGE.
+0460.
+0470The interface tries to read the requested information from the
+0480Natural system file (see 'Display' function, SYSERR Utility).
+0490If the specified language does not exist, the English message will
+0500be returned (if it exists).
+0510.
+0520RESPONSE indicates whether fields in PARM-AREA were valid:
+0530  0000 ....  Ok.
+0540  0003 ....  ERROR-NUMBER is invalid.
+0550  0004 ....  LANGUAGE not correctly specified.
+0560 -0001 ....  ERROR-NUMBER does not exist.
+0570 -0002 ....  Short text for LANGUAGE does not exist. Return English
+0580             message
+0590.
+0600***** End of Description *****

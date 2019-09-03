@@ -1,0 +1,172 @@
+0010DB: 148 FILE: 044  - LOAD-MODULE                      DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:23
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:23
+0080*      by user ESY351
+0090*
+0100*
+0110*      Fields common to all Op-systems
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200*
+0210*      Mvs fields
+0220*
+0230  1 FN FUNCTION                          A    8    D Function to be perfo
+0240*      Function to be performed:
+0250*      ESD  - return names of
+0260*      external symbols and
+0270*      other related info as
+0280*      they appear in the
+0290*      external symbol
+0300*      dictionary
+0310*      IDR  - return information on
+0320*      applied zaps and
+0330*      linkedit date/version
+0340*      VCON - return information on
+0350*      external symbols as
+0360*      they appear in the
+0370*      relocation dictionary
+0380*      DATA - return data on CSECTs
+0390*      ATTR - return module attribs
+0400  1 A1 DSNAME                            A   54    D Fully qualified data
+0410*      Fully qualified data set name.
+0420  1 A2 VOLSER                            A    6    D Volume serial number
+0430*      Volume serial number.
+0440*      (Only required if dataset is
+0450*      not cataloged).
+0460  1 A3 MEMBER                            A   10    D Member name.
+0470*      Member name.
+0480  1 A3 MEMBER-LONG-NAME                  A  253    D Member long name (fo
+0490*      Member long name (for DLLs).
+0500  1 AA PASSWORD                          A    8    D Password for protect
+0510*      Password for protected data
+0520*      set / file
+0530  1 AB SEGMENT-LENGTH                    B    2    D The length of the re
+0540*      The length of the record
+0550*      segment to be returned.
+0560*      At end of block/CSECT/module,
+0570*      the segment may be smaller.
+0580  1 AD BLOCK-OFFSET                      B    4    D The offset of this s
+0590*      The offset of this segment in
+0600*      the load module.
+0610  1 AE CSECT-OFFSET                      B    4    D The offset of this s
+0620*      The offset of this segment in
+0630*      the current CSECT.
+0640  1 CA SEGMENT                           A  253    D Relevent for functio
+0650*      Relevent for function 'DATA'.
+0660*      Contains the data segment
+0670*      with length SEGMENT-LENGTH.
+0680  1 CB ESD-NAME                          A    8    D The external symbol
+0690*      The external symbol name.
+0700  1 CB ESD-NAME-LONG                     A  253    D The first 253 bytes
+0710*      The first 253 bytes of the
+0720*      symbol name.
+0730  1 CC ESD-TYPE                          A    2    D For 'ESD'
+0740*      For 'ESD'
+0750*      SD - section definition
+0760*      PC - private code
+0770*      LR - label reference
+0780*      CM - Common
+0790*      ER - external reference
+0800*      WX - weak external reference
+0810*      PR - pseudo register
+0820*      For 'VCON'
+0830*      SD - external symbol is
+0840*      resolved
+0850*      ER - external symbol is
+0860*      unresolved
+0870*      WX - external symbol is
+0880*      unresolved (weak)
+0890  1 CD ESD-ADDRESS                       B    4    D Relevant for 'ESD'.
+0900*      Relevant for 'ESD'.
+0910*      The address of the external
+0920*      symbol.
+0930  1 CE ESD-LENGTH                        N 11.0    D Relevant for 'ESD'.
+0940*      Relevant for 'ESD'.
+0950*      The length of the external
+0960*      symbol.
+0970  1 CF ESD-AMODE                         A    3    D Relevant for 'ESD'.
+0980*      Relevant for 'ESD'.
+0990*      The AMODE assigned to the
+1000*      CSECT.
+1010  1 CG ESD-RMODE                         A    3    D Relevant for 'ESD'.
+1020*      Relevant for 'ESD'.
+1030*      The RMODE assigned to the
+1040*      CSECT.
+1050  1 CH ESD-LR-ID                         N  5.0    D Relevant for 'ESD'.
+1060*      Relevant for 'ESD'.
+1070*      The Id of the label reference
+1080*      (LR) symbol.
+1090  1 CI ESD-ID                            N  5.0    D Relevant for 'ESD'.
+1100*      Relevant for 'ESD'.
+1110*      The Id of the external symbol.
+1120  1 CJ IN-CSECT                          A    8    D Relevant for 'VCON'.
+1130*      Relevant for 'VCON'.
+1140*      The name of the CSECT in which
+1150*      the reference to the external
+1160*      symbol appears.
+1170  1 CJ IN-CSECT-LONG                     A  253    D Relevant for 'VCON'.
+1180*      Relevant for 'VCON'.
+1190*      The first 253 bytes of the
+1200*      CSECT where the reference to
+1210*      the symbol appears.
+1220  1 D0 IDR-DATE                          A    8    D Relevant for 'IDR'.
+1230*      Relevant for 'IDR'.
+1240*      The date of the zap/linkage
+1250*      (DD/MM/YY).
+1260  1 DN IDR-DATX                          D    6    D Relevant for FUNCTIO
+1270*      Relevant for FUNCTION='IDR'.
+1280  1 D1 IDR-DATA                          A   40    D Relevant for 'IDR'.
+1290*      Relevant for 'IDR'.
+1300*      The IDR data.
+1310  1 D2 IDR-TYPE                          A    4    D Relevant for 'IDR'.
+1320*      Relevant for 'IDR'.
+1330*      ZAP  - AMASPZAP entry.
+1340*      IDR-DATA contains
+1350*      IDRDATA (length 8).
+1360*      LINK - Linkage entry.
+1370*      IDR-DATA contains
+1380*      linkedit name followed
+1390*      by version.
+1400*      USER - user data created by
+1410*      'IDENTIFY' statement.
+1420*      IDR-DATA contains
+1430*      data (max. 40 bytes).
+1440  1 D3 IDR-CALLER-ID                     A   80    D Relevant for 'IDR'.
+1450*      Relevant for 'IDR'.
+1460*      The caller-id specified in the
+1470*      IDR record.
+1480  1 I0 MODULE-LENGTH                     N 11.0    D Relevant for 'ATTR'.
+1490*      Relevant for 'ATTR'.
+1500*      The module's length in bytes.
+1510  1 I1 MODULE-ATTRIBUTES                 A  253    D Relevant for 'ATTR'.
+1520*      Relevant for 'ATTR'.
+1530*      The module's attributes in
+1540*      keyword format. The relevant
+1550*      keywords are separated by
+1560*      one blank. The keywords are:
+1570*      AUTH - APF authorized
+1580*      REFR - refreshable
+1590*      RENT - reentrant
+1600*      REUS - reusable
+1610*      OVLY - overlay
+1620*      TEST - test option (TSO)
+1630*      LOADONLY - only loadable
+1640*      SCTR - scatter
+1650*      NOTEXEC - not executable
+1660  1 I2 MODULE-SSI                        B    4    D Relevant for 'SSI'.
+1670*      Relevant for 'SSI'.
+1680*      The module's SSI data.
+1690*
+1700*      End of LOAD-MODULE
+1710*
+1720******DDM OUTPUT TERMINATED******

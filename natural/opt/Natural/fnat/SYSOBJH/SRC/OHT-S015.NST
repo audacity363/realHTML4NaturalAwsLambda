@@ -1,0 +1,27 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Unicode Work File
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180This option only applies to a work file written
+0190in Transfer format.
+0200
+0210Mark this field to write the work file in UTF-8.
+0220
+0230If this field is marked, all sources with code
+0240page are converted into UTF-8 before they are
+0250written into the work file.
+0260
+0270<HelpTextEnd>

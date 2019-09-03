@@ -1,0 +1,69 @@
+0010Get or set value of UPDATE command
+0020.
+0030Documentation ......... USR1042T    /*  Text object
+0040Interface ............. USR1042N    /*  Cataloged subprogram
+0050Example Program ....... USR1042P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATABASE
+0100.
+0110Keywords .............. DBUPD, GET, SET, UPDATE
+0120.
+0130Function .............. With this interface you can retrieve or specify
+0140                        the value of the UPDATE command. The UPDATE
+0150                        command prevents database updating. In
+0160                        addition the value of the DBUPD parameter
+0170                        will be returned.
+0180.
+0190.
+0200Parameters
+0210----------
+0220Define the following parameters with the DEFINE DATA statement:
+0230.
+0240 1 USR1042L
+0250   2 INPUTS
+0260     3 FUNCTION         (A01)
+0270   2 INPUT-OUTPUTS
+0280     3 UPDATE-CMD       (L)
+0290   2 OUTPUTS
+0300     3 DBUPD            (L)
+0310     3 RESPONSE         (I04)
+0320.
+0330Interface Call
+0340--------------
+0350Use the interface with the CALLNAT statement:
+0360.
+0370CALLNAT 'USR1042N' USR1042L
+0380.
+0390.
+0400Using the Application Programming Interface:
+0410--------------------------------------------
+0420Copy the subprogram USR1042N to the library SYSTEM or the steplib
+0430library respectively, or to the required library.
+0440.
+0450Description of the parameters:
+0460.
+04701 FUNCTION (Input)
+0480  Function code; possible values are:
+0490  'G' - Get current value of the UPDATE command
+0500  'S' - Set value of the UPDATE command
+0510.
+05201 UPDATE-CMD (Input/Output)
+0530  Value of the UPDATE command (Input if FUNCTION = 'S').
+0540  Possible values are:
+0550  TRUE:  UPDATE = ON
+0560  FALSE: UPDATE = OFF
+0570.
+05801 DBUPD (Output)
+0590  Value of the DBUPD parameter; possible values are:
+0600  TRUE:  DBUPD = ON
+0610  FALSE: DBUPD = OFF
+0620.
+06301 RESPONSE (Output)
+0640  Response code; possible values are:
+0650  0000 - No error occurred.
+0660  1001 - The value of FUNCTION must be 'G' or 'S'.
+0670.
+0680.
+0690*****  End of Description  *****

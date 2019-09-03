@@ -1,0 +1,108 @@
+0010DB: 148 FILE: 113  - TASK-INFO                        DEFAULT SEQUENCE:
+0020                              Cataloged by ESY351   on 2010-05-28 09:00:26
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2010-05-28 09:00:26
+0080*      by user ESY351
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      BS2000 fields
+0230*
+0240  1 ES SYSTEM-CODE                       B    2      System error code.
+0250*      System error code.
+0260  1 B1 JOB-NUMBER                        N  7.0    D TSN of job.
+0270*      TSN of job.
+0280  1 B2 JOB-NAME                          A    8      Name of job.
+0290*      Name of job.
+0300  1 B3 TYPE-NUMBER                       N  1.0      BS2000 task type. Po
+0310*      BS2000 task type. Possible
+0320*      values 1 - 7.
+0330  1 B4 STATUS                            A    9      Task status (DIALOG,
+0340*      Task status (DIALOG, TP, ...).
+0350  1 B5 PRIORITY                          N  3.0      Task scheduling prio
+0360*      Task scheduling priority.
+0370  1 B6 USER                              A    8      BS2000 User IDof tas
+0380*      BS2000 User IDof task owner.
+0390  1 B7 ACCOUNT-NUMBER                    A    8      For task types 1 - 3
+0400*      For task types 1 - 3.
+0410  1 B8 CPU-USED                          N  7.2      CPU time already use
+0420*      CPU time already used by task.
+0430*      For task types 2 and 3.
+0440  1 B9 UNPEND-CODE                       N  4.0      Pend-/Unpend-code fo
+0450*      Pend-/Unpend-code for task
+0460*      types 2 and 3.
+0470  1 BA TASK-QUEUE-NUMBER                 N  3.0      Number of task sched
+0480*      Number of task scheduler
+0490*      queue. For task types 2 and 3.
+0500  1 BB LAST-COMMAND                      A   12      Last command execute
+0510*      Last command executed by task.
+0520*      For task types 2 and 3.
+0530  1 BC SIZE                              A    6      Size of job.
+0540*      Size of job.
+0550*      Type 2 and 3: program size
+0560*      Types 4 - 7:  size of
+0570*      SPOOLOUT file.
+0580  1 BD LOADED-PROGRAM                    A   64      Task types 2 and 3:
+0590*      Task types 2 and 3:
+0600*      name of loaded program.
+0610  1 BE PRINT-FILE-NAME                   A   54      Name of printed file
+0620*      Name of printed file.
+0630  1 BF PRINT-ELEMENT                     A   64      Name of printed elem
+0640*      Name of printed element.
+0650  1 BG PRINT-ELEMENT-TYPE                A    8      Type of printed elem
+0660*      Type of printed element.
+0670  1 BH PRINT-ELEMENT-VERSION             A   24      Version of printed e
+0680*      Version of printed element.
+0690  1 BI NUMBER-OF-PRINTED-LINES           N  6.0      Number of printed li
+0700*      Number of printed lines.
+0710  1 BJ PRINT-ERROR-MESSAGE               A   10      Error message occurr
+0720*      Error message occurred during
+0730*      PRINT. Only relevant for task
+0740*      type 7.
+0750  1 BK PRINT-FORM                        A    8      For print jobs.
+0760*      For print jobs.
+0770  1 BL COPIES                            N  3.0      Number of copies for
+0780*      Number of copies for print
+0790*      jobs.
+0800  1 BM ORIGINATOR-TSN                    N  5.0      For print jobs:
+0810*      For print jobs:
+0820*      TSN of task which started the
+0830*      job.
+0840  1 BN CPU-MAX                           N  7.2      CPU time limit for t
+0850*      CPU time limit for the job.
+0860*      For task type 1 - 3.
+0870  1 BO DEVICE                            A    8      Printer device name.
+0880*      Printer device name.
+0890  1 BP ORIGINATOR-JOB-ID                 A    8      For print jobs:
+0900*      For print jobs:
+0910*      TSN of task which started the
+0920*      print job.
+0930  1 BR NUMBER-OF-PRINTED-PAGES           N  6.0      Number of printed pa
+0940*      Number of printed pages.
+0950  1 BS HOLD                              A    3      Task type 2:
+0960*      Task type 2:
+0970*      Value YES will be returned
+0980*      for hold jobs, otherwise NO.
+0990  1 JA JOB-ID                            A    8    D TSN of job.
+1000*      TSN of job.
+1010  1 D1 LOGON-DATX                        D    6      For task types 2 and
+1020*      For task types 2 and 3.
+1030  1 T1 LOGON-TIMX                        T   12      For task types 2 and
+1040*      For task types 2 and 3.
+1050*
+1060*      End of TASK-INFO
+1070*
+1080******DDM OUTPUT TERMINATED******

@@ -1,0 +1,55 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR6303N'
+0030/*  Retrieve Natural stack information (in Unicode format)
+0040/***********************************************************************
+0050DEFINE DATA LOCAL
+006001 P-FUNCTION (A1)
+007001 P-NUMBER   (I4)
+008001 P-DATA     (U80)
+0090*
+010001 STACK-TYPE (A8)
+011001 I          (I4)
+012001 ENTRIES    (I4)
+013001 #ALPHA     (A40)
+014001 #ALPHA2    (A40)
+015001 #UNI       (U50)
+016001 #UNI2      (U50)
+0170END-DEFINE
+0180*
+0190* Write test data to Stack
+0200*
+0210#ALPHA := 'Hello World'
+0220#ALPHA2:= 'today'
+0230#UNI   := 'Unicode 1'
+0240#UNI2  := 'Unicode 2'
+0250*
+0260STACK TOP DATA #ALPHA
+0270STACK TOP DATA #UNI
+0280STACK TOP COMMAND 'SYSPROF'
+0290STACK TOP DATA FORMATTED #ALPHA #ALPHA2
+0300STACK TOP DATA FORMATTED #UNI #UNI2 #UNI
+0310*
+0320* Read test data from Stack
+0330*
+0340/* Get the number of stack entries
+0350P-FUNCTION := 'N'
+0360CALLNAT 'USR6303N' P-FUNCTION P-NUMBER P-DATA
+0370ENTRIES := P-NUMBER
+0380*
+0390FOR I = 1 TO ENTRIES
+0400  /*
+0410  /* Get the type of the ith entry
+0420  P-FUNCTION := 'T'
+0430  P-NUMBER := I
+0440  CALLNAT  'USR6303N' P-FUNCTION P-NUMBER P-DATA
+0450  STACK-TYPE := P-DATA
+0460  /*
+0470  /* Get the ith entry (1st 80 bytes)
+0480  P-FUNCTION := 'R'
+0490  P-NUMBER := I
+0500  CALLNAT  'USR6303N' P-FUNCTION P-NUMBER P-DATA
+0510  /*
+0520  DISPLAY I STACK-TYPE P-DATA (AL=30)
+0530  /*
+0540END-FOR
+0550END

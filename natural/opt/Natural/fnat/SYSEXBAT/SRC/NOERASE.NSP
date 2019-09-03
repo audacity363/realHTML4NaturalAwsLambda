@@ -1,0 +1,17 @@
+0010/* ---------------------------------------------------------------------
+0020/* Program:        NOERASE
+0030/* Library:        SYSEXBAT (Batch mode samples)
+0040/*
+0050/* Functionality:  Windows with INPUT NO ERASE
+0060/*
+0070/* Description:    Demonstrate how the NO ERASE option works.
+0080/* ---------------------------------------------------------------------
+0090DEFINE DATA LOCAL
+01001 #name (A10)
+0110END-DEFINE
+0120**
+0130INPUT          (IP=ON AD=M)   #name
+0140INPUT NO ERASE (IP=ON AD=M) / #name
+0150**
+0160DISPLAY #name
+0170END

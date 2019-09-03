@@ -1,0 +1,84 @@
+0010* Program:  TESTS7
+0020* Library:  SYSRPC
+0030* Purpose:  Example subprogram for stub generation with extensible groups.
+0040*
+0050DEFINE DATA
+0060PARAMETER
+007001 GROUP-1(10)
+0080  02 A (A20)
+0090  02 B (A20)
+0100  02 GROUP-2(0:*)
+0110    03 C (A10/5)
+0120    03 D (A10)
+013001 LINE (A) DYNAMIC
+0140LOCAL
+01501 II      (I4)      /* index within subroutine
+01601 I       (I4)      /* index
+01701 J       (I4)      /* index
+01801 J-ORIG  (I4)      /* original upper limit
+01901 J-UPPER (I4)      /* new upper limit
+02001 K       (I4)      /* index
+02101 N       (I4)      /* counter
+02201 T-A20   (A20)     /* working variable
+02301 REDEFINE T-A20
+0240  2 T-A  (A1/20)
+0250  2 REDEFINE T-A
+0260    3 T-B (B1/20)
+02701 T-N (N3/20)
+0280END-DEFINE
+0290/*
+0300IF *OCCURRENCE(C,2) > 0
+0310THEN
+0320  J-ORIG  := *UBOUND(C,2)
+0330  J-UPPER := J-ORIG + 1
+0340  EXPAND ARRAY GROUP-2 TO (*:*,*:J-UPPER)
+0350END-IF
+0360/*
+0370FOR I 1 10
+0380  IF A(I) NE ' ' THEN
+0390    MOVE A(I) TO T-A20
+0400    PERFORM SHIFT
+0410    MOVE T-A20 TO A(I)
+0420  END-IF
+0430  /*
+0440  IF B(I) NE ' ' THEN
+0450  MOVE B(I) TO T-A20
+0460  PERFORM SHIFT
+0470  MOVE T-A20 TO B(I)
+0480  END-IF
+0490  /*
+0500  FOR J 0 J-ORIG
+0510    FOR K 1 5
+0520      IF C(I,J,K) NE ' ' THEN
+0530        MOVE C(I,J,K) TO T-A20
+0540        PERFORM SHIFT
+0550        MOVE T-A20 TO C(I,J,K)
+0560        MOVE N     TO C(I,J-UPPER,K)
+0570      END-IF
+0580    END-FOR
+0590    /*
+0600    IF D(I,J) NE ' ' THEN
+0610      MOVE D(I,J) TO T-A20
+0620      PERFORM SHIFT
+0630      MOVE T-A20 TO D(I,J)
+0640    END-IF
+0650  END-FOR
+0660END-FOR
+0670/*
+0680COMPRESS 'The subroutine SHIFT was invoked' N 'times.'
+0690    INTO LINE
+0700/*
+0710DEFINE SUBROUTINE SHIFT
+0720/* Translates upper case into lower case if value = 32
+0730ADD 1 TO N
+0740FOR II 1 20
+0750  IF T-B(II) = H'41' THRU H'5A' THEN
+0760    MOVE T-B(II) TO T-N(II)
+0770    ADD 33 TO T-N(II)
+0780    MOVE T-N(II) TO T-B(II)
+0790  END-IF
+0800END-FOR
+0810END-SUBROUTINE
+0820END
+0830
+0840

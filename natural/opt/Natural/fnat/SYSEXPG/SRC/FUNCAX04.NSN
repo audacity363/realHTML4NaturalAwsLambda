@@ -1,0 +1,11 @@
+0010** Example 'FUNCAX04': Calling a subprogram  (Subprogram)
+0020************************************************************************
+0030DEFINE DATA PARAMETER
+0040  1 #RESULT   (I4) BY VALUE RESULT
+0050  1 #SUMMAND1 (I4) BY VALUE
+0060  1 #SUMMAND2 (I4) BY VALUE
+0070END-DEFINE
+0080*
+0090#RESULT := #SUMMAND1 + #SUMMAND2
+0100*
+0110END

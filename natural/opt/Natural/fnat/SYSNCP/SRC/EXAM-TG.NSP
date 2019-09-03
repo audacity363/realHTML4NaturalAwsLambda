@@ -1,0 +1,56 @@
+0010/*  EXAM-TG   -  TEXT for Processor
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (1:8)
+0070     02 NATURAL-ERROR
+0080     02 RETURN-CODE
+0090     02 RESULT-FIELD (1:9)
+0100     02 GETSET-FIELD-NAME
+0110     02 GETSET-FIELD-VALUE
+0120  01 MSG     (A72)
+0130  01 IX      (I01)
+0140END-DEFINE
+0150DEFINE WINDOW INFO-TEXT
+0160  SIZE 14 * 70
+0170  BASE IX / IX
+0180  TITLE ' (TG) General Text '
+0190  CONTROL SCREEN
+0200  FRAMED POSITION OFF
+0210SET KEY ALL
+0220IX := *LEVEL * 2
+0230/***********************************************************************
+0240PROCESS COMMAND ACTION GET USING
+0250  PROCESSOR-NAME = ' '
+0260  GETSET-FIELD-NAME = 'NAME&'
+0270IF NATURAL-ERROR > 0
+0280  CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0290  WRITE MSG (AD=I)
+0300  ESCAPE ROUTINE
+0310END-IF
+0320MOVE GETSET-FIELD-VALUE TO PROCESSOR-NAME
+0330/***********************************************************************
+0340PROCESS COMMAND ACTION TEXT USING
+0350  PROCESSOR-NAME = PROCESSOR-NAME
+0360  COMMAND-LINE (*) = COMMAND-LINE (*)
+0370/*************************************
+0380IF NATURAL-ERROR > 0
+0390  CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0400END-IF
+0410/************************************
+0420INPUT WINDOW = 'INFO-TEXT' (AD=OIT' ' IP=OFF ) WITH TEXT MSG
+0430   /  ' Processor Name ...' PROCESSOR-NAME
+0440   /  ' (1) Header 1 .....'  RESULT-FIELD (1) (AD=OI AL=40)
+0450   /  ' (2) Header 2 .....'  RESULT-FIELD (2) (AD=OI AL=40)
+0460   /  ' (3) Entry 1 ......'  RESULT-FIELD (3) (AD=OI AL=40)
+0470   /  ' (4) Entry 2 ......'  RESULT-FIELD (4) (AD=OI AL=40)
+0480   /  ' (5) Entry 3 ......'  RESULT-FIELD (5) (AD=OI AL=40)
+0490   /  ' (6) Keywords #1 ..'  RESULT-FIELD (6) (AD=OI AL=40)
+0500   /  ' (7) Keywords #2 ..'  RESULT-FIELD (7) (AD=OI AL=40)
+0510   /  ' (8) Keywords #3 ..'  RESULT-FIELD (8) (AD=OI AL=40)
+0520   /  ' (9) Functions ....'  RESULT-FIELD (9) (AD=OI AL=40)
+0530/*************************************
+0540SET WINDOW OFF
+0550ESCAPE ROUTINE
+0560END

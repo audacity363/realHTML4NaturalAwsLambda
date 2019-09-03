@@ -1,0 +1,17 @@
+0010&H View USER-ATTRIBUTES
+0020&L
+0030&L
+0040#Zweck@    : Anzeigen der Attribute einer BS2000 Benutzerkennung.
+0050&L
+0060&L
+0070#System@   : BS2000/OSD.
+0080&L
+0090&L
+0100#Anwendung@: Mit Hilfe dieses Views koennen Sie sich die Attribute
+0110             Ihrer eigenen BS2000 Benutzerkennung anzeigen lassen.
+0120&L
+0130&L
+0140&L
+0150#Anmerkung@: Der BS2000 Systemverwalter kann sich die Attribute aller
+0160             BS2000 Benutzerkennungen anzeigen lassen.
+0170             Bei Einsatz von SECOS sind Einschraenkungen moeglich.

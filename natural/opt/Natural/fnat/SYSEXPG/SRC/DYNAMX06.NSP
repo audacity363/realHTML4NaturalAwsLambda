@@ -1,0 +1,29 @@
+0010** Example 'DYNAMX06': Dynamic variables (allocated memory)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #MYDYNTEXT1  (A)  DYNAMIC
+00501 #LEN         (I4)
+0060END-DEFINE
+0070*
+0080#MYDYNTEXT1 := 'a'     /* used length is 1, value is 'a'
+0090                       /* allocated size is still 1
+0100WRITE *LENGTH(#MYDYNTEXT1)
+0110*
+0120EXPAND DYNAMIC VARIABLE  #MYDYNTEXT1 TO 100
+0130                       /* used length is still 1, value is 'a'
+0140                       /* allocated size is 100
+0150*
+0160CALLNAT 'DYNAMX05' USING #MYDYNTEXT1
+0170WRITE *LENGTH(#MYDYNTEXT1)
+0180                       /* used length and allocated size
+0190                       /* may have changed in the subprogram
+0200*
+0210#LEN := *LENGTH(#MYDYNTEXT1)
+0220REDUCE DYNAMIC VARIABLE  #MYDYNTEXT1  TO  #LEN
+0230                       /* if allocated size is greater than used length,
+0240                       /* the unused memory is released
+0250*
+0260REDUCE DYNAMIC VARIABLE  #MYDYNTEXT1  TO  0
+0270WRITE *LENGTH(#MYDYNTEXT1)
+0280                       /* free allocated memory for dynamic variable
+0290END

@@ -1,0 +1,51 @@
+0010Get dynamic error message parts from the last error
+0020.
+0030Documentation ......... USR2009T    /*  Text object
+0040Interface ............. USR2009N    /*  Cataloged subprogram
+0050Example Program ....... USR2009P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR MESSAGES
+0100.
+0110Keywords .............. +PREVIOUS-VERSION,
+0120                        *ERROR-NR, DYNAMIC, ERROR, SYSERR
+0130.
+0140Interface Versions .... USR1012N, USR2009N, USR2030N
+0150.
+0160Function .............. Read dynamic error part for use with
+0170                        ":1:,:2:,:3:, ...". You can read the dynamic
+0180                        error parts of the last occurred error.
+0190                        With USR2009N, multiple error parts can be
+0200                        used.
+0210                        Note: The length of the error tokens is
+0220                        limited to A32. Please use USR2030N for tokens
+0230                        up to A253 (esp. DCOM applications)
+0240.
+0250.
+0260Parameters
+0270----------
+0280Define the following parameters with the DEFINE DATA statement:
+0290.
+0300
+031001 ERR-PARM     (A32/1:9)
+032001 OCC          (N01)     /*  Number of occurences
+033001 RESPONSE     (N04)     /*  Error code
+0340                              0 = ok
+0350                              1 = at least one token truncated
+0360.
+0370.
+0380Interface Call
+0390--------------
+0400Use the interface with the CALLNAT statement:
+0410.
+0420CALLNAT 'USR2009N' ERR-PARM  OCC RESPONSE
+0430.
+0440.
+0450Using the Application Programming Interface:
+0460--------------------------------------------
+0470Copy the subprogram USR2009N to the library SYSTEM or the steplib
+0480library respectively, or to the required library.
+0490.
+0500.
+0510***** End of Description *****

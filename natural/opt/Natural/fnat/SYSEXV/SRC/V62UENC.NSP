@@ -1,0 +1,77 @@
+0010* Program ...... V62UENC
+0020* Library ...... SYSEXV
+0030* Version ...... 6.2
+0040* Machine ...... UNIX
+0050*
+0060* Functionality: MOVE ENCODED
+0070************************************************************************
+0080*
+0090*
+0100DEFINE DATA LOCAL
+01101 A1         (A4)    /* alpha field
+01201 A2         (A4)    /* alpha field
+01301 RSP       (I4)     /* response code
+0140END-DEFINE
+0150*
+0160FORMAT KD=ON
+0170SET KEY PF3  NAMED 'Exit'
+0180    PF12 NAMED 'Canc'
+0190*
+0200*
+0210MOVE H'C1C2F1F2' TO A1            /* AB12 (EBCDIC)
+0220MOVE ENCODED A1 IN CODEPAGE 'IBM01141' TO A2 IN CODEPAGE 'US-ASCII'
+0230  GIVING RSP
+0240*
+0250INPUT  (IP=OFF)
+0260  01T *TIMX  (AD=OTD)
+0270  21T '***** NATURAL 6.2 ENHANCEMENTS *****'
+0280  70T *DATX  (AD=OTD DF=L)
+0290  /
+0300  01T 'User'
+0310  06T *USER  (AD=OLTI)
+0320  25T     '- Natural Unicode Support  -' (I)
+0330  64T 'Program'
+0340  72T *PROGRAM   (AD=OI)
+0350  /
+0360  15T '                - MOVE ENCODED -' (I)
+0370  //
+0380  02T 'MOVE ENCODED' (I) 'var1'  'IN CODEPAGE cp1'
+0390  (I)
+0400  'TO var2'  'IN CODEPAGE cp2' (I) 'GIVING var3'
+0410  /
+0420  /
+0430  02T 'MOVE ENCODED'  'translates a string from code page'
+0440  'cp1'
+0450  'to code page'  'cp2.'  /
+0460  02T 'var1'  'and'  'var2'
+0470  'are of format A, B or U. If format U is used, the'  /
+0480  02T 'corresponding'  'CODEPAGE'
+0490  'parameter must not be specified.'  /
+0500  02T 'When the keyword'  'GIVING'
+0510  'is used, error situations are intercepted and '  /
+0520  02T 'the corresponding error code is returned in'
+0530  'var3.'  /
+0540  /
+0550  02T '  MOVE H''C1C2F1F2'' TO A1            /* ''AB12'' (EBCDIC)'
+0560  /
+0570  02T '  MOVE ENCODED' (I) 'A1 IN CODEPAGE ''IBM01141'' TO A2'
+0580
+0590  'IN CODEPAGE ''US-ASCII'''  /
+0600  02T '    GIVING RSP'  /
+0610  /
+0620  02T 'A1:  ' A1 (AD=OI)
+0630  '  Hex:' A1(EM=H(4) AD=OI) /
+0640  02T 'A2:  ' A2 (AD=OI)
+0650  '  Hex:' A2(EM=H(4) AD=OI)
+0660  '  RSP:' RSP (AD=OLI)  /
+0670*
+0680IF *PF-KEY = 'PF3'
+0690  ESCAPE ROUTINE
+0700END-IF
+0710IF (*PF-KEY = 'PF12' OR= 'CLR')
+0720  CALLNAT 'UTILSTOP'
+0730END-IF
+0740*
+0750*
+0760END
+0770

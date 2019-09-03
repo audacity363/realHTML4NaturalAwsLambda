@@ -1,0 +1,18 @@
+0010** Example 'RPTEX2R': REPEAT (with WHILE and UNTIL option)
+0020************************************************************************
+0030RESET #X (I1) #Y (I1)
+0040*
+0050*
+0060REPEAT WHILE #X <= 5
+0070  ADD 1 TO #X
+0080  WRITE NOTITLE '=' #X
+0090LOOP
+0100*
+0110SKIP 3
+0120REPEAT
+0130  ADD 1 TO #Y
+0140  WRITE '=' #Y
+0150  UNTIL #Y = 6
+0160LOOP
+0170*
+0180END

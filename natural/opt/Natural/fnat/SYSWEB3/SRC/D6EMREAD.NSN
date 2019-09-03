@@ -1,0 +1,95 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - New Demo Application
+0030*
+0040*        D6EMREAD
+0050*
+0060* DESCRIPTION
+0070*               Get a Person
+0080*
+0090* AUTHOR        SAG   08.09.1998
+0100*
+0110* Version       8.3
+0120*
+0130* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0140*
+0150* HISTORY
+0160* USER    DATE       REASON
+0170* ------+------------+--------------------------------------------
+0180*       ! --.--.---- !
+0190* ------+------------+--------------------------------------------
+0200*
+0210* ------ PARAMETER -----------------------------------------------
+0220DEFINE DATA
+0230PARAMETER
+02401 #P-NO         (A) DYNAMIC
+02501 #P-NAME       (A) DYNAMIC
+02601 #P-FIRST-NAME (A) DYNAMIC
+02701 #P-BIRTH      (A) DYNAMIC
+02801 #P-SEX        (A) DYNAMIC
+02901 #P-DEPT       (A) DYNAMIC
+03001 #P-CITY       (A) DYNAMIC
+03101 #P-AREA-CODE  (A) DYNAMIC
+03201 #P-ZIP        (A) DYNAMIC
+03301 #P-COUNTRY    (A) DYNAMIC
+03401 #P-PHONE      (A) DYNAMIC
+03501 #INOUT-MSG    (A) DYNAMIC
+0360*
+0370LOCAL
+03801 EMPLOYEES-VIEW VIEW OF EMPLOYEES
+0390  2 PERSONNEL-ID
+0400  2 FIRST-NAME
+0410  2 NAME
+0420  2 SEX
+0430  2 BIRTH
+0440  2 CITY
+0450  2 ZIP
+0460  2 POST-CODE
+0470  2 COUNTRY
+0480  2 AREA-CODE
+0490  2 PHONE
+0500  2 DEPT
+0510*
+05201 #I (N7)  INIT <0>
+0530* Year2000 Employee File uses D instead of N6 this not needed
+0540* BIRTH-N (N08)
+0550* REDEFINE BIRTH-N
+0560* 2 BIRTH-J (A4)
+0570* 2 BIRTH-M (A2)
+0580* 2 BIRTH-D (A2)
+0590*
+06001 #ERROR      (I4)
+0610END-DEFINE
+0620*
+0630IF #P-NO NE ' '
+0640*
+0650  F. FIND EMPLOYEES-VIEW WITH PERSONNEL-ID = #P-NO
+0660    IF NO
+0670      COMPRESS #INOUT-MSG
+0680        'Sorry nothing found for personnel-id:' #P-NO
+0690        INTO #INOUT-MSG
+0700    END-NOREC
+0710*
+0720    #P-SEX        := EMPLOYEES-VIEW.SEX
+0730    #P-NO         := EMPLOYEES-VIEW.PERSONNEL-ID
+0740    #P-NAME       := EMPLOYEES-VIEW.NAME
+0750    #P-FIRST-NAME := EMPLOYEES-VIEW.FIRST-NAME
+0760*
+0770    MOVE EDITED EMPLOYEES-VIEW.BIRTH (EM=DD.MM.YYYY) TO #P-BIRTH
+0780    #P-DEPT       := EMPLOYEES-VIEW.DEPT
+0790    #P-CITY       := EMPLOYEES-VIEW.CITY
+0800    #P-AREA-CODE  := EMPLOYEES-VIEW.AREA-CODE
+0810    #P-ZIP        := EMPLOYEES-VIEW.ZIP
+0820    #P-COUNTRY    := EMPLOYEES-VIEW.COUNTRY
+0830    #P-PHONE      := EMPLOYEES-VIEW.PHONE
+0840*
+0850  END-FIND
+0860*
+0870  IF *NUMBER(F.) > 1
+0880    COMPRESS #INOUT-MSG 'Sorry' *NUMBER(F.)
+0890      'persons with personnel-id:' #P-NO 'found' INTO #INOUT-MSG
+0900  END-IF
+0910ELSE
+0920  COMPRESS 'Please select a person' INTO #INOUT-MSG
+0930END-IF
+0940*
+0950END

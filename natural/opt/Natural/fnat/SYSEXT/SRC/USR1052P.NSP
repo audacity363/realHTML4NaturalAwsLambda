@@ -1,0 +1,84 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1052N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 USR1052L
+0070   2 OS-COMMAND        (A253)
+0080   2 RESPONSE          (I04)
+0090   2 CMD-OPTIONS       (A253)        /* OPTIONAL PARAMETER for USR1052N
+0100   2 CMD-OUTPUT        (A/1:*) DYNAMIC    /* OPTIONAL PARA for USR1052N
+01101 #STDOUT-FLAG         (A1)
+01201 #SCREEN-FLAG         (A1)
+01301 #SYNCH-FLAG          (A1)
+01401 #LINES-RETURNED      (I4)
+01501 #CNT                 (I4)
+0160END-DEFINE
+0170/*
+0180SET KEY ALL
+0190SET CONTROL 'L'        /* Accept lower case
+0200/*
+0210DECIDE FOR FIRST CONDITION
+0220  WHEN *MACHINE-CLASS = 'PC'
+0230    ASSIGN OS-COMMAND  = 'CMD.EXE /C DIR *.*'
+0240 /* ASSIGN OS-COMMAND  = 'notepad'
+0250  WHEN NONE            /* UNIX assumed
+0260    ASSIGN OS-COMMAND  = 'ls -l '
+0270 /* ASSIGN OS-COMMAND = 'vi'
+0280END-DECIDE
+0290/*
+0300#STDOUT-FLAG := 'Y'  /* set STDOUT as option
+0310#SCREEN-FLAG := 'S'  /* set SCREENIO as option
+0320INPUT (AD=MIW IP=OFF)
+0330      'Enter an operating system command:' OS-COMMAND (AL=44)
+0340    / 'STDOUT - get command output (Y/N):' #STDOUT-FLAG
+0350    / 'Screen-IO, NoScreen-IO      (S/N):' #SCREEN-FLAG
+0360    / 'Synch, Asynch               (S/A):' #SYNCH-FLAG
+0370/*
+0380IF *PF-KEY NE 'ENTR'
+0390  ESCAPE ROUTINE
+0400END-IF
+0410/*
+0420/* give the desired flags to CMD-OPTIONS
+0430IF #STDOUT-FLAG = 'Y' OR= 'y' THEN
+0440  COMPRESS CMD-OPTIONS 'STDOUT' INTO CMD-OPTIONS
+0450END-IF
+0460IF #SCREEN-FLAG = 'S' OR= 's' THEN
+0470  COMPRESS CMD-OPTIONS 'SCREENIO' INTO CMD-OPTIONS
+0480END-IF
+0490IF #SCREEN-FLAG = 'N' OR= 'n' THEN
+0500  COMPRESS CMD-OPTIONS 'NOSCREENIO' INTO CMD-OPTIONS
+0510END-IF
+0520IF #SYNCH-FLAG = 'S' OR= 's' THEN
+0530  COMPRESS CMD-OPTIONS 'SYNCH' INTO CMD-OPTIONS
+0540END-IF
+0550IF #SYNCH-FLAG = 'A' OR= 'a' THEN
+0560  COMPRESS CMD-OPTIONS 'ASYNCH' INTO CMD-OPTIONS
+0570END-IF
+0580/*
+0590/* NOTES:
+0600/* Set all options in CMD-OPTIONS (if specified).
+0610/*   Do not set them in #OS-COMMAND and in CMD-OPTIONS.
+0620/* Avoid translation of quotation marks:
+0630/*   Set the profile parameter TQ=OFF or
+0640/*   replace quotation marks with hex-code.
+0650/* If you use one of the keywords SCREENIO, NOSCREENIO,
+0660/*   SYNCH or ASYNCH in the system command itself,
+0670/*   enclose it with quotation marks.
+0680/*
+0690EXAMINE OS-COMMAND FOR '"' AND REPLACE WITH H'22'
+0700/*
+0710/*
+0720/* call the interface
+0730CALLNAT 'USR1052N'  USR1052L
+0740/*
+0750WRITE / 'Return code from the operating system:' RESPONSE (AD=L)
+0760/*
+0770#LINES-RETURNED := *OCCURRENCE (CMD-OUTPUT)
+0780IF (#LINES-RETURNED > 0)
+0790  PRINT 'Output of command:' #LINES-RETURNED (AD=L) 'lines'
+0800  FOR #CNT = 1 to *OCCURRENCE (CMD-OUTPUT)
+0810    PRINT CMD-OUTPUT (#CNT)
+0820  END-FOR
+0830END-IF
+0840END

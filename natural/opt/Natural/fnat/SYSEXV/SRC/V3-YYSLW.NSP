@@ -1,0 +1,139 @@
+0010*
+0020* Program .. V3-YYSLW
+0030* Library .. SYSEXV
+0040* Version .. 3.1
+0050*
+0060* Functionality: For Year 2000, date interpretation with
+0070*                Sliding Window YSLW
+0080*
+0090* Note: Set profile parameters DTFORM=I and YSLW=30 for this example.
+0100************************************************************************
+0110*
+0120DEFINE DATA
+0130LOCAL
+01401 #DATE       (D)
+01501 #ALPHA      (A8)
+01601 SW-START    (N4)
+01701 SW-END      (N4)
+01801 CURR-DATE   (N8)
+01901 REDEFINE CURR-DATE
+0200  2 CURR-YEAR (N4)
+0210  2 REDEFINE CURR-YEAR
+0220    3 CURR-YEAR-A (A2)
+0230    3 CURR-YEAR-N2 (N2)
+02401 NAT22-DATE  (A10)
+0250END-DEFINE
+0260*
+0270FORMAT KD=ON
+0280SET KEY PF3  NAMED 'Exit'
+0290  PF12 NAMED 'Canc'
+0300*
+0310MOVE *DATN TO CURR-DATE
+0320SW-START := CURR-YEAR - 30
+0330SW-END   := SW-START + 99
+0340*
+0350IF CURR-YEAR-N2 < 30  /* for year 30, YSLW=30 has no effect
+0360  #ALPHA := '99-04-26'
+0370ELSE
+0380  #ALPHA := '01-04-26'
+0390END-IF
+0400*
+0410COMPRESS CURR-YEAR-A #ALPHA TO NAT22-DATE LEAVING NO
+0420*
+0430*
+0440#DATE := VAL (#ALPHA)
+0450*
+0460*
+0470*
+0480INPUT (IP=OFF )
+0490  01T *TIMX  (AD=OTD )
+0500  21T '***** NATURAL 3.1 ENHANCEMENTS *****'
+0510  70T *DATX  (AD=OTD DF=L )
+0520  /
+0530  01T 'User'
+0540  06T *USER  (AD=OILT )
+0550  28T '- Year 2000 Features -'(I)
+0560  64T 'Program'
+0570  72T *PROGRAM (AD=OI)
+0580  ///
+0590  02T 'New profile parameter YSLW - year sliding window'(I)
+0600  '     * First example *'
+0610  //
+0620  02T 'For this program,' 'YSLW=30'(I) 'has to be set, which means that'
+0630  'for the current'
+0640  /
+0650  02T 'year' CURR-YEAR (AD=OI)
+0660  'the sliding window starts with' SW-START (AD=OI)
+0670  'and ends with'  SW-END (AD=OI)
+0680  ///
+0690  02T '#ALPHA(A8) := ' #ALPHA (AD=OI) '    /* used format YY-MM-DD'
+0700  //
+0710  02T '#DATE(D)   := VAL(#ALPHA)'
+0720  /
+0730  02T ' '
+0740  //
+0750  02T 'Result: #DATE contains'
+0760  #DATE (AD=OI   EM=YYYY-MM-DD)
+0770  ///
+0780  02T 'Without sliding window (Version 2.2), #DATE contains'
+0790  NAT22-DATE (AD=OI)
+0800  /
+0810  02T 'because the current century is assumed.'
+0820*
+0830IF *PF-KEY = 'PF3'
+0840  ESCAPE ROUTINE
+0850END-IF
+0860IF (*PF-KEY = 'PF12' OR = 'CLR')
+0870  CALLNAT 'UTILSTOP'
+0880END-IF
+0890
+0900*
+0910STACK TOP DATA #ALPHA
+0920*
+0930INPUT #DATE
+0940*
+0950*
+0960INPUT (IP=OFF)
+0970  01T *TIMX  (AD=OTD )
+0980  21T '***** NATURAL 3.1 ENHANCEMENTS *****'
+0990  70T *DATX  (AD=OTD DF=L )
+1000  /
+1010  01T 'User'
+1020  06T *USER  (AD=OILT )
+1030  28T '- Year 2000 Features -'(I)
+1040  64T 'Program'
+1050  72T *PROGRAM (AD=OI)
+1060  ///
+1070  02T 'New profile parameter YSLW - year sliding window'(I)
+1080  '     * Second example *'
+1090  //
+1100  02T 'For this program,'  'YSLW=30' 'has to be set, which means that'
+1110  'for the current'
+1120  /
+1130  02T 'year' CURR-YEAR (AD=OI)
+1140  'the sliding window starts with' SW-START (AD=OI)
+1150  'and ends with' SW-END (AD=OI)
+1160  //
+1170  02T '#ALPHA(A8) := ' #ALPHA (AD=OI) '    /* used format YY-MM-DD'
+1180  //
+1190  02T 'STACK TOP DATA #ALPHA'
+1200  //
+1210  02T 'INPUT #DATE'
+1220  /
+1230  //
+1240  02T 'Result: #DATE contains'
+1250  #DATE (AD=OI    EM=YYYY-MM-DD)
+1260  //
+1270  02T 'Without sliding window (Version 2.2), #DATE contains'
+1280  NAT22-DATE (AD=OI)
+1290  /
+1300  02T 'because the current century is assumed.'
+1310*
+1320IF *PF-KEY = 'PF3'
+1330  ESCAPE ROUTINE
+1340END-IF
+1350IF (*PF-KEY = 'PF12' OR = 'CLR')
+1360  CALLNAT 'UTILSTOP'
+1370END-IF
+1380*
+1390END

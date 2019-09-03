@@ -1,0 +1,224 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1057N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+00601 V                  (I01)  CONST <20>
+0070LOCAL
+00801 USR1057L
+0090  2 OBJECT-KEY
+0100    3 LIBRARY        (A08)
+0110    3 OBJECT-NAME    (A32)
+0120    3 OBJECT-TYPE    (A02)
+0130      /*
+0140  2 INPUTS
+0150    3 OPT-ACCESS     (A01)
+0160    3 OPT-UNUSED-1   (L)
+0170    3 OPT-UNUSED-2   (A01)
+0180    3 OPT-LINE-NUM   (A01)
+0190    3 OPT-UNUSED-3   (L)
+0200    3 OPT-REDEF-DIR  (L)
+0210    3 OPT-UNUSED-4   (A01)
+0220    3 OPT-AMOUNT     (I02)
+0230    3 OPT-LINESIZE   (I02)
+0240      /*
+0250  2 INPUT-OUTPUTS
+0260    3 INT-HANDLE     (I04)
+0270    3 NEXT-SEQ       (I04)
+0280    3 NEXT-NUM       (I02)
+0290      /*
+0300  2 OUTPUTS
+0310    3 RETURNED       (I02)
+0320    3 SRC-NUM        (I02/1:V)
+0330    3 SRC-TEXT       (A01/1:V,1:72)
+0340    3 REDEFINE SRC-TEXT
+0350      4 SRC-GROUP    (1:V)
+0360        5 SRC-LINE   (A72)
+0370    3 REDEFINE SRC-TEXT
+0380      4 DIR-OBJNAME      (A32)    /* Object Name
+0390      4 DIR-LIBRARY      (A08)    /* Library ID
+0400      4 DIR-OBJTYPE      (A02)    /* Object Type
+0410      4 DIR-OBJKIND      (A01)    /* Source or Module
+0420      4 DIR-DBID         (A05)    /* DBID of System File
+0430      4 DIR-FNR          (A05)    /* FNR of System File
+0440      4 DIR-DATN         (A08)    /* Date in Format (YYYYMMDD)
+0450      4 DIR-TIMN         (A07)    /* Time in Format (HHIISST)
+0460      4 DIR-USERID       (A08)    /* User ID
+0470      4 DIR-PROGMODE     (A01)    /* Programming Mode
+0480      4 DIR-SRCSIZE      (A10)    /* Source Area Size
+0490      4 DIR-GPSIZE       (A10)    /* Size of Module
+0500      4 DIR-UNIQUE-ID    (A32)    /* Unique ID
+0510      4 DIR-DDM-DBID     (A05)    /* DBID the DDM is cataloged with
+0520      4 DIR-DDM-FNR      (A05)    /* FNR the DDM is cataloged with
+0530      4 DIR-NATVERS      (A04)    /* NATURAL Version
+0540      4 DIR-NATSM        (A02)    /* NATURAL SM Level
+0550      4 DIR-INIT-USER    (A08)    /* Init User ID
+0560      4 DIR-TID          (A08)    /* Terminal ID
+0570      4 DIR-TRANS-NAME   (A08)    /* TP Transcation Name
+0580      4 DIR-OPSYS        (A08)    /* Operating System
+0590      4 DIR-TPSYS        (A08)    /* TP System
+0600      4 DIR-USED-GDA     (A08)    /* Used GDA
+0610      4 FILLER            80X
+0620      4 DIR-SAVE-CAT-TIME (T)     /* Save date in internal format
+0630        /* End of directory attributes
+0640    3 SRC-SEQ        (I04/1:V)
+0650    3 SRC-LONG       (A01/1:V)
+0660      /*
+06701 USR1057N
+0680  2 VERSION          (I01)     INIT <4>
+0690  2 V1-NSC-CKECK     (A01)
+0700  2 V2-DBID          (N05)
+0710  2 V2-FNR           (N04)
+0720  2 V2-PSW           (A08)
+0730  2 V2-CIP           (N08)
+0740  2 V2-SYSFILE       (A01)
+0750  2 V3-EMPTY-BLANK   (A1)    /* 'Y' = return empty lines on mainframe
+0760  2 V4-FSEC-DBID     (N05)
+0770  2 V4-FSEC-FNR      (N05)
+0780  2 V4-FSEC-PSW      (A08)
+0790  2 V4-FSEC-CIP      (N08)
+0800                             /*       with blank instead of H'00'
+08101 REDEFINE USR1057N
+0820  2 EXTENDED-PARMS
+0830    3 EXTENDED-DATA  (A01/1:55)
+0840      /*
+0850LOCAL USING USR-MSG   /* Data for message exchange
+0860LOCAL USING USR-FLD   /* Description of the field in error
+0870/*
+0880LOCAL
+08901 LOCAL-MSG          (A79)
+09001 IX                 (I02)
+09101 INPUT-OK           (L)
+0920END-DEFINE
+0930/*
+0940SET KEY ALL
+0950/*
+0960LIBRARY        := *LIBRARY-ID
+0970OBJECT-NAME    := *PROGRAM
+0980OPT-LINE-NUM   := 'Y'
+0990OPT-REDEF-DIR  := TRUE
+1000OPT-AMOUNT     := 20
+1010OPT-LINESIZE   := 72
+1020/*
+1030/*
+1040OPT-ACCESS     := 'O'
+1050/*
+1060REPEAT
+1070  IF NAD-FLD.FIELD-POSITION = 0 THEN
+1080    NAD-FLD.FIELD-POSITION := 2
+1090  END-IF
+1100  INPUT (AD=MITL'_' IP=OFF)
+1110    TEXT NAD-MSG.MSG, MSG-DATA (1), MSG-DATA (2), MSG-DATA (3)
+1120    MARK NAD-FLD.FIELD-POSITION
+1130    / 10T 'Read a NATURAL source into an array:' (I)
+1140    / 10T '-' (36) (I) /
+1150    / 10T 'System file (U/N) ....'  V2-SYSFILE
+1160    / 10T 'Library ..............'  LIBRARY
+1170    / 10T 'Source ...............'  OBJECT-NAME (AL=8)
+1180    / 10T 'Object type ..........'  OBJECT-TYPE (AL=1)
+1190    / 10T 'DBID of Source .......'  V2-DBID
+1200    / 10T 'FNR of Source ........'  V2-FNR
+1210    / 10T 'PSW of Source ........'  V2-PSW (AD=N)
+1220    / 10T 'CIPERCODE of Source ..'  V2-CIP
+1230    / 10T 'Amount of lines ......'  OPT-AMOUNT
+1240    / 10T 'Line size ............'  OPT-LINESIZE
+1250    / 10T 'Return line numbers ..'  OPT-LINE-NUM
+1260    / 10T 'Redefine directory ...'  OPT-REDEF-DIR (EM=F/T)
+1270    / 10T 'DBID of FSEC .........'  V4-FSEC-DBID
+1280          'Password of FSEC .....'  V4-FSEC-PSW
+1290    / 10T 'FNR of FSEC ..........'  V4-FSEC-FNR
+1300          'Ciphercode of FSEC ...'  V4-FSEC-CIP
+1310   // 10T 'PRESS ANY PF-KEY TO STOP.'
+1320  RESET NAD-FLD.FIELD-POSITION
+1330/*
+1340  IF *PF-KEY NE 'ENTR'
+1350    ESCAPE ROUTINE
+1360  END-IF
+1370/*
+1380  IF OPT-AMOUNT > V
+1390    COMPRESS 'The maximum for the amount is' V
+1400      'in this example program.' INTO LOCAL-MSG
+1410    NAD-MSG.MSG := LOCAL-MSG
+1420    NAD-FLD.FIELD-POSITION := 4
+1430    ESCAPE TOP
+1440  END-IF
+1450/*
+1460  IF OPT-LINESIZE > 72
+1470    COMPRESS 'The maximum for the line size is'  72
+1480      'in this example program.' INTO LOCAL-MSG
+1490    NAD-MSG.MSG := LOCAL-MSG
+1500    NAD-FLD.FIELD-POSITION := 4
+1510    ESCAPE TOP
+1520  END-IF
+1530/*
+1540  REPEAT
+1550    /*
+1560    CALLNAT 'USR1057N' USR1057L  USR1057N.EXTENDED-PARMS
+1570      NAD-MSG   NAD-FLD
+1580    /*
+1590    IF OPT-ACCESS = 'O' AND OPT-REDEF-DIR AND MSG-NR = 0
+1600      WRITE (AD=OIL) 'Back with message number:' MSG-NR /
+1610        / '=' DIR-OBJNAME
+1620        / '=' DIR-LIBRARY
+1630        / '=' DIR-OBJKIND
+1640        / '=' DIR-OBJTYPE
+1650        / '=' DIR-DATN
+1660        / '=' DIR-TIMN
+1670        / '=' DIR-USERID
+1680        / '=' DIR-PROGMODE
+1690        / '=' DIR-SRCSIZE
+1700        / '=' DIR-GPSIZE
+1710/* Mainframe specific:
+1720        // '=' DIR-NATVERS
+1730        / '=' DIR-NATSM
+1740        / '=' DIR-INIT-USER
+1750        / '=' DIR-TID
+1760        / '=' DIR-TRANS-NAME
+1770        / '=' DIR-OPSYS
+1780        / '=' DIR-TPSYS
+1790        / '=' DIR-USED-GDA
+1800        / '=' DIR-SAVE-CAT-TIME (EM=YYYY-MM-DD)
+1810              DIR-SAVE-CAT-TIME (EM=HH:II:SS.T)
+1820    END-IF
+1830    /*
+1840    OPT-ACCESS := 'R'
+1850    /*
+1860    FOR IX = 1 TO RETURNED
+1870      WRITE (ZP=ON) SRC-NUM  (IX) (NL=4)
+1880        SRC-LONG (IX)
+1890        SRC-LINE (IX) (AL=71)
+1900    END-FOR
+1910    /*
+1920    IF *PF-KEY NE 'ENTR'
+1930      OPT-ACCESS := 'C'
+1940      CALLNAT 'USR1057N' USR1057L  USR1057N.EXTENDED-PARMS
+1950        NAD-MSG   NAD-FLD
+1960      ESCAPE ROUTINE
+1970    END-IF
+1980    /*
+1990    IF MSG-NR NE 0
+2000      IF NOT INPUT-OK AND RETURNED = 0
+2010* NAD-MSG.MSG, MSG-DATA (1), MSG-DATA (2), MSG-DATA (3) and
+2020* NAD-FLD.FIELD-POSITION is set
+2030        ESCAPE BOTTOM
+2040      ELSE
+2050        WRITE (AD=LI)
+2060          / 'Message number ....' NAD-MSG.MSG-NR
+2070          / 'Message ...........' NAD-MSG.MSG (AL=59)
+2080          / 'Message type ......' NAD-MSG.MSG-TYPE
+2090          / 'Message data ......' NAD-MSG.MSG-DATA (1:3)
+2100          // 'Field structure ...' NAD-FLD.FIELD-STRUCTURE
+2110          / 'Field name ........' NAD-FLD.FIELD-NAME
+2120          / 'Field position ....' NAD-FLD.FIELD-POSITION
+2130          / 'Field index .......' NAD-FLD.FIELD-INDEX1
+2140          NAD-FLD.FIELD-INDEX2
+2150          NAD-FLD.FIELD-INDEX3
+2160        ESCAPE ROUTINE
+2170      END-IF
+2180    END-IF
+2190    /*
+2200    INPUT-OK := TRUE    /* All parameter checks are done
+2210  END-REPEAT
+2220END-REPEAT
+2230/*
+2240END

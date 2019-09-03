@@ -1,0 +1,35 @@
+0010/*  NCP-USR1  User Exit - SYSNCP utility for Natural Command Processor
+0020/*  This program is released also in source form, too.
+0030/*  The user exit NCP-USR1 changed with Natural Version 4.1.
+0040/***********************************************************************
+0050/*
+0060/*  If you start the SYSNCP utility or enter the direct command
+0070/*  'RESTART', this user exit is invoked.
+0080/*  You can enter your special code here, e.g.:
+0090/*
+0100/*  CALLNAT      'USER-XY'   /*  Subprogram, defined by user
+0110/*  FETCH RETURN 'USER-KL'   /*  Program, defined by user
+0120/*
+0130/*  Do not use STACK TOP COMMAND statements.
+0140/*  Call your user programs via FETCH RETURN statement and
+0150/*  recall the SYSNCP utility with FETCH 'NCP-MENU'.
+0160/*
+0170/***********************************************************************
+0180DEFINE DATA LOCAL
+0190* 01 READ-ME (L)    INIT <TRUE>
+0200  01 READ-ME (L)    INIT <FALSE>
+0210END-DEFINE
+0220/*
+0230IF READ-ME DO
+0240  WRITE NOTITLE
+0250    'This is program' (I) *PROGRAM (AD=OI)
+0260*   'in library' (I) *LIBRARY-ID (AD=OI)
+0270* Note: *LIBRARY-ID is now current user library/last logon library
+0280*
+0290DOEND
+0300/**********************************************************************
+0310SET GLOBALS WH=OFF
+0320FETCH 'NCP-MENU'               /* New entry for SYSNCP utility
+0330/**********************************************************************
+0340/*
+0350END

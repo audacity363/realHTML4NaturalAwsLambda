@@ -1,0 +1,7 @@
+0010if *UI = 'GUI' then
+0020   stack top command 'MENU---D'
+0030else
+0040   stack top command 'MENU---C'
+0050end-if
+0060stop
+0070END

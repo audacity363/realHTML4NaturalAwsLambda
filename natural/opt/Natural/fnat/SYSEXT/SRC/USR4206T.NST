@@ -1,0 +1,310 @@
+0010List objects in a library
+0020.
+0030Documentation ......... USR4206T    /*  Text object
+0040Interface ............. USR4206N    /*  Cataloged subprogram
+0050Example Program ....... USR4206P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL OBJECTS
+0100.
+0110Keywords .............. +CURRENT-VERSION, +MOD-NAT-6.3.14,
+0120                        FNAT, FSEC ENABLED, FUSER, LIST, MODULE,
+0130                        SOURCE, SYSTEM FILE
+0140.
+0150Interface Versions .... USR1055N, USR4206N
+0160.
+0170Function .............. This interface lists objects in a library and
+0180                        return directory information.
+0190                        Natural Version 1.2 objects are not supported.
+0200                        With USR4206N, the information on the object is
+0210                        enhanced.
+0220                        With MF6.3.14: support for FSEC switch
+0230.
+0240.
+0250Parameters
+0260----------
+0270Define the following parameters with the DEFINE DATA statement:
+0280.
+02901 USR4206L
+0300  2 OBJECT-KEY
+0310    3 LIBRARY               (A08)
+0320    3 OBJECT-FROM           (A33)
+0330    3 OBJECT-TO             (A33)
+0340    3 OBJECT-KIND           (A01)
+0350  2 OBJECT-LOCATION
+0360    3 OBJECT-DBID           (N05)
+0370    3 OBJECT-FNR            (N04)
+0380    3 OBJECT-PASSWORD       (A08)
+0390    3 OBJECT-CIPHERCODE     (N08)
+0400    3 OBJECT-SYSFILE        (A01)
+0410  2 INPUTS
+0420    3 OPT-ACCESS            (A01)
+0430    3 OPT-TYPE-OP           (A01)
+0440    3 OPT-TYPE              (A24)
+0450    3 OPT-SCROLL            (A01)
+0460    3 OPT-WILDCARD          (A01)
+0470    3 OPT-ASTERISK          (A01)
+0480    3 OPT-AMOUNT            (I02)
+0490  2 INPUT-OUTPUTS
+0500    3 INT-HANDLE            (I04)
+0510    3 NEXT-OBJ              (A32)
+0520  2 OUTPUTS
+0530    3 RETURNED              (I02)
+0540    3 LIST-OBJ              (A32/1:nn)
+0550    3 LIST-TYPE-SRC         (A01/1:nn)
+0560    3 LIST-TYPE-MOD         (A01/1:nn)
+0570.
+0580  2 OUTPUT-DIR-DATA         (1:nn)
+0590    3 OUT-SOURCE-DATA
+0600      4 OUT-SRC-DATE-TIME   (T)
+0610      4 OUT-SRC-USER        (A08)
+0620      4 OUT-SRC-VERSION     (A08)  /* VV.RR.SM
+0630      4 OUT-SRC-SIZE        (I04)
+0640      4 OUT-SRC-PROG-MODE   (A01)
+0650      4 OUT-SRC-CODEPAGE    (A32)
+0660    3 OUT-CATALOGED-DATA
+0670      4 OUT-CAT-DATE-TIME   (T)
+0680      4 OUT-CAT-USER        (A08)
+0690      4 OUT-CAT-VERSION     (A08)  /* VV.RR.SM
+0700      4 OUT-CAT-BP-SIZE     (I04)
+0710      4 OUT-CAT-GDA-NAME    (A08)
+0720      4 OUT-CAT-CODEPAGE    (A32)
+0730.
+07401 USR4206N
+0750  2 VERSION                 (I01)     INIT <2>
+0760  2 ED-VERSION-FORMAT       (A01)     /* For VERSION >= 1 MF only
+0770  2 V2-FSEC-DBID            (N05)     /* For VERSION >= 2
+0780  2 V2-FSEC-FNR             (N05)     /* For VERSION >= 2
+0790  2 V2-FSEC-PSW             (A08)     /* For VERSION >= 2
+0800  2 V2-FSEC-CIP             (N08)     /* For VERSION >= 2
+08101 REDEFINE USR4206N
+0820  2 EXTENDED-PARMS
+0830    3 EXTENDED-DATA         (A01/1:28)
+0840.
+0850LOCAL USING USR-MSG   /* Data for message exchange
+0860LOCAL USING USR-FLD   /* Description of the field in error
+0870.
+0880.
+0890Interface Call
+0900--------------
+0910Use the interface with the CALLNAT statement:
+0920.
+0930CALLNAT 'USR4206N' USR4206L  USR4206N.EXTENDED-PARMS
+0940                   USR-MSG   USR-FLD
+0950.
+0960.
+0970Using the Application Programming Interface:
+0980--------------------------------------------
+0990Copy the subprogram USR4206N to the library SYSTEM or the steplib
+1000library respectively, or to the required library.
+1010.
+1020.
+1030Input ...... LIBRARY (A08)
+1040                    Library where the object is located. If
+1050                    LIBRARY is blank, the current library is used.
+1060.
+1070Input ...... OBJECT-FROM (A33), OBJECT-TO (A33)
+1080                    Full wildcard support is available.
+1090                    You can specify in OBJECT-FROM an object set,
+1100                    e.g. USR*. Or you can specify a range of objects
+1110                    to be listed, e.g. D>, K<.
+1120.
+1130Some examples:
+1140--------------
+1150 Description of object set               : OBJECT-FROM : OBJECT-TO :
+1160 ----------------------------------------:-------------:-----------:
+1170 1) Object names starting with USR       : USR*        : --        :
+1180                                         :             :           :
+1190 2) Object names after USR               :             :           :
+1200    a) Including USR                     : USR         : --        :
+1210    b) Excluding USR                     : USR>        : --        :
+1220                                         :             :           :
+1230 3) Object names before USR              :             :           :
+1240    a) Including USR                     : --          : USR       :
+1250    b) Excluding USR                     : --          : USR<      :
+1260                                         :             :           :
+1270 4) The range of object names is a       :             :           :
+1280    combination of 2) and 3):            :             :           :
+1290    Select names starting with R,S,T     : R           : U<        :
+1300                                         :             :           :
+1310Some Rules:
+1320-----------
+1330 1) The wildcard '?' and the asterisk '*' are supported in the
+1340    field OBJECT-FROM only. If they are used, OBJECT-TO must be
+1350    blank.
+1360.
+1370 2) The field OBJECT-TO is used only to specify a range with
+1380    the special characters '>' and '<', not '*' and '?'.
+1390.
+1400 3) The special characters '>' and '<' are allowed only at the
+1410    end of the string. For example, 'ABC<DEF' is an invalid
+1420    expression.
+1430.
+1440.
+1450Input ...... OBJECT-KIND (A01)
+1460                    Saved, cataloged, stowed or all objects in a
+1470                    library could be listed.
+1480                    Possible values are:
+1490                    'S' - Saved objects
+1500                    'C' - Cataloged objects
+1510                    'A' - Saved or cataloged objects
+1520                    'B' - Saved and cataloged objects
+1530.
+1540Input ...... OBJECT-DBID (N5)
+1550                    DBID of library.
+1560.
+1570Input ...... OBJECT-FNR  (N4)
+1580                    FNR of library.
+1590.
+1600Input ...... OBJECT-PASSWORD (A08)
+1610                    Password for library.
+1620.
+1630Input ...... OBJECT-CIPHERCODE (N08)
+1640                    Cipher code for system file.
+1650.
+1660Input ...... OBJECT-SYSFILE (A01), if DBID and FNR are 0
+1670                    the system file to be listed.
+1680                    Possible values are:
+1690                    'U' - FUSER system file
+1700                    'N' - FNAT system file
+1710                    ' ' - FUSER system file or FNAT for SYS-libraries
+1720.
+1730Input ...... OPT-ACCESS (A01)
+1740                    Access type.
+1750                    Possible values are:
+1760                    'O' - Open processing
+1770                    'R' - Read objects
+1780                    'C' - Close processing; only necessary to
+1790                          force the end of processing. An automatic
+1800                          close is done by the subprogram if the
+1810                          request has been successfully satisfied.
+1820                    The open/close processing is only necessary
+1830                    if the objects are stored in a file system.
+1840.
+1850Input ...... OPT-TYPE-OP (A01)
+1860                    Object type operator; corresponds to OPT-TYPE.
+1870                    Possible values are:
+1880                    'I' - Include OPT-TYPE objects
+1890                    'E' - Exclude OPT-TYPE objects
+1900                    ' ' - Include all objects
+1910.
+1920Input ...... OPT-TYPE (A24)
+1930                    List of object types; corresponds to
+1940                    OPT-TYPE-OP. If an '*' is specified, all
+1950                    objects will be listed.
+1960.
+1970Input ...... OPT-SCROLL (A01)
+1980                    Scrolling direction. Possible values are:
+1990                    'D' - Scroll forward
+2000                    'T' - Restart at top of the object set
+2010.
+2020In/Output .. OPT-WILDCARD (A01)
+2030                    This wildcard character will be substituted by
+2040                    exactly one character. If this field is left
+2050                    blank, the default wildcard character '?'
+2060                    will apply.
+2070.
+2080In/Output .. OPT-ASTERISK (A01)
+2090                    This wildcard character will be substituted by
+2100                    any character string. If this field is left
+2110                    blank, the default wildcard character '*'
+2120                    will apply.
+2130.
+2140Input ...... OPT-AMOUNT (I02)
+2150                    Amount of requested occurrences.
+2160                    The maximum value is 255.
+2170
+2180In/Output .. INT-HANDLE (I04)
+2190                    Do not change. Passed out by the open call to
+2200                    identify the caller during subsequent calls.
+2210.
+2220In/Output .. NEXT-OBJ (A32)
+2230                    Do not change. The object to be used as
+2240                    starting value for the next subprogram call.
+2250                    Filled by the subprogram to initialize the
+2260                    next loop.
+2270.
+2280Output ..... RETURNED (I02)
+2290                    Number of filled occurrences.
+2300.
+2310Output ..... LIST-OBJ (A32/1:nn),
+2320             LIST-TYPE-SRC (A01/1:nn),
+2330             LIST-TYPE-MOD (A01/1:nn),
+2340             OUTPUT-DIR-DATA (1:nn)
+2350                    (nn: The upper index of the arrays is variable.
+2360                     nn corresponds to OPT-AMOUNT.)
+2370                    List of objects and for each object: the
+2380                    type of the source and of the cataloged object,
+2390                    and some directory data:
+2400                      OUT-SRC-DATE-TIME (T)
+2410                      OUT-SRC-USER      (A8)
+2420                      OUT-SRC-VERSION   (A8)
+2430                      OUT-SRC-SIZE      (I4)
+2440                      OUT-SRC-PROG-MODE (A1)
+2450                      OUT-SRC-CODEPAGE  (A32)
+2460                      OUT-CAT-DATE-TIME (T)
+2470                      OUT-CAT-USER      (A8)
+2480                      OUT-CAT-VERSION   (A8)
+2490                      OUT-CAT-BP-SIZE   (I4)
+2500                      OUT-CAT-GDA-NAME  (A8)
+2510                      OUT-CAT-CODEPAGE  (A32)
+2520                    Note: The fields OUT-SRC-VERSION, OUT-CAT-VERSION,
+2530                          OUT-CAT-BP-SIZE, OUT-CAT-GDA-NAME and
+2540                          OUT-CAT-CODEPAGE are filled on Mainframe only.
+2550.
+2560In/Output .. USR4206N.VERSION (I01)
+2570                    Version number of the subprogram.
+2580                    0 is the version number for the original
+2590                    parameter layout.
+2600                    1 is the version number which applies to MF only
+2610                    2 is the version number for the possible
+2620                    FSEC switch.
+2630.
+2640Input V1 ... USR4206N.ED-VERSION-FORMAT (A01)
+2650                    MF only
+2660                    for USR4206N.VERSION > 0;
+2670                    Version format for the fields OUT-SRC-VERSION
+2680                    and OUT-CAT-VERSION. Possible values are:
+2690                    'N' = return version information in the same format
+2700                          as returned by the system variable *NATVERS,
+2710                          for example: '08.02.01'.
+2720                    'O' or ' ' = return version information in the
+2730                          format 'V.R.SSSS', for example: '8.2.0001'.
+2740.
+2750Input V2 ... USR4206N.V2-FSEC-DBID (N5)
+2760                    DBID of FSEC system file.
+2770.
+2780Input V2 ... USR4206N.V2-FSEC-FNR  (N4)
+2790                    FNR of FSEC system file.
+2800.
+2810Input V2 ... USR4206N.V2-FSEC-PASSWORD (A08)
+2820                    Password for FSEC system file.
+2830.
+2840Input V2 ... USR4206N.V2-FSEC-CIPHERCODE (N08)
+2850                    Cipher code for FSEC system file.
+2860.
+2870Output ..... USR-MSG
+2880                    Data used for message exchange.
+2890                    For further information see the PDA USR-MSG.
+2900                    The following message numbers are possible:
+2910                    =  0000  Ok
+2920                    =  0100  End of data reached
+2930                    =  1001  Parameter error
+2940                    =  1002  Parameter/internal error
+2950                    =  1005  Invalid range specified
+2960                    =  1010  Invalid range specified - wildcard notation
+2970                    <  0000  Natural system messages
+2980                             NSC messages
+2990                      -0806  Library :1: not found.
+3000                      -0807  Logon to library :1: is not permitted.
+3010                      -0839  The library 'SYSSEC' :1: has not been found.
+3020                      -0972  User is not authorized to use command: :1:.
+3030                      -4891  Invalid DBID/FNR specified for a library.
+3040.
+3050Output ..... USR-FLD
+3060                    Description of the field in error.
+3070                    For further information see the PDA USR-FLD.
+3080.
+3090.
+3100*****  End of Description  *****

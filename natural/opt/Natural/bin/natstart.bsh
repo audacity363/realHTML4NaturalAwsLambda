@@ -1,0 +1,70 @@
+#!/bin/sh
+#
+#-------------------------------------------------------------------
+#  
+# file:    natstart.bsh 
+# purpose: start up natural on system boot
+#
+# modifications:
+#
+# date          by    reason
+# ------------+-----+-----------------------------------------------
+# 27-nov-1992 | mas | adapted to NATURAL 210
+# ------------+-----+-----------------------------------------------
+# 30-DEC-1992 | tvo | test $? instaed of $status thanx, to RDR
+# ------------+-----+-----------------------------------------------
+#  4-JAN-1992 | tvo | rename conf= with bp= options
+# ------------+-----+-----------------------------------------------
+#
+# this file is also responsible to start up the natural multiuser
+# bufferpool.
+#
+#-------------------------------------------------------------------
+#
+echo "natstart.bsh started at `date`"
+#
+#
+# set the environment for this script
+#
+NAT_HOME=/home/EUR/hkk/Suite.10.3.1029/Natural
+#
+#
+# set up commandline options for bufferpool server
+#
+bp=NATBP
+exit_code=1
+#
+options="BPID=${bp}"
+#
+# start up the natural bufferpool server process
+#
+natbpsrv=${NAT_HOME}/bin/natbpsrv
+if [ -r ${natbpsrv} ]
+then
+  echo starting natural bufferpool server with the command
+  echo ${natbpsrv} ${options}
+       ${natbpsrv} ${options}
+  if [ $? -ne 0 ]
+  then
+    echo NATURAL bufferpool server failed
+  else
+    echo NATURAL bufferpool server started
+    exit_code=0
+  fi
+else
+  echo "${natbpsrv}: not found or not executable"
+  echo "NATURAL bufferpool server not started"
+fi
+#
+#-------------------------------------------------------------------
+#
+# thats all, terminate procedure
+#
+if [ $exit_code -eq 0 ]
+then
+  echo "natstart.bsh finished at `date`"
+else
+  echo "natstart.bsh failed at `date`"
+fi
+#
+exit $exit_code

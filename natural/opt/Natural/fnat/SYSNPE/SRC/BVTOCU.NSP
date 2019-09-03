@@ -1,0 +1,67 @@
+0010*
+0020* RENAME/SCRATCH File
+0030*
+0040DEFINE DATA GLOBAL USING TUTO
+0050            LOCAL  USING BVTOCU-L
+0060            LOCAL
+0070*
+008001 #FUNCTION                (A8)
+009001 #DSNAME                  (A54)
+010001 #VOLSER                  (A6)
+011001 #PASSWORD                (A8)
+012001 #ERASE-OPTION            (A7)
+013001 #ERASE-RANGE             (A1)
+014001 #NEWNAME                 (A54)
+0150END-DEFINE
+0160PERFORM PF-KEY
+0170*
+0180* ------------------------------ MAIN LOOP ----------------------------
+0190*
+0200REPEAT
+0210  PERFORM SCREEN-IO
+0220  DECIDE ON FIRST #FUNCTION
+0230    VALUE 'SCRATCH',
+0240          'PURGE'   PROCESS VTOC-UPDATE
+0250                      USING NODE                  = ##NODE
+0260                        ,   FUNCTION              = #FUNCTION
+0270                        ,   DSNAME                = #DSNAME
+0280                        ,   VOLSER                = #VOLSER
+0290                        ,   PASSWORD              = #PASSWORD
+0300                        ,   ERASE-OPTION          = #ERASE-OPTION
+0310                        ,   ERASE-RANGE           = #ERASE-RANGE
+0320                     GIVING ERROR-CODE
+0330                            ERROR-TEXT
+0340                            SYSTEM-CODE
+0350    VALUE 'RENAME' PROCESS VTOC-UPDATE
+0360                     USING NODE                  = ##NODE
+0370                       ,   FUNCTION              = #FUNCTION
+0380                       ,   DSNAME                = #DSNAME
+0390                       ,   VOLSER                = #VOLSER
+0400                       ,   PASSWORD              = #PASSWORD
+0410                       ,   NEWNAME               = #NEWNAME
+0420                    GIVING ERROR-CODE
+0430                           ERROR-TEXT
+0440                           SYSTEM-CODE
+0450    ANY            IF ERROR-CODE NE 0
+0460                      INCLUDE BERR---C
+0470                     ELSE
+0480                      ASSIGN ##MSG-NR = 1007
+0490                   END-IF
+0500    NONE           ASSIGN ##MSG-NR = 1033
+0510  END-DECIDE
+0520END-REPEAT
+0530*
+0540* ------------------------------ SCREEN-IO ----------------------------
+0550*
+0560DEFINE SUBROUTINE SCREEN-IO
+0570INPUT WITH TEXT *##MSG-NR,
+0580                 ##MSG-TXT1,
+0590                 ##MSG-TXT2
+0600      USING MAP 'BVTOCU-&'
+0610RESET ##MSG
+0620END-SUBROUTINE
+0630*
+0640* ------------------------------ PF-KEY -------------------------------
+0650*
+0660INCLUDE C-PFKEY
+0670END

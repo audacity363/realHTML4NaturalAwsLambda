@@ -1,0 +1,13 @@
+0010&H View VTOC-UPDATE
+0020&L
+0030&L
+0040#Zweck@    : Durchfuehrung von VTOC-Aenderungen.
+0050&L
+0060#System@   : z/OS, z/VSE, BS2000/OSD.
+0070&L
+0080&L
+0090#Anwendung@: Dieser View ermoeglicht dem Benutzer die Ausfuehrung von
+0100             Aktualisierungen der VTOC, wie z.B. Umbenennen oder
+0110             Loeschen von Dateien.
+0120&L
+0130#Anmerkung@:

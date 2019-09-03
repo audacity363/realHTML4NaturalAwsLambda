@@ -1,0 +1,33 @@
+0010/*=====================================================================
+0020/* Note:
+0030/*   This is the same as OHT-0001, it only has a Successor.
+0040/*   When changing this one, change also OHT-0001.
+0050/*=====================================================================
+0060/**********************************************************************
+0070/* Help texts for SYSOBJH.
+0080/* Do not change the identifiers (text between '<' and '>')
+0090/**********************************************************************
+0100<HeaderStart>
+0110<Application> SYSOBJH
+0120<Header1> Command Line
+0130<Header2>
+0140<Window-Size> 0, 0
+0150/* <Window-Pos>  0, 0
+0160/* <InputValues>
+0170/* <InputNames>
+0180<Predecessor>
+0190<Successor>OHT-0014
+0200<HeaderEnd>
+0210<HelpTextStart>
+0220
+0230The command line can be used to enter internal commands or
+0240external (Natural) commands.
+0250
+0260External commands have to be preceded by '//'.
+0270Any external command stops the Object Handler utility.
+0280
+0290To invoke the commands menu, enter the command 'COMMAND'.
+0300
+0310Press ENTER to display local commands.
+0320
+0330<HelpTextEnd>

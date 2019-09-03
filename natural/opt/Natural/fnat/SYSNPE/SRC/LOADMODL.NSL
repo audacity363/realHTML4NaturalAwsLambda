@@ -1,0 +1,30 @@
+0010**DV          0031     V1LOAD-MODULE                     LOAD-MODULE
+0020**DD          0034N 3.0 2ERROR-CODE                      /* Message code.
+0030**DD          0035A  58 2ERROR-TEXT                      /* Text describing message.
+0040**DD          0036N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0037A  16 2NODE-NAME
+0060**DD          0038A   8 2FUNCTION                        /* Function to be performed:
+0070**DD          0039A  54 2DSNAME                          /* Fully qualified data set name
+0080**DD          0040A   6 2VOLSER                          /* Volume serial number.
+0090**DD          0041A  10 2MEMBER                          /* Member name.
+0100**DD          0042A   8 2PASSWORD                        /* Password for protected data
+0110**DD          0043B   2 2SEGMENT-LENGTH                  /* The length of the record
+0120**DD          0044B   4 2BLOCK-OFFSET                    /* The offset of this segment in
+0130**DD          0045B   4 2CSECT-OFFSET                    /* The offset of this segment in
+0140**DD          0046A 253 2SEGMENT                         /* Relevent for function 'DATA'.
+0150**DD          0047A   8 2ESD-NAME                        /* The external symbol name.
+0160**DD          0048A   2 2ESD-TYPE                        /* For 'ESD'
+0170**DD          0049B   4 2ESD-ADDRESS                     /* Relevant for 'ESD'.
+0180**DD          0050N11.0 2ESD-LENGTH                      /* Relevant for 'ESD'.
+0190**DD          0051A   3 2ESD-AMODE                       /* Relevant for 'ESD'.
+0200**DD          0052A   3 2ESD-RMODE                       /* Relevant for 'ESD'.
+0210**DD          0053N 5.0 2ESD-LR-ID                       /* Relevant for 'ESD'.
+0220**DD          0054N 5.0 2ESD-ID                          /* Relevant for 'ESD'.
+0230**DD          0055A   8 2IN-CSECT                        /* Relevant for 'VCON'.
+0240**DD          0056A   8 2IDR-DATE                        /* Relevant for 'IDR'.
+0250**DD          0057D     2IDR-DATX
+0260**DD          0058A  40 2IDR-DATA                        /* Relevant for 'IDR'.
+0270**DD          0059A   4 2IDR-TYPE                        /* Relevant for 'IDR'.
+0280**DD          0060N 7.0 2MODULE-LENGTH                   /* Relevant for 'ATTR'.
+0290**DD          0061A  80 2MODULE-ATTRIBUTES               /* Relevant for 'ATTR'.
+0300**DD          0062B   4 2MODULE-SSI                      /* Relevant for 'SSI'.

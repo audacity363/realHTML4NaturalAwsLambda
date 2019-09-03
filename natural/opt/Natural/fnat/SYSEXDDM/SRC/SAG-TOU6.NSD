@@ -1,0 +1,65 @@
+0010 DB: 000 FILE: 027  - SAG-TOURS-E-PERSON               DEFAULT SEQUENCE:
+0020
+0030T L DB Name                              F Leng  S D Remark
+0040- - -- --------------------------------  - ----  - - ------------------------
+0050  1 AA PERSON-ID                         N  8.0  N D
+0060  1 AB BIRTH-DATE                        N  8.0  N
+0070  1 EH SEX                               A    1    D
+0080*      2 values: 'M' for 'male',  'F'
+0090*      for 'female'
+0100G 1 AC NAME
+0110  2 AD SURNAME                           A   20    D
+0120  2 AE FIRST-NAME-1                      A   20  N
+0130  2 AF FIRST-NAME-2                      A   20  N
+0140  2 AG TITLE                             A   20  N
+0150  2 AH FORM-OF-ADDRESS                   A    8  N
+0160G 1 AI ADDRESS
+0170M 2 AJ ADDRESS-ADDITION                  A   20
+0180  2 AK STREET-NUMBER                     A   20  N
+0190  2 AL COUNTRY                           A    3    D
+0200  2 AM ZIP-CODE                          A   10  N D
+0210  2 AN CITY                              A   20    D
+0220P 1 AO PHONE
+0230*      2 occ.:  1. phone private,  2.
+0240*      phone company
+0250  2 AP AREA-CODE                         A    6
+0260  2 AQ PHONE-NUMBER                      A   15
+0270G 1 AU CUSTOMER
+0280  2 AV CUSTOMER-FLAG                     A    1  N
+0290*      'Y'  if person = customer
+0300  2 AW DID-CUSTOMER                      A    8  N D
+0310G 1 AX OWNER
+0320  2 AY OWNER-FLAG                        A    1  N
+0330*      'Y'  if person = owner
+0340  2 AZ DID-OWNER                         A    8  N D
+0350G 1 A0 SKIPPER
+0360  2 A1 SKIPPER-FLAG                      A    1  N
+0370*      'Y'  if person = skipper
+0380  2 A2 DID-SKIPPER                       A    8  N D
+0390  2 A3 SKIPPER-SAILING-INSTRUCTOR        A    1  N
+0400*      'Y'  if skipper = sailing
+0410*      instructor
+0420  1 T1 PERSON-TIMESTAMP                  T   12  N
+0430*      used for Natural Constract
+0440  1 A4 SURNAME-PH                        A   20
+0450  1 A5 CUSTOMER-SP                       A    9    S
+0460*      -------- SOURCE FIELD(S) -------
+0470*      CUSTOMER-FLAG(1-1)
+0480*      PERSON-ID(1-8)
+0490  1 A6 OWNER-SP                          A    9    S
+0500*      -------- SOURCE FIELD(S) -------
+0510*      OWNER-FLAG(1-1)
+0520*      PERSON-ID(1-8)
+0530  1 A7 SKIPPER-SP                        A    9    S
+0540*      -------- SOURCE FIELD(S) -------
+0550*      SKIPPER-FLAG(1-1)
+0560*      PERSON-ID(1-8)
+0570  1 EI SEX-SURNAME-SP                    A   21    S
+0580*      -------- SOURCE FIELD(S) -------
+0590*      SEX(1-1)
+0600*      SURNAME(1-20)
+0610  1 EJ COUNTRY-CITY-SP                   A   23    S
+0620*      -------- SOURCE FIELD(S) -------
+0630*      COUNTRY(1-3)
+0640*      CITY(1-20)
+0650******DDM OUTPUT TERMINATED******

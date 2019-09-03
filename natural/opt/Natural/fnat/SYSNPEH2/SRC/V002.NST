@@ -1,0 +1,14 @@
+0010&H View READ-FILE
+0020&L
+0030&L
+0040#Zweck@    : Lesen von Daten auf Plattendateien.
+0050&L
+0060#System@   : z/OS, z/VSE, BS2000/OSD.
+0070&L
+0080&L
+0090#Anwendung@: Dieser View ermoeglicht das Lesen aller oder ausgewaehlter
+0100             Datensaetze einer sequentiellen oder Bibliotheksdatei (PDS/
+0110             LIBRARIAN/LMS). Bei Nutzung der SCAN-Felder werden nur die
+0120             der Suchzeichenkette entsprechenden Saetze zurueckgegeben.
+0130&L
+0140#Anmerkung@: Die Datei MUSS vorhanden sein.

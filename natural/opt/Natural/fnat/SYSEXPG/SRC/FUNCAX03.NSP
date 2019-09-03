@@ -1,0 +1,12 @@
+0010** Example 'FUNCAX03': Calling a subprogram  (Program)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+0040  1 #RESULT (I4) INIT <0>
+0050END-DEFINE
+0060*
+0070CALLNAT 'FUNCAX04' #RESULT 2 3    /* Result is stored in #RESULT.
+0080*
+0090WRITE '=' #RESULT                 /* Print out the result of the
+0100                                  /* subprogram.
+0110*
+0120END

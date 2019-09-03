@@ -1,0 +1,13 @@
+0010&H View MAIN-STORAGE
+0020&L
+0030&L
+0040#Purpose@: Display Main Storage.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : This view allows a user or application to display storage
+0100           allocated to the Entire System Server partition.
+0110&L
+0120#Notes@  :
+0130

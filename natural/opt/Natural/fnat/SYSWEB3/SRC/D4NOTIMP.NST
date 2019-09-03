@@ -1,0 +1,33 @@
+0010 <HTML><HEAD><META http-equiv='Content-Type' content='text/html;
+0020 charset=iso-8859-1'><TITLE>Demo Application - Entrance</TITLE>
+0030 <SCRIPT LANGUAGE='JavaScript' SRC='$JAVASCRIPT$/natatweb.js'></SCRIPT>
+0040 </HEAD><BODY BGCOLOR="#FFFFFF" TEXT="#000000"><FORM METHOD='GET'
+0050 ACTION='D4CHOOSE' NAME='FMENU'><INPUT
+0060 TYPE='HIDDEN' NAME='TODO' VALUE='(none)'><INPUT TYPE='HIDDEN'
+0070 NAME='GIF' VALUE='$PICTURES$'><TABLE BORDER="0" CELLSPACING="0"
+0080 CELLPADDING="3" WIDTH="100%"><TR VALIGN="Middle"><TD><IMG
+0090 SRC="$PICTURES$/natw_dot.gif" WIDTH="20" HEIGHT="20"></TD><TD
+0100 BGCOLOR="#6666FF">&nbsp;</TD><TD ROWSPAN=2 BGCOLOR="#6666FF"><H1
+0110 ALIGN="Center">Maintenance of File: Vehicles</H1></TD></TR><TR><TD
+0120 bgcolor="#6699FF"><IMG SRC="$PICTURES$/natw_dot.gif" BORDER="0"
+0130 WIDTH="60" HEIGHT="1"></TD><TD BGCOLOR="#6666FF"><IMG
+0140 SRC="$PICTURES$/natw_dot.gif" BORDER="0" WIDTH="60" HEIGHT="1"></TD>
+0150 </TR><TR VALIGN="Top"><TD COLSPAN=2 bgcolor="#6699FF" VALIGN="TOP"
+0160 ALIGN="CENTER"><IMG SRC='$PICTURES$/natw_dot.gif' WIDTH='127'
+0170 HEIGHT='8'><BR><A HREF='javascript:history.go(-1)')
+0180 onMouseOver='imgAct("back")' onMouseOut='imgInact("back")'>
+0190 <IMG alt='Go Back' NAME='back' SRC='$PICTURES$/nww_back.gif'
+0200 BORDER='0' WIDTH='129' HEIGHT='21'></A>
+0210 <BR><IMG SRC='$PICTURES$/natw_dot.gif' WIDTH='127' HEIGHT='8'><BR>
+0220 </TD><TD align=right><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="3"
+0230 WIDTH="100%"><TR><TD>&nbsp;</TD><TD></TD></TR><TR><TD><H2
+0240 ALIGN="RIGHT"><FONT COLOR="Red">This is the right</FONT></H2></TD>
+0250 <TD><H2 ALIGN="Left"><FONT COLOR="Red">place for your own example!
+0260 </FONT></H2></TD></TR><TR><TD></TD><TD></TD></TR><TR><TD></TD>
+0270 <TD><HR noshade size=3 color=black><P><B>ACCEPT NO LIMITS</B></TD>
+0280 </TR><TR><TD></TD><TD><IMG SRC="$PICTURES$/natw_slo.gif"
+0290 ALIGN="Right" WIDTH="239" HEIGHT="41"></TD></TR></TABLE></TD></TR>
+0300 <TR><TD></TD><TD></TD><TD bgcolor="#6699FF" width=100%>&nbsp;</TD>
+0310 </TR><TR><TD></TD><TD></TD><TD><IMG SRC="$PICTURES$/natw_nww.gif"
+0320 WIDTH="110" HEIGHT="20" ALIGN="Right"></TD></TR></TABLE></FORM>
+0330 </BODY></HTML>

@@ -1,0 +1,142 @@
+0010**     Example program for USR3005N
+0020**     This program shows, how data can be retrieved from Predict.
+0030**     It retrieves all defined associations.
+0040**
+0050DEFINE DATA LOCAL
+00601 REQUEST-RESULT(A) DYNAMIC
+0070*
+0080LOCAL USING PARSER-X               /* Local Data Area is located
+0090                                   /* in Library SYSEXXT
+0100LOCAL
+01101 XML_PARSER_XPATH             (A) DYNAMIC
+01201 XML_PARSER_XPATH_TYPE        (A1)
+01301 XML_PARSER_CONTENT           (A) DYNAMIC
+01401 XML_PARSER_CONTENT_IS_EMPTY  (L)
+01501 XML_PARSER_ERROR_TEXT        (A253)
+01601 XML_PARSER_RESPONSE          (I2)
+01701 #XNAME (A) DYNAMIC
+01801 #XVALUE (A) DYNAMIC
+01901 #MSG-NR(I4)
+02001 #MSG-TEXT(A79)
+02101 #MSG-TYPE(A8)
+0220END-DEFINE
+0230PRINT 'Example program' *PROGRAM 'for USR3005N'
+0240/     'This program shows, how data can be retrieved from Predict.'
+0250/     'It retrieves all defined associations.'
+0260/
+0270COMPRESS
+0280'<Predict>'
+0290  '<Request>'
+0300    '<Select>'
+0310      '<Search>'
+0320**
+0330**   To get the list of all defined association:
+0340**
+0350        '<Object-type value=''#ASSOCIATION''/>'
+0360      '</Search>'
+0370      '<Return>'
+0380        '<Field name=''ID''/>'
+0390        '<Field name=''TITLE''/>'
+0400        '<Field name=''TARGET-OBJECT-TYPE''/>'
+0410        '<Field name=''TARGET-TYPE-TITLE''/>'
+0420        '<Field name=''SOURCE-OBJECT-TYPE''/>'
+0430        '<Field name=''SOURCE-TYPE-TITLE''/>'
+0440        '<Field name=''DIRECTION''/>'
+0450        '<Field name=''ADDITIONAL-ATTRIBUTES''/>'
+0460        '<Field name=''MAINTAINABLE''/>'
+0470      '</Return>'
+0480**
+0490**   To get the list of all active associations of object type
+0500**   Adabas file use:
+0510**
+0520**    '<Search>'
+0530**      '<Object-type value=''#ASSOCIATION''/>'
+0540**      '<Attribute name=''SOURCE-OBJECT-TYPE'' value=''FILE-A''/>'
+0550**      '<Attribute name=''DIRECTION'' value=''ACTIVE''/>
+0560**    '</Search>'
+0570**    '<Return>'
+0580**      '<Field name=''ID''/>'
+0590**      '<Field name=''TITLE''/>'
+0600**      '<Field name=''TARGET-OBJECT-TYPE''/>'
+0610**      '<Field name=''TARGET-TYPE-TITLE''/>'
+0620**      '<Field name=''SOURCE-OBJECT-TYPE''/>'
+0630**      '<Field name=''SOURCE-TYPE-TITLE''/>'
+0640**      '<Field name=''DIRECTION''/>'
+0650**      '<Field name=''ADDITIONAL-ATTRIBUTES''/>'
+0660**      '<Field name=''MAINTAINABLE''/>'
+0670**    '</Return>'
+0680    '</Select>'
+0690  '</Request>'
+0700'</Predict>'
+0710*
+0720TO REQUEST-RESULT
+0730*
+0740PRINT 'Request passed to USR3005N' /
+0750PRINT REQUEST-RESULT
+0760*
+0770CALLNAT 'USR3005N' REQUEST-RESULT
+0780*
+0790PRINT / 'Result returned from USR3005N'/
+0800*
+0810INCLUDE PARSER_X                    /* Copy Code is located
+0820                                    /* in Library SYSEXXT
+0830                                    /*
+0840  'REQUEST-RESULT'                  /* XML FILE TO BE PARSED
+0850  'XML_PARSER_XPATH'                /* XPATH TO REPESENT ELEMENT...
+0860  'XML_PARSER_XPATH_TYPE'           /* TYPE OF CALLBACK
+0870  'XML_PARSER_CONTENT'              /* CONTENT OF FOUND ELEMENT
+0880  'XML_PARSER_CONTENT_IS_EMPTY'     /* IS TRUE IF ELEMENT IS EMPTY
+0890  'XML_PARSER_ERROR_TEXT'           /* ERROR MESSAGE
+0900  'XML_PARSER_RESPONSE'             /* ERROR NR; 0 = OK
+0910*
+0920DEFINE SUBROUTINE CALLBACK
+0930*
+0940EXAMINE XML_PARSER_XPATH TRANSLATE INTO UPPER
+0950DECIDE ON FIRST VALUE OF XML_PARSER_XPATH
+0960*
+0970  VALUE 'PREDICT/RESULT/MESSAGE/?NUMBER'
+0980    #MSG-NR := VAL(XML_PARSER_CONTENT)
+0990*
+1000  VALUE 'PREDICT/RESULT/MESSAGE/?TEXT'
+1010    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#MSG-TEXT'
+1020**
+1030** With PRCCNVCH
+1040** the coded special characters in XML_PARSER_CONTENT are translated
+1050** into the printable form
+1060**
+1070*
+1080  VALUE 'PREDICT/RESULT/MESSAGE/?TYPE'
+1090    #MSG-TYPE := XML_PARSER_CONTENT
+1100    EXAMINE #MSG-TYPE TRANSLATE INTO UPPER
+1110    IF #MSG-TYPE NE 'SUCCESS'
+1120**
+1130** Possible Values of ?TYPE are SUCCESS, ERROR and WARNING
+1140**
+1150      PRINT #MSG-NR
+1160      PRINT #MSG-TEXT
+1170    END-IF
+1180*
+1190  VALUE 'PREDICT/RESULT/ROW'
+1200**
+1210** New Object type starts here
+1220**
+1230   PRINT ' '
+1240*
+1250  VALUE 'PREDICT/RESULT/ROW/ATTRIBUTE/?NAME'
+1260    #XNAME := XML_PARSER_CONTENT
+1270*
+1280  VALUE 'PREDICT/RESULT/ROW/ATTRIBUTE/?VALUE'
+1290    INCLUDE USR3005Y '''2''' 'XML_PARSER_CONTENT' '#XVALUE'
+1300    PRINT #XNAME ':' #XVALUE
+1310*
+1320  NONE IGNORE
+1330*
+1340END-DECIDE
+1350END-SUBROUTINE /* CALLBACK
+1360*
+1370DEFINE SUBROUTINE PARSER_ERROR
+1380   PRINT 'Parser Error'
+1390   PRINT XML_PARSER_ERROR_TEXT
+1400 END-SUBROUTINE
+1410*
+1420END

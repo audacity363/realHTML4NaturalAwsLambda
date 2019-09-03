@@ -1,0 +1,26 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Use Conversion Table
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180If you select this option, data are converted in ASCII format
+0190by using the Natural internal conversion table (when 'System table'
+0200is marked) or by using a user defined conversion table
+0210(when 'User table' is marked).
+0220
+0230This applies only when the data from the work file are in EBCDIC
+0240format or when a conversion-program is specified.
+0250
+0260<HelpTextEnd>

@@ -1,0 +1,4 @@
+0010** Example 'INCEX1C': INCLUDE (copycode used by INCEX1)
+0020************************************************************************
+0030*
+0040WRITE 'Inside copycode'

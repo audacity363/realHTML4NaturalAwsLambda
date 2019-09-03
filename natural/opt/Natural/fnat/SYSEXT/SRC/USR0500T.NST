@@ -1,0 +1,49 @@
+0010Define title of window
+0020.
+0030Documentation ......... USR0500T    /*  Text object
+0040Interface ............. USR0500N    /*  Cataloged subprogram
+0050Example Program ....... USR0500P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. WINDOW HANDLING
+0100.
+0110Keywords .............. TITLE, WINDOW
+0120.
+0130Function .............. This interface displays a text in the window
+0140                        title bar.
+0150                        Note: Functionality is now available with the
+0160                              DEFINE WINDOW statement.
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+0230 1 SWITCH         (L)    BY VALUE
+0240 1 WINDOW-TITLE   (A253) BY VALUE
+0250.
+0260.
+0270Interface Call
+0280--------------
+0290Use the interface with the CALLNAT statement:
+0300.
+0310CALLNAT 'USR0500N' SWITCH WINDOW-TITLE
+0320.
+0330.
+0340Using the Application Programming Interface:
+0350--------------------------------------------
+0360Copy the subprogram USR0500N to the library SYSTEM or the steplib
+0370library respectively, or to the required library.
+0380.
+0390Description of the parameters:
+0400.
+0410SWITCH (Input)
+0420  TRUE  = Set title bar on
+0430  FALSE = Set title bar off
+0440.
+0450WINDOW-TITLE (Input)
+0460  String to be displayed in the title bar
+0470.
+0480.
+0490*****  End of Description  *****

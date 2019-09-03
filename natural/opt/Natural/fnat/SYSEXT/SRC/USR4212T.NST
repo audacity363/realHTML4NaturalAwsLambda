@@ -1,0 +1,229 @@
+0010Analyze data area
+0020.
+0030Documentation ......... USR4212T    /*  Text object
+0040Interface ............. USR4212N    /*  Cataloged subprogram
+0050Example Program ....... USR4212P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. EDITOR
+0100.
+0110Keywords .............. +MOD-NAT-6.3.14,
+0120                        DATA AREA, FSEC ENABLED
+0130.
+0140Function .............. This interface provides information about
+0150                        the fields of a Natural data area.
+0160                        With MF6.3.14: support for FSEC switch
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+0230Input/output 1 P-FUNCTION (A1)
+0240                        R = Read data area from the system file,
+0250                            convert it into table format and
+0260                            return first definition(s);
+0270                            changed to N when P-RETURN-CODE = 0
+0280                        N = Get next definition(s)
+0290Input ...... 1 P-OBJECT-TYPE (A1)
+0300                        Type of data area (L/A/G)
+0310                        (not evaluated yet)
+0320             1 P-OBJECT-NAME (A8)
+0330                        Name of the data area to be processed
+0340             1 P-OBJECT-LIBRARY (A8)
+0350                        Name of the library where the data area resides
+0360             1 P-LIBRARY-DBID (N5)
+0370                        Data base ID for P-OBJECT-LIBRARY
+0380             1 P-LIBRARY-FNR (N5)
+0390                        File number for P-OBJECT-LIBRARY
+0400             1 P-LIBRARY-PASSWORD (A8)
+0410                        Adabas password for P-OBJECT-LIBRARY
+0420             1 P-LIBRARY-CIPHER (A8)
+0430                        Adabas cipher code for P-OBJECT-LIBRARY
+0440Output ..... 1 P-DATA-AREA-DEFINITION (1:V)
+0450                        Variable array that contains the returned
+0460                        definition(s). The size of the array is defined
+0470                        by the calling program.
+0480                        P-Data-Area-Definition is redefined as follows:
+0490               2 Entry-Type (A1)
+0500                        D Usual definition line
+0510                          (use Variable-Definition)
+0520                        C Comment line (use Comment-line)
+0530               2 Variable-Definition               (A77)
+0540                        Definition of the data area entry.
+0550                        Entry-Type = D Variable-Definition is
+0560                        redefined as follows:
+0570               2 Redefine Variable-Definition
+0580                 3 V-Level (A2)
+0590                        Level of the variable
+0600                 3 V-Name (A32)
+0610                        Name of the variable
+0620                 3 V-Format (A1)
+0630                        Format of the variable
+0640                 3 V-Length (A10)
+0650                        Length of the variable
+0660                 3 V-Field-Comment (A32)
+0670                        Field comment
+0680                        Entry-Type = C Variable-Definition is
+0690                        redefined as follows:
+0700               2 Redefine Variable-Definition
+0710                 3 V-Comment-Line (A77)
+0720                        Contents of a comment line
+0730               2 EM-Value (A63)
+0740                        Contains the edit mask without leading EM=,
+0750                        e.g. X-XX-X (for EM=X-XX-X)
+0760               2 HD-Value (A58)
+0770                        Contains the header definition without leading
+0780                        HD=, e.g. 'Header' (for HD='Header')
+0790               2 PM-Value (A5)
+0800                        Contains the PM value without leading PM=,
+0810                        e.g. C (for PM=C)
+0820               2 Name-of-View-Block-Handle (A32)
+0830                        Contains the name of the VIEW, BLOCK or
+0840                        HANDLE
+0850               2 Array-Index-1-from (A11)
+0860                        Contains the start value of the first
+0870                        array index definition
+0880               2 Array-Index-1-to (A11)
+0890                        Contains the end value of the first
+0900                        array index definition
+0910               2 Array-Index-2-from (A11)
+0920                        Contains the start value of the second
+0930                        array index definition
+0940               2 Array-Index-2-to (A11)
+0950                        Contains the end value of the second
+0960                        array index definition
+0970               2 Array-Index-3-from (A11)
+0980                        Contains the start value of the third
+0990                        array index definition
+1000               2 Array-Index-3-to (A11)
+1010                        Contains the end value of the third
+1020                        array index definition
+1030               2 Init-Const-Value (A) Dynamic
+1040                        Contains the init or const value without
+1050                        leading 'INIT' (respectively 'CONST' and
+1060                        'CONSTANT'), e.g.
+1070                        <'Abcdefg'>  for the init value definition
+1080                             INIT <'Abcdefg'>) or
+1090                        (1) <'ARR1'> (2) <'ARR2'> for
+1100                             INIT (1) <'ARR1'>  (2) <'ARR2'>)
+1110               2 Flags (A1/1:20)
+1120                        Contains flags that describe the kind of the
+1130                        variable definition:
+1140                 Flags (1): Definition
+1150                        B = block begin (block name is in field
+1160                            V-Name)
+1170                        V = begin view definition (view name is in
+1180                            field View-Block-Handle)
+1190                        D = any field of a view
+1200                        S = begin of a structure
+1210                        K = component of a structure
+1220                        F = user field - usual declaration
+1230                        R = redefinition begin
+1240                        H = handle of a dialog element (handle name
+1250                            is in field View-Block-Handle)
+1260                        O = handle of object
+1270                 Flags (2): Type
+1280                        R = within a redefine statement
+1290                        C = constant
+1300                        G = subfunction block (prior block name is in
+1310                            field View-Block-Handle)
+1320                        V = call-by-value
+1330                        W = call-by-value-result
+1340                        X = call-by-value optional
+1350                        Y = call-by-value-result optional
+1360                        Z = call-by-reference optional
+1370                 Flags (3): Index
+1380                        I = Index is specified;
+1390                            index definition is in the fields:
+1400                              Array-Index-1-from, Array-Index-1-to,
+1410                              Array-Index-2-from, Array-Index-2-to,
+1420                              Array-Index-3-from, Array-Index-3-to
+1430                            and array rank in Flags (4)
+1440                 Flags (4): Array-Rank; rank of the array:
+1450                        1, 2 or 3;
+1460                        If the field is a MU field, Array-Rank
+1470                        is 1 or 2.
+1480                        If the field is a PE field, Array-Rank is 1.
+1490                 Flags (5): View-Field-Property
+1500                        G = group
+1510                        P = periodic group
+1520                        M = multiple field
+1530                        * = counter field
+1540                      ' ' = simple view field
+1550                        F = FILLER field
+1560                 Flags (6): EMU
+1570                        U = Edit mask is a Unicode edit mask
+1580                 Flags (7): Type of definition
+1590                        O = handle of object
+1600                        H = handle
+1610                        B = block
+1620                        C = constant/counterfield
+1630                        R = redefine
+1640                        V = view
+1650                        P = periodic group
+1660                        G = group
+1670                        M = multiple field
+1680                        U = GUID
+1690                        * = comment line
+1700                 Flags (8:20) Currently not used
+1710Input/output 1 P-WORK-AREA (A1/1:250)
+1720                        Work area; must not be changed
+1730Output ..... 1 P-RETURN-CODE (I4)
+1740                        Result:
+1750                            0 = OK, more data available
+1760                            1 = P-Function invalid
+1770                            2 = P-Object-Name empty
+1780                            3 = P-Object-Library empty
+1790                            4 = DBID/FNR combination invalid
+1800                            5 = P-Object-Name is no data area
+1810                            6 = Invalid version in EXTENSIONS
+1820                           99 = OK and ready
+1830                         1000 = Data area P-Object-Name not found
+1840                         others: see contents of P-RETURN-MESSAGE
+1850                                NSC check
+1860                                 -0806
+1870                                 -0807
+1880                                 -0839
+1890                                 -0972
+1900                                 -4891
+1910             1 P-RETURN-MESSAGE (A250)
+1920                         Return message
+1930Input/output P-EXTENSIONS.VERSION (I1)
+1940                        Version number of the subprogram.
+1950                        0 is the version number for the original
+1960                        parameter layout.
+1970                        The actual version number is 1.
+1980                        V=1 Parameter V1-FSEC-DBID has been added.
+1990                                      V1-FSEC-FNR
+2000                                      V1-FSEC-PSW
+2010                                      V1-FSEC-CIP
+2020.
+2030Interface Call
+2040--------------
+2050Use the interface with the CALLNAT statement:
+2060.
+2070  CALLNAT 'USR4212N'
+2080          P-FUNCTION
+2090          P-OBJECT-TYPE
+2100          P-OBJECT-NAME
+2110          P-OBJECT-LIBRARY
+2120          P-LIBRARY-DBID
+2130          P-LIBRARY-FNR
+2140          P-LIBRARY-PASSWORD
+2150          P-LIBRARY-CIPHER
+2160          P-DATA-AREA-DEFINITION (*)
+2170          P-WORK-AREA (*)
+2180          P-RETURN-CODE
+2190          P-RETURN-MESSAGE
+2200          P-EXTENSIONS.EXTENDED-DATA (*)
+2210.
+2220.
+2230Using the Application Programming Interface:
+2240--------------------------------------------
+2250Copy the subprogram USR4212N to the library SYSTEM or the steplib
+2260library respectively, or to the required library.
+2270.
+2280.
+2290***** End of Description *****

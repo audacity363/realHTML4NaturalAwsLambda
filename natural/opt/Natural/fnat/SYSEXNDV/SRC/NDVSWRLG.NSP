@@ -1,0 +1,125 @@
+0010/**********************************************************************
+0020/* NDVSWRLG: Example for the Write NDV Log File function
+0030/*---------------------------------------------------------------------
+0040/* Note:
+0050/* For more information see also A-README in SYSEXNDC in
+0060/* Natural Studio 62 and above.
+0070/**********************************************************************
+0080/*---------------------------------------------------------------------
+0090/*---------------- Compiler options -----------------------------------
+0100/*---------------------------------------------------------------------
+0110OPTIONS LOWSRCE=ON
+0120/*---------------------------------------------------------------------
+0130/*---------------- Data definitions -----------------------------------
+0140/*---------------------------------------------------------------------
+0150DEFINE DATA
+0160/*---------------------------------------------------------------------
+0170/*---------------- Independent data -----------------------------------
+0180/*---------------------------------------------------------------------
+0190INDEPENDENT
+02001 +User-TRACE-LEVEL                   (I2)
+0210/*---------------------------------------------------------------------
+0220/*---------------- Local data -----------------------------------------
+0230/*---------------------------------------------------------------------
+0240LOCAL
+02501 Local-Buffer                        (A1/1:5000)
+02601 Redefine Local-Buffer
+0270  2 Filler                            20X
+0280  2 Local-Buffer-Header-Data          (A1/1:480)
+0290  2 Redefine Local-Buffer-Header-Data
+0300    3 Local-Buffer-Caller-Name        (A8)
+0310    3 Local-Buffer-Function-Code      (A2)
+0320    3 Local-Buffer-Return-Code-Sign   (A1)
+0330    3 Local-Buffer-Return-Code        (N4)
+0340  2 Local-Buffer-Function-Data        (A1/1:4500)
+0350  2 Redefine Local-Buffer-Function-Data
+0360    3 LBFD-Fct-Line-1                 (A250)
+0370  2 Redefine Local-Buffer-Function-Data     /* Trace settings
+0380    3 LBFD-Header-Text                (A64)
+0390    3 LBFD-Log-Message                (A250)
+0400/*---------------------------------------------------------------------
+0410/* Parameter for NDVS004N
+0420/*---------------------------------------------------------------------
+04301 NDVS004N-Function                   (A2)
+04401 NDVS004N-Para                       (A332)
+04501 Redefine NDVS004N-Para                     /* For funtion 'WN'
+0460  2 NDVS004N-NDV-Log-Header           (A64)
+0470  2 NDVS004N-NDV-Log-Msg              (A250)
+04801 Redefine NDVS004N-Para                     /* In case of error
+0490  2 NDVS004N-Data-Buffer              (A79)
+0500  2 NDVS004N-ERROR-TEXT-1             (A253)
+05101 NDVS004N-RETURN-CODE                (I4)
+0520/*---------------------------------------------------------------------
+0530/* Other local data
+0540/*---------------------------------------------------------------------
+05501 Error-Text-1                        (A250)
+05601 Return-Code                         (I4)
+0570END-DEFINE
+0580/**********************************************************************
+0590/*---------------------------------------------------------------------
+0600/*---------------- Start of main program ------------------------------
+0610/*---------------------------------------------------------------------
+0620/*---------------------------------------------------------------------
+0630/* Init Communication (set steplibs, check for trace and set the
+0640/* +User-TRACE-LEVEL variable)
+0650/*---------------------------------------------------------------------
+0660Callnat 'NDVS001N'
+0670        Return-Code
+0680        Error-Text-1
+0690If (Return-Code <> 0)
+0700  *Error-Nr := 999
+0710End-If
+0720/*---------------------------------------------------------------------
+0730/* Read data sent from client
+0740/*---------------------------------------------------------------------
+0750Callnat 'NDVS003N'
+0760        Local-Buffer (*)
+0770        'G'                              /* Get
+0780        Return-Code
+0790        Error-Text-1
+0800/*---------------------------------------------------------------------
+0810/* Write the log file data
+0820/*---------------------------------------------------------------------
+0830If (Return-Code = 0)
+0840  NDVS004N-NDV-Log-Header := LBFD-Header-Text
+0850  NDVS004N-NDV-Log-Msg    := LBFD-Log-Message
+0860  NDVS004N-RETURN-CODE    := 0
+0870  NDVS004N-Function       := 'WL'
+0880  CALLNAT 'NDVS004N'
+0890          NDVS004N-Function
+0900          NDVS004N-Para
+0910          NDVS004N-RETURN-CODE
+0920  If (NDVS004N-RETURN-CODE <> 0)
+0930    Local-Buffer-Function-Code := 'ER'     /* Error
+0940    Compress *Program ':' NDVS004N-ERROR-TEXT-1
+0950             into LBFD-Fct-Line-1
+0960    Local-Buffer-Return-Code-Sign := '-'
+0970    Local-Buffer-Return-Code      := 999
+0980  Else
+0990    Local-Buffer-Function-Code := 'LR'     /* Log Return
+1000    Local-Buffer-Return-Code-Sign := ' '
+1010    Local-Buffer-Return-Code      := 0
+1020  End-If
+1030Else
+1040  Local-Buffer-Function-Code := 'ER'     /* Error
+1050  Compress *Program ':' Error-Text-1 into LBFD-Fct-Line-1
+1060End-If
+1070/*---------------------------------------------------------------------
+1080/* Return values to client
+1090/*---------------------------------------------------------------------
+1100Callnat 'NDVS003N'
+1110        Local-Buffer (*)
+1120        'P'                              /* Put
+1130        Return-Code
+1140        Error-Text-1
+1150/*---------------------------------------------------------------------
+1160/* Delete the steplibs and leave here
+1170/*---------------------------------------------------------------------
+1180CALLNAT 'NDVS002N'                       /* Cleanup
+1190Stop
+1200/*---------------------------------------------------------------------
+1210/*---------------- End of main program --------------------------------
+1220/*---------------------------------------------------------------------
+1230/**********************************************************************
+1240/**********************************************************************
+1250END

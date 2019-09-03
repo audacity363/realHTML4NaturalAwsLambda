@@ -1,0 +1,26 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Data area format
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180You can specify how the source of data areas is
+0190to be processed.
+0200Valid values are:
+0210 O  Convert data area sources to old internal format (if possible)
+0220 N  Convert data area sources to new internal format
+0230 D  Convert data area sources to Define Data format
+0240 *  Do not convert data area sources
+0250
+0260<HelpTextEnd>

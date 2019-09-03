@@ -1,0 +1,149 @@
+0010/*  EXAM-GA - GET all fields
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 GETSET-FIELD-NAME
+0070     02 GETSET-FIELD-VALUE
+0080     02 NATURAL-ERROR
+0090  01 #PROC-NAME          (A08)
+0100  01 IX                  (N2)
+0110  01 JX                  (I2)
+0120  01 MOD                 (C)
+0130  01 FOUND1              (L)
+0140  01 FOUND2              (L)
+0150  01 FOUND3              (L)
+0160  01 #GETSET-FIELD-VALUE (A32)
+0170  01 FIELD               (A16)
+0180  01 REDEFINE FIELD
+0190     02 FIELD-ARR        (A1/1:16)
+0200  01 FIELD-NAME          (A16/1:64)  CONST <
+0210     'NAME            ',    /*  Current active processor name
+0220     'NAME&           ',    /*  Processor name (language dependent)
+0230     'LIBRARY         ',    /*  Processor loaded from library
+0240     'FNR             ',    /*  Processor loaded from FNR
+0250     'DBID            ',    /*  Processor loaded from DBID
+0260     'TIMESTMP        ',    /*  Timestamp of current processor
+0270     'COUNTER         ',    /*  Runtime access counter
+0280     'BUFFER-LENGTH   ',    /*  Bytes NCPWORK allocated
+0290     'C-DELIMITER     ',    /*  Multiple command delimiter
+0300     'DATA-DELIMITER  ',    /*  Data delimiter
+0310     'PF-KEY          ',    /*  PF-KEY may be command
+0320     'UPPER-CASE      ',    /*  Keywords in upper case
+0330     'UQ-KEYWORDS     ',    /*  Keywords are unique
+0340     'IMPLICIT-KEYWORD',    /*  Index to implicit keyword
+0350     'MIN-LEN         ',    /*  Minimum length keyword
+0360     'MAX-LEN         ',    /*  Maximum length of keyword
+0370     'KEYWORD-SEQ     ',    /*  Default keyword sequence
+0380     'ALT-KEYWORD-SEQ ',    /*  Alternative keyword seq.
+0390     'USER-SEQUENCE   ',    /*  User may override default keyw. seq.
+0400*    'PRIVATE         ',    /*  Private synonyms allowed (Not supported)
+0410     'CURR-LOCATION   ',    /*  Current location (IFN)
+0420     'CURR-IKN1       ',    /*  IKN1 of current location
+0430     'CURR-IKN2       ',    /*  IKN2 of current location
+0440     'CURR-IKN3       ',    /*  IKN3 of current location
+0450     'CHECK-LOCATION  ',    /*  Last checked location (IFN)
+0460     'CHECK-IKN1      ',    /*  IKN1 of last checked location
+0470     'CHECK-IKN2      ',    /*  IKN2 of last checked location
+0480     'CHECK-IKN3      ',    /*  IKN3 of last checked location
+0490     'TOP-IKN1        ',    /*  Highest number of keyword type '1'
+0500     'TOP-IKN2        ',    /*  Highest number of keyword type '2'
+0510     'TOP-IKN3        ',    /*  Highest number of keyword type '3'
+0520     'KEY1-TOTAL      ',    /*  Number of keywords type '1'
+0530     'KEY2-TOTAL      ',    /*  Number of keywords type '2'
+0540     'KEY3-TOTAL      ',    /*  Number of keywords type '3'
+0550     'FUNCTIONS-TOTAL ',    /*  Number of cataloged functions
+0560     'LOCAL-GLOBAL-SEQ',    /*  Local/global function validation
+0570     'ERROR-HANDLER   ',    /*  Name of general error handler
+0580     'SECURITY        ',    /*  Running under NSC or not
+0590     'SEC-PREFETCH    ',    /*  NSC prefetch done or not
+0600     'PREFIX1         ',    /*  Keyword prefix in keyword editor
+0610     'PREFIX2         ',    /*  Keyword prefix in keyword editor
+0620     'HEX1            ',    /*  Keyword prefix in cataloged proc.
+0630     'HEX2            ',    /*  Keyword prefix in cataloged proc.
+0640     'TRACE           ',    /*  Trace flag
+0650     'LAST-COM        ',    /*  Last cmd line: *COM
+0660     'MULTI-COM       ',    /*  Rest of last multi cmd: *COM
+0670     'DYNAMIC         ',    /*  Dynamic error part :1:
+0680     '                '  >  /*  End-of-file indicator
+0690END-DEFINE
+0700/**********************************************************************
+0710RESET FOUND1 FOUND2 FOUND3
+0720REPEAT
+0730  RESET *COM
+0740  ADD 1 TO IX
+0750  MOVE FIELD-NAME (IX) TO GETSET-FIELD-NAME
+0760  IF GETSET-FIELD-NAME = ' '
+0770    ESCAPE BOTTOM
+0780  END-IF
+0790  /* Remember special fields
+0800  IF GETSET-FIELD-NAME = 'TIMESTMP'
+0810    MOVE TRUE TO FOUND1
+0820  END-IF
+0830  IF GETSET-FIELD-NAME = 'HEX1'
+0840    MOVE TRUE TO FOUND2
+0850  END-IF
+0860  IF GETSET-FIELD-NAME = 'HEX2'
+0870    MOVE TRUE TO FOUND3
+0880  END-IF
+0890  /*
+0900  PROCESS COMMAND ACTION GET USING
+0910    PROCESSOR-NAME = #PROC-NAME              /*  Current processor
+0920    GETSET-FIELD-NAME = GETSET-FIELD-NAME
+0930  /*
+0940  MOVE GETSET-FIELD-VALUE TO #GETSET-FIELD-VALUE
+0950  /*
+0960  /* Suppress non-printable characters
+0970  IF FOUND1           /* Check TIMESTAMP
+0980    RESET FOUND1
+0990    MOVE GETSET-FIELD-VALUE TO field
+1000    FOR JX = 1 TO 16
+1010      IF FIELD-ARR(JX) NE MASK(P)
+1020        MOVE '.' TO FIELD-ARR(JX)
+1030      END-IF
+1040    END-FOR
+1050    MOVE FIELD TO GETSET-FIELD-VALUE
+1060  END-IF
+1070  IF FOUND2           /* Check HEX1
+1080    RESET FOUND2
+1090    MOVE GETSET-FIELD-VALUE TO FIELD
+1100    FOR JX = 1 TO 16
+1110      IF FIELD-ARR(JX) NE MASK(P)
+1120        MOVE '.' TO FIELD-ARR(JX)
+1130      END-IF
+1140    END-FOR
+1150    MOVE FIELD TO GETSET-FIELD-VALUE
+1160  END-IF
+1170  IF FOUND3           /* Check HEX2
+1180    RESET FOUND3
+1190    MOVE GETSET-FIELD-VALUE TO FIELD
+1200    FOR JX = 1 TO 16
+1210      IF FIELD-ARR(JX) NE MASK(P)
+1220        MOVE '.' TO FIELD-ARR(JX)
+1230      END-IF
+1240    END-FOR
+1250    MOVE FIELD TO GETSET-FIELD-VALUE
+1260  END-IF
+1270  /*
+1280  DISPLAY NOTITLE
+1290    'No.'           IX (NL=03 SG=F)
+1300    'Field Name'    GETSET-FIELD-NAME   (AL=16)
+1310    'Current Value' GETSET-FIELD-VALUE  (AL=16)
+1320    'Hex Value    ' #GETSET-FIELD-VALUE (EM=H(10))
+1330    'Error'         NATURAL-ERROR
+1340  IF GETSET-FIELD-NAME = SCAN '-COM'
+1350  AND *COM NE ' '
+1360    WRITE ' --' *COM (AL=64)
+1370  END-IF
+1380  /*
+1390  IF IX = 1
+1400    IF NATURAL-ERROR NE 0
+1410      WRITE '*** NCPWORK not accessible ***' (I)
+1420      ESCAPE BOTTOM
+1430    END-IF
+1440    MOVE GETSET-FIELD-VALUE TO #PROC-NAME
+1450  END-IF
+1460  /*
+1470END-REPEAT
+1480/**********************************************************************
+1490END

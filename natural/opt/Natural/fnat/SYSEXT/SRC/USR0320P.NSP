@@ -1,0 +1,65 @@
+0010/*  Get user short error-message from FNAT / FUSER file
+0020/*  ATTENTION:   Natural Security check intentionally bypassed
+0030/*  This program serves as an example how to design a user-defined
+0040/*  program to call 'USR0320N'
+0050/**********************************************************************
+0060DEFINE DATA LOCAL
+0070  01 PARAM
+0080     02 APPLICATION  (A08)   /* Must not be blank
+0090     02 ERROR-NUMBER (N04)   /* 1 thru 9999
+0100     02 LANG-CODE    (I01)   /* 1 thru 60 allowed
+0110     02 RESPONSE     (N04)   /* Error during execution of USR0320N
+0120     02 SHORT-TEXT   (A65)
+0130  01 #MSG            (A72)
+0140  01 #MARK           (N4)
+0150END-DEFINE
+0160/*
+0170/* Set up some defaults:
+0180/*
+0190MOVE *APPLIC-ID TO APPLICATION     /* Current application
+0200MOVE *LANGUAGE  TO LANG-CODE       /* Current language code
+0210SET KEY ALL
+0220/*
+0230REPEAT
+0240  /*
+0250  RESET RESPONSE SHORT-TEXT
+0260  /*
+0270  INPUT (AD=MITL'_' IP=OFF ZP=ON SG=OFF) WITH TEXT #MSG MARK #MARK ///
+0280    15T  ' Read User Short Error Message' /
+0290    15T  ' from System File FUSER or FNAT' /
+0300    15T  '-' (32) //
+0310    18T  'Application .....' APPLICATION    /
+0320    18T  'Error number ....' ERROR-NUMBER   /
+0330    18T  'Language code ...' LANG-CODE      ///
+0340    15T  'Press ENTER to receive the text.' /
+0350    15T  'Press any PF-Key to stop.'
+0360    17/1 ' ' (78)
+0370    /*
+0380  IF *PF-KEY NE 'ENTR'
+0390    ESCAPE BOTTOM
+0400  END-IF
+0410  RESET #MARK #MSG
+0420  /*
+0430  CALLNAT 'USR0320N' PARAM
+0440  /*
+0450  IF RESPONSE > 0
+0460    DECIDE ON FIRST VALUE OF RESPONSE
+0470      VALUE 2    #MSG := 'Invalid Application.'
+0480                 #MARK := 1
+0490      VALUE 3    #MSG := 'Invalid Error Number.'
+0500                 #MARK := 2
+0510      VALUE 4    #MSG := 'Invalid Language Code.'
+0520                 #MARK := 3
+0530      VALUE 8    #MSG := 'Error text not found.'
+0540                 #MARK := 3
+0550      VALUE 9    #MSG := 'Error Number not found.'
+0560                 #MARK := 2
+0570      NONE
+0580        INPUT 'Response code from USR0320N:' (I) RESPONSE (AD=OIL)
+0590    END-DECIDE
+0600  ELSE
+0610    /* INPUT NO ERASE (AD=OI IP=OFF) 17/1 SHORT-TEXT
+0620    #MSG :=  SHORT-TEXT
+0630  END-IF
+0640END-REPEAT
+0650END

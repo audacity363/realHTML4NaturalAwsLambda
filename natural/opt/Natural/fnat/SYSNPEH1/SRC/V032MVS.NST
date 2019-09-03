@@ -1,0 +1,17 @@
+0010&H View RESOURCE-CONTROL
+0020&L
+0030&L
+0040#Purpose@: Set and release system enqueues.
+0050&L
+0060&L
+0070#OpSys@  : z/OS
+0080&L
+0090&L
+0100#Usage@  : This view may be used to synchronize entities on a NATURAL
+0110           basis. Resources may be ENQUEUE'd and DEQUEUE'd by one
+0120           application, allowing synchronization with other applications
+0130           using the same technique.
+0140#Notes@  :
+0150
+0160
+0170

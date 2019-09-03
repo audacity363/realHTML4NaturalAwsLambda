@@ -1,0 +1,53 @@
+0010Save or restore Natural environment parameters
+0020.
+0030Documentation ......... USR1002T    /*  Text object
+0040Interface ............. USR1002N    /*  Cataloged subprogram
+0050Example Program ....... USR1002P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL ENVIRONMENT
+0100.
+0110Keywords .............. ENVIRONMENT, PARAMETER
+0120.
+0130Function............... Some Natural parameters being currently
+0140                        in effect can be saved by this interface.
+0150                        Then these Natural parameters may be
+0160                        overwritten by the next program or
+0170                        application. At last, the parameters of
+0180                        the previous situation can be restored
+0190                        again.
+0200.
+0210.
+0220Parameters
+0230----------
+0240Define the following parameters with the DEFINE DATA statement:
+0250.
+026001 ACTION (A01)  /* 'S'  Save Natural parameters
+0270                 /* 'R'  Restore Natural parameters
+0280.
+0290.
+0300Interface Call
+0310--------------
+0320Use the interface with the CALLNAT statement:
+0330.
+0340CALLNAT 'USR1002N' ACTION
+0350.
+0360.
+0370Using the Application Programming Interface:
+0380--------------------------------------------
+0390Copy the subprogram USR1002N to the library SYSTEM or the steplib
+0400library respectively, or to the required library.
+0410.
+0420List of some Natural parameters which will be saved when USR1002N is
+0430invoked with ACTION='S':
+0440.
+0450Position of message line, statistics line, PF-key lines;
+0460color settings;
+0470contents of the system variables *STARTUP and *ERROR-TA;
+0480SYNERR, contents of HC, SM;
+0490contents of terminal controls %+, %-, %=, %B, %D, %E=, %G, %L, %M,
+0500  %N, %O, %P, %Q, %RO, %S, %U, %V, %VN, %Wx, %WN, %X, %Y .
+0510.
+0520.
+0530***** End of Description *****

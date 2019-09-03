@@ -1,0 +1,58 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3XSLT3
+0050*
+0060* DESCRIPTION   Call XSLT processor.
+0070*
+0080* SEE
+0090*
+0100* AUTHOR        SAG   03.06.2002
+0110*
+0120* Version       8.3
+0130*
+0140* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0150*
+0160* HISTORY
+0170* USER    DATE       REASON
+0180* ------+----------+----------------------------------------------
+0190*       ! --.--.-- !
+0200* ------+----------+----------------------------------------------
+0210*
+0220* ------ PARAMETER -----------------------------------------------
+0230DEFINE DATA
+0240PARAMETER USING W3PARM
+0250LOCAL USING W3CONST
+0260*
+0270LOCAL
+02801 W3XSLT   (A) DYNAMIC
+02901 W3XML    (A) DYNAMIC
+03001 W3RESULT (A) DYNAMIC
+0310END-DEFINE
+0320* --- ERROR HANDLING ---
+0330ON ERROR
+0340  PERFORM W3ERROR ##W3ERROR
+0350  PERFORM W3END ##RPC
+0360  ESCAPE ROUTINE
+0370END-ERROR
+0380*
+0390* --- INITIALIZE Web Interface ---
+0400PERFORM W3INIT ##RPC
+0410*
+0420* --- SET TYPE OF RETURN-PAGE ---
+0430PERFORM W3CONTENT-TYPE 'text/html'
+0440* --- LOAD RETURN-PAGE ---
+0450PERFORM W3LOAD-RESOURCE 1X 'e3xslt3.html'
+0460*
+0470* --- WRITE XML ---
+0480PERFORM W3READ-RESOURCE 1X 'e3xslt3.xsl' W3XSLT
+0490PERFORM W3READ-RESOURCE 1X 'e3xslt2.xml' W3XML
+0500*
+0510* --- Apply XSL ---
+0520PERFORM W3APPLY-XSLT-XML-TO-DYNAMIC W3XSLT W3XML W3RESULT
+0530*
+0540* --- Change output ---
+0550PERFORM W3REPLACE 1X "$XML$" W3RESULT
+0560*
+0570PERFORM W3END ##RPC
+0580END

@@ -1,0 +1,37 @@
+0010**C           0000*
+0020**C           0000*Natural Web Interface -  New Demo Application
+0030**C           0000*
+0040**C           0000*DESCRIPTION  Internal Parameter
+0050**C           0000*
+0060**C           0000*AUTHOR        SAG   11.04.1997
+0070**C           0000*
+0080**C           0000*VERSION       6.2.
+0090**C           0000*
+0100**C           0000*(c) Copyright  Software AG 1997-2005. All rights reserved.
+0110**C           0000*
+0120**DS          0000      1#DEMO-MENU
+0130**DK          0000A   1 2#SE
+0140**DK          0000A   1 2#ME
+0150**DK          0000A   1 2#BR
+0160**DK          0000A   1 2#LI
+0170**DK          0000A   1 2#CH
+0180**DK          0000A   1 2#DE
+0190**DK          0000A   1 2#SH
+0200**DK          0000A   1 2#AD
+0210**DK          0000A   1 2#DD
+0220**DK          0000A   1 2#DC
+0230**DK          0000A   1 2#DA
+0240**DK          0000A   1 2#CL
+0250**DS          0000      1#DEMO-PARM
+0260**DK          0000A  72 2#CGI
+0270**DK          0000A  72 2#GIF
+0280**DK          0000N   5 2#START
+0290**DK          0000N   7 2#END-MAX
+0300**DK          0000N   5 2#END
+0310**DK          0000A   8 2#PERSON
+0320**DK          0000A  20 2#FROM
+0330**DK          0000A  20 2#TO
+0340**DK          0000A  20 2#TODO
+0350**DK          0000A   1 2#STATUS
+0360**DK          0000A   2 2#OT
+0370**DK          0000A 250 2#MSG

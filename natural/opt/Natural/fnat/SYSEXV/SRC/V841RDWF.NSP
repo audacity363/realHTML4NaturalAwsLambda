@@ -1,0 +1,60 @@
+0010* Program .. V841RDWF
+0020* Library .. SYSEXV
+0030* Version .. 8.4.1
+0040*
+0050* Functionality: Enhanced feature of WORK FILE statement with adjust
+0060*                occurences.
+0070*
+0080********************************************************************
+0090DEFINE DATA LOCAL
+01001 #ARR (A6/1:*)
+01101 #OCC (N4)
+0120END-DEFINE
+0130*
+0140DEFINE WORK FILE 1 TYPE 'ASCII'
+0150*
+0160FORMAT KD=ON
+0170SET KEY PF3  NAMED 'Exit'
+0180  PF12 NAMED 'Canc'
+0190IF *PF-KEY = 'PF3'
+0200  ESCAPE ROUTINE
+0210END-IF
+0220IF (*PF-KEY = 'PF12' OR= 'CLR')
+0230  CALLNAT 'UTILSTOP'
+0240END-IF
+0250*
+0260INPUT (IP=OFF AD=MI)
+0270  01T *TIMX  (AD=OTD)
+0280  21T '***** NATURAL 8.4.1 ENHANCEMENTS *****'
+0290  70T *DATX  (AD=OTD DF=L)
+0300  /
+0310  01T 'User'
+0320  06T *USER  (AD=OILT )
+0330  26T '- Statement Enhancements -'(I)
+0340  64T 'Program'
+0350  72T *PROGRAM (AD=OI)
+0360  ////
+0370  02T 'READ WORK FILE ASCII with X-array and ADJUST its occurrences'(I)
+0380  //
+0390  02T 'WRITE WORK FILE 1 VARIABLE "text1 text2 text3"'
+0400  /
+0410  02T 'WRITE WORK FILE 1 VARIABLE "text4 text5"'
+0420  //
+0430  02T 'READ WORK FILE 1 AND SELECT #ARR(*) AND ADJUST OCCURRENCES'
+0440  //
+0450  02T 'Press Enter to Continue.....'
+0460  /
+0470*
+0480WRITE WORK FILE 1 VARIABLE 'text1 text2 text3 '
+0490WRITE WORK FILE 1 VARIABLE 'text4 text5'
+0500*
+0510READ WORK FILE 1 AND SELECT #ARR(*) AND ADJUST OCCURRENCES
+0520    #OCC := *OCCURRENCE(#ARR)
+0530
+0540    DISPLAY 20T #OCC #ARR(1:#OCC)
+0550    /*
+0560    /* Occurrences: 3 Array(*): 'text1', 'text2', 'text3'
+0570    /* Occurrences: 2 Array(*): 'text4', 'text5'
+0580  END-WORK
+0590*
+0600END

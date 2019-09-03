@@ -1,0 +1,32 @@
+0010/*  USR1072P - GET COMMAND ID OF A RETAIN SET
+0020/*********************************************************************
+0030/*  This program serves as an example how to design a user-defined
+0040/*  program to call 'USR1072N'
+0050/*********************************************************************
+0060DEFINE DATA LOCAL
+007001 EMP VIEW OF EMPLOYEES
+0080   02 NAME
+0090   02 CITY
+010001 PARMBLOCK
+0110   02 RSET-NAME          (A32)   /* IN : NAME OF RETAIN SET
+0120   02 RSET-CID           (B4)    /* OUT: COMMAND ID
+0130   02 RC                 (I4)    /* RESPONSE CODE:
+0140                                 /*  0  SUCCESS:
+0150                                 /*     RSET-CID CONTAINS THE COMMAND ID
+0160                                 /* -1  FAILURE
+017001 RETAIN-SET            (A32)
+0180END-DEFINE
+0190*
+0200RETAIN-SET := 'CITIZENS'
+0210FIND EMP WITH CITY = 'PARIS' RETAIN AS RETAIN-SET
+0220  DISPLAY NAME CITY
+0230END-FIND
+0240*
+0250RESET RSET-NAME RSET-CID RC
+0260RSET-NAME := RETAIN-SET
+0270*
+0280CALLNAT 'USR1072N' PARMBLOCK
+0290*
+0300DISPLAY RC RSET-NAME RSET-CID
+0310*
+0320END

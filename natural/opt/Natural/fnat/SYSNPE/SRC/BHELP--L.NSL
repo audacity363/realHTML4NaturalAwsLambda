@@ -1,0 +1,10 @@
+0010**DV          0011     V1HELP-INFO                       HELP-INFO
+0020**DD          0014N 3.0 2ERROR-CODE
+0030**DD          0015A  58 2ERROR-TEXT
+0040**DD          0016N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0017A  10 2SYSTEM-MESSAGE-CODE
+0060**DD          0018B   2 2SYSTEM-CODE
+0070**DD          0019A   6 2OPTION
+0080**DD          0020A   7 2MESSAGE-ID
+0090**DD          0021A  79 2LINE
+0100**DD          0022N 1.0 2LANGUAGE-ID

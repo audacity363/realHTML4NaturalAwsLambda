@@ -1,0 +1,9 @@
+0010**DV          0010     V1VTOC                            VTOC
+0020**DD          0013N 3.0 2ERROR-CODE
+0030**DD          0014A  58 2ERROR-TEXT
+0040**DD          0015N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0016A  10 2SYSTEM-MESSAGE-CODE
+0060**DD          0017A   6 2VOLSER
+0070**DD          0018A  54 2DSNAME
+0080**DD          0019N 7.0 2FILE-SIZE
+0090**DD          0020B   2 2SYSTEM-CODE

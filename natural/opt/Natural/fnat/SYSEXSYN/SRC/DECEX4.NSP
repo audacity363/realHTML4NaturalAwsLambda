@@ -1,0 +1,22 @@
+0010** Example 'DECEX4': DECIDE ON (with EVERY option)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #FIELD (N1)
+0050END-DEFINE
+0060*
+0070INPUT 'Enter any value between 1 and 9:' #FIELD (SG=OFF)
+0080*
+0090DECIDE ON EVERY VALUE OF #FIELD
+0100  VALUE 1 : 4
+0110    WRITE 'Content of #FIELD is 1-4'
+0120  VALUE 2 : 5
+0130    WRITE 'Content of #FIELD is 2-5'
+0140  ANY VALUE
+0150    WRITE 'Content of #FIELD is 1-5'
+0160  ALL VALUE
+0170    WRITE 'Content of #FIELD is 2-4'
+0180  NONE VALUE
+0190    WRITE 'Content of #FIELD is not 1-5'
+0200END-DECIDE
+0210*
+0220END

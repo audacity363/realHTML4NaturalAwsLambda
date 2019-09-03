@@ -1,0 +1,14 @@
+0010**DV          0015     V1MAIN-STORAGE                    MAIN-STORAGE
+0020**DD          0018N 3.0 2ERROR-CODE
+0030**DD          0019A  58 2ERROR-TEXT
+0040**DD          0020N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0021B   4 2ADDRESS
+0060**DD          0022B   8 2ADDRESS-64BIT                   /* Starting main storage address
+0070**DD          0023N 3.0 2LENGTH
+0080**DD          0024B   2 2OFFSET
+0090**DD          0025A 250 2AREA
+0100**DRR         0026     R2AREA                            /* REDEF. BEGIN : AREA
+0110**DFR         0027B  16 3AREA-CONT
+0120**DRR         0028     R3AREA-CONT                       /* REDEF. BEGIN : AREA-CONT
+0130**DFRI1       0029B   4 4AREA-HEX                        (1:4)
+0140**DD          0030A   8 2JOB-NAME

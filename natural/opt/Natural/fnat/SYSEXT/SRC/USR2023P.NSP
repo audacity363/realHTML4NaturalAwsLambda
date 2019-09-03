@@ -1,0 +1,69 @@
+0010/* Check type of data bases
+0020/*
+0030/* This program serves as example how to design a user-defined
+0040/* program to call 'USR1022N'
+0050/**********************
+0060DEFINE DATA
+0070LOCAL
+0080 1 DB-TYPE    (A01/1:257)
+0090 1 DBID       (N05/1:257)
+0100 1 DB-TYPE-0  (A01)
+0110 1 DB-FROM    (N05)
+0120 1 DB-TO      (N05)
+0130 1 IX1        (N05)
+0140 1 IX2        (N05)
+0150 1 IX3        (N05)
+0160 1 MSG        (A72)
+0170END-DEFINE
+0180/*
+0190SET KEY PF3
+0200MSG := 'Please enter range.'
+0210DB-FROM := 0
+0220DB-TO := 255
+0230REPEAT
+0240  INPUT (AD=MI) WITH TEXT MSG
+0250   'Please enter range of databases for which you want to check'
+0260   'the type:' //
+0270   'From ..' DB-FROM (SG=OFF CD=NE) /
+0280   'To ....' DB-TO (SG=OFF CD=NE) /
+0290   // 'Press PF3 to stop.'
+0300  IF *PF-KEY = 'PF3' THEN
+0310    ESCAPE BOTTOM
+0320  END-IF
+0330  IF DB-FROM < 0 OR DB-FROM > 65535 THEN
+0340    MSG := 'Start value less than 0 or greater than 65535.'
+0350    ESCAPE TOP
+0360  END-IF
+0370  IF DB-TO < 0 OR DB-TO > 65535 THEN
+0380    MSG := 'End value less than 0 or greater than 65535.'
+0390    ESCAPE TOP
+0400  END-IF
+0410  IF DB-FROM > DB-TO THEN
+0420    MSG := 'Start value greater than end value.'
+0430    ESCAPE TOP
+0440  END-IF
+0450*
+0460  DBID(1) := 0
+0470  DBID(2) := 255
+0480  CALLNAT 'USR2023N' DB-TYPE(*) DBID(*)
+0490  WRITE 'Type of DB     0 ......' DB-TYPE(1)
+0500    /   'Type of DB   255 ......' DB-TYPE(2)
+0510    /   '-' (25)
+0520  DB-TYPE-0 := DB-TYPE(1)
+0530*
+0540  IX2 := 0
+0550  FOR IX1 = DB-FROM TO DB-TO
+0560    IX2 := IX2 + 1
+0570    DBID(IX2) := IX1
+0580    IF IX2 = 257 OR IX1 = DB-TO THEN
+0590      CALLNAT 'USR2023N' DB-TYPE(*) DBID(*)
+0600      FOR IX3 = 1 TO IX2
+0610        IF DB-TYPE(IX3) NE DB-TYPE-0 THEN
+0620          WRITE 'Type of DB' DBID(IX3) (SG=F) '......' DB-TYPE(IX3)
+0630        END-IF
+0640      END-FOR
+0650      RESET IX2
+0660    END-IF
+0670  END-FOR
+0680END-REPEAT
+0690END

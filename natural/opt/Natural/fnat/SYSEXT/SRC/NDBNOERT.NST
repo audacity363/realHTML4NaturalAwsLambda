@@ -1,0 +1,28 @@
+0010*
+0020ignore SQL codes from next DB call     Product=NDB    Lib=STEPLIBS
+0030**
+0040Name of Subprogram......:  NDBNOERR    /*  'CALLNAT'-Interface
+0050**
+0060Function................:  Suppresses NAT3700 errors from the next
+0070                           SQL call. This allows a program controlled
+0080                           continuation if an SQL statement produces
+0090                           an negative SQL code.
+0100**
+0110                           After the SQL call, the subprogram 'NDBERR'
+0120                           be used to investigate the SQL code.
+0130**
+0140Parameter layout........:  none
+0150**
+0160*/                                                         Next page ...
+0170**
+0180* How to use the interface NDBNOERR :
+0190* ----------------------------------
+0200* The Subprogram 'NDBNOERR' should be copied to library 'SYSTEM' or
+0210* to the steplib-library respectively,  or to any application.
+0220**
+0230* The calling program has to use the following statement:
+0240**
+0250* CALLNAT 'NDBNOERR'
+0260**
+0270***** End of description *****
+0280*

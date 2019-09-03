@@ -1,0 +1,67 @@
+0010Get the value of an environment variable
+0020.
+0030Documentation ......... USR1053T    /*  Text object
+0040Interface ............. USR1053N    /*  Cataloged subprogram
+0050Example Program ....... USR1053P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. NATURAL ENVIRONMENT
+0100.
+0110Keywords .............. ENVIRONMENT, GET, VARIABLE
+0120.
+0130Function .............. This routine retrieves the character string
+0140                        which is assigned to an environment variable.
+0150
+0160                        Exception:
+0170                        For NATROOT, NATGUI_BMP the routine
+0180                        retrieves the assignment of the current Natural
+0190                        environment.
+0200
+0210                        Note:
+0220                        If an environment variable is set with USR6202N
+0230                        and response +1 returns, then the variable is
+0240                        changed but USR1053N will only get the value
+0250                        after the Natural startup.
+0260.
+0270.
+0280Parameters
+0290----------
+0300Define the following parameters with the DEFINE DATA statement:
+0310.
+0320 1 USR1053L
+0330   2 INPUTS
+0340     3 ENV-VARIABLE    (A80)
+0350   2 OUTPUTS
+0360     3 CHAR-STRING     (A253)
+0370     3 RESPONSE        (I04)
+0380.
+0390Interface Call
+0400--------------
+0410Use the interface with the CALLNAT statement:
+0420.
+0430CALLNAT 'USR1053N' USR1053L USR1053N.EXTENDED-PARMS
+0440.
+0450.
+0460Using the Application Programming Interface:
+0470--------------------------------------------
+0480Copy the subprogram USR1053N to the library SYSTEM or the steplib
+0490library respectively, or to the required library.
+0500.
+0510.
+0520Parameter Description:
+0530----------------------
+0540Input ...... 1 ENV-VARIABLE (A80)
+0550                     Environment variable. It must be entered
+0560                     without leading special character (e.g. $).
+0570.
+0580Output ..... 1 CHAR-STRING  (A253)
+0590                     The character string which is assigned to
+0600                     the environment variable.
+0610.
+0620Output ..... 1 RESPONSE     (I04)
+0630                     Response code. Possible values are:
+0640                        0 - Ok
+0650                       -1 - Environment variable does not exist
+0660.
+0670*****  End of description  *****

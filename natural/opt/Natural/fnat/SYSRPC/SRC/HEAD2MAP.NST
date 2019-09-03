@@ -1,0 +1,64 @@
+0010* - Headings of lines for SYSRPC SRVLIST additional information -      *
+0020*                                                                      *
+0030* Important: Do not change the names in the Field column.              *
+0040*                                                                      *
+0050* You can comment out (* ) lines to exclude it from the report.        *
+0060* You can change the sequence of lines in the report by rearranging    *
+0070* the sequence of lines herein.                                        *
+0080* You can change text enclosed in apostrophes and inline comments.     *
+0090*                                                                      *
+0100* A hyphen at the end of a line indicates that the description         *
+0110* continues on the next line. This is important for batch runs,        *
+0120* where the description is printed as a legend.                        *
+0130************************************************************************
+0140*
+0150* -Field --------------Heading-/*-Remarks-------------------------------
+0160*
+0170* UID                    'USER-ID in the ACI'
+0180* PUID                   'Physical internal unique ID'
+0190* TOKEN                  'Corresponds to TOKEN in the ACI'
+0200CHARSET                'Character set used on platform.'
+0210                       /*    34  EBCDIC IBM
+0220                       /*    66  EBCDIC SNI
+0230                       /*     1  ASCII PC 386
+0240                       /*    16  ASCII PC OS/2
+0250                       /*   128  ASCII 8859-1
+0260FHIGHORDERFIRST        'Endian type of platform.'
+0270                       /*   1  Big endian (high order first)
+0280                       /*   0  Little endian
+0290STATUS                 'Status of user.'
+0300                       /*   0  Not waiting
+0310                       /*   5  Waiting
+0320** Only displayed if user is waiting:
+0330SWAITCONVID            'Kind of conversation for which user waits'
+0340                       /*  NEW,OLD,ANY User waiting for ... conversations
+0350                       /*  NONE  User waiting for non-conversational reply
+0360                       /*  CONV-ID  User waiting for specific conversation
+0370      /* When waiting for ANY, NEW or OLD, the class name/server/service
+0380      /* of the service to wait for is displayed.
+0390**
+0400NCONVACTIVE            'Number of active conversations of this user.'
+0410NSERVICEACTIVE         'Number of services active (offered) by this server.'
+0420LASTACTIVITY           'Elapsed time since the last activity of the user.'
+0430NONACT                 'Non-activity timeout in seconds.'
+0440WAITNEW                'Accumulated time server waited for new conversations.'
+0450NWAITNEW               'Number of times server waited for new conversations.'
+0460WAITOLD                'Accumulated time server or client waited for messages of existing conversations.'
+0470NWAITOLD               'Number of times server or client waited for messages of existing conversations.'
+0480NCONV                  'Sum of conversations for the user since start of session.'
+0490LTOTALUOWS             'Number of UOWs (units of work).'
+0500IPADDRESS              'IPv4 address of server.'
+0510HOSTNAME               'Host name of server.'
+0520RECVOPTION             'Receive option.'
+0530ATTACHMANAGER          'Attach manager indicator.'
+0540NAUTHORIZATIONSUCCESS  'Counter AUTHORIZ succeeded.'
+0550NAUTHORIZATIONFAIL     'Counter AUTHORIZ failed.'
+0560CREATETIME             'Creation time.'
+0570RPCLIBRARYNAME         'Name of the RPC library of the current user request.'
+0580RPCPROGRAMNAME         'Name of the RPC program of the current user request.'
+0590NSEQUENCENUMBER        'Unique sequence number of server.'
+0600APPLICATIONNAME        'Caller of the broker or job name.'
+0610APPLICATIONTYPE        'Application type. (Used internally)'
+0620APPLICATIONVERSION     'Application version. (Used internally)'
+0630IPV6ADDRESS            'IPv6 address'
+0640

@@ -1,0 +1,14 @@
+0010&H View LOAD-MODULE
+0020&L
+0030&L
+0040#Purpose@: Retrieve information relating to specified load module.
+0050&L
+0060#OpSys@  : z/OS
+0070&L
+0080&L
+0090#Usage@  : This view retrieves load module information, e.g.
+0100           CSECT names, type of external symbol, address and length
+0110           of CSECT, AMODE & RMODE, zaps applied to module etc.
+0120&L
+0130#Notes@  :
+0140

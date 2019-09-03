@@ -1,0 +1,17 @@
+0010**C           0   *
+0020**C           0   *Natural Web Interface -  DCOM Extension
+0030**C           0   *
+0040**C           0   *DESCRIPTION  Global Unique IDs for DCOM Cass and Interface
+0050**C           0   *
+0060**C           0   *AUTHOR        SAG   11.04.1997
+0070**C           0   *
+0080**C           0   *VERSION       6.2.
+0090**C           0   *
+0100**C           0   *(c) Copyright  Software AG 1997-2005. All rights reserved.
+0110**C           0   *
+0120**DFU  F      2   A  36U1CLSID-SYSWEB3
+0130**HF1
+0140**I                      CONST <'1D52A6ED-A9F1-41F1-8AE9-6AC187227DF9'>
+0150**DFU  F      2   A  36U1IID-NATWEB3
+0160**HF1
+0170**I                      CONST <'7B106EF3-8356-4D31-A981-4273927F67E6'>

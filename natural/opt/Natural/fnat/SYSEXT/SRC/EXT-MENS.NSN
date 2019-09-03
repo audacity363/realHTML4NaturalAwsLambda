@@ -1,0 +1,202 @@
+0010*
+0020*  Member ......... EXT-MENS
+0030*  Type ........... Subprogram
+0040*  Library ........ SYSEXTC
+0050*
+0060*  Function ....... Search window for all keywords / categories
+0070*
+0080************************************************************************
+0090*
+0100DEFINE DATA
+0110PARAMETER
+0120  01 SEL-TYPE      (A01)             /* 'K' keywords
+0130                                     /* 'C' categories
+0140  01 SEL-STRING    (A30)             /* Selection value
+0150LOCAL USING EXTXPDA2                 /* Array of current selection
+0160LOCAL
+0170  01 SEL-ITEM       (A30)            /* Map fields
+0180  01 TABLES
+0190     02 MAX-ITEM    (N02)
+0200     02 M-ITEM      (A30/1:10)
+0210  01 M-MARKS        (A10)
+0220  01 REDEFINE M-MARKS
+0230     02 M-MARK      (A01/1:10)
+0240  01 CV-SEL-ITEM    (C)
+0250  01 CV-ITEM        (C/1:10)
+0260  01 CV-MARK        (C/1:10)
+0270  01 ERR-TEXT       (A72)
+0280  01 MAP-TITLE      (A30)
+0290*
+0300  01 NEW-SELECTION  (L)
+0310  01 START-POS      (I04)
+0320  01 END-POS        (I04)
+0330  01 IX             (I04)
+0340  01 IY             (I04)
+0350  01 #NUM           (N6.4)
+0360  01 #POS1          (I04)
+0370  01 #POS2          (I04)
+0380  01 NEW-ITEM       (A30)
+0390END-DEFINE
+0400*
+0410DEFINE WINDOW KEYWORD-MAP
+0420  SIZE 16 * 38
+0430  BASE 04 / 22
+0440  TITLE MAP-TITLE
+0450  CONTROL SCREEN
+0460DEFINE WINDOW CATEGORY-MAP
+0470  SIZE 16 * 40
+0480  BASE 04 / 21
+0490  TITLE MAP-TITLE
+0500  CONTROL SCREEN
+0510*
+0520SET KEY
+0530  TREQ        NAMED ' '
+0540  PF1  = HELP NAMED 'Help'
+0550  PF3         NAMED 'Exit'
+0560  PF6         NAMED '--'
+0570  PF7         NAMED '-'
+0580  PF8         NAMED '+'
+0590  PF9         NAMED '++'
+0600  PF12        NAMED 'Canc'
+0610  PF2  PF4  PF5  PF10 PF11
+0620  PF13 PF14 PF15 PF16 PF17 PF18
+0630  PF19 PF20 PF21 PF22 PF23 PF24
+0640*
+0650*
+0660IF SEL-TYPE = 'K'
+0670  COMPRESS ' Search for Keywords ' INTO MAP-TITLE
+0680ELSE
+0690  COMPRESS ' Search for Categories ' INTO MAP-TITLE
+0700END-IF
+0710*
+0720MOVE SEL-STRING TO SEL-ITEM NEW-ITEM
+0730RESET SEL-STRING
+0740NEW-SELECTION := TRUE
+0750START-POS := 1
+0760*
+0770REPEAT
+0780  MOVE (AD=I)  TO CV-MARK (*)
+0790  MOVE (AD=D CD=TU)  TO CV-ITEM (*)
+0800  /*
+0810  RESET M-MARKS
+0820  /*
+0830  /*  Get all map fields for current selection criteria
+0840  /*
+0850  CALLNAT 'EXTXMENS' SEL-TYPE TABLES START-POS
+0860                     NEW-SELECTION NEW-ITEM
+0870                     XML-CURR-ITEM
+0880  /*
+0890  IF MAX-ITEM < 10
+0900    ADD 1 TO MAX-ITEM
+0910    MOVE (AD=NP) TO CV-MARK (MAX-ITEM:10)    /*  Protect mark fields
+0920    SUBTRACT 1 FROM MAX-ITEM
+0930  END-IF
+0940  IF MAX-ITEM > 10
+0950    MOVE 10 TO MAX-ITEM
+0960  END-IF
+0970  IF SEL-TYPE = 'K'
+0980    /*
+0990    /*  Highlight map fields (reserved keywords)
+1000    /*
+1010    FOR IX 1 10
+1020      IF M-ITEM (IX) = MASK ('+')
+1030        MOVE (AD=I CD=NE) TO CV-ITEM (IX)
+1040      END-IF
+1050    END-FOR
+1060  END-IF
+1070  IF MAX-ITEM = 0
+1080    MOVE 'Nothing found for selection.' TO ERR-TEXT
+1090  END-IF
+1100  /*
+1110  /*********************************************************************
+1120  IF SEL-TYPE = 'K'
+1130    INPUT WINDOW = 'KEYWORD-MAP' WITH TEXT ERR-TEXT USING MAP 'EXT-MAPK'
+1140  ELSE
+1150    INPUT WINDOW ='CATEGORY-MAP' WITH TEXT ERR-TEXT USING MAP 'EXT-MAPC'
+1160  END-IF
+1170  /*********************************************************************
+1180  /*
+1190  RESET ERR-TEXT NEW-SELECTION
+1200  /*
+1210  IF *PF-KEY = 'PF3' OR= 'PF12'   /* Exit commands
+1220    REDUCE ARRAY XML-CURR-ITEM.ITEM-NAME TO 0
+1230    ESCAPE BOTTOM
+1240  END-IF
+1250  /*
+1260  /*  Check selection
+1270  /*
+1280  IF CV-SEL-ITEM MODIFIED
+1290    NEW-SELECTION := TRUE
+1300    IF SEL-ITEM = ' '
+1310      RESET NEW-ITEM
+1320    ELSE
+1330      EXAMINE DIRECTION BACKWARD SEL-ITEM FOR '*'
+1340              GIVING POSITION #POS1
+1350              GIVING LENGTH #POS2
+1360      IF #POS1 > 0
+1370        IF #POS1 < #POS2        /* Reset after asterisk
+1380          #POS1 := #POS1 + 1
+1390          MOVE ' ' TO SUBSTRING(SEL-ITEM,#POS1)
+1400        END-IF
+1410      END-IF
+1420      MOVE SEL-ITEM TO NEW-ITEM
+1430    END-IF
+1440    /* ========>
+1450    ESCAPE TOP
+1460    /* ========>
+1470  END-IF
+1480  /*
+1490  /*  Execute paging commands
+1500  /*
+1510  DECIDE ON FIRST *PF-KEY
+1520    /***********
+1530    VALUE 'PF6'  /* '--'
+1540                 MOVE 1 TO START-POS
+1550    /***********
+1560    VALUE 'PF7'  /* '-'
+1570                 SUBTRACT 10 FROM START-POS
+1580                 IF START-POS < 1
+1590                   START-POS := 1
+1600                 END-IF
+1610    /***********
+1620    VALUE 'PF8'  /* '+'
+1630                 IF START-POS + 10 LE XML-CURR-ITEM.C-ITEM
+1640                   ADD 10 TO START-POS
+1650                 END-IF
+1660    /***********
+1670    VALUE 'PF9'  /* '++'
+1680                 IF XML-CURR-ITEM.C-ITEM > 0
+1690                   #NUM := XML-CURR-ITEM.C-ITEM / 10.0
+1700                   IF FRAC(#NUM) NE 0
+1710                     START-POS := (INT(#NUM) * 10) + 1
+1720                   ELSE
+1730                     START-POS := (INT(#NUM) * 10) - 9
+1740                   END-IF
+1750                 END-IF
+1760    /***********
+1770    ANY VALUE
+1780                 /* ========>
+1790                 ESCAPE TOP
+1800                 /* ========>
+1810    /***********
+1820    NONE         IGNORE
+1830  END-DECIDE
+1840  /*
+1850  /*  Something marked
+1860  /*
+1870  IF M-MARKS > ' '
+1880    FOR IX 1 TO 10
+1890      IF M-MARK (IX) NE ' '
+1900        MOVE M-ITEM (IX) TO SEL-STRING
+1910        /* ============>
+1920        ESCAPE ROUTINE
+1930        /* ============>
+1940      END-IF
+1950    END-FOR
+1960  END-IF
+1970*
+1980END-REPEAT
+1990**
+2000SET WINDOW OFF
+2010/*
+2020END

@@ -1,0 +1,25 @@
+0010** Example 'EDITMX04': Edit mask (different EM for numeric fields)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 EMPLOY-VIEW VIEW OF EMPLOYEES
+0050  2 PERSONNEL-ID
+0060  2 FIRST-NAME
+0070  2 NAME
+0080  2 SALARY (1)
+0090  2 BONUS  (1,1)
+0100  2 LEAVE-DUE
+0110END-DEFINE
+0120*
+0130LIMIT 2
+0140READ EMPLOY-VIEW BY PERSONNEL-ID = '20018000'
+0150                 WHERE SALARY(1) = 28000 THRU 30000
+0160  DISPLAY (SF=4)
+0170          'N A M E'    NAME
+0180          'SALARY'     SALARY(1)  (EM=*USD^ZZZ,999)
+0190          'BONUS (ZZ)' BONUS(1,1) (EM=S*ZZZ,999) /
+0200          'BONUS (Z9)' BONUS(1,1) (EM=SZ99,999+) /
+0210          '->' '='     BONUS(1,1) (EM=-999,999)
+0220          'VAC/DUE'    LEAVE-DUE  (EM=+999)
+0230  SKIP 1
+0240END-READ
+0250END

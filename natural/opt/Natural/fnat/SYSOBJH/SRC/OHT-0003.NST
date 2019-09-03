@@ -1,0 +1,26 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Exceptions
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180If this field is marked, exceptions for the selection
+0190can be specified.
+0200
+0210All objects which match the selection are checked against
+0220the specifications in the exception definition.
+0230If they match all the specifications in the exception
+0240definition, they are deselected.
+0250
+0260<HelpTextEnd>

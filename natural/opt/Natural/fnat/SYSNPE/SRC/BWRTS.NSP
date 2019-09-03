@@ -1,0 +1,131 @@
+0010*
+0020* Print
+0030*
+0040DEFINE DATA GLOBAL USING TUTO
+0050            LOCAL  USING BWRTS--L
+0060            LOCAL
+0070*
+008001 #DATA                    (A60/1:10)
+009001 #RECLEN                  (N3/1:10)
+010001 #I                       (P2)
+011001 RECORD-WRITTEN           (L)
+0120*
+013001 #OBJECT                  (A7)
+014001 #DSNAME                  (A54)
+015001 #PASSWORD                (A8)
+016001 #FUNCTION                (A8)
+017001 #RECORD                  (A253)
+018001 #RECORD-LENGTH           (N3)
+019001 #COPIES                  (I1)
+020001 #JOB-NAME                (A8)
+021001 #DEVICE                  (A8)
+022001 #BINARY                  (A2)
+023001 #START-NUMBER            (N5)   INIT <1>
+024001 #END-NUMBER              (N5)
+025001 #CONTROL                 (A12)
+026001 #CHARS                   (A64)
+0270END-DEFINE
+0280PERFORM PF-KEY
+0290*
+0300* ------------------------------ MAIN LOOP ----------------------------
+0310*
+0320REPEAT
+0330  PERFORM SCREEN-IO
+0340  DECIDE ON FIRST #OBJECT
+0350    VALUE 'FILE'    PERFORM PRINT-BS2000-FILE
+0360    VALUE 'RECORDS' PERFORM PRINT-RECORDS
+0370    NONE            ASSIGN  ##MSG-NR = 1033
+0380  END-DECIDE
+0390END-REPEAT
+0400*
+0410* ------------------------------ print-bs2000-file --------------------
+0420*
+0430DEFINE SUBROUTINE PRINT-BS2000-FILE
+0440PROCESS WRITE-SPOOL
+0450         USING NODE                  = ##NODE
+0460           ,   FUNCTION              = 'CLOSE'
+0470           ,   DSNAME                = #DSNAME
+0480           ,   PASSWORD              = #PASSWORD
+0490           ,   JOB-NAME              = #JOB-NAME
+0500           ,   DEVICE                = #DEVICE
+0510           ,   CONTROL               = #CONTROL
+0520           ,   BINARY                = #BINARY
+0530           ,   START-NUMBER          = #START-NUMBER
+0540           ,   END-NUMBER            = #END-NUMBER
+0550           ,   CHARS                 = #CHARS
+0560        GIVING ERROR-CODE
+0570               ERROR-TEXT
+0580               SYSTEM-CODE
+0590*
+0600IF ERROR-CODE NE 0
+0610   INCLUDE BERR---C
+0620  ELSE
+0630   ASSIGN ##MSG-NR   = 1035
+0640   ASSIGN ##MSG-TXT1 = JOB-ID
+0650END-IF
+0660END-SUBROUTINE
+0670*
+0680* ------------------------------ print-records ------------------------
+0690*
+0700DEFINE SUBROUTINE PRINT-RECORDS
+0710ASSIGN RECORD-WRITTEN = FALSE
+0720FOR.
+0730FOR #I = 1 TO 11
+0740  IF #I > 10 AND RECORD-WRITTEN
+0750     IF RECORD-WRITTEN
+0760        ASSIGN #FUNCTION = 'CLOSE'
+0770        RESET  #RECORD #RECORD-LENGTH
+0780       ELSE
+0790        ESCAPE BOTTOM (FOR.)
+0800     END-IF
+0810    ELSE
+0820     IF #RECLEN (#I) = 0 AND #DATA (#I) = ' '
+0830        ESCAPE TOP
+0840     END-IF
+0850     ASSIGN RECORD-WRITTEN = TRUE
+0860     RESET  #FUNCTION
+0870     ASSIGN #RECORD = #DATA (#I)
+0880     ASSIGN #RECORD-LENGTH = #RECLEN (#I)
+0890  END-IF
+0900  PROCESS WRITE-SPOOL
+0910           USING NODE                  = ##NODE
+0920             ,   FUNCTION              = #FUNCTION
+0930             ,   RECORD                = #RECORD
+0940             ,   RECORD-LENGTH         = #RECORD-LENGTH
+0950             ,   JOB-NAME              = #JOB-NAME
+0960             ,   DEVICE                = #DEVICE
+0970             ,   CONTROL               = #CONTROL
+0980             ,   BINARY                = #BINARY
+0990             ,   START-NUMBER          = #START-NUMBER
+1000             ,   END-NUMBER            = #END-NUMBER
+1010             ,   CHARS                 = #CHARS
+1020          GIVING ERROR-CODE
+1030                 ERROR-TEXT
+1040                 SYSTEM-CODE
+1050  IF ERROR-CODE NE 0
+1060     INCLUDE BERR---C
+1070     ESCAPE BOTTOM
+1080  END-IF
+1090END-FOR
+1100IF ERROR-CODE NE 0
+1110   INCLUDE BERR---C
+1120  ELSE
+1130   ASSIGN ##MSG-NR   = 1035
+1140   ASSIGN ##MSG-TXT1 = JOB-ID
+1150END-IF
+1160END-SUBROUTINE
+1170*
+1180* ------------------------------ SCREEN-IO ----------------------------
+1190*
+1200DEFINE SUBROUTINE SCREEN-IO
+1210INPUT WITH TEXT *##MSG-NR,
+1220                 ##MSG-TXT1,
+1230                 ##MSG-TXT2
+1240      USING MAP 'BWRTS--&'
+1250RESET ##MSG
+1260END-SUBROUTINE
+1270*
+1280* ------------------------------ PF-KEY -------------------------------
+1290*
+1300INCLUDE C-PFKEY
+1310END

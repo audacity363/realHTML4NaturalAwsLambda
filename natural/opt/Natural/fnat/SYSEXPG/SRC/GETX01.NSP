@@ -1,0 +1,24 @@
+0010** Example 'GETX01': GET (put single record in hold with UPDATE stmt)
+0020**
+0030** CAUTION: Executing this example will modify the database records!
+0040***********************************************************************
+0050DEFINE DATA LOCAL
+00601 EMPLOY-VIEW VIEW OF EMPLOYEES
+0070  2 NAME
+0080  2 SALARY (1)
+0090END-DEFINE
+0100*
+0110RD. READ EMPLOY-VIEW BY NAME
+0120  DISPLAY EMPLOY-VIEW
+0130  IF SALARY (1) > 1500000
+0140    /*
+0150    GE. GET EMPLOY-VIEW *ISN (RD.)
+0160    /*
+0170    WRITE '=' (50) 'RECORD IN HOLD:' *ISN(RD.)
+0180    COMPUTE SALARY (1) = SALARY (1) * 1.15
+0190    /*
+0200    UPDATE (GE.)
+0210    END TRANSACTION
+0220  END-IF
+0230END-READ
+0240END

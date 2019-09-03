@@ -1,0 +1,16 @@
+0010** Example 'DISPLX18': DISPLAY  (using default settings for SF, AL, UC,
+0020**                     LC, IC, TC and compare with DISPLX19)
+0030************************************************************************
+0040DEFINE DATA LOCAL
+00501 EMPLOY-VIEW VIEW OF EMPLOYEES
+0060  2 NAME
+0070  2 FIRST-NAME
+0080  2 CITY
+0090  2 SALARY    (1)
+0100  2 BONUS     (1,1)
+0110END-DEFINE
+0120*
+0130FIND (6) EMPLOY-VIEW WITH CITY = 'CHAPEL HILL'
+0140  DISPLAY NAME FIRST-NAME SALARY(1) BONUS(1,1)
+0150END-FIND
+0160END

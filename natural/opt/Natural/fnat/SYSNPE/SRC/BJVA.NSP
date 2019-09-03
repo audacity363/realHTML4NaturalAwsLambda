@@ -1,0 +1,160 @@
+0010* Program   BJVA
+0020* View      JOB-VARIABLES
+0030*
+0040* Function  Show JV-attributes of the specified JV
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* hka 97-12-12   NPE213:   make it y2000 compliant
+0090* ======================================================================
+0100*
+0110DEFINE DATA GLOBAL USING TUTO
+0120            LOCAL  USING BJV----L
+0130            LOCAL
+014001 #DISPLAY
+0150   02 SHARE              (A3)
+0160   02 LENGTH             (N3)
+0170   02 READ-PASSWORD      (A4)
+0180   02 WRITE-PASSWORD     (A4)
+0190   02 CREATION-DATX      (D)
+0200   02 EXPIRATION-DATX    (D)
+0210   02 ACCESS             (A5)
+0220   02 JV-TYPE            (A10)
+0230*
+024001 #NAME                 (A54)
+025001 #INPUT
+0260   02 #FUNCTION          (A8)
+0270   02 #SECOND-NAME       (A54)
+0280   02 #STATE             (A1)
+0290   02 #ACCESS            (A5)
+0300   02 #SHARE             (A3)
+0310   02 #RETENTION-PERIOD  (N5)
+0320   02 #PASSWORD          (A8)
+0330   02 #READ-PASSWORD     (A8)
+0340   02 #WRITE-PASSWORD    (A8)
+0350   02 #REPLACE           (A3)
+0360*
+037001  #CVAR             (C)
+038001  END-OF-DISPLAY    (L)
+039001  END-OF-PROCESSING (L)
+0400*
+0410END-DEFINE
+0420IF *DATA = 1
+0430   INPUT #NAME
+0440   ASSIGN #CVAR = (AD=DP)
+0450  ELSE
+0460   ASSIGN #CVAR = (AD=I)
+0470END-IF
+0480*
+0490PERFORM PF-KEY
+0500SET KEY PF3 = PGM
+0510PERFORM SCREEN-IO
+0520*
+0530* ------------------------------ MAIN LOOP ----------------------------
+0540*
+0550REPEAT
+0560UNTIL END-OF-PROCESSING
+0570FNDJV.
+0580FIND JOB-VARIABLES
+0590     WITH NODE       =  ##NODE
+0600      AND FUNCTION  =  'ATTRIB'
+0610      AND NAME      =  #NAME
+0620*
+0630  IF ERROR-CODE NE 0 OR SYSTEM-CODE NE 0
+0640     INCLUDE BERR---C
+0650  END-IF
+0660*
+0670  MOVE BY NAME JOB-VARIABLES TO #DISPLAY
+0680  PERFORM SCREEN-IO
+0690END-FIND
+0700*
+0710IF *COUNTER (FNDJV.) = 0
+0720   ASSIGN ##MSG-NR = 1031
+0730   PERFORM SCREEN-IO
+0740END-IF
+0750END-REPEAT
+0760*
+0770* ------------------------------ SCREEN-IO ----------------------------
+0780*
+0790DEFINE SUBROUTINE SCREEN-IO
+0800ASSIGN END-OF-DISPLAY = FALSE
+0810REPEAT
+0820UNTIL END-OF-DISPLAY
+0830   INPUT WITH TEXT *##MSG-NR,
+0840                    ##MSG-TXT1,
+0850                    ##MSG-TXT2
+0860         USING MAP 'BJVA---&'
+0870   RESET ##MSG
+0880   IF *PF-KEY = 'PF3'
+0890      ASSIGN END-OF-PROCESSING = TRUE
+0900      ESCAPE BOTTOM
+0910   END-IF
+0920*
+0930   DECIDE ON FIRST #FUNCTION
+0940     VALUE 'ATTRIB'  ASSIGN END-OF-DISPLAY = TRUE
+0950     VALUE 'ERASE'   PROCESS JOB-VARIABLES
+0960                        USING NODE      = ##NODE
+0970                          ,   FUNCTION  = #FUNCTION
+0980                          ,   NAME      = #NAME
+0990                          ,   PASSWORD  = #PASSWORD
+1000                       GIVING ERROR-CODE
+1010                              ERROR-TEXT
+1020                              SYSTEM-CODE
+1030                     IF ERROR-CODE NE 0 OR SYSTEM-CODE NE 0
+1040                        INCLUDE BERR---C
+1050                       ELSE
+1060                        RESET #INPUT #DISPLAY
+1070                     END-IF
+1080     VALUE 'ALLOC'   PROCESS JOB-VARIABLES
+1090                        USING NODE           = ##NODE
+1100                          ,   FUNCTION       = #FUNCTION
+1110                          ,   NAME           = #NAME
+1120                          ,   ACCESS         = #ACCESS
+1130                          ,   SHARE          = #SHARE
+1140                          ,   READ-PASSWORD  = #READ-PASSWORD
+1150                          ,   WRITE-PASSWORD = #WRITE-PASSWORD
+1160                          ,   PASSWORD       = #PASSWORD
+1170                          ,   REPLACE        = #REPLACE
+1180                       GIVING ERROR-CODE
+1190                              ERROR-TEXT
+1200                              SYSTEM-CODE
+1210                     IF ERROR-CODE NE 0 OR SYSTEM-CODE NE 0
+1220                        INCLUDE BERR---C
+1230                       ELSE
+1240                        RESET #INPUT
+1250                        ASSIGN END-OF-DISPLAY = TRUE
+1260                     END-IF
+1270     VALUE 'MODATTR' PROCESS JOB-VARIABLES
+1280                        USING NODE                 = ##NODE
+1290                          ,   FUNCTION             = #FUNCTION
+1300                          ,   NAME                 = #NAME
+1310                          ,   PASSWORD             = #PASSWORD
+1320                          ,   ACCESS               = #ACCESS
+1330                          ,   SHARE                = #SHARE
+1340                          ,   READ-PASSWORD        = #READ-PASSWORD
+1350                          ,   WRITE-PASSWORD       = #WRITE-PASSWORD
+1360                          ,   RETENTION-PERIOD     = #RETENTION-PERIOD
+1370                          ,   SECOND-NAME          = #SECOND-NAME
+1380                       GIVING ERROR-CODE
+1390                              ERROR-TEXT
+1400                              SYSTEM-CODE
+1410                     IF ERROR-CODE NE 0 OR SYSTEM-CODE NE 0
+1420                        INCLUDE BERR---C
+1430                       ELSE
+1440                        IF #SECOND-NAME NE ' '
+1450                           ASSIGN #NAME = #SECOND-NAME
+1460                        END-IF
+1470                        RESET #INPUT
+1480                        ASSIGN END-OF-DISPLAY = TRUE
+1490                     END-IF
+1500     VALUE 'ERASE'   IGNORE
+1510     NONE            ASSIGN ##MSG-NR = 1033
+1520   END-DECIDE
+1530END-REPEAT
+1540RESET #DISPLAY
+1550END-SUBROUTINE
+1560*
+1570* ------------------------------ PF-KEY -------------------------------
+1580*
+1590INCLUDE C-PFKEY
+1600END

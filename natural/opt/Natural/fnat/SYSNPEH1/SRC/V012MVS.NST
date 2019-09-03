@@ -1,0 +1,12 @@
+0010&H View READ-SPOOL
+0020&L
+0030&L
+0040#Purpose@: Read SYSOUT from Spool.
+0050&L
+0060#OpSys@  : z/OS, z/VSE
+0070&L
+0080&L
+0090#Usage@  : This view retrieves records from JES.
+0100&L
+0110#Notes@  : Use SPOOL-FILES to display spool file information
+0120           relating to the specified job before executing READ-SPOOL.

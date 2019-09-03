@@ -1,0 +1,143 @@
+0010*
+0020* Print
+0030*
+0040DEFINE DATA GLOBAL USING TUTO
+0050            LOCAL  USING BPRDOC-L
+0060            LOCAL
+0070*
+008001 #DATA                    (A60/1:10)
+009001 #RECLEN                  (N3/1:10)
+010001 #I                       (P2)
+011001 RECORD-WRITTEN           (L)
+0120*
+013001 #OBJECT                  (A7)
+014001 #DSNAME                  (A54)
+015001 #PASSWORD                (A8)
+016001 #FUNCTION                (A8)
+017001 #RECORD                  (A253)
+018001 #RECORD-LENGTH           (N3)
+019001 #CHARACTER-SETS          (A8)
+020001 #FACE-SIDE               (A8)
+021001 #FORM-NAME               (A8)
+022001 #JOB-NAME                (A8)
+023001 #ADDITIONAL-COPIES       (A3)
+024001 #HEADER-PAGE-TEXT        (A32)
+025001 #PARAMETER-SET-1         (A55)
+0260   INIT <'TO-PRINTER=*PAR(PRINTER-NAME=your-Printer)'>
+027001 #COMMAND-RESPONSE        (A253)
+0280END-DEFINE
+0290PERFORM PF-KEY
+0300*
+0310* ------------------------------ MAIN LOOP ----------------------------
+0320*
+0330REPEAT
+0340  PERFORM SCREEN-IO
+0350  DECIDE ON FIRST #OBJECT
+0360    VALUE 'FILE'    PERFORM PRINT-BS2000-FILE
+0370    VALUE 'RECORDS' PERFORM PRINT-RECORDS
+0380    NONE            ASSIGN  ##MSG-NR = 1033
+0390  END-DECIDE
+0400END-REPEAT
+0410*
+0420* ------------------------------ print-bs2000-file --------------------
+0430*
+0440DEFINE SUBROUTINE PRINT-BS2000-FILE
+0450PROCESS PRINT-DOCUMENT
+0460         USING NODE                  = ##NODE
+0470           ,   FUNCTION              = 'CLOSE'
+0480           ,   DSNAME                = #DSNAME
+0490           ,   PASSWORD              = #PASSWORD
+0500           ,   JOB-NAME              = #JOB-NAME
+0510           ,   CHARACTER-SETS        = #CHARACTER-SETS
+0520           ,   FACE-SIDE             = #FACE-SIDE
+0530           ,   FORM-NAME             = #FORM-NAME
+0540           ,   ADDITIONAL-COPIES     = #ADDITIONAL-COPIES
+0550           ,   HEADER-PAGE-TEXT      = #HEADER-PAGE-TEXT
+0560           ,   PARAMETER-SET-1       = #PARAMETER-SET-1
+0570        GIVING ERROR-CODE
+0580               ERROR-TEXT
+0590               SYSTEM-CODE
+0600               COMMAND-RESPONSE
+0610*
+0620IF ERROR-CODE NE 0
+0630   INCLUDE BERR---C
+0640  ELSE
+0650   WRITE '=' COMMAND-RESPONSE (EM=X(79))
+0660   ASSIGN ##MSG-NR   = 1035
+0670   ASSIGN ##MSG-TXT1 = JOB-ID
+0680END-IF
+0690END-SUBROUTINE
+0700*
+0710* ------------------------------ print-records ------------------------
+0720*
+0730DEFINE SUBROUTINE PRINT-RECORDS
+0740ASSIGN RECORD-WRITTEN = FALSE
+0750FOR.
+0760FOR #I = 1 TO 11
+0770  IF #I > 10
+0780     IF RECORD-WRITTEN
+0790        ASSIGN #FUNCTION = 'CLOSE'
+0800        RESET  #RECORD #RECORD-LENGTH
+0810       ELSE
+0820        ESCAPE BOTTOM (FOR.)
+0830     END-IF
+0840    ELSE
+0850     IF #RECLEN (#I) = 0 AND #DATA (#I) = ' '
+0860        ESCAPE TOP
+0870     END-IF
+0880     ASSIGN RECORD-WRITTEN = TRUE
+0890     RESET  #FUNCTION
+0900     ASSIGN #RECORD = #DATA (#I)
+0910     ASSIGN #RECORD-LENGTH = #RECLEN (#I)
+0920  END-IF
+0930  PROCESS PRINT-DOCUMENT
+0940           USING NODE                  = ##NODE
+0950             ,   FUNCTION              = #FUNCTION
+0960             ,   RECORD                = #RECORD
+0970             ,   RECORD-LENGTH         = #RECORD-LENGTH
+0980             ,   JOB-NAME              = #JOB-NAME
+0990             ,   CHARACTER-SETS        = #CHARACTER-SETS
+1000             ,   FACE-SIDE             = #FACE-SIDE
+1010             ,   FORM-NAME             = #FORM-NAME
+1020             ,   ADDITIONAL-COPIES     = #ADDITIONAL-COPIES
+1030             ,   HEADER-PAGE-TEXT      = #HEADER-PAGE-TEXT
+1040             ,   PARAMETER-SET-1       = #PARAMETER-SET-1
+1050          GIVING ERROR-CODE
+1060                 ERROR-TEXT
+1070                 SYSTEM-CODE
+1080                 COMMAND-RESPONSE
+1090  IF ERROR-CODE NE 0
+1100     INCLUDE BERR---C
+1110     ESCAPE BOTTOM
+1120  END-IF
+1130END-FOR
+1140*
+1150IF ERROR-CODE NE 0
+1160   INCLUDE BERR---C
+1170  ELSE
+1180   WRITE '=' COMMAND-RESPONSE (EM=X(79))
+1190   IF RECORD-WRITTEN = TRUE
+1200      ASSIGN ##MSG-NR   = 1035
+1210      ASSIGN ##MSG-TXT1 = JOB-ID
+1220     ELSE
+1230      ASSIGN ##MSG-NR   = 1000
+1240      ASSIGN ##MSG-TXT1 = 'Please enter'
+1250      ASSIGN ##MSG-TXT2 = 'record data.'
+1260   END-IF
+1270END-IF
+1280END-SUBROUTINE
+1290*
+1300* ------------------------------ SCREEN-IO ----------------------------
+1310*
+1320DEFINE SUBROUTINE SCREEN-IO
+1330INPUT WITH TEXT *##MSG-NR,
+1340                 ##MSG-TXT1,
+1350                 ##MSG-TXT2
+1360      USING MAP 'BPRDOC-&'
+1370RESET ##MSG
+1380END-SUBROUTINE
+1390*
+1400* ------------------------------ PF-KEY -------------------------------
+1410*
+1420INCLUDE C-PFKEY
+1430END

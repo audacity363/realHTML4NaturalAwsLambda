@@ -1,0 +1,81 @@
+0010* Program   BFATTR
+0020* View      FILE-ATTRIBUTES
+0030*
+0040* Function  Display attributes of a given file
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* hka 97-12-03   NPE213:   make it y2000 compliant
+0090* ======================================================================
+0100*
+0110DEFINE DATA GLOBAL USING TUTO
+0120            LOCAL  USING BFATTR-L
+0130            LOCAL
+014001  #DISPLAY
+0150    02 DSORG                  (A4)
+0160    02 CREATION-DATX          (D)
+0170    02 EXPIRATION-DATX        (D)
+0180    02 LAST-REFERENCE-DATX    (D)
+0190    02 MODIFICATION-DATX      (D)
+0200    02 MODIFICATION-TIMX      (T)
+0210    02 LAST-TTR               (N7)
+0220    02 FILE-SIZE              (N7)
+0230    02 SECURITY               (A5)
+0240    02 LRECL                  (N5)
+0250    02 BLKSIZE                (N5)
+0260    02 RECFM                  (A5)
+0270    02 NUMBER-OF-EXTENTS      (N3)
+0280    02 SECONDARY-QTY          (N7)
+0290    02 PERCENT-USED           (N3)
+0300    02 SHARE                  (A4)
+0310    02 BACKUP-TYPE            (A1)
+0320    02 ACCESS-TYPE            (A5)
+0330    02 KEY-LENGTH             (N4)
+0340    02 KEY-POSITION           (N5)
+0350    02 VOLSER-ARRAY           (A6/1:5)
+0360    02 ALLOCATION-TYPE        (A4)
+0370    02 BACKUP-INFO            (A19)
+0380    02 BACKUP-VERSION-NUMBER  (N5)
+0390    02 MIGRATE                (A9)
+0400    02 STORAGE-LEVEL          (A2)
+0410*
+042001  #DSNAME         (A54)
+043001  #VOLSER         (A6)
+0440END-DEFINE
+0450PERFORM PF-KEY
+0460*
+0470* ------------------------------ MAIN LOOP ----------------------------
+0480*
+0490REPEAT
+0500PERFORM SCREEN-IO
+0510FND.
+0520FIND FILE-ATTRIBUTES WITH NODE     =  ##NODE
+0530                     AND  DSNAME   =  #DSNAME
+0540                     AND  VOLSER   =  #VOLSER
+0550  IF ERROR-CODE NE 0 OR SYSTEM-CODE NE 0
+0560     INCLUDE BERR---C
+0570     ESCAPE BOTTOM (FND.)
+0580  END-IF
+0590  MOVE BY NAME FILE-ATTRIBUTES TO #DISPLAY
+0600  MOVE FILE-ATTRIBUTES.VOLSER-ARRAY(1) TO #VOLSER
+0610  IF #DISPLAY.ALLOCATION-TYPE = 'PAM'
+0620     RESET #DISPLAY.ALLOCATION-TYPE
+0630  END-IF
+0640END-FIND
+0650END-REPEAT
+0660*
+0670* ------------------------------ SCREEN-IO ----------------------------
+0680*
+0690DEFINE SUBROUTINE SCREEN-IO
+0700INPUT WITH TEXT *##MSG-NR,
+0710                 ##MSG-TXT1,
+0720                 ##MSG-TXT2
+0730      USING MAP 'BFATTR-&'
+0740RESET ##MSG
+0750RESET #DISPLAY
+0760END-SUBROUTINE
+0770*
+0780* ------------------------------ PF-KEY -------------------------------
+0790*
+0800INCLUDE C-PFKEY
+0810END

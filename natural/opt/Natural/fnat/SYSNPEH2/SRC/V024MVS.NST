@@ -1,0 +1,15 @@
+0010&H View TCB
+0020&L
+0030&L
+0040#Zweck@    : Ausgabe von Informationen ueber alle Task-Kontroll-
+0050             bloecke (TCB's), die zu einem bestimmten aktiven
+0060             Adressraum gehoeren.
+0070&L
+0080#System@   : z/OS.
+0090&L
+0100&L
+0110#Anwendung@: Dieser View kann zur Ueberwachung der TCB's der Vater-
+0120             und Sohnprozesse benutzt werden, die in einem bestimm-
+0130             ten Adressraum laufen.
+0140&L
+0150#Anmerkung@:

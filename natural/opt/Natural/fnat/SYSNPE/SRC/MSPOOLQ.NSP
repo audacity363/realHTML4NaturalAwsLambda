@@ -1,0 +1,174 @@
+0010* Program   MSPOOLQ
+0020* View      SPOOL-QUEUE
+0030*
+0040* Function  Display SPOOL Queue
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* sju 02-02-18   NPE321:   7 digit job-number
+0090* hka 97-12-12   NPE213:   make it y2000 compliant
+0100* ======================================================================
+0110*
+0120DEFINE DATA
+0130    GLOBAL USING TUTO
+0140    LOCAL USING SPOOLQ-L
+0150    LOCAL
+016001  #DISPLAY (15)
+0170    02 JOB-NAME          (A8)
+0180    02 JOB-NUMBER        (N7)     /* was N5 sju 02-02-18
+0190    02 STATUS            (A9)
+0200    02 QUEUE             (A3)
+0210    02 TYPE              (A3)
+0220    02 PRIORITY          (N3)
+0230    02 JOB-CLASS         (A1)
+0240    02 HOLD              (A1)     /* was A3 sju 02-02-18
+0250    02 #DATE-1           (D)
+0260    02 #TIME-1           (T)
+0270    02 #DATE-2           (D)
+0280    02 #TIME-2           (T)
+0290*
+030001  #DYN-HEADER     (A33)
+031001  #DYN-HEADER-ALL (A33)  INIT <'Date-1    Time-1 Date-2    Time-2'>
+032001  #DYN-HEADER-IN  (A16)  INIT <'Date/Time on RDR'>
+033001  #DYN-HEADER-XEQ (A09)  INIT <'XEQ-Start'>
+034001  #DYN-HEADER-OUT (A25)  INIT <'XEQ-Start        XEQ-Stop'>
+0350*
+036001  #JOB-NAME       (A8)   INIT <'*'>
+037001  #STATUS         (A9)   INIT <'*'>
+038001  #QUEUE          (A3)   INIT <'*'>
+039001  #TYPE           (A3)   INIT <'*'>
+0400*
+041001  #I              (P2)
+042001  #COUNT          (P8)
+043001  #CVAR           (C)
+044001  #CV-TIME-1      (C/1:15)
+045001  #CV-TIME-2      (C/1:15)
+0460*
+0470END-DEFINE
+0480#CVAR         := (AD=I)
+0490#CV-TIME-1(*) := (AD=N)
+0500#CV-TIME-2(*) := (AD=N)
+0510PERFORM PF-KEY
+0520PERFORM SCREEN-IO
+0530*
+0540* ------------------------------ MAIN LOOP ----------------------------
+0550*
+0560REPEAT
+0570FND.
+0580FIND SPOOL-QUEUE WITH NODE     =  ##NODE
+0590                 AND  JOB-NAME =  #JOB-NAME
+0600                 AND  STATUS   =  #STATUS
+0610                 AND  QUEUE    =  #QUEUE
+0620                 AND  TYPE     =  #TYPE
+0630*
+0640  IF ERROR-CODE NE 0
+0650     ASSIGN ##MSG-NR   = 1000
+0660     ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0670     ESCAPE BOTTOM (FND.)
+0680  END-IF
+0690*
+0700  IF #I = 15
+0710     PERFORM SCREEN-IO
+0720     IF #CVAR MODIFIED
+0730        ESCAPE BOTTOM (FND.)
+0740     END-IF
+0750  END-IF
+0760*
+0770  ADD 1 TO #I
+0780  ADD 1 TO #COUNT
+0790  MOVE BY NAME SPOOL-QUEUE TO #DISPLAY (#I)
+0800*
+0810  IF #JOB-NAME = '*'    /* then some fields are not filled because of
+0820     FND-2.             /* performance reasons, hence this inner FIND
+0830     FIND SPOOL-QUEUE WITH NODE       =  ##NODE
+0840                      AND  JOB-NAME   =  FND.JOB-NAME
+0850                      AND  JOB-NUMBER =  FND.JOB-NUMBER
+0860                      AND  QUEUE      =  FND.QUEUE
+0870                      AND  TYPE       =  FND.TYPE
+0880       /*
+0890       IF ERROR-CODE NE 0
+0900          ASSIGN ##MSG-NR   = 1000
+0910          ASSIGN ##MSG-TXT1 = ERROR-TEXT
+0920          ESCAPE BOTTOM (FND.)
+0930       END-IF
+0940       /*
+0950       MOVE BY NAME SPOOL-QUEUE TO #DISPLAY (#I)
+0960     END-FIND /* FND-2.
+0970  END-IF
+0980*
+0990  DECIDE ON FIRST VALUE OF SPOOL-QUEUE.QUEUE
+1000    VALUE 'IN'
+1010      #DATE-1 (#I)    := DATX-ON-READER
+1020      #TIME-1 (#I)    := TIMX-ON-READER
+1030      #CV-TIME-1 (#I) := (AD=D)
+1040      #CV-TIME-2 (#I) := (AD=N)
+1050    VALUE 'XEQ'
+1060      #DATE-1 (#I) := DATX-XEQ-START
+1070      #TIME-1 (#I) := TIMX-XEQ-START
+1080      #CV-TIME-1 (#I) := (AD=D)
+1090      #CV-TIME-2 (#I) := (AD=N)
+1100    VALUE 'OUT'
+1110      #DATE-1 (#I) := DATX-XEQ-START
+1120      #TIME-1 (#I) := TIMX-XEQ-START
+1130      #DATE-2 (#I) := DATX-XEQ-STOP
+1140      #TIME-2 (#I) := TIMX-XEQ-STOP
+1150      #CV-TIME-1 (#I) := (AD=D)
+1160      #CV-TIME-2 (#I) := (AD=D)
+1170    NONE VALUE IGNORE
+1180  END-DECIDE
+1190END-FIND
+1200DECIDE FOR FIRST CONDITION
+1210  WHEN ##MSG-NR NE 0                     /* ERROR OCCURED
+1220       IGNORE
+1230  WHEN #I > 0
+1240       ASSIGN ##MSG-NR = 1030            /* BOTTOM OF DATA
+1250  WHEN #COUNT = 0
+1260       ASSIGN ##MSG-NR = 1031            /* NOTHING FOUND
+1270  WHEN ANY
+1280       PERFORM SCREEN-IO
+1290  WHEN NONE
+1300       IGNORE
+1310END-DECIDE
+1320RESET #COUNT
+1330END-REPEAT
+1340*
+1350* ------------------------------ SCREEN-IO ----------------------------
+1360*
+1370DEFINE SUBROUTINE SCREEN-IO
+1380  DECIDE ON FIRST VALUE OF #QUEUE
+1390    VALUE 'IN'
+1400      #DYN-HEADER := #DYN-HEADER-IN
+1410    VALUE 'XEQ'
+1420      #DYN-HEADER := #DYN-HEADER-XEQ
+1430    VALUE 'OUT'
+1440      #DYN-HEADER := #DYN-HEADER-OUT
+1450    NONE VALUE
+1460      #DYN-HEADER := #DYN-HEADER-ALL
+1470  END-DECIDE
+1480  INPUT WITH TEXT *##MSG-NR,
+1490                   ##MSG-TXT1,
+1500                   ##MSG-TXT2
+1510        USING MAP 'MSPOOLQ&'
+1520  RESET ##MSG
+1530  DECIDE FOR EVERY CONDITION
+1540    WHEN #JOB-NAME = ' '
+1550         ASSIGN #JOB-NAME = '*'
+1560    WHEN #STATUS = ' '
+1570         ASSIGN #STATUS = '*'
+1580    WHEN #QUEUE = ' '
+1590         ASSIGN #QUEUE = '*'
+1600    WHEN #TYPE = ' '
+1610         ASSIGN #TYPE = '*'
+1620    WHEN NONE
+1630         IGNORE
+1640  END-DECIDE
+1650  RESET #DISPLAY (*)
+1660  RESET #I
+1670  #CV-TIME-1 (*) := (AD=N)
+1680  #CV-TIME-2 (*) := (AD=N)
+1690END-SUBROUTINE
+1700*
+1710* ------------------------------ PF-KEY -------------------------------
+1720*
+1730INCLUDE C-PFKEY
+1740END

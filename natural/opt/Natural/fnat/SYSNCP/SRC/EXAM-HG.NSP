@@ -1,0 +1,44 @@
+0010/*  EXAM-HG - HELP Global Menu
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  1 PGM (A08)
+0050  1 REDEFINE PGM
+0060    2 FILLER 7X
+0070    2 CMD (A01)
+0080  1 IX (I1)
+0090  1 MOD (C)
+0100END-DEFINE
+0110DEFINE WINDOW EXAM
+0120  SIZE 12 * 48
+0130  BASE IX / IX
+0140  TITLE ' (HG) Help for Global Functions '
+0150  CONTROL SCREEN
+0160  FRAMED POSITION OFF
+0170SET KEY ALL
+0180REPEAT
+0190  MOVE *PROGRAM TO PGM
+0200  IX := *LEVEL * 2
+0210  /*************************************************
+0220  INPUT WINDOW = 'EXAM' (AD=MIT'_' IP=OFF CV=MOD ) /
+0230    08T   'Code ' (I) 'Function        ' (I) //
+0240    08T   ' L   '  'List all Global Functions' /
+0250    08T   ' U   '  'List all Functions       ' /
+0260    08T   ' I   '  'Individual List          ' /
+0270    08T   ' .   '  'Exit                     ' //
+0280    09T    CMD
+0290  /**************************************************
+0300  IF *PF-KEY NE 'ENTR'
+0310  OR MOD NOT MODIFIED
+0320    ESCAPE ROUTINE
+0330  END-IF
+0340  /*
+0350  DECIDE ON FIRST CMD
+0360    VALUE '.'
+0370      ESCAPE ROUTINE
+0380    VALUE 'L', 'I', 'U'
+0390      FETCH RETURN PGM
+0400    NONE
+0410      REINPUT 'Please enter valid code.'
+0420  END-DECIDE
+0430END-REPEAT
+0440END

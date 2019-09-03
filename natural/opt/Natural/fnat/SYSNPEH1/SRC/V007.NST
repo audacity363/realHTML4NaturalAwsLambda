@@ -1,0 +1,12 @@
+0010&H View VTOC-UPDATE
+0020&L
+0030&L
+0040#Purpose@: Perform VTOC update functions.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : This view allows the user or application to perform VTOC
+0100           update functions, e.g. Rename/Scratch/Purge dataset.
+0110&L
+0120#Notes@  :

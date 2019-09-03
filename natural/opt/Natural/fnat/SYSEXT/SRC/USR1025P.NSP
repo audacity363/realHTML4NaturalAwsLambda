@@ -1,0 +1,134 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1025N'.
+0030/***********************************************************************
+0040DEFINE DATA LOCAL
+00501 USR1025L
+0060  2 ACTION                   (A1)        /* 'D', 'A', 'I', 'P'
+0070  2 STEPLIB-ID               (A8/1:8)    /* ID of steplib
+0080  2 DBID                     (N5/1:8)    /* DBID of steplib
+0090  2 FNR                      (N5/1:8)    /* FNR of steplib
+0100  2 PASSWORD                 (A8)        /* Input for ACTION 'A'
+0110  2 CIPHERCODE               (N8)        /* Input for ACTION 'A'
+0120  2 POSIT                    (N1)        /* Pos. of lib (for add/delete)
+0130  2 AST-STEPLIB              (A8)        /* Value of *STEPLIB
+0140  2 AST-DBID                 (N5)        /* DBID of *STEPLIB
+0150  2 AST-FNR                  (N5)        /* FNR of *STEPLIB
+0160  2 NUMBER-ACTIVE            (N1)        /* Number of active steplibs
+0170  2 RESPONSE                 (N4)        /* Error code
+0180  2 INFOTEXT                 (A65)       /* Text for RESPONSE field
+01901 P-NUMBER-STEPLIBS          (I1)        /* optional rameter
+02001 P-STEPLIB-NAME             (A8/1:30)   /* optional rameter
+02101 P-STEPLIB-DBID             (N5/1:30)   /* optional rameter
+02201 P-STEPLIB-FNR              (N5/1:30)   /* optional rameter
+0230/*
+02401 USE-NEW-HANDLING           (L)
+0250END-DEFINE
+0260/*---------------------------------------------------------------------
+0270/* Set up some defaults:
+0280/*---------------------------------------------------------------------
+0290SET KEY ALL
+0300USE-NEW-HANDLING := TRUE
+0310/*---------------------------------------------------------------------
+0320ACTION := 'D'                /* Display active steplibs
+0330REPEAT
+0340  /*-------------------------------------------------------------------
+0350  /* New handling for more than 8 steplibs
+0360  /*-------------------------------------------------------------------
+0370  IF USE-NEW-HANDLING
+0380    /*
+0390    CALLNAT 'USR1025N'
+0400            USR1025L
+0410            P-NUMBER-STEPLIBS
+0420            P-STEPLIB-NAME (*)
+0430            P-STEPLIB-DBID (*)
+0440            P-STEPLIB-FNR (*)
+0450    /*
+0460    INPUT (AD=OIL IP=OFF ZP=OFF SG=OFF) WITH TEXT INFOTEXT
+0470        'Maintain steplib table:' (I)
+0480      / '-' (23) (I)
+0490      / 'Action ..........'    ACTION  (AD=MIT'_') '(D,A,P,I)'
+0500     4X 'No. of steplibs ...'  P-NUMBER-STEPLIBS  (AD=OI ZP=ON)
+0510      / 'Add/Delete No. ..'    POSIT  (AD=MIT'_' ZP=ON)
+0520    34T 'Response ..........'  RESPONSE  (AD=OI ZP=ON SG=ON)
+0530      / 'Add-Library .....'    STEPLIB-ID (1)  (AD=MIT'_')
+0540    34T 'Add-DBID ...'         DBID (1)  (AD=MIT'_' ZP=ON)
+0550    55T 'Add-FNR ...'          FNR (1)  (AD=MIT'_' ZP=ON)
+0560      / 'Add-Password ....'    PASSWORD  (AD=MIT'_')
+0570    34T 'Add-Cipher code ....' CIPHERCODE  (AD=MIT'_' ZP=ON)
+0580      / '   ------------- Steplibs ----------------'
+0590      / '    Library  DBID  FNR     '-
+0600        '    Library  DBID  FNR     '-
+0610        '    Library  DBID  FNR'
+0620      / ' 1.' P-STEPLIB-NAME  (1) P-STEPLIB-DBID  (1) P-STEPLIB-FNR  (1)
+0630    28T '11.' P-STEPLIB-NAME (11) P-STEPLIB-DBID (11) P-STEPLIB-FNR (11)
+0640    55T '21.' P-STEPLIB-NAME (21) P-STEPLIB-DBID (21) P-STEPLIB-FNR (21)
+0650      / ' 2.' P-STEPLIB-NAME (2)  P-STEPLIB-DBID (2)  P-STEPLIB-FNR (2)
+0660    28T '12.' P-STEPLIB-NAME (12) P-STEPLIB-DBID (12) P-STEPLIB-FNR (12)
+0670    55T '22.' P-STEPLIB-NAME (22) P-STEPLIB-DBID (22) P-STEPLIB-FNR (22)
+0680      / ' 3.' P-STEPLIB-NAME (3)  P-STEPLIB-DBID (3)  P-STEPLIB-FNR (3)
+0690    28T '13.' P-STEPLIB-NAME (13) P-STEPLIB-DBID (13) P-STEPLIB-FNR (13)
+0700    55T '23.' P-STEPLIB-NAME (23) P-STEPLIB-DBID (23) P-STEPLIB-FNR (23)
+0710      / ' 4.' P-STEPLIB-NAME (4)  P-STEPLIB-DBID (4)  P-STEPLIB-FNR (4)
+0720    28T '14.' P-STEPLIB-NAME (14) P-STEPLIB-DBID (14) P-STEPLIB-FNR (14)
+0730    55T '24.' P-STEPLIB-NAME (24) P-STEPLIB-DBID (24) P-STEPLIB-FNR (24)
+0740      / ' 5.' P-STEPLIB-NAME (5)  P-STEPLIB-DBID (5)  P-STEPLIB-FNR (5)
+0750    28T '15.' P-STEPLIB-NAME (15) P-STEPLIB-DBID (15) P-STEPLIB-FNR (15)
+0760    55T '25.' P-STEPLIB-NAME (25) P-STEPLIB-DBID (25) P-STEPLIB-FNR (25)
+0770      / ' 6.' P-STEPLIB-NAME (6)  P-STEPLIB-DBID (6)  P-STEPLIB-FNR (6)
+0780    28T '16.' P-STEPLIB-NAME (16) P-STEPLIB-DBID (16) P-STEPLIB-FNR (16)
+0790    55T '26.' P-STEPLIB-NAME (26) P-STEPLIB-DBID (26) P-STEPLIB-FNR (26)
+0800      / ' 7.' P-STEPLIB-NAME (7)  P-STEPLIB-DBID (7)  P-STEPLIB-FNR (7)
+0810    28T '17.' P-STEPLIB-NAME (17) P-STEPLIB-DBID (17) P-STEPLIB-FNR (17)
+0820    55T '27.' P-STEPLIB-NAME (27) P-STEPLIB-DBID (27) P-STEPLIB-FNR (27)
+0830      / ' 8.' P-STEPLIB-NAME (8)  P-STEPLIB-DBID (8)  P-STEPLIB-FNR (8)
+0840    28T '18.' P-STEPLIB-NAME (18) P-STEPLIB-DBID (18) P-STEPLIB-FNR (18)
+0850    55T '28.' P-STEPLIB-NAME (28) P-STEPLIB-DBID (28) P-STEPLIB-FNR (28)
+0860      / ' 9.' P-STEPLIB-NAME (9)  P-STEPLIB-DBID (9)  P-STEPLIB-FNR (9)
+0870    28T '19.' P-STEPLIB-NAME (19) P-STEPLIB-DBID (19) P-STEPLIB-FNR (19)
+0880    55T '29.' P-STEPLIB-NAME (29) P-STEPLIB-DBID (29) P-STEPLIB-FNR (29)
+0890      / '10.' P-STEPLIB-NAME (10) P-STEPLIB-DBID (10) P-STEPLIB-FNR (10)
+0900    28T '20.' P-STEPLIB-NAME (20) P-STEPLIB-DBID (20) P-STEPLIB-FNR (20)
+0910    55T '30.' P-STEPLIB-NAME (30) P-STEPLIB-DBID (30) P-STEPLIB-FNR (30)
+0920      / '*STEPLIB ........' AST-STEPLIB
+0930    34T 'DBID .......'      AST-DBID
+0940    55T 'FNR .......'       AST-FNR
+0950  /*-------------------------------------------------------------------
+0960  /* old handling
+0970  /*-------------------------------------------------------------------
+0980  ELSE
+0990    /*
+1000    CALLNAT 'USR1025N'
+1010            USR1025L
+1020    /*
+1030    INPUT (AD=OIL IP=OFF ZP=OFF SG=OFF) WITH TEXT INFOTEXT
+1040        'Maintain steplib table:' (I)
+1050      / '-' (23) (I) /
+1060      / 'Action ..........' ACTION (AD=MIT'_') '(D,A,P,I)'
+1070        4X 'No. of steplibs ...' NUMBER-ACTIVE (AD=OI ZP=ON)
+1080      / 'Add/Delete No. ..' POSIT (AD=MIT'_' ZP=ON)
+1090        14X 'Response ..........' RESPONSE   (AD=OI ZP=ON)
+1100     // '   ------------- Steplibs ----------------'
+1110      / '   Library  DBID  FNR   Password Cipercode'
+1120      / '1.' STEPLIB-ID(1) (AD=MIT'_')
+1130             DBID(1)       (AD=MIT'_' ZP=ON)
+1140             FNR(1)        (AD=MIT'_' ZP=ON)
+1150             PASSWORD      (AD=MIT'_')
+1160             CIPHERCODE    (AD=MIT'_' ZP=ON)
+1170      / '2.' STEPLIB-ID(2) DBID(2) FNR(2)
+1180      / '3.' STEPLIB-ID(3) DBID(3) FNR(3)
+1190      / '4.' STEPLIB-ID(4) DBID(4) FNR(4)
+1200      / '5.' STEPLIB-ID(5) DBID(5) FNR(5)
+1210      / '6.' STEPLIB-ID(6) DBID(6) FNR(6)
+1220      / '7.' STEPLIB-ID(7) DBID(7) FNR(7)
+1230      / '8.' STEPLIB-ID(8) DBID(8) FNR(8)
+1240      / '  ' AST-STEPLIB (AD=O) AST-DBID (AD=O)
+1250             AST-FNR (AD=O) 25T '( *STEPLIB )'
+1260      /// 'Press any PF-Key to stop.'
+1270  END-IF
+1280  /*
+1290  IF *PF-KEY NE 'ENTR'
+1300    ESCAPE ROUTINE
+1310  END-IF
+1320END-REPEAT
+1330/*---------------------------------------------------------------------
+1340END

@@ -1,0 +1,63 @@
+0010Get Natural stack information
+0020.
+0030Documentation ......... USR4003T    /*  Text object
+0040Interface ............. USR4003N    /*  Cataloged subprogram
+0050Example Program ....... USR4003P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. RUNTIME
+0100.
+0110Keywords .............. +PREVIOUS-VERSION,
+0120                        STACK
+0130.
+0140Interface Versions .... USR4003N, USR6303N, USR8222N
+0150.
+0160Function .............. Retrieve the number of stack entries, the
+0170                        type and contents of a given stack entry.
+0180                        The stack entry is received as (A32).
+0190                        If the stack entry should be available in
+0200                        Unicode, the interface USR6303N should be
+0210                        used instead.
+0220.
+0230.
+0240Parameters
+0250----------
+0260Define the following parameters with the DEFINE DATA statement:
+0270.
+0280   01 P-FUNCTION (A1)      The function to be performed; one of:
+0290                           'N' - Retrieve the number of entries stacked
+0300                           'T' - Retrieve the type of a stack entry.
+0310                                 A stack is either a command or data.
+0320                           'R' - Retrieve the first 32 bytes of a stack
+0330                                 entry.
+0340   01 P-NUMBER   (I4)      - For function 'N': Return the number of
+0350                             stack entries
+0360                           - For functions 'T' and 'R': Specify the
+0370                             number of the stack entry requested.
+0380                           - Return -1: if an invalid function is
+0390                                        specified or entry does not
+0400                                        exist.
+0410                                    -2: if an invalid type on stack is
+0420                                        found.
+0430                                    -3: if specified entry on stack
+0440                                        doesn't exist.
+0450   01 P-DATA     (A32)     - For function 'T': Return the string
+0460                             'COMMAND' or 'DATA'
+0470                           - For function 'R': Return up to 32 bytes
+0480                             from the stack entry.
+0490.
+0500Interface Call
+0510--------------
+0520Use the interface with the CALLNAT statement:
+0530.
+0540CALLNAT 'USR4003N' P-FUNCTION P-NUMBER P-DATA
+0550.
+0560.
+0570Using the Application Programming Interface:
+0580--------------------------------------------
+0590Copy the subprogram USR4003N to the library SYSTEM or the steplib
+0600library respectively, or to the required library.
+0610.
+0620.
+0630*****  End of Description  *****

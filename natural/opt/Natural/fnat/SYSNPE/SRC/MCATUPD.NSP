@@ -1,0 +1,57 @@
+0010* Program   MCATUPD
+0020* View      CATALOG-UPDATE
+0030*
+0040* Function  Catalog Maintenance
+0050*
+0060* ----------------------------------------------------------------------
+0070*
+0080DEFINE DATA
+0090   GLOBAL USING TUTO
+0100   LOCAL  USING CATUPD-L
+0110   LOCAL  1 #GENERATIONS (I1)
+0120END-DEFINE
+0130*
+0140INPUT (AD=MI'_' IP=OFF ZP=OFF SG=OFF)
+0150    /  ##TITLE (AD=OI IP=OFF)
+0160  ///  '  Operation ...........:' CATALOG-UPDATE.FUNCTION
+0170                                 '(catlg/recatlg/uncatlg)'
+0180   //  '  Data set name .......:' CATALOG-UPDATE.DSNAME
+0190    /  '  Device ..............:' CATALOG-UPDATE.DEVICE
+0200    /  '  Volumes .............:' #V1 #V2 #V3 #V4
+0210                            / 26T #V5 #V6 #V7 #V8
+0220*   /  '  Cvol ................:' CATALOG-UPDATE.CVOL
+0230*   /  '  Index ...............:' CATALOG-UPDATE.INDEX
+0240*   /  '  Alias ...............:' CATALOG-UPDATE.ALIAS
+0250* ///  '  For BLDG:'
+0260*  //  '  Delete ..............:' CATALOG-UPDATE.DELETE '(y/n)'
+0270* sju 02-02-15 above line out, next 1 in
+0280*  //  '  Delete ..............:' CATALOG-UPDATE.DELETE-OPTION '(y/n)'
+0290*   /  '  Empty ...............:' CATALOG-UPDATE.EMPTY '(y/n)'
+0300*   /  '  No. of generations ..:' #GENERATIONS
+0310* rmu 02-12-18 Removed all lines after Volumes, because CAT-UPD no
+0320*              longer supports CVOL stuff.
+0330*
+0340PROCESS CATALOG-UPDATE
+0350   USING NODE                  = ##NODE
+0360     ,   DSNAME                = CATALOG-UPDATE.DSNAME
+0370     ,   DEVICE                = CATALOG-UPDATE.DEVICE
+0380     ,   VOLUMES               = CATALOG-UPDATE.VOLUMES
+0390     ,   FUNCTION              = CATALOG-UPDATE.FUNCTION
+0400*    ,   CVOL                  = CATALOG-UPDATE.CVOL
+0410*    ,   INDEX                 = CATALOG-UPDATE.INDEX
+0420*    ,   ALIAS                 = CATALOG-UPDATE.ALIAS
+0430*    ,   EMPTY                 = CATALOG-UPDATE.EMPTY
+0440*    ,   DELETE                = CATALOG-UPDATE.DELETE
+0450* sju 02-02-15 above line out, next 1 in
+0460*    ,   DELETE-OPTION         = CATALOG-UPDATE.DELETE-OPTION
+0470*    ,   NUMBER-OF-GENERATIONS = #GENERATIONS
+0480* rmu 02-12-18 Removed all lines after Volumes, because CAT-UPD no
+0490*              longer supports CVOL stuff.
+0500  GIVING ERROR-CODE
+0510         ERROR-TEXT
+0520IF ERROR-CODE > 0
+0530   REINPUT ERROR-TEXT
+0540ELSE
+0550   REINPUT 'Operation successful'
+0560END-IF
+0570END

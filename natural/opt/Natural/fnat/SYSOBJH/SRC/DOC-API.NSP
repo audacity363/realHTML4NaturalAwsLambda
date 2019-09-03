@@ -1,0 +1,383 @@
+0010************************************************************************
+0020* Application: SYSOBJH (Object Handler)
+0030* Program:     DOC-API
+0040* Platforms:   Mainframe 4.1 / Unix 6.1/ Windows 6.1
+0050**----------------------------------------------------------------------
+0060* Function:    Documentation and example program for the Object Handler
+0070*              API 'OBJHAPI'
+0080**----------------------------------------------------------------------
+0090**----------------------------------------------------------------------
+0100* Author:      SAG DARMSTADT
+0110* Date:        17.07.2003
+0120********************  MAINTENANCE LOG  *********************************
+0130* DATE       USER  ID      REASON
+0140* ---------- ----- ------  ---------------------------------------------
+0150* 05.11.2007 SSZ1  299019  Redefinition of P-STATISTICS wrong
+0160* 19.08.2008 SSZ2  NR2603  New parameter Extensions-Exec-SYSTRANS-Cmd
+0170* 09.05.2017 SSZ3  MF24496 Consider DTFORM parameter
+0180************************************************************************
+0190************************************************************************
+0200* Parameters of OBJHAPI:
+0210*   INPUT:
+0220*
+0230*     P-Function            (A1)     Valid values:
+0240*                                    'S' (Start) for the first call
+0250*                                    'C' (Continue) for subsequent calls
+0260*                                    'E' (End) for the last call
+0270*                                        (always required)
+0280*
+0290*     P-Command-Line-1      (A253)   first part of the command line
+0300*     P-Command-Line-2      (A253)   second part of the command line
+0310*     P-Command-Line-3      (A253)   third part of the command line
+0320*     P-Command-Line-4      (A253)   fourth part of the command line
+0330*     P-Command-Line-5      (A253)   fifth part of the command line
+0340*     P-Command-Line-6      (A253)   sixth part of the command line
+0350*     P-Command-Line-7      (A253)   seventh part of the command line
+0360*     P-Command-Line-8      (A253)   eighth part of the command line
+0370*          These variables contain the complete object handler command
+0380*          (see documentation for details of the command syntax).
+0390*
+0400*   OUTPUT:
+0410*     P-Statistics          (N7/1:V) Statistical data of the objects
+0420*                                    processed. At least one occurrence
+0430*                                    must be used.
+0440*                                    See redefinition below for the
+0450*                                    meaning of the single items.
+0460*
+0470*     P-Work-Area           (A1/600) Internal work area, do not change
+0480*
+0490*     P-Return-Messages     (A79/4)  returned messages (allways filled)
+0500*
+0510*     P-Return-Code         (I4)     Return code from OBJHAPI
+0520*              0 = OK, Function completed successfully
+0530*              1 = Invalid version in Extended Parameter
+0540*              2 = Extended parameter size too small
+0550*              3 = OBJHAPI must be located in library SYSTEM
+0560*                  or any other any SYS-library.
+0570*              4 = Error during set steplibs
+0580*              5 = Error during reset steplibs
+0590*              6 = Invalid value in parameter P-Function
+0600*          -4870 = Error in command
+0610*          -4852 = NSC error (see P-Return-Messages)
+0620*          -nnnn = Natural errors msgs
+0630*
+0640*     P-Cmd-Return-Code     (I4)     Return code from SYSOBJH
+0650*              0 = Command OK
+0660*           1000 = Nothing found for this requ.
+0670*           1110 = 0 + NSC error occurred
+0680*           1111 = 1000 + NSC error occurred
+0690*           1112 = 9900 + NSC error occurred
+0700*           9900 = Number to process reached
+0710*           9990 = Function executed successfully
+0720*           all others, see P-Return-Messages
+0730*
+0740*   OTHER:
+0750*     P-Extensions          (A1/1:V) for future parameters;
+0760*                                    V = 1 for Extensions-Version = 0
+0770*                                    V = 2 for Extensions-Version = 1
+0780*       redefined as follows:
+0790*       2 Extensions-Version (I1)    the version of the API
+0800*       2 Extensions-Exec-SYSTRANS-Cmd (A1) for Extensions-Version = 1:
+0810*                                    'Y' means, that the command line
+0820*                                    contains a command in the syntax
+0830*                                    for the SYSTRANS utiliy
+0840************************************************************************
+0850DEFINE DATA
+0860/*---------------------------------------------------------------------
+0870/*---------------- Local data -----------------------------------------
+0880/*---------------------------------------------------------------------
+0890LOCAL
+0900/*---------------------------------------------------------------------
+0910/* local variables for the Extensions variables
+0920/*---------------------------------------------------------------------
+09301 OBJHAPI-PARMS
+0940  2 P-FUNCTION                        (A1)
+0950  2 P-COMMAND-LINE-1                  (A253)
+0960  2 P-COMMAND-LINE-2                  (A253)
+0970  2 P-COMMAND-LINE-3                  (A253)
+0980  2 P-COMMAND-LINE-4                  (A253)
+0990  2 P-COMMAND-LINE-5                  (A253)
+1000  2 P-COMMAND-LINE-6                  (A253)
+1010  2 P-COMMAND-LINE-7                  (A253)
+1020  2 P-COMMAND-LINE-8                  (A253)
+1030  2 P-STATISTICS                      (N7/1:50)
+1040  2 REDEFINE P-STATISTICS                   /* Processed objects:
+1050    3 ST-NATURAL-LIBS                 (N7)
+1060    3 ST-TOTAL-OBJECTS                (N7)
+1070    3 ST-ERROR-MESSAGES               (N7)
+1080    3 ST-WORK-FILE-RECORDS            (N7)
+1090    3 ST-NATURAL-SOURCES              (N7)
+1100    3 ST-NATURAL-CATALOGED            (N7)
+1110    3 ST-NATURAL-SOURCES-REPLACED     (N7)
+1120    3 ST-NATURAL-CATALOGED-REPLACED   (N7)
+1130    3 ST-NATURAL-SOURCES-REJECTED     (N7)
+1140    3 ST-NATURAL-CATALOGED-REJECTED   (N7)
+1150    3 ST-SHORT-ERROR-MSGS             (N7)
+1160    3 ST-LONG-ERROR-MSGS              (N7)
+1170    /* 3 ST-SHORT-ERROR-MSGS-REPLACED    (N7)            /* Start SSZ1
+1180    /* 3 ST-LONG-ERROR-MSGS-REPLACED     (N7)
+1190    /* 3 ST-SHORT-ERROR-MSGS-REJECTED    (N7)
+1200    3 ST-ERROR-MSGS-REPLACED          (N7)
+1210    3 ST-ERROR-MSGS-NOT-REPLACED      (N7)                 /* End SSZ1
+1220    3 ST-LONG-ERROR-MSGS-REJECTED     (N7)
+1230    3 ST-SUBRT-OR-CLASSES-REJECTED    (N7)
+1240    3 ST-NCPS                         (N7)
+1250    3 ST-NCPS-REPLACED                (N7)
+1260    3 ST-NCPS-REJECTED                (N7)
+1270    3 ST-RESOURCES                    (N7)
+1280    3 ST-RESOURCES-REPLACED           (N7)
+1290    3 ST-RESOURCES-REJECTED           (N7)
+1300    3 ST-EXTERNALS                    (N7)
+1310    3 ST-EXTERNALS-REPLACED           (N7)
+1320    3 ST-EXTERNALS-REJECTED           (N7)
+1330    3 ST-FDTS                         (N7)
+1340    3 ST-FDTS-REPLACED                (N7)
+1350    3 ST-FDTS-REJECTED                (N7)
+1360    3 ST-RELATED                      (N7)
+1370    3 ST-RELATED-REPLACED             (N7)
+1380    3 ST-RELATED-REJECTED             (N7)
+1390    3 ST-MF-DDMS                      (N7)
+1400    3 ST-MF-DDMS-REPLACED             (N7)
+1410    3 ST-MF-DDMS-REJECTED             (N7)
+1420    3 ST-MF-DEBUG-ENVS                (N7)
+1430    3 ST-MF-DEBUG-ENVS-REPLACED       (N7)
+1440    3 ST-MF-DEBUG-ENVS-REJECTED       (N7)
+1450    3 ST-MF-PROFILES                  (N7)
+1460    3 ST-MF-PROFILES-REPLACED         (N7)
+1470    3 ST-MF-PROFILES-REJECTED         (N7)
+1480    3 ST-MF-SUBFILES                  (N7)
+1490    3 ST-MF-SUBFILES-REPLACED         (N7)
+1500    3 ST-MF-SUBFILES-REJECTED         (N7)
+1510    3 ST-MF-NAT-CAT-REJECTED-VERSION  (N7)
+1520  2 P-WORK-AREA                       (A1/600)
+1530  2 P-RETURN-MESSAGES                 (A79/4)
+1540  2 P-RETURN-CODE                     (I4)
+1550  2 P-CMD-RETURN-CODE                 (I4)
+15601 P-EXTENSIONS                        (A1/1:2)
+15701 REDEFINE P-EXTENSIONS
+1580  2 P-EXTENSIONS-VERSION              (I1)
+1590  2 P-EXTENSIONS-EXEC-SYSTRANS-CMD    (A1)
+1600/*---------------------------------------------------------------------
+1610/* single local variables
+1620/*---------------------------------------------------------------------
+16301 PC-ENCIRONMENT                      (L)
+16401 MAINFRAME                           (L)
+16501 SYSTRANS-CMD                        (A1)
+16601 YES-NO                              (A1)
+16701 DATE-VAR                            (A10)                    /* SSZ3
+1680END-DEFINE
+1690/**********************************************************************
+1700/*---------------------------------------------------------------------
+1710/*---------------- Start of Main Program ------------------------------
+1720/*---------------------------------------------------------------------
+1730/*---------------------------------------------------------------------
+1740/* Inits
+1750/*---------------------------------------------------------------------
+1760IF (*MACHINE-CLASS = 'MAINFRAME')
+1770  MAINFRAME := TRUE
+1780ELSE
+1790  IF (*MACHINE-CLASS = 'PC')
+1800    PC-ENCIRONMENT := TRUE
+1810  END-IF
+1820END-IF
+1830YES-NO := 'Y'
+1840/*---------------------------------------------------------------------
+1850/* 1st example: Unload in TRANSFER format
+1860/*---------------------------------------------------------------------
+1870P-COMMAND-LINE-1 := 'UNLOAD DOC* LIB SYSOBJH OBJTYPE N '
+1880P-COMMAND-LINE-2 := 'WHERE TRANSFER REPORT'
+1890IF MAINFRAME
+1900  COMPRESS P-COMMAND-LINE-2 'API-REP1' INTO P-COMMAND-LINE-2
+1910  IF (*DEVICE = 'PC')
+1920    P-COMMAND-LINE-3 := 'PC C:\TR-W-1.dat'
+1930  END-IF
+1940ELSE
+1950  IF PC-ENCIRONMENT
+1960    P-COMMAND-LINE-3 := 'WORK C:\TR-W-1.dat'
+1970  ELSE
+1980    P-COMMAND-LINE-3 := 'WORK $HOME/TR-W-1.dat'
+1990  END-IF
+2000END-IF
+2010INPUT (IP=OFF AD=M) MARK *YES-NO
+2020      'Command:'
+2030    / P-COMMAND-LINE-1 (AL=75)
+2040    / P-COMMAND-LINE-2 (AL=75)
+2050    / P-COMMAND-LINE-3 (AL=75)
+2060    / P-COMMAND-LINE-4 (AL=75)
+2070    / P-COMMAND-LINE-5 (AL=75)
+2080    / 'SYSTRANS command ? (Y/N)' SYSTRANS-CMD (AD=T)
+2090   // 'Execute ? (Y/N) ........' YES-NO (AD=T)
+2100IF (YES-NO = 'Y')
+2110  RESET P-STATISTICS (*)
+2120  IF (SYSTRANS-CMD = 'Y')
+2130    THEN P-EXTENSIONS-EXEC-SYSTRANS-CMD := 'Y'
+2140    ELSE P-EXTENSIONS-EXEC-SYSTRANS-CMD := 'N'
+2150  END-IF
+2160  P-FUNCTION := 'S'            /* Set 'S' (Start function)
+2170  PERFORM EXECUTE-COMMAND
+2180  IF (P-RETURN-CODE >= 0)
+2190    P-FUNCTION := 'E'            /* Set 'E' (End)
+2200    PERFORM EXECUTE-COMMAND
+2210  END-IF
+2220END-IF
+2230/*---------------------------------------------------------------------
+2240/* 2nd example: Load in TRANSFER format
+2250/*---------------------------------------------------------------------
+2260DATE-VAR := *DATN                                      /* Start SSZ3
+2270COMPRESS SUBSTRING (DATE-VAR,1,4) '-'
+2280         SUBSTRING (DATE-VAR,5,2) '-'
+2290         SUBSTRING (DATE-VAR,7,2)
+2300    INTO DATE-VAR LEAVING NO SPACE
+2310/* COMPRESS 'LOADALL WITH NEWLIBRARY' *USER 'NEWDATE' *DATX
+2320COMPRESS 'LOADALL WITH NEWLIBRARY' *USER
+2330         'NEWDATE' DATE-VAR                              /* End SSZ3
+2340         INTO P-COMMAND-LINE-1
+2350P-COMMAND-LINE-2 := 'WHERE TRANSFER REPORT'
+2360IF MAINFRAME
+2370  COMPRESS P-COMMAND-LINE-2 'API-REP2' INTO P-COMMAND-LINE-2
+2380  IF (*DEVICE = 'PC')
+2390    P-COMMAND-LINE-3 := 'PC C:\TR-W-1.dat'
+2400  END-IF
+2410ELSE
+2420  IF PC-ENCIRONMENT
+2430    P-COMMAND-LINE-3 := 'WORK C:\TR-W-1.dat'
+2440  ELSE
+2450    P-COMMAND-LINE-3 := 'WORK $HOME/TR-W-1.dat'
+2460  END-IF
+2470END-IF
+2480P-COMMAND-LINE-4 := 'REPLACE ALL'
+2490INPUT (IP=OFF AD=M) MARK *YES-NO
+2500      'Command:'
+2510    / P-COMMAND-LINE-1 (AL=75)
+2520    / P-COMMAND-LINE-2 (AL=75)
+2530    / P-COMMAND-LINE-3 (AL=75)
+2540    / P-COMMAND-LINE-4 (AL=75)
+2550    / P-COMMAND-LINE-5 (AL=75)
+2560    / 'SYSTRANS command ? (Y/N)' SYSTRANS-CMD (AD=T)
+2570   // 'Execute ? (Y/N)' YES-NO (AD=T)
+2580IF (YES-NO = 'Y')
+2590  RESET P-STATISTICS (*)
+2600  IF (SYSTRANS-CMD = 'Y')
+2610    THEN P-EXTENSIONS-EXEC-SYSTRANS-CMD := 'Y'
+2620    ELSE P-EXTENSIONS-EXEC-SYSTRANS-CMD := 'N'
+2630  END-IF
+2640  P-FUNCTION := 'S'            /* Set 'S' (Start function)
+2650  PERFORM EXECUTE-COMMAND
+2660  IF (P-RETURN-CODE >= 0)
+2670    P-FUNCTION := 'E'            /* Set 'E' (End)
+2680    PERFORM EXECUTE-COMMAND
+2690  END-IF
+2700END-IF
+2710/*---------------------------------------------------------------------
+2720/* Exit program
+2730/*---------------------------------------------------------------------
+2740ESCAPE ROUTINE
+2750/*---------------------------------------------------------------------
+2760/*---------------- End of Main Program --------------------------------
+2770/*---------------------------------------------------------------------
+2780/**********************************************************************
+2790/**********************************************************************
+2800/*---------------------------------------------------------------------
+2810/*---------------- Subroutine Execute-Command ----------------------------
+2820/*---------------------------------------------------------------------
+2830DEFINE SUBROUTINE EXECUTE-COMMAND
+2840  /*-------------------------------------------------------------------
+2850  /* Prepare interface call
+2860  /*-------------------------------------------------------------------
+2870  P-EXTENSIONS-VERSION := 1
+2880  /*-------------------------------------------------------------------
+2890  /* Call the interface
+2900  /*-------------------------------------------------------------------
+2910  CALLNAT 'OBJHAPI'
+2920          OBJHAPI-PARMS
+2930          P-EXTENSIONS (*)
+2940  NEWPAGE
+2950  /*-------------------------------------------------------------------
+2960  /* Check if error occurred
+2970  /*-------------------------------------------------------------------
+2980  IF (P-RETURN-CODE <> 0)
+2990    PRINT 'Error' P-RETURN-CODE 'occurred:'
+3000        / P-RETURN-MESSAGES (1)
+3010        / P-RETURN-MESSAGES (2)
+3020        / P-RETURN-MESSAGES (3)
+3030        / P-RETURN-MESSAGES (4)
+3040    ESCAPE ROUTINE
+3050  END-IF
+3060  /*-------------------------------------------------------------------
+3070  /* Display result from interface call
+3080  /*-------------------------------------------------------------------
+3090  PRINT 'Result from interface call:'
+3100      / 'Return code from SYSOBJH' P-CMD-RETURN-CODE
+3110      / P-RETURN-MESSAGES (1)
+3120  IF (P-CMD-RETURN-CODE <> 0)
+3130    PRINT P-RETURN-MESSAGES (2)
+3140        / P-RETURN-MESSAGES (3)
+3150        / P-RETURN-MESSAGES (4)
+3160  END-IF
+3170  /*-------------------------------------------------------------------
+3180  /* Display statistical data of the objects processed
+3190  /*-------------------------------------------------------------------
+3200  PRINT 'Statistical data of the objects processed:'
+3210     / 'Total objects .........' ST-TOTAL-OBJECTS
+3220   40T 'Work file records .....' ST-WORK-FILE-RECORDS
+3230     / 'Natural libraries .....' ST-NATURAL-LIBS
+3240     / 'Objects' 40T 'Total' 50T 'Replaced' 60T 'Rejected'
+3250     / 'Natural sources .......' 40T ST-NATURAL-SOURCES
+3260                                 50T ST-NATURAL-SOURCES-REPLACED
+3270                                 60T ST-NATURAL-SOURCES-REJECTED
+3280     / 'Natural cataloged .....' 40T ST-NATURAL-CATALOGED
+3290                                 50T ST-NATURAL-CATALOGED-REPLACED
+3300                                 60T ST-NATURAL-CATALOGED-REJECTED
+3310     / 'Cataloged rejected ....' 40T ST-MF-NAT-CAT-REJECTED-VERSION
+3320                                                         /* Start SSZ1
+3330     /* / 'Short error messages ..' 40T ST-SHORT-ERROR-MSGS
+3340     /*                             50T ST-SHORT-ERROR-MSGS-REPLACED
+3350     /*                             60T ST-SHORT-ERROR-MSGS-REJECTED
+3360     /* / 'Long error messages ...' 40T ST-LONG-ERROR-MSGS
+3370     /*                             50T ST-LONG-ERROR-MSGS-REPLACED
+3380     /*                             60T ST-LONG-ERROR-MSGS-REJECTED
+3390     / 'Error messages ........' 40T ST-ERROR-MESSAGES
+3400                                 50T ST-ERROR-MSGS-REPLACED
+3410                                 60T ST-ERROR-MSGS-NOT-REPLACED
+3420     / 'Short error messages ..' 40T ST-SHORT-ERROR-MSGS
+3430     / 'Long error messages ...' 40T ST-LONG-ERROR-MSGS
+3440                                 60T ST-LONG-ERROR-MSGS-REJECTED
+3450                                                           /* End SSZ1
+3460     / 'Subrt./Classes rejected' 60T ST-SUBRT-OR-CLASSES-REJECTED
+3470     / 'Command-Processors ....' 40T ST-NCPS
+3480                                 50T ST-NCPS-REPLACED
+3490                                 60T ST-NCPS-REJECTED
+3500     / 'FDTs ..................' 40T ST-FDTS
+3510                                 50T ST-FDTS-REPLACED
+3520                                 60T ST-FDTS-REJECTED
+3530  IF MAINFRAME
+3540  PRINT
+3550     / 'DDMs ..................' 40T ST-MF-DDMS
+3560                                 50T ST-MF-DDMS-REPLACED
+3570                                 60T ST-MF-DDMS-REJECTED
+3580     / 'Debug environments ....' 40T ST-MF-DEBUG-ENVS
+3590                                 50T ST-MF-DEBUG-ENVS-REPLACED
+3600                                 60T ST-MF-DEBUG-ENVS-REJECTED
+3610     / 'Profiles ..............' 40T ST-MF-PROFILES
+3620                                 50T ST-MF-PROFILES-REPLACED
+3630                                 60T ST-MF-PROFILES-REJECTED
+3640     / 'DL/I subfiles .........' 40T ST-MF-SUBFILES
+3650                                 50T ST-MF-SUBFILES-REPLACED
+3660                                 60T ST-MF-SUBFILES-REJECTED
+3670  ELSE
+3680  PRINT
+3690     / 'Resources .............' 40T ST-RESOURCES
+3700                                 50T ST-RESOURCES-REPLACED
+3710                                 60T ST-RESOURCES-REJECTED
+3720     / 'External Objects ......' 40T ST-EXTERNALS
+3730                                 50T ST-EXTERNALS-REPLACED
+3740                                 60T ST-EXTERNALS-REJECTED
+3750     / 'DDMs ..................' 40T ST-RELATED
+3760                                 50T ST-RELATED-REPLACED
+3770                                 60T ST-RELATED-REJECTED
+3780  END-IF
+3790  /*-------------------------------------------------------------------
+3800END-SUBROUTINE /* Execute-Command
+3810/**********************************************************************
+3820/**********************************************************************
+3830END

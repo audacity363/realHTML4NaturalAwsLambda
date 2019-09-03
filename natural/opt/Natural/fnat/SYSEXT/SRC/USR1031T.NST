@@ -1,0 +1,51 @@
+0010Check Natural object name
+0020.
+0030Documentation ......... USR1031T    /*  Text object
+0040Interface ............. USR1031N    /*  Cataloged subprogram
+0050Example Program ....... USR1031P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATA HANDLING
+0100.
+0110Keywords .............. NAME, OBJECT NAME
+0120.
+0130Function .............. Checks if an object name is valid according to
+0140                        the Natural naming conventions (see the Natural
+0150                        documentation chapter 'Using Natural'/'Rules and
+0160                        Naming Conventions' for further information).
+0170.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+0230 1 OBJECT-NAME    (A32)   /* Name of object to be checked
+0240 1 P-RESPONSE     (N04)   /* Error pointer
+0250.
+0260Interface Call
+0270--------------
+0280Use the interface with the CALLNAT statement:
+0290.
+0300CALLNAT 'USR1031N' OBJECT-NAME P-RESPONSE
+0310.
+0320.
+0330Using the Application Programming Interface:
+0340--------------------------------------------
+0350Copy the subprogram USR1031N to the library SYSTEM or the steplib
+0360library respectively, or to the required library.
+0370.
+0380Description of the parameters:
+0390.
+0400OBJECT-NAME (Input)
+0410  Has to be filled before invoking the interface.
+0420  OBJECT-NAME contains the name of the object to be checked.
+0430.
+0440P-RESPONSE (Output)
+0450  P-RESPONSE = 0 indicates that the name is valid.
+0460  P-RESPONSE = -12 indicates that the name is all blank.
+0470  Otherwise P-RESPONSE contains the position of the first byte which is
+0480  not valid according to the Natural naming conventions.
+0490.
+0500.
+0510*****  End of Description  *****

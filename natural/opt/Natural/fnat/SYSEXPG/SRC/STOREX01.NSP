@@ -1,0 +1,118 @@
+0010** Example 'STOREX01': STORE  (Add new records to EMPLOYEES file)
+0020**
+0030** CAUTION: Executing this example will modify the database records!
+0040************************************************************************
+0050DEFINE DATA LOCAL
+00601 EMPLOYEE-VIEW VIEW OF EMPLOYEES
+0070  2 PERSONNEL-ID(A8)
+0080  2 NAME        (A20)
+0090  2 FIRST-NAME  (A20)
+0100  2 MIDDLE-I    (A1)
+0110  2 SALARY      (P9/2)
+0120  2 MAR-STAT    (A1)
+0130  2 BIRTH       (D)
+0140  2 CITY        (A20)
+0150  2 COUNTRY     (A3)
+0160*
+01701 #PERSONNEL-ID (A8)
+01801 #NAME         (A20)
+01901 #FIRST-NAME   (A20)
+02001 #INITIAL      (A1)
+02101 #MAR-STAT     (A1)
+02201 #SALARY       (N9)
+02301 #BIRTH        (A8)
+02401 #CITY         (A20)
+02501 #COUNTRY      (A3)
+02601 #CONF         (A1)   INIT <'Y'>
+0270END-DEFINE
+0280*
+0290REPEAT
+0300  INPUT 'ENTER A PERSONNEL ID AND NAME (OR ''END'' TO END)' //
+0310        'PERSONNEL-ID : ' #PERSONNEL-ID    //
+0320        'NAME         : ' #NAME  /
+0330        'FIRST-NAME   : ' #FIRST-NAME
+0340  /*********************************************************************
+0350  /*  validate entered data
+0360  /*********************************************************************
+0370  IF #PERSONNEL-ID = 'END' OR #NAME = 'END'
+0380    STOP
+0390  END-IF
+0400  IF #NAME = ' '
+0410    REINPUT WITH TEXT 'ENTER A LAST-NAME'
+0420            MARK 2 AND SOUND ALARM
+0430  END-IF
+0440  IF #FIRST-NAME = ' '
+0450    REINPUT WITH TEXT 'ENTER A FIRST-NAME'
+0460            MARK 3 AND SOUND ALARM
+0470  END-IF
+0480  /*********************************************************************
+0490  /*  ensure person is not already on file
+0500  /*********************************************************************
+0510  FIP2. FIND NUMBER EMPLOYEE-VIEW WITH PERSONNEL-ID =  #PERSONNEL-ID
+0520  /*
+0530  IF *NUMBER (FIP2.) > 0
+0540    REINPUT 'PERSON WITH SAME PERSONNEL-ID ALREADY EXISTS'
+0550             MARK 1 AND SOUND ALARM
+0560  END-IF
+0570  /*********************************************************************
+0580  /*  get further information
+0590  /*********************************************************************
+0600  INPUT
+0610    'ENTER EMPLOYEE DATA'                            ////
+0620    'PERSONNEL-ID             :' #PERSONNEL-ID (AD=IO) /
+0630    'NAME                     :' #NAME         (AD=IO) /
+0640    'FIRST-NAME               :' #FIRST-NAME   (AD=IO) ///
+0650    'INITIAL                  :' #INITIAL              /
+0660    'ANNUAL SALARY            :' #SALARY               /
+0670    'MARITAL STATUS           :' #MAR-STAT             /
+0680    'DATE OF BIRTH (YYYYMMDD) :' #BIRTH                /
+0690    'CITY                     :' #CITY                 /
+0700    'COUNTRY (3 CHARS)        :' #COUNTRY              //
+0710    'ADD THIS RECORD (Y/N)    :' #CONF         (AD=M)
+0720  /*********************************************************************
+0730  /*  ENSURE REQUIRED FIELDS CONTAIN VALID DATA
+0740  /*********************************************************************
+0750  IF #SALARY < 10000
+0760    REINPUT TEXT 'ENTER A PROPER ANNUAL SALARY' MARK 2
+0770  END-IF
+0780  IF NOT (#MAR-STAT = 'S'  OR = 'M' OR = 'D' OR = 'W')
+0790    REINPUT TEXT 'ENTER VALID MARITAL STATUS  S=SINGLE ' -
+0800                 'M=MARRIED D=DIVORCED W=WIDOWED' MARK 3
+0810  END-IF
+0820  IF NOT(#BIRTH = MASK(YYYYMMDD) AND #BIRTH = MASK(1582-2699))
+0830    REINPUT TEXT 'ENTER CORRECT DATE' MARK 4
+0840  END-IF
+0850  IF #CITY  = ' '
+0860    REINPUT TEXT 'ENTER A CITY NAME' MARK 5
+0870  END-IF
+0880  IF #COUNTRY = ' '
+0890    REINPUT TEXT 'ENTER A COUNTRY CODE' MARK 6
+0900  END-IF
+0910  IF NOT (#CONF = 'N' OR= 'Y')
+0920    REINPUT TEXT 'ENTER Y (YES) OR N (NO)' MARK 7
+0930  END-IF
+0940  IF #CONF = 'N'
+0950    ESCAPE TOP
+0960  END-IF
+0970  /*********************************************************************
+0980  /*  add the record with STORE
+0990  /*********************************************************************
+1000  MOVE #PERSONNEL-ID TO EMPLOYEE-VIEW.PERSONNEL-ID
+1010  MOVE #NAME         TO EMPLOYEE-VIEW.NAME
+1020  MOVE #FIRST-NAME   TO EMPLOYEE-VIEW.FIRST-NAME
+1030  MOVE #INITIAL      TO EMPLOYEE-VIEW.MIDDLE-I
+1040  MOVE #SALARY       TO EMPLOYEE-VIEW.SALARY (1)
+1050  MOVE #MAR-STAT     TO EMPLOYEE-VIEW.MAR-STAT
+1060  MOVE EDITED #BIRTH TO EMPLOYEE-VIEW.BIRTH (EM=YYYYMMDD)
+1070  MOVE #CITY         TO EMPLOYEE-VIEW.CITY
+1080  MOVE #COUNTRY      TO EMPLOYEE-VIEW.COUNTRY
+1090  /*
+1100  STP3. STORE RECORD IN FILE EMPLOYEE-VIEW
+1110  /*
+1120  /*********************************************************************
+1130  /*  mark end of logical transaction
+1140  /*********************************************************************
+1150  END OF TRANSACTION
+1160  RESET INITIAL #CONF
+1170END-REPEAT
+1180END

@@ -1,0 +1,147 @@
+0010/*  Read NATURAL Error Information
+0020/*  This program serves as example how to design a user-defined
+0030/*  program to call 'USR2006N'.
+0040/*  It will be called via ERROR-TA, when executing USR2006X.
+0050/***********************************************************************
+0060*
+0070*
+0080*
+0090DEFINE DATA LOCAL
+0100************************************************************************
+011001 CONTROL                            /*control block*/
+0120  02 INDEX                  (I4)       /*NUMBER OF MESSAGE TO READ*/
+0130  02 RESPONSE               (I4)       /*RESPONSE CODE*/
+0140*
+015001 ERROR                              /*error information*/
+0160  02 NUMBER                 (I4)       /*ERROR NUMBER*/
+0170 02 LINE                   (I4)       /*PROGRAM LINE WHERE ERROR OCCURED
+0180  02 PROGRAM                (A32)      /*PROGRAM WITH ERROR*/
+0190  02 LIBRARY                (A32)      /*LIBRARY OF PROGRAM WITH ERROR*/
+0200  02 DBID                   (I4)       /*DBID*/
+0210  02 FNR                    (I4)       /*AND FILE NUMBER*/
+0220  02 TIME                   (T)        /*TIME OF ERROR*/
+0230  02 OBJTYPE                (A11)      /*OBJECT TYPE*/
+0240  02 LANGUAGE               (I4)       /*LANGUAGE CODE*/
+0250  02 LEVEL                  (I4)       /*OBJECT LEVEL*/
+0260  02 FILLER                 (B1)
+0270  02 MC                     (B1)       /*MESSAGE CLASS:
+0280    /*00 - ERROR
+0290    /*01 - WARNING
+0300    /*02 - MESSAGE
+0310  02 EC                     (B1)       /*ERROR CLASS:
+0320    /*00 - SYSTEM
+0330    /*00 - USER
+0340  02 ET                     (B1)       /*ERROR TYPE*/
+0350    /*00 - RUNTIME
+0360    /*01 - SYNTAX
+0370    /*02 - COMMAND TIME
+0380    /*03 - TERMINATION
+0390    /*04 - PROGRAM TERMINATION
+0400    /*05 - REMOTE
+0410*
+042001 TEXT                    (A253)     /*message text
+0430************************************************************************
+0440*
+04501 #TYPE       (A20)
+04601 #CLASS      (A20)
+04701 #MSG-CLASS  (A20)
+04801 #DATE       (A20)
+04901 #TIME       (A20)
+0500*
+0510END-DEFINE
+0520*
+0530DEFINE WINDOW DETAIL
+0540  SIZE AUTO
+0550  BASE 05/18
+0560  TITLE  'MESSAGE INFORMATION'
+0570  CONTROL SCREEN
+0580  FRAMED OFF
+0590*
+0600*
+0610MOVE  1 TO INDEX
+0620*
+0630REPEAT
+0640********************************
+0650**  read message information  **
+0660********************************
+0670  CALLNAT 'USR2006N' CONTROL ERROR TEXT
+0680  IF RESPONSE NE 0
+0690    IF INDEX GT 1
+0700*
+0710      MOVE -1 TO INDEX
+0720      CALLNAT 'USR2006N' CONTROL ERROR TEXT
+0730*
+0740      ESCAPE BOTTOM
+0750    END-IF
+0760    RESET INDEX                               /*READ LAST MESSAGE*/
+0770    CALLNAT 'USR2006N' CONTROL ERROR TEXT
+0780  END-IF
+0790*
+0800**********************************
+0810**  DISPLAY MESSAGE INFORMATION **
+0820**********************************
+0830*
+0840  RESET #CLASS
+0850  DECIDE ON FIRST VALUE OF EC
+0860    VALUE 0    MOVE 'System'            TO #CLASS
+0870    VALUE 1    MOVE 'User'              TO #CLASS
+0880    NONE MOVE 'Unknown'           TO #CLASS
+0890  END-DECIDE
+0900*
+0910  RESET #MSG-CLASS
+0920  DECIDE ON FIRST VALUE OF MC
+0930    VALUE 0    MOVE 'Error'             TO #MSG-CLASS
+0940    VALUE 1    MOVE 'Warning'           TO #MSG-CLASS
+0950    VALUE 2    MOVE 'Message'           TO #MSG-CLASS
+0960    NONE MOVE 'Unknown'           TO #MSG-CLASS
+0970  END-DECIDE
+0980*
+0990  RESET #TYPE
+1000  DECIDE ON FIRST VALUE OF ET
+1010    VALUE 0    MOVE 'Runtime'             TO #TYPE
+1020    VALUE 1    MOVE 'Syntax'              TO #TYPE
+1030    VALUE 2    MOVE 'Command Execution'   TO #TYPE
+1040    VALUE 3    MOVE 'Termination'         TO #TYPE
+1050    VALUE 4    MOVE 'Program Termination' TO #TYPE
+1060    VALUE 5    MOVE 'Remote'              TO #TYPE
+1070    NONE MOVE 'Unknown'             TO #TYPE
+1080  END-DECIDE
+1090*
+1100  MOVE EDITED TIME   (EM=YYYY'-'MM'-'DD) TO #DATE
+1110  MOVE EDITED TIME   (EM=HH':'II':'SS)   TO #TIME
+1120*
+1130*
+1140  IF INDEX EQ 0
+1150    WRITE 'last message'
+1160  ELSE
+1170    WRITE INDEX '.message'
+1180  END-IF
+1190*
+1200  WRITE
+1210    'Date of message.......' '-' #DATE          (AD=O) /
+1220    'Time of message.......' '-' #TIME          (AD=O) /
+1230    '---------------------------------------'          /
+1240    'Message Number........' '-' NUMBER         (AD=O) /
+1250    'Message Type..........' '-' #TYPE          (AD=O) /
+1260    'Message Class.........' '-' #MSG-CLASS     (AD=O) /
+1270    'Error Class...........' '-' #CLASS         (AD=O) /
+1280    '---------------------------------------'          /
+1290    'Object Name...........' '-' PROGRAM        (AD=O) /
+1300    'Line..................' '-' LINE           (AD=O) /
+1310    'Object Type...........' '-' OBJTYPE        (AD=O) /
+1320    'Subroutine Level......' '-' LEVEL          (AD=O) /
+1330    'Library...............' '-' LIBRARY        (AD=O) /
+1340    'Database..............' '-' DBID           (AD=O) /
+1350    'File Number...........' '-' FNR            (AD=O) /
+1360    'Text..................'                    (AD=O) /
+1370    TEXT (AL=79)
+1380  NEWPAGE
+1390*
+1400  IF INDEX = 0
+1410    ESCAPE BOTTOM
+1420  ELSE         ADD 1 TO INDEX
+1430  END-IF
+1440*
+1450END-REPEAT
+1460*
+1470END

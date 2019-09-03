@@ -1,0 +1,491 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1035N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060 1 C-SCRMAX           (I01)   CONST <32>   /* Maximum number of lines
+0070LOCAL
+0080 1 CONTROL-BLOCK
+0090   2 ED-SESNUM        (B02)   /* Number of session (0-50)
+0100   2 ED-LOGFLAG       (A01)   /* Logical name in use
+0110   2 ED-LOGNAME       (A08)   /* Logical name of the session
+0120   2 ED-REQUEST       (A04)   /* Editor request
+0130   2 ED-LIBRARY       (A08)   /* Unused
+0140   2 ED-MEMBER        (A08)   /* Unused
+0150   2 ED-RECLEN        (B02)   /* Maximum length of each line
+0160   2 ED-PRFLEN        (B02)   /* Length of a prefix line on screen
+0170   2 ED-SCRLEN        (B02)   /* Length of a single line on screen
+0180   2 ED-SCRNUM        (B02)   /* Number of lines on screen
+0190   2 ED-SCRMAX        (B02)   /* Maximum number of lines on screen
+0200   2 ED-RENUM         (B01)   /* Unused
+0210   /*
+0220   2 ED-MCMND         (A50)   /* Main command: command line
+0230   2 ED-SCMND         (A08)   /* Secondary command: PF-key
+0240   2 ED-CAREA         (B02)   /* Cursor area
+0250   2 ED-CROW          (B02)   /* Cursor row
+0260   2 ED-CCLM          (B02)   /* Cursor column
+0270   /*
+0280   2 ED-RECTOP        (B02)   /* Unused
+0290   2 ED-NEW-RECTOP    (B04)   /* Line number of new first line on screen
+0300   2 ED-RECNUM        (B02)   /* Unused
+0310   2 ED-NEW-RECNUM    (B04)   /* Number of lines in the source area
+0320   2 ED-FILECHG       (B01)   /* Indicator if source area has been mod.
+0330   2 ED-SRAUSED       (B04)   /* Used source area in bytes
+0340   2 ED-SRAFREE       (B04)   /* Unused source area in bytes
+0350   2 ED-FLINE         (A80)   /* Message test. Explanation for
+0360                              /* ED-MSGNUM or ED-ERRNUM
+0370   2 ED-MSGNUM        (B02)   /* Message number
+0380   2 ED-ERRNUM        (B02)   /* Error number
+0390   2 ED-DUMMY         (A32)   /* Used for enhancements
+0400   2 REDEFINE ED-DUMMY
+0410     3 ED-DSTYPE      (A01)   /* Type of session
+0420     3 ED-RECMAX      (B02)   /* Target session for CSES request
+0430 /*
+0440 1 CB-ALIN                         /* Attributes of prefix area
+0450   2 CB-ALIN-V        (N01/1:C-SCRMAX)
+0460 1 L-PREFIXES                      /* Prefix area
+0470   2 L-PREFIX-MAX     (A06/1:C-SCRMAX)
+0480   2 REDEFINE L-PREFIX-MAX
+0490     3 L-PREFIX       (A06/1:C-SCRMAX) /* Length must be equal C-PRFLEN
+0500   /*3 L-PREFIX       (A04/1:C-SCRMAX) /* Use this for OPEN-WINDOW
+0510 /*
+0520 1 CB-ADAT                         /* Attributes of data lines
+0530   2 CB-ADAT-V        (N01/1:C-SCRMAX)
+0540 1 L-DATA-LINES                    /* Data lines
+0550   2 L-DATA-MAX       (A72/1:C-SCRMAX)
+0560   2 REDEFINE L-DATA-MAX
+0570     3 L-DATA         (A72/1:C-SCRMAX) /* Length must be equal C-SCRLEN
+0580   /*3 L-DATA         (A40/1:C-SCRMAX) /* Use this for OPEN-WINDOW
+0590/*
+0600LOCAL     /* Define some constants for the edit session:
+0610 1 C-LOGFLAG          (A01)   CONST <'N'>
+0620 1 C-LOGNAME          (A08)   CONST <'NATEDIT1'>
+0630 1 C-RECLEN           (B02)   CONST <88>
+0640 1 C-RENUM            (B01)   CONST <10>  /* Unused
+0650 1 C-SESNUM           (B02)
+0660 1 C-PRFLEN           (B02)
+0670 1 C-SCRLEN           (B02)
+0680 1 C-SCRNUM           (B02)
+0690LOCAL
+0700 1 L-COMMAND          (A50)
+0710 1 L-MESSAGE          (A79)
+0720 1 L-SCROLL           (A04)
+0730 1 AT-PREF            (C/1:C-SCRMAX)
+0740 1 AT-DATA            (C/1:C-SCRMAX)
+0750 1 CURSOR-AREA        (P01)
+0760 1 CURSOR-ROW         (P03)
+0770 1 CURSOR-COLUMN      (P03)
+0780 /*
+0790 1 PF-CMD             (A08/1:24) INIT <'Help ','       ','End  ','    ',
+0800                                       'Rfind','Rchange','Up   ','Down',
+0810                                       '     ','Left   ','Right','Quit'>
+0820 1 R-ATR              (C/1:6)
+0830                 INIT <(AD=I),(AD=IP),(AD=D),(AD=DP),(AD=N),(AD=NP)>
+0840LOCAL
+0850 1 PF-KEY             (A04)
+0860 1 REDEFINE PF-KEY
+0870   2 FILLER1          (A02)
+0880   2 PF-NUM           (A02)
+0890 1 PF-A               (A02)
+0900 1 REDEFINE PF-A
+0910   2 PF-NR            (N02)
+0920 1 IX                 (I02)
+0930 1 IY                 (I02)
+0940 1 ERROR-NUMBER       (N04)
+0950 1 DISP               (L)
+0960 1 NO-SCREEN          (L)
+0970 1 OPEN-WINDOW        (L)
+0980END-DEFINE
+0990/* ---------------------------------------------------------------------
+1000DEFINE SUBROUTINE RELATIVE-CURSOR
+1010/* Translate absolute cursor position to a cursor-area line and column
+1020MOVE *CURS-LINE TO CURSOR-ROW
+1030MOVE *CURS-COL TO CURSOR-COLUMN
+1040/*
+1050DECIDE ON FIRST VALUE OF CURSOR-ROW
+1060  VALUE 1     /* Message line
+1070    MOVE 1 TO ED-CAREA
+1080    MOVE CURSOR-COLUMN TO ED-CCLM
+1090    MOVE 1 TO ED-CROW
+1100  VALUE 2     /* Command line
+1110    MOVE 2 TO ED-CAREA
+1120    COMPUTE CURSOR-COLUMN = CURSOR-COLUMN - 6
+1130    MOVE CURSOR-COLUMN TO ED-CCLM
+1140    MOVE 1 TO ED-CROW
+1150  VALUE 3:23  /* Editing area
+1160    IF CURSOR-COLUMN = 1 THRU 7
+1170      MOVE 4 TO ED-CAREA
+1180      COMPUTE CURSOR-COLUMN = CURSOR-COLUMN  - 1
+1190    ELSE
+1200      MOVE 5 TO ED-CAREA
+1210      COMPUTE CURSOR-COLUMN = CURSOR-COLUMN - 7
+1220    END-IF
+1230    COMPUTE CURSOR-ROW = CURSOR-ROW - 2
+1240    MOVE CURSOR-ROW TO ED-CROW
+1250    MOVE CURSOR-COLUMN TO ED-CCLM
+1260  NONE
+1270    IGNORE
+1280END-DECIDE
+1290END-SUBROUTINE
+1300/* ---------------------------------------------------------------------
+1310DEFINE SUBROUTINE ABSOLUTE-CURSOR
+1320/* Translate cursor-area row and column to an absolute cursor position
+1330MOVE ED-CAREA TO CURSOR-AREA
+1340MOVE ED-CROW  TO CURSOR-ROW
+1350MOVE ED-CCLM  TO CURSOR-COLUMN
+1360/*INPUT (AD=O) CURSOR-AREA / CURSOR-ROW / CURSOR-COLUMN
+1370/*
+1380DECIDE ON FIRST VALUE OF CURSOR-AREA
+1390  VALUE 1    /* Message line
+1400    MOVE 1 TO *CURS-LINE
+1410    MOVE CURSOR-COLUMN TO *CURS-COL
+1420  VALUE 2    /* Command line
+1430    MOVE 2 TO *CURS-LINE
+1440    COMPUTE *CURS-COL = CURSOR-COLUMN + 13
+1450  VALUE 4    /* Prefix area
+1460    COMPUTE *CURS-LINE = CURSOR-ROW + 2
+1470    COMPUTE *CURS-COL  = CURSOR-COLUMN
+1480  VALUE 5    /* Command area
+1490    COMPUTE *CURS-LINE = CURSOR-ROW + 2
+1500    COMPUTE *CURS-COL  = CURSOR-COLUMN + 7
+1510  NONE
+1520    IGNORE
+1530END-DECIDE
+1540END-SUBROUTINE
+1550/* ---------------------------------------------------------------------
+1560DEFINE SUBROUTINE OPEN-SESSION
+1570  RESET OPEN-WINDOW        /* Open with full screen mode
+1580  /*OPEN-WINDOW := TRUE    /* Open a window
+1590  /*
+1600  IF OPEN-WINDOW
+1610    /*
+1620    /* Open a small editor window with a edit area size of 10 lines
+1630    /* with 40 characters. The prefix length is 4 characters.
+1640    /* You must change your local data area first:
+1650    /* L-PREFIX and L-DATA must be defined with these values
+1660    /*
+1670    ASSIGN C-PRFLEN = 4
+1680    ASSIGN C-SCRLEN = 40
+1690    ASSIGN C-SCRNUM = 10
+1700  ELSE
+1710    /*
+1720    /* Open a full screen editor with a edit area size of 19 lines
+1730    /* with 72 characters. The prefix length is 6 characters.
+1740    /*
+1750    ASSIGN C-PRFLEN = 6
+1760    ASSIGN C-SCRLEN = 72
+1770    ASSIGN C-SCRNUM = 19
+1780  END-IF
+1790  /*
+1800  ASSIGN ED-REQUEST = 'OPEN'       /* Open session
+1810  /* Define some session defaults:
+1820  ASSIGN ED-SESNUM  = 0            /* Open a free session
+1830  ASSIGN ED-LOGFLAG = C-LOGFLAG
+1840  ASSIGN ED-LOGNAME = C-LOGNAME
+1850  /* ASSIGN ED-DSTYPE  = 'D'       /* Use one of 50 data buffers
+1860  ASSIGN ED-DSTYPE  = 'N'          /* Use the NATURAL source area
+1870  ASSIGN ED-RECLEN  = C-RECLEN
+1880  ASSIGN ED-SCRMAX  = C-SCRMAX
+1890  ASSIGN ED-SCRNUM  = C-SCRNUM
+1900  ASSIGN ED-SCRLEN  = C-SCRLEN
+1910  ASSIGN ED-PRFLEN  = C-PRFLEN
+1920  ASSIGN ED-RENUM   = C-RENUM
+1930  RESET  ED-MCMND ED-SCMND ED-CAREA ED-CROW ED-CCLM
+1940  /*
+1950  CALLNAT 'USR1035N'
+1960           CONTROL-BLOCK CB-ALIN L-PREFIXES CB-ADAT L-DATA-LINES
+1970  /*
+1980  C-SESNUM := ED-SESNUM            /* Session number returned from OPEN
+1990END-SUBROUTINE
+2000/* ---------------------------------------------------------------------
+2010DEFINE SUBROUTINE CLOSE-SESSION
+2020  ASSIGN ED-REQUEST = 'CLSS'       /* Close session
+2030  ASSIGN ED-SESNUM  = C-SESNUM
+2040  /*
+2050  CALLNAT 'USR1035N'
+2060           CONTROL-BLOCK CB-ALIN L-PREFIXES CB-ADAT L-DATA-LINES
+2070END-SUBROUTINE
+2080/* ---------------------------------------------------------------------
+2090DEFINE SUBROUTINE GET-STATUS
+2100  ASSIGN ED-REQUEST = 'STAT'       /* Get session status
+2110  ASSIGN ED-SESNUM  = C-SESNUM
+2120  /*
+2130  CALLNAT 'USR1035N'
+2140           CONTROL-BLOCK CB-ALIN L-PREFIXES CB-ADAT L-DATA-LINES
+2150END-SUBROUTINE
+2160/* ---------------------------------------------------------------------
+2170DEFINE SUBROUTINE GET-SCREEN
+2180  ASSIGN ED-REQUEST = 'GETS'       /* Get screen
+2190  ASSIGN ED-SESNUM  = C-SESNUM
+2200  ASSIGN ED-SCRNUM  = C-SCRNUM
+2210  ASSIGN ED-SCRLEN  = C-SCRLEN
+2220  ASSIGN ED-PRFLEN  = C-PRFLEN
+2230  /*
+2240  CALLNAT 'USR1035N'
+2250           CONTROL-BLOCK CB-ALIN L-PREFIXES CB-ADAT L-DATA-LINES
+2260END-SUBROUTINE
+2270/* ---------------------------------------------------------------------
+2280DEFINE SUBROUTINE UPDATE-SCREEN
+2290  ASSIGN ED-REQUEST = 'UPDT'       /* Update screen
+2300  ASSIGN ED-SESNUM  = C-SESNUM
+2310  ASSIGN ED-SCRNUM  = C-SCRNUM
+2320  ASSIGN ED-SCRLEN  = C-SCRLEN
+2330  ASSIGN ED-PRFLEN  = C-PRFLEN
+2340  /* ED-MCMND and ED-SCMND have been already filled; or assign directly:
+2350  /* ASSIGN ED-MCMND   = 'SORT'   /* Sort the edit buffer
+2360  /*
+2370  CALLNAT 'USR1035N'
+2380           CONTROL-BLOCK CB-ALIN L-PREFIXES CB-ADAT L-DATA-LINES
+2390END-SUBROUTINE
+2400/* ---------------------------------------------------------------------
+2410DEFINE SUBROUTINE GET-LINES
+2420  ASSIGN ED-REQUEST = 'GETL'       /* Get lines
+2430  ASSIGN ED-SESNUM  = C-SESNUM
+2440  ASSIGN ED-SCRLEN  = C-SCRLEN
+2450  /* Example for getting lines:
+2460  ASSIGN ED-SCRNUM  = 10           /* Get 10 lines
+2470  ASSIGN ED-NEW-RECTOP  = 1        /* Starting with line 1
+2480  /*
+2490  CALLNAT 'USR1035N'
+2500           CONTROL-BLOCK CB-ALIN L-PREFIXES CB-ADAT L-DATA-LINES
+2510END-SUBROUTINE
+2520/* ---------------------------------------------------------------------
+2530DEFINE SUBROUTINE ADD-LINES
+2540  ASSIGN ED-REQUEST = 'ADDL'       /* Add lines
+2550  ASSIGN ED-SESNUM  = C-SESNUM
+2560  /* Example for adding lines to the buffer:
+2570  ASSIGN ED-SCRNUM  = 10           /* Add 10 lines
+2580  ASSIGN ED-NEW-RECTOP  = 8        /* Add after line 8
+2590  /*
+2600  ASSIGN L-DATA (01) = 'First new line'
+2610  ASSIGN L-DATA (03) = 'Third new line'
+2620  /*
+2630  CALLNAT 'USR1035N'
+2640           CONTROL-BLOCK CB-ALIN L-PREFIXES CB-ADAT L-DATA-LINES
+2650END-SUBROUTINE
+2660/* ---------------------------------------------------------------------
+2670DEFINE SUBROUTINE UPDATE-LINES
+2680  ASSIGN ED-REQUEST = 'UPDL'       /* Update lines
+2690  ASSIGN ED-SESNUM  = C-SESNUM
+2700  ASSIGN ED-SCRLEN  = C-SCRLEN
+2710  /* Example for updating lines:
+2720  ASSIGN ED-SCRNUM  = 1            /* Update 1 line
+2730  ASSIGN ED-NEW-RECTOP  = 1        /* Starting with line 1
+2740  ASSIGN L-DATA (1) = 'Update of first line'
+2750  /*
+2760  CALLNAT 'USR1035N'
+2770           CONTROL-BLOCK CB-ALIN L-PREFIXES CB-ADAT L-DATA-LINES
+2780END-SUBROUTINE
+2790/* ---------------------------------------------------------------------
+2800DEFINE SUBROUTINE DELETE-LINES
+2810  ASSIGN ED-REQUEST = 'DELL'       /* Delete lines
+2820  ASSIGN ED-SESNUM  = C-SESNUM
+2830  /* Example for deleting lines out of the buffer:
+2840  ASSIGN ED-SCRNUM  = 10           /* Delete 10 lines
+2850  ASSIGN ED-NEW-RECTOP  = 8        /* Delete after line 8
+2860  /*
+2870  CALLNAT 'USR1035N'
+2880           CONTROL-BLOCK CB-ALIN L-PREFIXES CB-ADAT L-DATA-LINES
+2890END-SUBROUTINE
+2900/* ---------------------------------------------------------------------
+2910DEFINE SUBROUTINE COPY-SESSION
+2920  ASSIGN ED-REQUEST = 'CSES'       /* Copy session
+2930  ASSIGN ED-SESNUM  = C-SESNUM
+2940  /* Copy actual session into session ED-RECMAX:
+2950  /* Session ED-RECMAX must be opened before
+2960  ASSIGN ED-RECMAX  = 50           /* Copy to session number 50
+2970  /*
+2980  CALLNAT 'USR1035N'
+2990           CONTROL-BLOCK CB-ALIN L-PREFIXES CB-ADAT L-DATA-LINES
+3000END-SUBROUTINE
+3010/* ---------------------------------------------------------------------
+3020DEFINE SUBROUTINE NO-SCREEN-OUTPUT
+3030IX := 1   /* Execute example 1
+3040/* IX := 2   /* Execute example 2
+3050/*
+3060DECIDE ON FIRST VALUE OF IX
+3070  VALUE 1                 /* Modification with 'Screen' requests
+3080    PERFORM ADD-LINES
+3090  /*PERFORM DELETE-LINES
+3100    PERFORM GET-SCREEN
+3110    ASSIGN ED-MCMND = 'change "line" "replaced string"'
+3120    PERFORM UPDATE-SCREEN
+3130    PERFORM CLOSE-SESSION
+3140  VALUE 2                 /* Modification with 'Line' requests
+3150  /*PERFORM ADD-LINES
+3160    PERFORM GET-LINES
+3170  /*WRITE 'Get the first ten data lines:' (I) / L-DATA (1:10)
+3180    PERFORM UPDATE-LINES
+3190    PERFORM GET-LINES
+3200  /*WRITE // 'The first line has been modified:' (I) / L-DATA (1:10)
+3210    PERFORM CLOSE-SESSION
+3220  NONE
+3230    IGNORE
+3240END-DECIDE
+3250END-SUBROUTINE
+3260/* ---------------------------------------------------------------------
+3270/* Main program:
+3280/* ---------------------------------------------------------------------
+3290SET KEY ALL
+3300SET KEY PF1  = HELP NAMED PF-CMD (01)
+3310        PF2  = PGM  NAMED ' '
+3320        PF3  = PGM  NAMED 'Exit'
+3330        PF4  = PGM  NAMED ' '
+3340        PF5  = PGM  NAMED PF-CMD (05)
+3350        PF6  = PGM  NAMED PF-CMD (06)
+3360        PF7  = PGM  NAMED '-'
+3370        PF8  = PGM  NAMED '+'
+3380        PF9  = PGM  NAMED ' '
+3390        PF10 = PGM  NAMED '<'
+3400        PF11 = PGM  NAMED '>'
+3410        PF12 = PGM  NAMED 'Canc'
+3420/*
+3430FORMAT KD=ON
+3440SET CONTROL 'M99'      /* Suppress message line
+3450SET CONTROL 'YB'       /* Display PF-keys at bottom
+3460/*
+3470PERFORM OPEN-SESSION
+3480/*
+3490IF ED-ERRNUM NE 0
+3500  ERROR-NUMBER := ED-ERRNUM   /* Error number in decimal form
+3510  WRITE 'Error occurred during OPEN processing:' (I)
+3520         / '=' ERROR-NUMBER / '=' ED-FLINE (AL=65)
+3530  SET CONTROL 'MB'      /* Show message line again
+3540  ESCAPE ROUTINE
+3550END-IF
+3560/*
+3570PERFORM GET-STATUS
+3580/*
+3590IF ED-ERRNUM NE 0
+3600  ERROR-NUMBER := ED-ERRNUM   /* Error number in decimal form
+3610  WRITE 'Error occurred during STAT processing:' (I)
+3620         / '=' ERROR-NUMBER / '=' ED-FLINE (AL=65)
+3630  SET CONTROL 'MB'      /* Show message line again
+3640  ESCAPE ROUTINE
+3650END-IF
+3660/*
+3670/* You can execute the editor requests without output on the screen:
+3680/* ASSIGN NO-SCREEN = TRUE
+3690IF NO-SCREEN
+3700  PERFORM NO-SCREEN-OUTPUT
+3710  SET CONTROL 'MB'      /* Show message line again
+3720  ESCAPE ROUTINE
+3730END-IF
+3740/*
+3750REP.
+3760REPEAT
+3770  PERFORM GET-SCREEN
+3780  /*
+3790  IF ED-ERRNUM NE 0
+3800     ESCAPE BOTTOM (REP.)
+3810  END-IF
+3820  /*
+3830  ASSIGN L-COMMAND = ED-MCMND
+3840  ASSIGN L-MESSAGE = ED-FLINE
+3850  /*
+3860  FOR IX = 1 TO 20            /* Assign attributes
+3870    MOVE CB-ALIN-V(IX) TO IY
+3880    IF NOT (IY = 1 THRU 6)
+3890      ASSIGN IY = 1
+3900    END-IF
+3910    MOVE R-ATR(IY) TO AT-PREF(IX)
+3920    /*
+3930    MOVE CB-ADAT-V(IX) TO IY
+3940    IF NOT (IY = 1 THRU 6)
+3950      ASSIGN IY = 1
+3960    END-IF
+3970    MOVE R-ATR(IY) TO AT-DATA(IX)
+3980  END-FOR
+3990  /*
+4000  PERFORM ABSOLUTE-CURSOR   /* Set the cursor on the screen
+4010  /*
+4020  INPUT (AD=W IP=OFF DY='01BL'01)
+4030    01T L-MESSAGE (AD=OI)
+4040    /
+4050    01T 'Command ===>' (I)
+4060    14T L-COMMAND (AD=MI)
+4070  /*
+4080  / 01T L-PREFIX(01) (AD=MI CV=AT-PREF(01))
+4090    08T L-DATA  (01) (AD=MI CV=AT-DATA(01))
+4100  / 01T L-PREFIX(02) (AD=MI CV=AT-PREF(02))
+4110    08T L-DATA  (02) (AD=MI CV=AT-DATA(02))
+4120  / 01T L-PREFIX(03) (AD=MI CV=AT-PREF(03))
+4130    08T L-DATA  (03) (AD=MI CV=AT-DATA(03))
+4140  / 01T L-PREFIX(04) (AD=MI CV=AT-PREF(04))
+4150    08T L-DATA  (04) (AD=MI CV=AT-DATA(04))
+4160  / 01T L-PREFIX(05) (AD=MI CV=AT-PREF(05))
+4170    08T L-DATA  (05) (AD=MI CV=AT-DATA(05))
+4180  / 01T L-PREFIX(06) (AD=MI CV=AT-PREF(06))
+4190    08T L-DATA  (06) (AD=MI CV=AT-DATA(06))
+4200  / 01T L-PREFIX(07) (AD=MI CV=AT-PREF(07))
+4210    08T L-DATA  (07) (AD=MI CV=AT-DATA(07))
+4220  / 01T L-PREFIX(08) (AD=MI CV=AT-PREF(08))
+4230    08T L-DATA  (08) (AD=MI CV=AT-DATA(08))
+4240  / 01T L-PREFIX(09) (AD=MI CV=AT-PREF(09))
+4250    08T L-DATA  (09) (AD=MI CV=AT-DATA(09))
+4260  / 01T L-PREFIX(10) (AD=MI CV=AT-PREF(10))
+4270    08T L-DATA  (10) (AD=MI CV=AT-DATA(10))
+4280  / 01T L-PREFIX(11) (AD=MI CV=AT-PREF(11))
+4290    08T L-DATA  (11) (AD=MI CV=AT-DATA(11))
+4300  / 01T L-PREFIX(12) (AD=MI CV=AT-PREF(12))
+4310    08T L-DATA  (12) (AD=MI CV=AT-DATA(12))
+4320  / 01T L-PREFIX(13) (AD=MI CV=AT-PREF(13))
+4330    08T L-DATA  (13) (AD=MI CV=AT-DATA(13))
+4340  / 01T L-PREFIX(14) (AD=MI CV=AT-PREF(14))
+4350    08T L-DATA  (14) (AD=MI CV=AT-DATA(14))
+4360  / 01T L-PREFIX(15) (AD=MI CV=AT-PREF(15))
+4370    08T L-DATA  (15) (AD=MI CV=AT-DATA(15))
+4380  / 01T L-PREFIX(16) (AD=MI CV=AT-PREF(16))
+4390    08T L-DATA  (16) (AD=MI CV=AT-DATA(16))
+4400  / 01T L-PREFIX(17) (AD=MI CV=AT-PREF(17))
+4410    08T L-DATA  (17) (AD=MI CV=AT-DATA(17))
+4420  / 01T L-PREFIX(18) (AD=MI CV=AT-PREF(18))
+4430    08T L-DATA  (18) (AD=MI CV=AT-DATA(18))
+4440  / 01T L-PREFIX(19) (AD=MI CV=AT-PREF(19))
+4450    08T L-DATA  (19) (AD=MI CV=AT-DATA(19))
+4460  / 01T L-PREFIX(20) (AD=MI CV=AT-PREF(20))
+4470    08T L-DATA  (20) (AD=MI CV=AT-DATA(20))
+4480  /*
+4490  ASSIGN PF-KEY = *PF-KEY    /* Check if a PF-key has been pressed
+4500  IF PF-KEY = 'ENTR'
+4510    RESET ED-SCMND
+4520  ELSE
+4530    MOVE RIGHT PF-NUM TO PF-A        /* Separate PF-key number
+4540    ASSIGN ED-SCMND = PF-CMD (PF-NR)
+4550  END-IF
+4560  /*
+4570  ASSIGN ED-MCMND = L-COMMAND
+4580  /*
+4590  PERFORM RELATIVE-CURSOR   /* Get the cursor position
+4600  /*
+4610  PERFORM UPDATE-SCREEN
+4620  /*
+4630  IF ED-ERRNUM NE 0
+4640    ESCAPE BOTTOM (REP.)
+4650  END-IF
+4660  /*
+4670  /* ASSIGN DISP = TRUE       /* If you like to see the output parms ...
+4680  IF DISP = TRUE
+4690    WRITE 'Output parameter:' (I) /
+4700      / '=' ED-NEW-RECNUM
+4710      / '=' ED-NEW-RECTOP
+4720      / '=' ED-SRAFREE
+4730      / '=' ED-FILECHG
+4740      / '=' ED-MSGNUM
+4750      / '=' ED-SRAUSED
+4760      / '=' ED-CAREA
+4770      / '=' ED-CROW
+4780      / '=' ED-CCLM
+4790  END-IF
+4800END-REPEAT  /* (REP.)
+4810/*
+4820IF ED-ERRNUM NE 0
+4830  ERROR-NUMBER := ED-ERRNUM   /* Error number in decimal form
+4840  WRITE 'Error number returned:' (I)
+4850        // '=' ERROR-NUMBER / '=' ED-FLINE (AL=65)
+4860END-IF
+4870/*
+4880PERFORM CLOSE-SESSION
+4890SET CONTROL 'MB'      /* Show message line again
+4900/*
+4910END

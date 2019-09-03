@@ -1,0 +1,81 @@
+0010DB: 000 FILE: 011  - EMPLOYEES                        DEFAULT SEQUENCE:
+0020
+0030T L DB Name                              F Leng  S D Remark
+0040- - -- --------------------------------  - ----  - - ------------------------
+0050  1 AA PERSONNEL-ID                      A    8    D
+0060       HD=PERSONNEL/ID
+0070*      CNNNNNNN
+0080*      C=COUNTRY
+0090G 1 AB FULL-NAME
+0100  2 AC FIRST-NAME                        A   20  N
+0110  2 AD MIDDLE-I                          A    1  N
+0120  2 AE NAME                              A   20    D
+0130  1 AD MIDDLE-NAME                       A   20  N
+0140  1 AF MAR-STAT                          A    1  F
+0150       HD=MARITAL/STATUS
+0160*      M=MARRIED
+0170*      S=SINGLE
+0180*      D=DIVORCED
+0190*      W=WIDOWED
+0200  1 AG SEX                               A    1  F
+0210       HD=S/E/X
+0220  1 AH BIRTH                             D    6    D
+0230       HD=DATE/OF/BIRTH
+0240       EM=YYYY-MM-DD
+0250  1 AH N@BIRTH                           I    2    D
+0260G 1 A1 FULL-ADDRESS
+0270M 2 AI ADDRESS-LINE                      A   20  N
+0280       HD=ADDRESS
+0290  2 AJ CITY                              A   20  N D
+0300  2 AK ZIP                               A   10  N
+0310       HD=POSTAL/ADDRESS
+0320  2 AK POST-CODE                         A   10  N
+0330       HD=POSTAL/ADDRESS
+0340  2 AL COUNTRY                           A    3  N
+0350G 1 A2 TELEPHONE
+0360  2 AN AREA-CODE                         A    6  N
+0370       HD=AREA/CODE
+0380  2 AM PHONE                             A   15  N
+0390       HD=TELEPHONE
+0400  1 AO DEPT                              A    6    D
+0410       HD=DEPARTMENT/CODE
+0420  1 AP JOB-TITLE                         A   25  N D
+0430       HD=CURRENT/POSITION
+0440P 1 AQ INCOME
+0450*      ANNUAL INCOMES
+0460*      DURING YEARS WITH THE INTER-
+0470*      NATIONAL ENTERPRISE
+0480  2 AR CURR-CODE                         A    3  N
+0490       HD=CURRENCY/CODE
+0500  2 AS SALARY                            P  9.0  N
+0510       HD=ANNUAL/SALARY
+0520M 2 AT BONUS                             P  9.0  N
+0530*      BONUS PER YEAR
+0540*      IN CURRRENCY UNIT
+0550G 1 A3 LEAVE-DATA
+0560*      LEAVE/VACATION INFO
+0570*      FOR EMPLOYEE WITHIN 1 YEAR
+0580  2 AU LEAVE-DUE                         N  2.0
+0590       HD=LEAVE/DUE
+0600*      VACATION DAYS/YEAR
+0610*      EMPLOYEE IS ENTITLED TO
+0620  2 AV LEAVE-TAKEN                       N  2.0  N
+0630*      VACATION DAYS TAKEN
+0640*      IN THIS YEAR
+0650P 1 AW LEAVE-BOOKED
+0660  2 AX LEAVE-START                       N  8.0  N
+0670       HD=LEAVE/START
+0680       EM=9999/99/99
+0690  2 AY LEAVE-END                         N  8.0  N
+0700       HD=LEAVE/END
+0710       EM=9999/99/99
+0720M 1 AZ LANG                              A    3  N D
+0730       HD=LANG/SPOKEN
+0740  1 PH PHONETIC-NAME                     A   20    P
+0750  1 H1 LEAVE-LEFT                        B    4  N S
+0760       HD=LEAVE/REMAINING
+0770  1 S1 DEPARTMENT                        A    4    S
+0780       HD=SECTION
+0790  1 S2 DEPT-PERSON                       A   26    S
+0800P 1 S3 CURRENCY-SALARY                   A   12  N S
+0810******DDM OUTPUT TERMINATED******

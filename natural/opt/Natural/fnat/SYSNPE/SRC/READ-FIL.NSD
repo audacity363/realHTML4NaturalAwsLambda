@@ -1,0 +1,209 @@
+0010DB: 148 FILE: 002  - READ-FILE                        DEFAULT SEQUENCE:
+0020                              Cataloged by STL      on 2013-08-28 10:26:48
+0030TYPE: PROCESS
+0040T L DB Name                              F Leng  S D Remark
+0050- - -- --------------------------------  - ----  - - ------------------------
+0060*      Generation started
+0070*      at 2013-08-28 10:10:02
+0080*      by user ESY353
+0090*
+0100*
+0110*      Global fields
+0120*
+0130  1 EC ERROR-CODE                        N  3.0      Message code.
+0140*      Message code.
+0150  1 ET ERROR-TEXT                        A   58      Text describing mess
+0160*      Text describing message.
+0170  1 DB NODE                              N  5.0    D Node ID (DBID).
+0180*      Node ID (DBID).
+0190  1 ND NODE-NAME                         A   16    D
+0200  1 SM SYSTEM-MESSAGE-CODE               A   10
+0210*
+0220*      Fields common to all Op-systems
+0230*
+0240  1 A1 DSNAME                            A   54    D Fully qualified data
+0250*      Fully qualified data set name.
+0260  1 A4 RECORD                            A  253    D The retrieved record
+0270*      The retrieved record. The
+0280*      length of this field as it
+0290*      appears in the format buffer
+0300*      determines the portion of the
+0310*      record retrieved each time a
+0320*      record is requested.
+0330*      Field SEGMENT-NUMBER will
+0340*      contain segment number within
+0350*      the record. For example:
+0360*      Record is 240 bytes long, and
+0370*      calling program requests
+0380*      80 bytes.
+0390*      (In NATURAL:
+0400*      OBTAIN RECORD (A80))
+0410*      Calling program will receive
+0420*      three segments.
+0430  1 A5 RECORD-LENGTH                     N  5.0      Length of entire rec
+0440*      Length of entire record
+0450*      (not the segment length).
+0460  1 A6 SEGMENT-NUMBER                    N  5.0    D Segment number withi
+0470*      Segment number within record.
+0480  1 A7 RECORD-NUMBER                     N  9.0    D Record position with
+0490*      Record position within data
+0500*      set.
+0510*      BS2000: In case of PAM file
+0520*      PAM block number must
+0530*      be specified here.
+0540  1 A8 END-OF-FILE                       A    3      Contains YES if end-
+0550*      Contains YES if end-of-file
+0560*      reached.
+0570*      RECORD-NUMBER contains number
+0580*      of records in data set.
+0590  1 A9 POSITION                          N  5.0    D Starting position wi
+0600*      Starting position within
+0610*      record.
+0620*      RECORD will contain input
+0630*      record starting at this
+0640*      position.
+0650  1 AA PASSWORD                          A    8    D Password for protect
+0660*      Password for protected data
+0670*      set.
+0680  1 AB SEGMENT-LENGTH                    N  3.0    D Length of segment.
+0690*      Length of segment.
+0700  1 AD DIRECT                            A    3    D YES if RECFM=F and
+0710*      YES if RECFM=F and
+0720*      DSORG=PS/DA, block is
+0730*      read directly according to
+0740*      RECORD-NUMBER /
+0750*      BLOCK-NUMBER.
+0760*      In BS2000 the record will
+0770*      be accessed directly, if
+0780*      RECFM=F. Note, that this
+0790*      method is not recommended
+0800*      for files with rest
+0810*      blocks.
+0820*      NO  default
+0830  1 AF BLOCK-LENGTH                      N  5.0      Length of the block.
+0840*      Length of the block.
+0850*
+0860  1 AS SCAN                              A    3    D If YES is supplied,
+0870*      If YES is supplied, the first
+0880*      record which meets the
+0890*      selection criteria and all
+0900*      following records are
+0910*      returned.
+0920  1 AT SCAN-LIMIT                        N  7.0    D Specifies the maximu
+0930*      Specifies the maximum number
+0940*      of records to scan before a
+0950*      record is selected.
+0960*      If the limit is reached,
+0970*      error-code 533 and the
+0980*      appropriate text is returned.
+0990  1 AU SCAN-TYPE                         A    1    D If 'A' is given, an
+1000*      If 'A' is given, an absolute
+1010*      scan will be performed.
+1020*      Wild cards '*' and '_' are
+1030*      treated as normal characters.
+1040  1 AV SCAN-LENGTH                       N  3.0    D Specifies the length
+1050*      Specifies the length of the
+1060*      scan string in field 'RECORD'.
+1070*      Only relevant if SCAN-TYPE=A.
+1080  1 AW SCAN-COLUMN-FROM                  N  5.0    D Specifies the column
+1090*      Specifies the column number
+1100*      where the scan should start.
+1110*      Default is 1.
+1120*      Only relevant if SCAN-TYPE=A.
+1130  1 AX SCAN-COLUMN-TO                    N  5.0    D Specifies the column
+1140*      Specifies the column number
+1150*      where the scan should end.
+1160*      Default is the end of the
+1170*      record.
+1180*      Only relevant if SCAN-TYPE=A.
+1190  1 AY TIME-LIMIT                        N  5.0    D Specifies the maximu
+1200*      Specifies the maximum number
+1210*      of seconds to scan for a given
+1220*      record.
+1230*
+1240*      Fields common to MVS and VSE
+1250*
+1260  1 A2 VOLSER                            A    6    D Volume serial number
+1270*      Volume serial number.
+1280*      Not relevant for BS2000.
+1290  1 AE BLOCK-NUMBER                      N  9.0    D Block number.
+1300*      Block number.
+1310  1 A3 MEMBER                            A   10    D Member name
+1320*      Member name
+1330*      (only if data set is PDS).
+1340*
+1350*      Fields common to MVS and BS2000
+1360*
+1370  1 AL PRODUCT                           A    1    D 'P' if access method
+1380*      'P' if access method is
+1390*      PANVALET.
+1400*      'M' if BS2000 'LMS'.
+1410*      'L' if LIBRARIAN.
+1420  1 B1 KEY                               A  253    D ISAM key
+1430*      ISAM key
+1440  1 V0 DIRECTION                         A    1    D VSAM
+1450*      VSAM
+1460*      ISAM
+1470*
+1480*      MVS fields
+1490*
+1500  1 AG BLOCK-TTR                         B    3    D TTR of block which w
+1510*      TTR of block which was read.
+1520  1 AG BLOCK-TOKEN                       B    4    D Token of block which
+1530*      Token of block which was read.
+1540  1 AC PRODUCT-OPTIONS                   A   80    D Specification of 'X'
+1550*      Specification of 'X' will
+1560*      cause expansion of ++INCLUDE
+1570*      (PANVALET).
+1580  1 AZ SPANNED                           A    8    D Spanned records (REC
+1590*      Spanned records (RECFM=VBS/VS)
+1600*      NO     - Record not spanned
+1610*      FIRST  - Record returned is
+1620*      first part.
+1630*      MIDDLE - Record returned is
+1640*      middle part (not
+1650*      FIRST and not LAST)
+1660*      LAST   - Record returned is
+1670*      last part.
+1680*
+1690*      VSE fields
+1700*
+1710  1 AH LIBRARY                           A    8    D Name of library.
+1720*      Name of library.
+1730  1 AI SUB-LIBRARY                       A    8    D Name of sublibrary.
+1740*      Name of sublibrary.
+1750  1 AJ MEMBER-TYPE                       A    8    D Member type.
+1760*      Member type.
+1770  1 AK VSAM-CATALOG                      A    8    D Name of VSAM catalog
+1780*      Name of VSAM catalog where
+1790*      the library is kept.
+1800  1 AM LRECL                             B    2    D Logical record lengt
+1810*      Logical record length
+1820*      (needed if RECFM=F;
+1830*      default is 80).
+1840  1 AN BLKSIZE                           B    2    D Block size for data
+1850*      Block size for data set.
+1860  1 AO RECFM                             A    2    D Record format of the
+1870*      Record format of the data set
+1880*      (default is 'F').
+1890  1 AP MEMBER-VIF                        A    3
+1900*
+1910*      BS2000 fields
+1920*
+1930  1 A3 ELEMENT                           A   64    D Name of LMS element
+1940*      Name of LMS element to be read
+1950  1 AJ ELEMENT-TYPE                      A    8    D Type of LMS element.
+1960*      Type of LMS element.
+1970  1 B2 ELEMENT-VERSION                   A   24    D Version of LMS eleme
+1980*      Version of LMS element.
+1990  1 B3 ELEMENT-PASSWORD                  A    8    D Password for protect
+2000*      Password for protected LMS
+2010*      element. (LMS V2 or above)
+2020  1 BZ ELEMENT-RECORD-TYPE               N  3.0    D Record type (LMS onl
+2030*      Record type (LMS only).
+2040  1 ES SYSTEM-CODE                       B    2      System error code.
+2050*      System error code.
+2060*
+2070*      End of READ-FILE
+2080*
+2090******DDM OUTPUT TERMINATED******

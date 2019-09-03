@@ -1,0 +1,32 @@
+0010/* USR0622P - reset error counter to avoid NAT9969 error
+0020/*
+0030/*   This program serves as example how to design a user-defined
+0040/*   program to call 'USR0622N'
+0050/******************************************************************
+0060/*
+0070DEFINE DATA LOCAL
+0080  01 N01          (N01)
+0090  01 LOOP-CONTROL (A01)  CONST <'Y'>
+0100  01 CURR-PGM     (A08)  INIT  <*PROGRAM>
+0110END-DEFINE
+0120/*
+0130ADD 10 TO N01               /*  Force a runtime error
+0140/*
+0150ON ERROR
+0160  IF LOOP-CONTROL = 'Y'     /*  ---> NAT9969  and  TERMINATE session
+0170    /* SET CONTROL 'N'         /*  Try an endless loop ..........
+0180    /* WRITE NOTITLE
+0190    /* // 'NAT9969 will follow soon ...'
+0200   /* /  'This session will terminate automatically.'
+0210    FETCH CURR-PGM          /*  Error recursively
+0220  ELSE
+0230    /* SET CONTROL 'N'         /*  Really endlessly .............
+0240    /* WRITE NOTITLE
+0250    /* // '+++ WARNING +++' (I)
+0260    /* /  'This session can only be cancelled by computer operator.'
+0270    CALLNAT 'USR0622N'      /*  reset error counter
+0280    FETCH CURR-PGM          /*  Recursion endlessly ....
+0290  END-IF
+0300END-ERROR
+0310/*
+0320END

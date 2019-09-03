@@ -1,0 +1,29 @@
+0010** Example 'NWPEX1': NEWPAGE
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 EMPLOY-VIEW VIEW OF EMPLOYEES
+0050  2 CITY
+0060  2 NAME
+0070  2 SALARY    (1)
+0080  2 CURR-CODE (1)
+0090END-DEFINE
+0100*
+0110LIMIT 15
+0120READ EMPLOY-VIEW BY CITY FROM 'DENVER'
+0130  DISPLAY CITY (IS=ON) NAME SALARY (1) CURR-CODE (1)
+0140  AT BREAK OF CITY
+0150    SKIP 1
+0160    /*
+0170    NEWPAGE WHEN LESS THAN 10 LINES LEFT
+0180    WRITE '****************************************'
+0190      /   'SUMMARY FOR ' OLD(CITY)
+0200      /   '****************************************'
+0210      /   '****************************************'
+0220      /   'SUM OF SALARIES:' SUM(SALARY(1))
+0230      /   'AVG OF SALARIES:' AVER(SALARY(1))
+0240      /   '****************************************'
+0250    NEWPAGE
+0260    /*
+0270  END-BREAK
+0280END-READ
+0290END

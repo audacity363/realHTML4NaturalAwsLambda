@@ -1,0 +1,51 @@
+0010*
+0020* Program .. V3-MOVE
+0030* Library .. SYSEXV
+0040* Version .. 3.1
+0050*
+0060* Functionality: Show improved processing of the MOVE statement
+0070************************************************************************
+0080*
+0090DEFINE DATA
+0100LOCAL
+01101 #TARGET1 (A03)
+0120END-DEFINE
+0130*
+0140FORMAT KD=ON
+0150SET KEY PF3  NAMED 'Exit'
+0160  PF12 NAMED 'Canc'
+0170*
+0180*
+0190MOVE RIGHT JUSTIFIED 'ABCDE' TO #TARGET1
+0200*
+0210*
+0220*
+0230INPUT (IP=OFF )
+0240  01T *TIMX  (AD=OTD)
+0250  21T '***** NATURAL 3.1 ENHANCEMENTS *****'
+0260  70T *DATX  (AD=OTD )
+0270  /
+0280  01T 'User'
+0290  06T *USER  (AD=OILT )
+0300  26T '- Statement Enhancements -'(I)
+0310  64T 'Program'
+0320  72T *PROGRAM (AD=OI)
+0330  ///
+0340  02T 'Improved processing of the MOVE statement'(I)
+0350  ////
+0360  02T 'MOVE RIGHT JUSTIFIED ''ABCDE'' TO #TARGET1 (A3)'
+0370  ////
+0380  02T 'Result with Version 3.1:'
+0390  #TARGET1 (AD=OI)
+0400  //
+0410  02T 'Result with Version 2.2:'  'ABC' (AD=OI)
+0420  //////
+0430*
+0440*
+0450IF *PF-KEY = 'PF3'
+0460  ESCAPE ROUTINE
+0470END-IF
+0480IF (*PF-KEY = 'PF12' OR= 'CLR')
+0490  CALLNAT 'UTILSTOP'
+0500END-IF
+0510END

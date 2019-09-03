@@ -1,0 +1,42 @@
+0010* Program   MZAP
+0020* View      AMASPZAP
+0030*
+0040* Function  Execute AMASPZAP Utility
+0050*
+0060* ----------------------------------------------------------------------
+0070*
+0080DEFINE DATA
+0090   GLOBAL USING TUTO
+0100   LOCAL  USING LIBZAP-L
+0110   LOCAL  1 #DSNAME   (A44)
+0120          1 #PASSWORD (A8)
+0130          1 #VOLSER   (A6)
+0140          1 #CMD   (A40/1:6)
+0150END-DEFINE
+0160*
+0170REPEAT
+0180*
+0190   INPUT (AD=MI'_' IP=OFF)
+0200         ##TITLE (AD=OI IP=OFF)
+0210      // '  Dataset...:' #DSNAME
+0220       / '  Password..:' #PASSWORD
+0230       / '  Volume....:' #VOLSER
+0240      // '  Command...:' #CMD(1) / 14X #CMD(2) / 14X #CMD(3)
+0250                   / 14X #CMD(4) / 14X #CMD(5) / 14X #CMD(6)
+0260*
+0270   COMPRESS #CMD(1) ';' #CMD(2) ';' #CMD(3) ';'
+0280            #CMD(4) ';'  #CMD(5) ';' #CMD(6) TO LIB-ZAP.COMMAND
+0290*
+0300   FIND LIB-ZAP WITH NODE    = ##NODE
+0310                 AND COMMAND = LIB-ZAP.COMMAND
+0320                 AND DSNAME  = #DSNAME
+0330                 AND PASSWORD= #PASSWORD
+0340                 AND VOLSER  = #VOLSER
+0350      IF ERROR-CODE > 0
+0360         REINPUT ERROR-TEXT
+0370      END-IF
+0380      PRINT NOTITLE LINE
+0390   END-FIND
+0400*
+0410END-REPEAT
+0420END

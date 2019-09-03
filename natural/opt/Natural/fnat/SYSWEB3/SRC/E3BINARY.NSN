@@ -1,0 +1,40 @@
+0010***********************************************************************
+0020* Class ........ Natural Web Interface - Example Programs
+0030* Subprogram ... E3BINARY
+0040* Author ....... SAG
+0050* Date ......... 2004-12-07
+0060* Description .. Writes a binary to the document.
+0070***********************************************************************
+0080* Copyright (c) 2016 Software AG, Germany.  All rights reserved.
+0090*********************** Updates in Version 8.3 ************************
+0100* Date       User  iTrac      Reason
+0110* ---------- ----- ---------- -----------------------------------------
+0120* 2016-05-04 SAG   NATOS-7212 Use correct resource name
+0130***********************************************************************
+0140* ------ PARAMETER -----------------------------------------------
+0150DEFINE DATA
+0160PARAMETER USING W3PARM
+0170LOCAL USING W3CONST
+0180LOCAL
+01901 W3JPEG       (A) DYNAMIC
+0200END-DEFINE
+0210* --- ERROR HANDLING ---
+0220ON ERROR
+0230  PERFORM W3ERROR ##W3ERROR
+0240  PERFORM W3END ##RPC
+0250  ESCAPE ROUTINE
+0260END-ERROR
+0270*
+0280* --- INITIALIZE Web Interface ---
+0290PERFORM W3INIT ##RPC
+0300*
+0310* --- SET TYPE OF RETURN-PAGE ---
+0320PERFORM W3CONTENT-TYPE 'image/jpeg' /* extension   jpeg jpg jpe'
+0330* --- WRITE THE HEAD OF THE DOCUMENT ---
+0340PERFORM W3READ-RESOURCE 1X 'com_nat.gif' W3JPEG
+0350PERFORM W3BINARY W3JPEG
+0360*
+0370* --- END Web Interface ---
+0380PERFORM W3END ##RPC
+0390*
+0400END

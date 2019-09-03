@@ -1,0 +1,39 @@
+0010/* This program serves as example how to design a user-defined
+0020/* program to call 'USR2013N'
+0030/* Note: On mainframe the DBNAME parameter has the format (A07). On
+0040/*       open systems the DBNAME parameter has the format (A11).
+0050/*       Use USR3013N instead of USR2013N, because the DBNAME
+0060/*       parameter used by USR3013N has the format (A20) and is
+0070/*       unique on both platforms.
+0080/***********************************************************************
+0090DEFINE DATA
+0100LOCAL
+0110 1 USR2013L
+0120   2 OUTPUTS
+0130     3 FILENAME       (A12/1:50)
+0140     3 DBID           (P05/1:50)
+0150     3 FNR            (P05/1:50)
+0160     3 DBNAME         (A11/1:50)
+0170     3 AMOUNT         (P04)
+0180 1 IX                 (I01)
+0190END-DEFINE
+0200/**********************
+0210CALLNAT 'USR2013N'  USR2013L
+0220/*
+0230IF AMOUNT = 0
+0240  WRITE '*** INFORMATION NOT AVAILABLE ***' (I)
+0250ELSE
+0260  WRITE NOTITLE /
+0270    '+-----------------------------------------+' (I) /
+0280    '+  NATURAL System File Assignments        +' (I) /
+0290    '+                                         +' (I) /
+0300    '+ File Name      DBID    FNR  Type        +' (I)
+0310  FOR IX = 1 TO AMOUNT
+0320    WRITE '+' (I)
+0330      FILENAME (IX)  DBID (IX) 1X FNR (IX) 2X DBNAME (IX) '+' (I)
+0340  END-FOR
+0350  WRITE
+0360    '+                                         +' (I) /
+0370    '+-----------------------------------------+' (I)
+0380END-IF
+0390END

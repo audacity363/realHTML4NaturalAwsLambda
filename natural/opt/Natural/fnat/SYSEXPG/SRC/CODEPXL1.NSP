@@ -1,0 +1,126 @@
+0010** Example 'CODEPXL1': List all characters of a given code page (1 byte)
+0020************************************************************************
+0030*
+0040DEFINE DATA
+0050LOCAL USING CODEPL01
+0060LOCAL
+00701 #CODEPAGE      (A64)             /* code page/alias name
+00801 #IANANAME      (A64)             /* code page name
+00901 #IANANUM       (I4)
+01001 #MIBENUM       (A6)
+01101 #SUP           (L)
+01201 #ENC           (A1)
+01301 #ENCODE        (A8)
+01401 #MSG           (A79)
+01501 #RSP           (I4)
+01601 #HEAD          (A70)             /* header
+01701 #HEAD2         (A70)             /* header
+01801 #HEAD3         (A70)             /* header
+01901 MAX-I2         (I4) CONST <255>  /* total number of chars - 1
+02001 MAX-LINES      (I4) CONST <7>    /* number of printed lines - 1
+0210*
+02201 U-LONG         (U256)
+02301 REDEFINE U-LONG
+0240  2 U1           (U1/0:MAX-I2)
+02501 REDEFINE U-LONG
+0260  2 CHARACTER    (U32/0:MAX-LINES) /* one line with U-chars
+0270*
+02801 U-BIG          (U288)            /* 36*8
+02901 REDEFINE U-BIG
+0300  2 U-LINE       (U36/0:MAX-LINES) /* full line
+0310  2 REDEFINE U-LINE
+0320    3 U-LINEX    (0:MAX-LINES)
+0330      4 U-CP     (U2)
+0340      4 U-FILLER (U2)
+0350      4 U-CHAR   (U32)
+0360*
+03701 #I             (I4)
+03801 I1             (I4)
+03901 I2             (I4)
+04001 #CODEPOINT     (B1)
+04101 RSP            (I4)
+04201 A2             (A2)
+0430END-DEFINE
+0440*
+0450* FORMAT LS=140
+0460*
+0470INPUT (IP=OFF)
+0480  2T 'Character Set (1 byte encoding):' /
+0490  2T #CODEPAGE
+0500
+0510CALLNAT 'CODEPN02' #CODEPAGE #IANANUM #SUP #ENC #RSP /* get the info
+0520MOVE #IANA-ALIAS (#IANANUM) TO #CODEPAGE
+0530MOVE #IANA-NAME  (#IANANUM) TO #IANANAME
+0540MOVE #IANA-MIBENUM (#IANANUM) TO #MIBENUM
+0550
+0560WRITE
+0570  02T '                     List Characters of a Character Set' //
+0580  02T 'Character Set ...' #CODEPAGE (AL=50) /
+0590  02T 'IANA name .......' #IANANAME (AL=50) /
+0600  02T 'MIBenum .........' #MIBENUM (AD=O AL=50) /
+0610  02T 'Available .......' #SUP (EM='No'/'Yes')
+0620
+0630IF NOT #SUP
+0640  ESCAPE ROUTINE
+0650END-IF
+0660
+0670RESET #HEAD
+0680DECIDE ON FIRST VALUE OF #ENC
+0690  VALUE '1'
+0700    MOVE '1 byte' TO #ENCODE
+0710  VALUE '2'
+0720    MOVE '2 byte' TO #ENCODE
+0730    COMPRESS 'Note ............'
+0740      'Use the program CODEPXL2 for 2-byte character sets.' INTO #HEAD
+0750  VALUE '4'
+0760    MOVE '4 byte' TO #ENCODE
+0770    COMPRESS 'Note ............'
+0780    'Characters for this encoding cannot be listed.' INTO #HEAD
+0790  VALUE '8'
+0800    MOVE '1-4 byte' TO #ENCODE
+0810    COMPRESS 'Note ............'
+0820    'Only the first 256 characters are listed.' INTO #HEAD
+0830  VALUE 'X'
+0840    MOVE 'special' TO #ENCODE
+0850    COMPRESS 'Note ............'
+0860    'Characters for this encoding cannot be listed.' INTO #HEAD
+0870  NONE
+0880    MOVE ' ' TO #ENCODE
+0890END-DECIDE
+0900WRITE
+0910  02T 'Encoding ........' #ENCODE
+0920
+0930IF #ENC NE '1'
+0940  WRITE  02T #HEAD
+0950END-IF
+0960
+0970IF #ENC NE '1' AND #ENC NE '8'
+0980  ESCAPE ROUTINE
+0990END-IF
+1000
+1010RESET RSP
+1020*
+1030* Run through all values
+1040FOR I1 = 0 TO MAX-I2
+1050  MOVE I1 TO #CODEPOINT
+1060  MOVE ENCODED #CODEPOINT IN CODEPAGE #CODEPAGE TO U1(I1) GIVING RSP
+1070END-FOR
+1080*
+1090WRITE NOTITLE /
+1100  2T '    0123456789ABCDEF0123456789ABCDEF'
+1110*
+1120* Fill the lines with the codepoint and characters
+1130FOR I1 = 0 TO MAX-LINES
+1140  /* codepoint of first u-char in line
+1150  I2 := (MAX-I2 + 1) / (MAX-LINES + 1) * I1
+1160  MOVE I2 TO #CODEPOINT
+1170  MOVE EDITED #CODEPOINT (EM=HH) TO A2
+1180  MOVE A2             TO U-CP (I1)
+1190  MOVE U'  '          TO U-FILLER (I1)
+1200  MOVE CHARACTER (I1) TO U-CHAR (I1)
+1210  WRITE 2T U-LINE(I1)
+1220END-FOR
+1230*
+1240WRITE 2T '    0123456789ABCDEF0123456789ABCDEF'
+1250*
+1260END

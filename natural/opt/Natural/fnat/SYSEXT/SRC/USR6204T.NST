@@ -1,0 +1,75 @@
+0010Set profile parameter PROGRAM
+0020.
+0030Documentation ......... USR6204T    /*  Text object
+0040Interface ............. USR6204N    /*  Cataloged subprogram
+0050Example Program ....... USR6204P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. PROFILE PARAMETERS
+0100.
+0110Keywords .............. BACKEND, PARAMETER, PROFILE, PROGRAM, SET
+0120.
+0130Function .............. This routine sets the Natural profile parameter
+0140                        PROGRAM. It will be executed when Natural
+0150                        is terminated.
+0160                        With USR6204N, the interface can be used
+0170                        platformwide.
+0180.
+0190                        For OpenSystems:
+0200                         The program should be found in one of the
+0210                         libraries identified by the environment
+0220                         variable PATH.
+0230                        For Mainframes:
+0240                         Also USR4001N can be used instead.
+0250.
+0260.
+0270Parameters
+0280----------
+0290Define the following parameters with the DEFINE DATA statement:
+0300.
+0310Input ...... 1 PROGRAM-NAME (A12)
+0320                     Non-Natural program as back-end program.
+0330.
+0340                     For OpenSystems:
+0350                      Use name with/without extension
+0360.
+0370                     For Mainframes:
+0380                      Use program name only with length (A8)
+0390                      1 REDEFINE PROGRAM-NAME
+0400                        2 KEYWORD       (A03)
+0410                        2 DELIMITER     (A01)
+0420                        2 TRANS-ID      (A04)
+0430                        2 DUMMY         (A04)   /* should be empty
+0440                      In CICS back-end transactions can be
+0450                      entered as 'STR=nnnn' or 'RET=nnnn'.
+0460.
+0470Output ..... 1 RESPONSE-CODE (I04)
+0480                     Response code.
+0490.
+0500                     For OpenSystems:
+0510                        0 - Ok.
+0520                        8 - Program not found.
+0530                       12 - Execution rights not available.
+0540.
+0550                     For Mainframes:
+0560                        0 - Ok.
+0570                        2 - Invalid length of program name(A8).
+0580                        4 - Program name invalid.
+0590                        8 - Program not found.
+0600                       12 - Transaction ID not found.
+0610.
+0620Interface Call
+0630--------------
+0640Use the interface with the CALLNAT statement:
+0650.
+0660CALLNAT 'USR6204N'  PROGRAM-NAME RESPONSE-CODE
+0670.
+0680.
+0690Using the Application Programming Interface:
+0700--------------------------------------------
+0710Copy the subprogram USR6204N to the library SYSTEM or the steplib
+0720library respectively, or to the required library.
+0730.
+0740.
+0750*****  End of Description  *****

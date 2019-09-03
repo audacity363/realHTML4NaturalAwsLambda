@@ -1,0 +1,26 @@
+0010* Text member for building ENTIRE SYSTEM SERVER's tutorial menu
+0020*                        PFKEY PFKEY PFKEY PFKEY PFKEY PFKEY
+0030* PF1-PF6                            Exit        User  Sys
+0040* PF7-PF12               Up    Down        Lang        Node
+0050*
+0060* The format was revised for NPR321
+0070*
+0080* The user site may make its own entries to the tutorial
+0090* in any other member 'TUTOnnnn'.
+0100* Changes should not be made in member 'TUTO#XXX' because
+0110* they will be gone with subsequent releases.
+0120* The format is fixed:
+0130*    View name           (a16)
+0140*    Program name        (a8)
+0150*    Flag                (a1)                       .NPR321.
+0160*    Program description (a47)           (was a48)  .NPR321.
+0170*
+0180* The flag currently supports the following values:
+0190*    blank = Always add to menu, regardless of platform
+0200*    E     = EBCDIC - add to menu only if running on EBCDIC machine
+0210*            (currently z/OS & OS/390, VSE/ESA, BS2000/OSD)
+0220*    I     = ISO-8859-1 (IASCII, ASCII)
+0230*            (currently PC's, *nixen, VAXen)
+0240*
+0250* COPY-FILE       COPYLIB MCopy PDS or SEQ file from node to node
+0260View            Program FProgram Description

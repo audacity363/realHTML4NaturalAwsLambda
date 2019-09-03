@@ -1,0 +1,55 @@
+0010/************************* ERRCSETA ***********************************
+0020/* Translate NATURAL Short System Error Messages
+0030/* to the character set defined within this user exit.
+0040/**********************************************************************
+0050/* This table may be modified according to your needs.
+0060/* Translation works as follows:
+0070/* Each byte within a text is regarded as being of format (B01).
+0080/* Thus, each byte is a pointer into the character set table.
+0090/* The character found at the indexed position is taken instead.
+0100/* Example:
+0110/*   Character 'A' is equal to H'41' in our source text.
+0120/*   H'41' converts to decimal 065.
+0130/*   The character at position 065 in our table
+0140/*   is the substitute for our former character 'A'.
+0150/**********************************************************************
+0160DEFINE DATA PARAMETER                 /*  Called by: 'ERRCHAR'
+0170  01 CHAR-SET          (A16/00:15)    /*  Byte-container
+0180  01 REDEFINE CHAR-SET
+0190     02 CHAR-A1        (A01/000:255)  /*  access to each byte
+0200END-DEFINE
+0210/*
+0220/*   First portion: H'00' thru H'3F':
+0230/*
+0240MOVE H'000102030405060708090A0B0C0D0E0F' TO CHAR-SET (00)
+0250MOVE H'101112131415161718191A1B1C1D1E1F' TO CHAR-SET (01)
+0260MOVE ' !"#$%&''()*+,-./' TO CHAR-SET (02)
+0270MOVE '0123456789:;<=>?'    TO CHAR-SET (03)
+0280/*
+0290/*   Second portion: H'40' thru H'7F':
+0300/*
+0310MOVE  '@ABCDEFGHIJKLMNO'    TO CHAR-SET (04)
+0320MOVE  'PQRSTUVWXYZ[\]^_'    TO CHAR-SET (05)
+0330MOVE  '''abcdefghijklmno'    TO CHAR-SET (06)
+0340MOVE  'pqrstuvwxyz{|}ß '    TO CHAR-SET (07)
+0350/*
+0360/*   Third portion: H'80' thru H'BF':
+0370/*
+0380MOVE  '                '    TO CHAR-SET (08)
+0390MOVE  '                '    TO CHAR-SET (09)
+0400MOVE  '                '    TO CHAR-SET (10)
+0410MOVE  '                '    TO CHAR-SET (11)
+0420/*
+0430/*   Fourth portion: H'C0' thru H'FF':
+0440/*
+0450MOVE  '                '    TO CHAR-SET (12)
+0460MOVE  '                '    TO CHAR-SET (13)
+0470MOVE  '                '    TO CHAR-SET (14)
+0480MOVE  '                '    TO CHAR-SET (15)
+0490/*
+0500/*
+0510/*   The string delimiter character:
+0520/*
+0530MOVE '"' TO CHAR-A1 (125)
+0540/*
+0550END

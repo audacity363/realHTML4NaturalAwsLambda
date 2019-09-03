@@ -1,0 +1,18 @@
+0010&H View TASK-INFO
+0020&L
+0030&L
+0040#Purpose@: Retrieve information about BS2000 jobs
+0050&L
+0060&L
+0070#OpSys@  : BS2000/OSD
+0080&L
+0090&L
+0100#Usage@  : The information retrieved by this view is the same
+0110           as returned by BS2000 system command '/STA <tsn>' or
+0120           '/SHOW-JOB-STATUS JOB-ID=TSN(<tsn>)' for a specific
+0130           BS2000 job.
+0140&L
+0150&L
+0160#Notes@  :
+0170
+0180

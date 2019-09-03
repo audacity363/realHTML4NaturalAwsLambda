@@ -1,0 +1,28 @@
+0010* Subprogram ... V62UMOVN
+0020* Library ...... SYSEXV
+0030* Version ...... 6.2
+0040* Machine ...... UNIX
+0050* Used by ...... V62UMOVE
+0060*
+0070* Functionality: Return the value of CPCVERR (ON/OFF)
+0080************************************************************************
+0090*
+0100*
+0110DEFINE DATA
+0120PARAMETER
+013001 PAR_CPCVERR (A3)       /* value of CPCVERR: ON/OFF
+0140LOCAL
+01501 #ALPHA        (A6)    /* alpha field
+01601 #UNICODE      (U6)    /* Unicode field
+0170END-DEFINE
+0180*
+0190ON ERROR
+0200  IF *ERROR-NR = 3413  /* Conversion error
+0210    MOVE 'ON' TO PAR_CPCVERR
+0220    ESCAPE ROUTINE
+0230  END-IF
+0240END-ERROR
+0250MOVE 'OFF' TO PAR_CPCVERR
+0260MOVE UH'004103A900C40635307E8CAA' TO #UNICODE /* from multiple codepages
+0270MOVE #UNICODE TO #ALPHA
+0280END

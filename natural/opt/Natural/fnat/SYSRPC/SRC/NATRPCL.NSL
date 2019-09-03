@@ -1,0 +1,108 @@
+0010/*C                     *      ***** *****************************************************************DA:00.00ED:00.00PF:MNV:09010100
+0020/*C                                * *Natural RPC                                                    *
+0030/*C                     *      ***** *****************************************************************
+0040/*C                                * *
+0050/*C                                * *RPC protocol header for stubs
+0060/*C                                * *
+0070/*C                     *      ***** *****************************************************************
+0080/*C                                * *SYSTEM MAINTENANCE
+0090/*C                                * *
+0100/*C                     -      ----* *----- ------ RPC 5.1 -------------------------------------------
+0110/*C                                * *WWE   030925 Reworked           (internal fields removed) 245251
+0120/*C                     -      ----* *----- ------ RPC 6.1 -------------------------------------------
+0130/*C                                * *WWE01 050408 New function code: FKT-STUBLESSRPCX          263882
+0140/*C                                * *WWE02 050415 New CB version:    CB_VERSION_2000           263882
+0150/*C                     -      ----* *----- ------ RPC 6.2 -------------------------------------------
+0160/*C                                * *WWE03 051214 New CB version:    CB_VERSION_2020            #0200
+0170/*C                     -      ----* *----- ------ RPC 6.3 -------------------------------------------
+0180/*C                                * *WWE06 110607 New CB version:    CB_VERSION_2035           i17882
+0190/*C                                * *WWE07 110607 New fields:        CB_OFF_SB, CB_LEN_SB      i17882
+0200/*C                     -      ----* *----- ------ RPC 8.2 -------------------------------------------
+0210/*C                                * *WWE04 100805 New CB version:    CB_VERSION_2030           i00993
+0220/*C                                * *WWE05 100805 New CB version:    CB_VERSION_2040           i00012
+0230/*C                     *      ***** *****************************************************************
+0240/*DFC  S            0054N         4C 1CB_VERSION_1110                 /* CB version 1110
+0250/*DFC  S            0055N         4C 1CB_VERSION_1120                 /* CB version 1120
+0260/*DFC  S            0056N         4C 1CB_VERSION_1130                 /* CB version 1130
+0270/*DFC  S            0057N         4C 1CB_VERSION_1140                 /* CB version 1140
+0280/*DFC  S            0062N         4C 1CB_VERSION_2000                 /* CB version 2000         WWE02
+0290/*DFC  S            0063N         4C 1CB_VERSION_2020                 /* CB version 2020         WWE03
+0300/*DFC  S            0064N         4C 1CB_VERSION_2030                 /* CB VERSION 2030         WWE04
+0310/*DFC  S            0066N         4C 1CB_VERSION_2035                 /* CB VERSION 2035         WWE06
+0320/*DFC  S            0065N         4C 1CB_VERSION_2040                 /* CB VERSION 2040         WWE05
+0330/*DF I1            M    A         1  1CB                              (1:192)
+0340/*DRR                              R 1CB                              /* BEGIN REDEFINE: CB
+0350/*DFR                   A       192  2CBBLOCK
+0360/*DRR                              R 1CB                              /* BEGIN REDEFINE: CB
+0370/*DFR                   N         4  2CB_VERSION                      /* protocol version
+0380/*DFR                   N         8  2CB_NPARM                        /* number of parameters
+0390/*DSR                                2CB_NATERR_INFO
+0400/*DFR                   N         5  3CB_NATERR_NR                    /* Natural error from server
+0410/*DFR                   N         4  3CB_NATERR_LINE                  /* Natural error line
+0420/*DFR                   A         1  3CB_NATERR_STAT                  /* Natural error status
+0430/*DFR                   A         8  3CB_NATERR_PNAM                  /* Natural error program
+0440/*DFR                   N         2  3CB_NATERR_LEVEL                 /* Natural error program level
+0450/*DFR                   A        16  2CB_SERVICE_ID                   /* ID of service routine
+0460/*DRR                              R 2CB_SERVICE_ID                   /* BEGIN REDEFINE: CB_SERVICE_ID
+0470/*DFR                   A         8  3CB_LIB                          /* library id   service routine
+0480/*DFR                   A         8  3CB_PNAM                         /* program name service routine
+0490/*DFR                   A        16  2CB_USID                         /* user id
+0500/*DFR                   A         2  2CB_ARCHITECTURE                 /* architecture byte sender
+0510/*DFR                   A         1  2CB_DATA_ARCH                    /* vb format
+0520/*CFR                              *                                  /* s=srv  c=clt  ' '=char
+0530/*DFR                   A         2  2CB_REQUEST_TYPE                 /* packet classifier
+0540/*DFR                   N         4  2CB_RESPONSECODE                 /* RPC runtime errors
+0550/*DFR                   A         1  2CB_COMPRESS                     /* buffer compressed
+0560/*DFR                   A         1  2CB_ERXAD                        /* ERX additions present 'Y'
+0570/*DFR                   A         1  2CB_LOG                          /* LOGON data present 'Y'
+0580/*DFR                   A         1  2CB_SEC                          /* SEC-LEVEL 1 TO 4 OR ' '
+0590/*DFR                   N         6  2CB_OFF_ERXB                     /* ERX addtions offset
+0600/*DRR                              R 2CB_OFF_ERXB
+0610/*DFR                   N         6  3CB_OFF_SB                       /* offset to SB            WWE07
+0620/*DFR                   N         6  2CB_OFF_LOGB                     /* NSC token offset
+0630/*DFR                   N         6  2CB_OFF_SECB                     /* encryption token offset
+0640/*DRR                              R 2CB_OFF_SECB
+0650/*DFR                   N         6  3CB_LEN_SB                       /* length of SB            WWE07
+0660/*DFR                   A         1  2CB_STPLSET                      /* STEPLIB set by stub 'Y'
+0670/*DFR                   A        96  2CB_RESERV
+0680/*DRR                              R 2CB_RESERV                       /* BEGIN REDEFINE: CB_RESERV
+0690/*DFR                   A         4  3CB_STILL_RESERVE                /* KEEP 4 BYTE FOR LATER USE
+0700/*DSR                                3CB_NATERR_DYNPART               /* dynamic part of error message
+0710/*DFR                   A         1  4CB_DYNERR                       /* DYNERR PRESENT 'Y'
+0720/*DFR                   A         1  4CB_NATERR_OTYP                  /* OBJECT TYPE MISSING ABOVE
+0730/*DFR                   N         2  4CB_DYNTLEN                      /* TOTAL LENGTH OF DYN TEXT
+0740/*DFR                   A        88  3CB_DYNTEXT                      /*
+0750/*CS                               * *fields defined for compatibility
+0760/*DS                                 1RPC-PARM
+0770/*DK                    I         4  2SEND-LEN                        /* send    length
+0780/*DK                    I         4  2REC-LEN                         /* receive length
+0790/*DFC  S            0059N         4C 1CBVER                           /* CB version 1120
+0800/*DFC  S            0060N         4C 1CBVEROLD                        /* CB version 1110
+0810/*DFC  S            0053I         4C 1FKT-CONVCLIENT                  /* client conversations
+0820/*DFC  S            0061I         4C 1FKT-STUBLESSRPCX                /* execute stub without VB WWE01
+0830/*HS0053
+0840/*I                      7
+0850/*HS0054
+0860/*I                      1110
+0870/*HS0055
+0880/*I                      1120
+0890/*HS0056
+0900/*I                      1130
+0910/*HS0057
+0920/*I                      1140
+0930/*HS0059
+0940/*I                      1120
+0950/*HS0060
+0960/*I                      1110
+0970/*HS0061
+0980/*I                      15
+0990/*HS0062
+1000/*I                      2000
+1010/*HS0063
+1020/*I                      2020
+1030/*HS0064
+1040/*I                      2030
+1050/*HS0065
+1060/*I                      2040
+1070/*HS0066
+1080/*I                      2035

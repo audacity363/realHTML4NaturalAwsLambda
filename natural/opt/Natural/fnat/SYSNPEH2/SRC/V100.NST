@@ -1,0 +1,19 @@
+0010&H View SEQ-FILE-DEMO
+0020&L
+0030#Zweck@    : Lesen von Daten auf Plattendateien (benutzerdefiniert)
+0040&L
+0050#System@   : z/OS, z/VSE, BS2000/OSD.
+0060&L
+0070#Anwendung@: Dieser View ermoeglicht das Lesen von sequentiellen Da-
+0080             teien mit fester Struktur. Sie koennen einen View defi-
+0090             nieren, der die Satzstruktur auf logischer Ebene be-
+0100             schreibt und entsprechend zugreifen. Die DBID muss die
+0110             ENTIRE SYSTEM SERVER DBID und die Dateinummer muss 100
+0120             sein.
+0130&L
+0140             Zum Beispiel soll eine Datei mit folgender Struktur ge-
+0150             lesen werden:
+0160              NAME A(16), CITY A(16), OPSYS A(10), PRODUCT A(24)
+0170&L
+0180#Anmerkung@: Weitere Informationen entnehmen Sie bitte dem Handbuch
+0190             "ENTIRE SYSTEM SERVER Reference Manual".

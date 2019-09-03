@@ -1,0 +1,12 @@
+0010 DB: 001 FILE: 001  - COMMAND                          DEFAULT SEQUENCE:
+0020
+0030T L DB Name                              F Leng  S D Remark
+0040- - -- --------------------------------  - ----  - - ------------------------
+0050  1 AA PROCESSOR-NAME                    A    8  N D  DE    USING
+0060M 1 AB COMMAND-LINE                      A   80  N D  MU/DE USING
+0070  1 AF GETSET-FIELD-NAME                 A   32  N D  DE    USING
+0080  1 BA NATURAL-ERROR                     N  4.0  N          GIVING
+0090  1 BB RETURN-CODE                       A    4  N          GIVING
+0100M 1 BC RESULT-FIELD                      A   80  N    MU    GIVING
+0110  1 BD GETSET-FIELD-VALUE                A   32  N D        USING; GIVING
+0120******DDM OUTPUT TERMINATED******

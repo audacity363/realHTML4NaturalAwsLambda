@@ -1,0 +1,61 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3TEMPL
+0050*
+0060* DESCRIPTION   Use as html template for the output page
+0070*
+0080* AUTHOR        SAG   03.06.2002
+0090*
+0100* Version       8.3
+0110*
+0120* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0130*
+0140* HISTORY
+0150* USER    DATE       REASON
+0160* ------+----------+----------------------------------------------
+0170*       ! --.--.-- !
+0180* ------+----------+----------------------------------------------
+0190*
+0200* ------ PARAMETER -----------------------------------------------
+0210DEFINE DATA
+0220PARAMETER USING W3PARM
+0230LOCAL USING W3CONST
+0240LOCAL USING W3PINFO
+0250LOCAL
+02601 #PROGRAM (A) DYNAMIC /* INIT < *program >
+0270END-DEFINE
+0280* --- ERROR HANDLING ---
+0290ON ERROR
+0300  PERFORM W3ERROR ##W3ERROR
+0310  PERFORM W3END ##RPC
+0320  ESCAPE ROUTINE
+0330END-ERROR
+0340*
+0350* --- INITIALIZE W3 API PROCESSING ---
+0360PERFORM W3INIT ##RPC
+0370*
+0380PERFORM W3CONTENT-TYPE 'text/html'
+0390*
+0400* load the html template
+0410PERFORM W3LOAD-RESOURCE ' ' 'e3templ.html'
+0420*
+0430PERFORM W3INFO ##W3INFO
+0440*
+0450#PROGRAM := *PROGRAM
+0460* comvert the given string to html format
+0470PERFORM W3TEXT-TO-HTML #PROGRAM
+0480*
+0490COMPRESS '<i>' #PROGRAM '</i>' INTO #PROGRAM LEAVING NO
+0500*
+0510* convert data to html format
+0520PERFORM W3REPLACE 'HTML' '$log$' ##W3INFO.LOG-TIME
+0530PERFORM W3REPLACE 'HTML' '$ext$' ##W3INFO.VERSION
+0540PERFORM W3REPLACE 'HTML' '$ver$' ##W3INFO.WEBAPI
+0550* do NOT convert the data
+0560PERFORM W3REPLACE ' ' '$prog$' #PROGRAM
+0570*
+0580* --- END W3 API PROCESSING ---
+0590PERFORM W3END ##RPC
+0600*
+0610END

@@ -1,0 +1,89 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR4209N'.
+0030/***********************************************************************
+0040DEFINE DATA LOCAL
+00501 USR4209L
+0060  2 OBJECT-KEY
+0070    3 LIBRARY-NAME                    (A8)
+0080    3 OBJECT-NAME                     (A32)
+0090  2 OBJECT-LOCATION
+0100    3 LIBRARY-DBID                    (N5)
+0110    3 LIBRARY-FNR                     (N5)
+0120    3 LIBRARY-PSW                     (A8)
+0130    3 LIBRARY-CIP                     (N8)
+0140  2 OUTPUTS
+0150    3 OUT-NUMBER-RETURNED             (I4)
+0160    3 OUT-NAME                        (A8)
+0170    3 OUT-S-C                         (A3)
+0180    3 OUT-SA-TYPE                     (A11)
+0190    3 OUT-SA-TYPE-SHORT               (A1)
+0200    3 OUT-SA-MODE                     (A1)
+0210    3 OUT-SA-VERSION                  (A6)
+0220    3 OUT-SA-USER-ID                  (A8)
+0230    3 OUT-SA-DATE                     (A10)
+0240    3 OUT-SA-TIME                     (A8)
+0250    3 OUT-SA-SIZE                     (A6)
+0260    3 OUT-CA-TYPE                     (A11)
+0270    3 OUT-CA-TYPE-SHORT               (A1)
+0280    3 OUT-CA-MODE                     (A1)
+0290    3 OUT-CA-VERSION                  (A6)
+0300    3 OUT-CA-USER-ID                  (A8)
+0310    3 OUT-CA-DATE                     (A10)
+0320    3 OUT-CA-TIME                     (A8)
+0330    3 OUT-CA-BP-SIZE                  (A6)
+0340    3 OUT-CA-DAT-SIZE                 (A6)
+0350    3 OUT-CODE-PAGE-NAME              (A64)
+03601 USR4209N
+0370  2 VERSION                           (I1)  INIT <0>
+03801 REDEFINE USR4209N
+0390  2 EXTENDED-PARMS
+0400    3 EXTENDED-DATA                   (A1/1:1)
+0410LOCAL USING USR-MSG
+0420LOCAL USING USR-FLD
+0430LOCAL
+04401 PDA-EXTENSION                       (A1/1:1)
+04501 REDEFINE PDA-EXTENSION
+0460  2 PDA-VERSION                       (I1)     /* VERSION NUMBER
+0470END-DEFINE
+0480/**********************************************************************
+0490/*---------------------------------------------------------------------
+0500/*---------------- Start of main program ------------------------------
+0510/*---------------------------------------------------------------------
+0520LIBRARY-NAME := 'SYSWEB'
+0530OBJECT-NAME  := 'H3-OPEN-FORM-JAVASCRIPT'
+0540/*
+0550CALLNAT 'USR4209N'
+0560          USR4209L
+0570          EXTENDED-DATA (*)
+0580          NAD-MSG
+0590          NAD-FLD
+0600/*
+0610IF (MSG-NR <> 0)
+0620  PRINT '=' MSG-NR / '=' MSG
+0630ELSE
+0640  IF (OUT-NUMBER-RETURNED < 1)
+0650    PRINT 'Long name' OBJECT-NAME 'not found.'
+0660  ELSE
+0670    PRINT 'Long Name:' OBJECT-NAME   40T 'Short Name' OUT-NAME
+0680          /
+0690    PRINT 'Kind     :' OUT-S-C
+0700          /
+0710    PRINT 'SRC-Type :' OUT-SA-TYPE   40T 'short    :' OUT-SA-TYPE-SHORT
+0720    PRINT 'SRC-Mode :' OUT-SA-MODE   40T 'SRC-Vers.:' OUT-SA-VERSION
+0730    PRINT 'SRC-User :' OUT-SA-USER-ID 40T 'SRC-Size :' OUT-SA-SIZE
+0740    PRINT 'SRC-Date :' OUT-SA-DATE   40T 'SRC-Time :' OUT-SA-TIME
+0750    PRINT 'Code Page:' OUT-CODE-PAGE-NAME
+0760          /
+0770    PRINT 'CAT-Type :' OUT-CA-TYPE   40T 'short    :' OUT-CA-TYPE-SHORT
+0780    PRINT 'CAT-Mode :' OUT-CA-MODE   40T 'CAT-Vers.:' OUT-CA-VERSION
+0790    PRINT 'CAT-User :' OUT-CA-USER-ID
+0800    PRINT 'CAT-Date :' OUT-CA-DATE   40T 'CAT-Time :' OUT-CA-TIME
+0810    PRINT 'BP-Size  :' OUT-CA-BP-SIZE 40T 'DAT-Size :' OUT-CA-DAT-SIZE
+0820  END-IF
+0830END-IF
+0840/*---------------------------------------------------------------------
+0850/*---------------- End of main program --------------------------------
+0860/*---------------------------------------------------------------------
+0870/**********************************************************************
+0880/**********************************************************************
+0890END

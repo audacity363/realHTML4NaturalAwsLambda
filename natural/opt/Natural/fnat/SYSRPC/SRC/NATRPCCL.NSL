@@ -1,0 +1,68 @@
+0010**C           0000*             SYSTEM MAINTENANCE
+0020**C           0000*----- ------ NAT 3.1 -------------------------------------------------
+0030**C           0000*WWE01 990315 remove PCID (no longer_supported by NATRPCC)       179934
+0040**C           0000***********************************************************************
+0050**DFC  S      0002I   4C1CO-OK                           /*no problems
+0060**HS0001
+0070**I                      0
+0080**DFC  S      0002I   4C1CO-NOFUNC                       /*no valid function given
+0090**HS0001
+0100**I                      1
+0110**DFC  S      0002I   4C1CO-TOMANY                       /*TO MANY SUBPROGRAMS
+0120**HS0001
+0130**I                      2
+0140**DFC  S      0002I   4C1CO-OPEN                         /*conversation is open
+0150**HS0001
+0160**I                      3
+0170**DFC  S      0002I   4C1CO-NOTOPEN                      /*conversation is not open
+0180**HS0001
+0190**I                      4
+0200**DFC  S      0002I   4C1CO-FOUND                        /*found it
+0210**HS0001
+0220**I                      5
+0230**DFC  S      0002I   4C1CO-NOTFOUND                     /*couldn't find it
+0240**HS0001
+0250**I                      6
+0260**DFC  S      0002I   4C1CO-CONVNOTF                     /*in conversation but no server
+0270**HS0001
+0280**I                      7
+0290**DFC  S      0002I   4C1CO-INVALID_DIR                  /*DIR OF WRONG VERSION
+0300**HS0001
+0310**I                      8
+0320**DFC  S      0002I   2C1PRESET_INDEX                    /*DIR inx for preset conv srv
+0330**HS0001
+0340**I                      -32768
+0350**DS          0000      1RPC-CONV-CL
+0360**DK          0000I   4 2RETVAL
+0370**DK          0000I   4 2LCID
+0380**CK          0000*2PCID                            I   4
+0390**DK          0000I   4 2FILLER-1                        /*for compatibility reasons
+0400**DK          0000I   4 2SNUM
+0410**DK          0000I   4 2DINX
+0420**DK          0000A   1 2FUNC
+0430**DK          0000A   1 2BIKE
+0440**DK          0000B   1 2LEVEL                           /* OPEN LEVEL
+0450**DK          0000A   8 2SERV
+0460**DK          0000A   8 2NODE
+0470**DK          0000A   8 2LOGSEC                          /*logon + security information
+0480**DRR         0000     R2LOGSEC                          /* BEGIN REDEFINE: LOGSEC
+0490**DFR         0000A   1 3LOGON-NODE                      /*logon for node 'N' ' '
+0500**DFR         0000A   1 3LOGON-SERV                      /*logon for server 'Y' 'N' ' '
+0510**C           0000*today only logon is supported
+0520**DS          0000      1RPC-CONV-CL-32
+0530**DK          0000I   4 2RETVAL
+0540**DK          0000I   4 2LCID
+0550**CK          0000*2PCID                            I   4
+0560**DK          0000I   4 2FILLER-1                        /*for compatibility reasons
+0570**DK          0000I   4 2SNUM
+0580**DK          0000I   4 2DINX
+0590**DK          0000A   1 2FUNC
+0600**DK          0000A   1 2BIKE
+0610**DK          0000B   1 2LEVEL                           /* OPEN LEVEL
+0620**DK          0000A  32 2SERV
+0630**DK          0000A  32 2NODE
+0640**DK          0000A   8 2LOGSEC                          /*logon + security information
+0650**DRR         0000     R2LOGSEC                          /* BEGIN REDEFINE: LOGSEC
+0660**DFR         0000A   1 3LOGON-NODE                      /*logon for node 'N' ' '
+0670**DFR         0000A   1 3LOGON-SERV                      /*logon for server 'Y' 'N' ' '
+0680**C           0000*today only logon is supported

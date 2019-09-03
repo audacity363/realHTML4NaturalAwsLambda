@@ -1,0 +1,700 @@
+0010Maintain objects using the Software AG editor engine
+0020.
+0030Documentation ......... USR2014T    /*  Text object
+0040Interface ............. USR2014N    /*  Cataloged subprogram
+0050Example Program ....... USR2014P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. EDITOR
+0100.
+0110Keywords .............. +MOD-NAT-8.4.1, +CURRENT-VERSION,
+0120                        BUFFER, EDITOR, SAG EDITOR, SOURCE
+0130.
+0140Interface Versions .... USR1035N, USR2014N
+0150.
+0160Function .............. Maintain the sources of Natural objects that
+0170                        can be edited with the program editor (programs,
+0180                        subprograms, subroutines, helproutines,
+0190                        copycode, text, class, function).
+0200                        These sources are maintained in the Natural
+0210                        source area.
+0220                        But maintain also non-Natural objects in the
+0230                        data buffer.
+0240.
+0250.
+0260INTRODUCTION
+0270------------
+0280.
+0290The interface makes it possible for you to create your own editor
+0300interface or to edit objects 'behind the scenes' without displaying
+0310the object. The edit functions available are almost the same as those
+0320provided by the Natural for UNIX program editor. The interface can be
+0330called from any Natural program.
+0340.
+0350Interface USR2014N applies the Software AG editor engine, a data
+0360administration tool without an interactive interface. Using special
+0370editor calls, you can use the editor engine to create your own
+0380editor interface.
+0390.
+0400Prerequisite: The Software AG editor must be installed.
+0410.
+0420.
+0430Buffer Selection
+0440----------------
+0450.
+0460To make changes to an object, the object must first be read into a
+0470buffer. A buffer consists of storage space and its associated data
+0480adminstration routines. If the object to be modified is a Natural
+0490object, the Natural source area is used. If, however, the
+0500object is not a Natural object, the Natural data buffer
+0510is used. The user specifies in an interface parameter which
+0520buffer is to be used to store the data.
+0530.
+0540The Data Buffer
+0550---------------
+0560.
+0570As mentioned above, if an object is not a Natural source, it can be
+0580read into the Natural data buffer instead of the Natural source
+0590area and then be modified there.
+0600.
+0610When the data buffer is opened, it is empty. The user is
+0620responsible for reading data into the buffer and writing it from the
+0630buffer. Up to 50 data buffers can be used in parallel.
+0640The maximum number of data buffers which can be used at one
+0650time depends on the following factors:
+0660.
+0670- the SSIZE,
+0680- the size of the editor buffer pool, and
+0690- the editor work files.
+0700.
+0710Editor and Line Commands
+0720------------------------
+0730.
+0740Virtually all editor commands and line commands can be performed
+0750on the buffer contents. Each command is listed at the end of this
+0760document. A full description of these commands is provided in the
+0770Natural Software AG Editor documentation.
+0780.
+0790REQUESTS
+0800--------
+0810.
+0820To access Natural sources, a method must be provided to access and
+0830manipulate data in the Natural source area or in the data buffer
+0840(for example, display it or update it).
+0850.
+0860All operations performed on the buffer are performed via requests.
+0870The primary task of requests is to simplify the procedure of
+0880displaying buffer contents to screen.
+0890.
+0900For example, the GETS (get screen) request delivers part of the
+0910contents of a buffer to the screen. It is possible to specify the
+0920line length and number of lines to be delivered for each GETS
+0930request. The editor converts the internal buffer format into
+0940the desired output format. The lines delivered to screen can be
+0950modified and these modifications returned to the buffer using an
+0960UPDT (update) request.
+0970.
+0980These functions can be viewed as a frame within the editor buffer.
+0990This frame can also be positioned within the buffer, using various
+1000requests. See figure below:
+1010
+1020               +-----------+
+1030               |           |
+1040               |           |
+1050               |           |
+1060 Top line ---> |-----+     |   GETS   +-----+
+1070               |abcde|     |   ---->  |abcde|
+1080               |     |     |          |     |
+1090 Screen -----> |     |     |   UPDT   |     |
+1100               |wxyz |     |   <----  |wxyz |
+1110               |-----+     |          +-----+
+1120               |           |          Screen
+1130               |           |
+1140               |           |
+1150               |           |
+1160               |  Buffer   |
+1170               +-----------+
+1180
+1190Request Listing
+1200---------------
+1210.
+1220The following list contains the abbreviation of each request
+1230along with a short description of what the request is used for.
+1240
+1250OPEN  -  Opens buffer.
+1260         See example OPEN-SESSION in USR2014P
+1270STAT  -  Gets the status of a buffer
+1280         See example OPEN-STATUS in USR2014P
+1290GETS  -  Gets screen. Reads data for output to screen.
+1300         See example GET-SCREEN in USR2014P
+1310UPDT  -  Updates screen. Updates buffer with data read from a modified
+1320         screen.
+1330         See example UPDATE-SCREEN in USR2014P
+1340CLSS  -  Closes buffer.
+1350         See example CLOSE-SESSION in USR2014P
+1360GETL  -  Gets lines.
+1370         See example GET-LINES in USR2014P
+1380ADDL  -  Adds lines.
+1390         See example ADD-LINES in USR2014P
+1400UPDL  -  Updates lines.
+1410         See example UPDATE-LINES in USR2014P
+1420DELL  -  Deletes lines.
+1430         See example DELETE-LINES in USR2014P
+1440CSES  -  Copies one buffer into another.
+1450         See example COPY-SESSION in USR2014P
+1460.
+1470Request Parameters
+1480------------------
+1490.
+1500Each request requires several parameter values that
+1510contain information about the request. Listed below are
+1520the parameters required for each request.
+1530.
+1540OPEN  -  Opens buffer.
+1550.
+1560   Parameter   Input/
+1570   Name        Output   Description
+1580   ---------   ------   -----------
+1590   ED-SESNUM     I/O    Number of session (0-50). If you enter 0, an
+1600                        unused session number is returned by the
+1610                        subprogram.
+1620   ED-LOGFLAG    I      Logical name in use.
+1630   ED-LOGNAME    I      Logical name of the session.
+1640   ED-DSTYPE     I      Buffer type (Natural source area or data buffer)
+1650   ED-RECLEN     I/O    Line length of data sets in buffer.
+1660   ED-SCRMAX     I      Maximum number of lines on screen.
+1670   ED-SCRNUM     I/O    Number of lines on screen.
+1680   ED-SCRLEN     I      Length of a single line on screen.
+1690   ED-PRFLEN     I      Length of a prefix line on screen.
+1700   ED-RENUM      I      Unused.
+1710
+1720STAT  -  Get status of a buffer.
+1730
+1740   Parameter   Input/
+1750   Name        Output   Description
+1760   ---------   ------   -----------
+1770   ED-SESNUM     I      Number of session (1-50).
+1780
+1790GETS  -  Gets screen. Reads data for output to screen.
+1800
+1810   Parameter   Input/
+1820   Name        Output   Description
+1830   ---------   ------   -----------
+1840   ED-SESNUM     I      Number of session (1-50).
+1850   ED-SCRNUM     I/O    Number of lines on screen.
+1860   ED-SCRLEN     I      Length of a single line on screen.
+1870   ED-PRFLEN     I      Length of a prefix line on screen.
+1880
+1890UPDT  -  Updates screen. Updates buffer with data read from a modified
+1900         screen.
+1910
+1920   Parameter   Input/
+1930   Name        Output   Description
+1940   ---------   ------   -----------
+1950   ED-SESNUM     I      Number of session (1-50).
+1960   ED-SCRNUM     I/O    Number of lines on screen.
+1970   ED-SCRLEN     I      Length of a single line on screen.
+1980   ED-PRFLEN     I      Length of a prefix line on screen.
+1990   ED-MCMND      I      Main command for editor operations.
+2000   ED-SCMND      I      Secondary command area for main commands
+2010
+2020CLSS  -  Closes a buffer.
+2030
+2040   Parameter   Input/
+2050   Name        Output   Description
+2060   ---------   ------   -----------
+2070   ED-SESNUM     I      Number of session (1-50).
+2080
+2090GETL  -  Gets lines.
+2100
+2110   Parameter   Input/
+2120   Name        Output   Description
+2130   ---------   ------   -----------
+2140   ED-SESNUM     I      Number of session (1-50).
+2150   ED-SCRLEN     I      Length of a single line on screen.
+2160   ED-SCRNUM     I      Number of lines to be retrieved.
+2170   ED-NEW-RECTOP I      Start line for retrieve operation.
+2180
+2190ADDL  -  Adds lines.
+2200
+2210   Parameter   Input/
+2220   Name        Output   Description
+2230   ---------   ------   -----------
+2240   ED-SESNUM     I      Number of session (1-50).
+2250   ED-SCRNUM     I      Number of lines to be added.
+2260   ED-NEW-RECTOP I      0 - New lines are added to the end of buffer.
+2270                        <num> - New lines added after <num> line.
+2280
+2290UPDL  -  Updates lines.
+2300
+2310   Parameter   Input/
+2320   Name        Output   Description
+2330   ---------   ------   -----------
+2340   ED-SESNUM     I      Number of session (1-50).
+2350   ED-SCRLEN     I      Length of a single line on screen.
+2360   ED-SCRNUM     I      Number of lines to be updated.
+2370   ED-NEW-RECTOP I      Start line for update operation.
+2380
+2390DELL  -  Deletes lines.
+2400
+2410   Parameter   Input/
+2420   Name        Output   Description
+2430   ---------   ------   -----------
+2440   ED-SESNUM     I      Number of session (1-50).
+2450   ED-SCRNUM     I      Number of lines to be deleted.
+2460   ED-NEW-RECTOP I      Start line for delete operation.
+2470
+2480CSES  -  Copies one buffer into another buffer.
+2490
+2500   Parameter   Input/
+2510   Name        Output   Description
+2520   ---------   ------   -----------
+2530   ED-SESNUM     I      Number of session (1-50).
+2540   ED-RECMAX     I      Target session.
+2550
+2560
+2570Main Parameters
+2580---------------
+2590
+2600When the interface is called from within a Natural program, five
+2610parameters must be provided:
+2620
+2630CALLNAT 'USR2014N'
+2640   CONTROL-BLOCK CB-ALIN L-PREFIX-A1(*,*) CB-ADAT L-DATA-A1(*,*)
+2650
+2660Each parameter is described below:
+2670
+2680  - CONTROL-BLOCK. This parameter is composed of many subparameters
+2690    which specify various attributes of individual requests.
+2700    These parameters are described at the end of this section.
+2710
+2720The remaining four parameters specify the data to be displayed on
+2730the screen and how this information is to be represented. The
+2740following figure illustrates this information:
+2750
+2760 +----------------------------------------------------------+
+2770 |   Prefix                                                 |
+2780 |    area                                                  |
+2790 |   <----> <--------- Edit area ---------------------->    |
+2800 |                                                          |
+2810 |   000010 data.data.data.data.data.data.data.data.data    |
+2820 |   000020 data.data.data.data.data.data.data.data.data    |
+2830 |   000030 data.data.data.data.data.data.data.data.data    |
+2840 |   000040 data.data.data.data.data.data.data.data.data    |
+2850 |   XXXXXX data.data.data.data.data.data.data.data.data    |
+2860 |   XXXXXX data.data.data.data.data.data.data.data.data    |
+2870 |   XXXXXX data.data.data.data.data.data.data.data.data    |
+2880 |   XXXXXX data.data.data.data.data.data.data.data.data    |
+2890 |   XXXXXX data.data.data.data.data.data.data.data.data    |
+2900 |   XXXXXX data.data.data.data.data.data.data.data.data    |
+2910 |   XXXXXX data.data.data.data.data.data.data.data.data    |
+2920 |                                                          |
+2930 |   <----> <------------------------------------------>    |
+2940 | CB-ALIN            CB-ADAT   L-DATA                      |
+2950 | L-PREFIX                                                 |
+2960 +----------------------------------------------------------+
+2970
+2980  - CB-ALIN.
+2990    This parameter describes the attributes of each prefix data line.
+3000    Format:          N01/1:yy
+3010    Possible values: 1 - AD=I,  2 - AD=IP
+3020                     3 - AD=D,  4 - AD=DP
+3030                     5 - AD=N,  6 - AD=NP
+3040                     yy must be equal to ED-SCRMAX
+3050
+3060  - L-PREFIX-A1
+3070    This parameter contains the prefix data of each line.
+3080             Format: A01/1:xx,1:yy
+3090    Possible values: xx must be equal to ED-PRFLEN
+3100                     yy must be equal to ED-SCRMAX
+3110
+3120  - CB-ADAT
+3130    This parameter describes the attributes of each data line.
+3140             Format: N01/1:yy
+3150    Possible values: The same as for CB-ALIN.
+3160                     yy must be equal to ED-SCRMAX
+3170
+3180  - L-DATA-A1
+3190    This parameter contains the data lines of the source.
+3200             Format: A01/1:xx,1:yy
+3210    Possible values: xx must be equal to ED-SCRLEN
+3220                     yy must be equal to ED-SCRMAX
+3230
+3240
+3250 - Control Block
+3260
+3270   Parameter   Input/
+3280   Name        Output   Description
+3290   ---------   ------   -----------
+3300   ED-SESNUM     I/O    Number of session (0-50).
+3310   ED-LOGFLAG    I      ED-LOGFLAG indicates whether a logical name for
+3320                        the session has to be in effect. The logical
+3330                        name can be specified in ED-LOGNAME.
+3340                        Possible values: Y,N
+3350   ED-LOGNAME    I      Logical name of the session.
+3360   ED-REQUEST    I      Editor request. Examples for each request are
+3370                        included as internal subroutines in the
+3380                        example program.
+3390   ED-LIBRARY    I      Unused.
+3400   ED-MEMBER     I      Unused.
+3410   ED-RECLEN     I/O    Maximum length of each line.
+3420   ED-PRFLEN     I      Length of a prefix line on screen.
+3430   ED-SCRLEN     I      Length of a single line on screen.
+3440   ED-SCRNUM     I/O    Number of lines on screen.
+3450   ED-SCRMAX     I      Maximum number of lines on screen.
+3460   ED-RENUM      I      Unused.
+3470   /*
+3480   ED-MCMND      I      Main command. The main commands are described
+3490                        in the 'Natural SAG Editor documentation'.
+3500   ED-SCMND      I      Secondary command. ED-SCMND should contain the
+3510                        command that is assigned to the pressed PF-key.
+3520   ED-CAREA      I/O    Area where the cursor is located; possible
+3530                        values are:
+3540                        1 - Message line
+3550                        2 - Command line
+3560                        4 - Prefix area
+3570                        5 - Data area
+3580   ED-CROW       I/O    Cursor row within the area (in full screen
+3590                        mode).
+3600                        The content must be a number starting with 1.
+3610   ED-CCLM       I/O    Cursor colum within the area (in full screen
+3620                        mode).
+3630                        ED-CCLM contains 0 if the cursor is located on
+3640                        the attribute byte, otherwise a number starting
+3650                        with 1.
+3660   /*
+3670   ED-RECTOP     I/O    Unused.
+3680   ED-NEW-RECTOP I/O    Line number of new first line on screen.
+3690   ED-RECNUM     I/O    Unused.
+3700   ED-NEW-RECNUM   O    Number of lines in the source area.
+3710   ED-FILECHG      O    Indicates whether source area has been modified.
+3720   ED-SRAUSED      O    Used source area in bytes.
+3730   ED-SRAFREE      O    Unused source area in bytes.
+3740   ED-FLINE        O    Message text. Explanation for ED-MSGNUM or
+3750                        ED-ERRNUM.
+3760   ED-MSGNUM       O    Message number. Confirms user actions.
+3770   ED-ERRNUM       O    Error number.
+3780                           0  ok
+3790                         501  invalid request
+3800                         503  invalid session number
+3810                         504  session does not exist
+3820                         520  not enough space in source area
+3830                         530  cancel editing
+3840                         531  quit editing
+3850                         535  save is pending
+3860
+3870                         601  ED-SCRNUM must be lower/equal as ED-SCRMAX
+3880                         602  ED-SCRLEN must be lower/equal as ED-RECLEN
+3890                         603  ED-SCRNUM must be equal to the defined
+3900                              occurrences of lines in field L-DATA-A1
+3910                         604  ED-PRFLEN cannot be bigger as the defined
+3920                              occurrences in L-PREFIX-A1
+3930                         605  ED-SCRLEN cannot be bigger as the defined
+3940                              occurrences in L-DATA-A1
+3950                         606  Both fields L-DATA-A1 and L-PREFIX-A1 must
+3960                              defined with the same occurrences of lines
+3970                         607  ED-SCRLEN * ED-SCRMAX must be lower 14400.
+3980                              (not on MAINFRAME)
+3990                         608  ED-RECLEN is too big
+4000                              If ED-DSTYPE = 'N' it should be <= 256
+4010                              If ED-DSTYPE = 'D' it should be lower
+4020                              as the SAG editor bufferpool block length.
+4030                              (Parameter LRECL of the SYSEDT utility)
+4040                         609  ED-SCRMAX must be lower/equal 100
+4050
+4060                        9999  invalid object type in source area
+4070                              (valid types : program, subprogram,
+4080                               subroutine, copycode, text, helproutine)
+4090   ED-DSTYPE     I      Type of session. Possible values are:
+4100                         'N' - Use the Natural source area
+4110                         'D' - Use a data buffer
+4120   ED-RECMAX     I      Target session.
+4130
+4140
+4150
+4160EXAMPLES
+4170--------
+4180
+4190USR2014P contains some examples of how to maintain objects in
+4200the Natural source area or in the Natural data buffer.
+4210As mentioned above there is an example for each request:
+4220
+4230OPEN  -  OPEN-SESSION
+4240STAT  -  GET-STATUS
+4250GETS  -  GET-SCREEN
+4260UPDT  -  UPDATE-SCREEN
+4270CLSS  -  CLOSE-SESSION
+4280GETL  -  GET-LINES
+4290ADDL  -  ADD-LINES
+4300UPDL  -  UPDATE-LINES
+4310DELL  -  DELETE-LINES
+4320CSES  -  COPY-SESSION
+4330
+4340If you maintain an object with screen output, the editor engine
+4350needs to know the position of the cursor on the screen. An example
+4360of how to compute the cursor position is contained in the two
+4370subroutines RELATIVE-CURSOR and ABSOLUTE-CURSOR. These subroutines
+4380must be called before and after any screen output.
+4390
+4400You can maintain an object without screen output. Assign the
+4410value TRUE to the logical variable NO-SCREEN and perform one of
+4420the examples in the subroutine NO-SCREEN-OUTPUT.
+4430
+4440Attention: If you change the line size, the number of lines on a
+4450screen or the length of the prefix area, your local data area must
+4460be adapted to these new values. Otherwise the edit frame L-PREFIX
+4470and L-DATA will not be displayed correctly.
+4480
+4490
+4500MAIN COMMANDS
+4510-------------
+4520The following table contains a list of main commands and a short
+4530description of what each command does. For more complete information
+4540on each command, see the Natural Software AG Editor documentation.
+4550
+4560ADVANCE  - Used to specify whether the cursor moves to the next line
+4570           automatically after a line update.
+4580AORDER   - Used to specify whether newly entered text is to be
+4590           automatically justified within the set boundaries.
+4600BNDS     - Used to restrict the effect of certain commands to a
+4610           specific range of columns.
+4620BOTTOM   - Used to scroll to the end of the object being edited.
+4630CANCEL   - Delivers message number (ED-ERRNUM) 530.
+4640CAPS     - Used to switch upper-case translation on and off.
+4650CENTER   - Used to center editor content.
+4660CHANGE   - Used to replace one character string by another string.
+4670COLS     - Displays a line at the top of the edit area showing
+4680           column positions.
+4690CWINDOW  - Used to copy a data window in accordance with command
+4700           parameters.
+4710DELETE   - Used to delete lines.
+4720DOWN     - Used to scroll downwards in the source code.
+4730DWINDOW  - Used to delete the last defined data window.
+4740DX       - Deletes the line marked with the .X label.
+4750DX-Y     - Deletes all lines between the .X and .Y labels.
+4760DY       - Deletes the line marked with the .Y label.
+4770EMPTY    - Controls the deletion of blank lines in the editor.
+4780ESCAPE   - Activates/deactivates the escape character to preceded line
+4790           commands entered in the first column of the source code.
+4800EX       - Deletes all lines preceding the line marked with .X label.
+4810EX-Y     - Deletes all lines preceding .X label and following .Y label.
+4820EXCLUDE  - Used to exclude lines from being displayed.
+4830EY       - Deletes all lines following the line marked with .Y label.
+4840FIND     - Used to search for a particular character string.
+4850FIX      - Used to specify the number of columns to remain displayed
+4860           when scrolling to the right.
+4870HEX      - Used to switch hexadecimal display mode on and off.
+4880HOME     - Returns the cursor to the command field at the next ENTER.
+4890INCLUDE  - Used to re-display lines that were excluded from display
+4900           by the EXCLUDE command.
+4910JLEFT    - Used to align source code left-justified.
+4920JRIGHT   - Used to align source code right-justified.
+4930JUSTIFY  - Used to set the justification mode for the line commands
+4940           TO and TOO.
+4950LABEL    - Used to mark the current line (line at the top of the edit
+4960           area) will a specified label.
+4970LC       - Used to change one or more lines to lower case.
+4980LEFT     - Scrolls the source code to the left.
+4990LIMIT    - Used to specify the maximum number of lines to be searched
+5000           with a FIND or RFIND command.
+5010LOCATE   - Used to scroll a specific line to the top of the edit area.
+5020LOG      - Activates or deactivates the log file containing a
+5030           history of all modifications made since session begin.
+5040MASK     - Activates or deactivates the mask function.
+5050MSO      - Used to specify whether multiple session operations are
+5060           possible or not.
+5070MWINDOW  - Used to move a data window in accordance with the command
+5080           parameters.
+5090NULLS    - Used to determine whether the source code lines are to be
+5100           filled with null characters.
+5110ORDER    - Used to join source code lines.
+5120OWINDOW  - Used to overlay a data window.
+5130POINT    - Places the line marked with the line command NZ at the top
+5140           of the data area.
+5150POWER    - Switches the editor to text-entry mode. Entered text is
+5160           placed in the first line of the edit area.
+5170PROFILE  - Displays the editor profile at the top of the edit screen.
+5180PROTECT  - Used to protect the prefix area of the editor.
+5190QUIT     - Delivers message number (ED-ERRNUM) 531.
+5200RCHANGE  - Repeats the last CHANGE command.
+5210RENUMBER - Renumber the lines.
+5220RESET    - Resets all pending line commands and deletes all line
+5230           labels.
+5240RFIND    - Repeats the last FIND command.
+5250RIGHT    - Scrolls the source code to the right.
+5260SAVE     - Delivers message number (ED-ERRNUM) 535.
+5270SHIFT    - Shifts a block of lines between the .X and .Y labels to
+5280           the right or left by a number of columns.
+5290TABS     - Used to control tabulator settings.
+5300TOP      - Used to scroll to the beginning of the object being edited.
+5310UC       - Converts one or more lines to upper case.
+5320UNDO     - If the log file is active (see LOG command), this command
+5330           successively backs out all changes made since pressing ENTER.
+5340UP       - Scrolls upwards in the source code.
+5350WINDOW   - Used to define a data window to be copied or moved.
+5360X        - Places the line marked with the line command .X at the
+5370           top fo the data area.
+5380XSWAP    - Used to exchange displayed lines with excluded lines.
+5390Y        - Places the line marked with the line command .Y at the
+5400           top of the data area.
+5410
+5420
+5430LINE COMMANDS
+5440-------------
+5450
+5460Note:  Many of the following line commands, such as the C(n) or D(n)
+5470       commands, allow the input of an optional integer parameter value.
+5480       This parameter value means "repeat this command n times".
+5490       When issuing line commands containing an integer parameter,
+5500       place the integer immediately after the command. For example,
+5510       C4 (copy line four times) or I5 (insert five lines).
+5520
+5530A    - Marks the target line for a move (M, Mn, MM) or copy (C, Cn, CC)
+5540       line command. The moved/copied line(s) are inserted after
+5550       this line.
+5560B    - Marks the target line for a move (M, Mn, MM) or copy (C, Cn, CC)
+5570       line command. The moved/copied line(s) are inserted before
+5580       this line.
+5590BNDS - Displays the boundary positions in this line.
+5600C(n) - Copies the current line or the next n lines to the position
+5610       indicated by an A, B or O line command.
+5620CC   - Marks the first line of a block of lines to be copied.
+5630       A second CC command is required to mark the last line of the
+5640       block to be copied. The lines are copied to the position
+5650       indicated by an A, B or O line command.
+5660CX   - Copies the line labelled .X. Inserts data after this line.
+5670CY   - Copies the line labelled .Y. Inserts data after this line.
+5680CX-Y - Copies the block of lines from the line labelled .X through
+5690       the line labelled .Y. Inserts data after this line.
+5700COLS - Displays the column positions in this line.
+5710D(n) - Deletes the current line or the next n lines.
+5720DD   - Marks the first line of a block to be deleted. A second DD
+5730       command is required to mark the last line of the block to
+5740       be deleted. The deletion is performed after second the DD has
+5750       been entered. DX Deletes the line labelled .X.
+5760DY   - Deletes the line labelled .Y.
+5770DX-Y - Deletes the block of lines from the line labelled .X to the
+5780       line labelled .Y.
+5790F(n) - Includes the first excluded line or the first n excluded lines.
+5800I    - Inserts one line. The editor switches to insert mode.
+5810I(n) - Inserts a single line or n lines.
+5820       You may type data in the new lines. When
+5830       you press ENTER, unused lines are deleted but one blank line
+5840       remains with the cursor in it (editor stays in insert mode).
+5850J    - Joins next line with this one. You can specify how
+5860       many of the characters of the following line are to be
+5870       joined by placing the cursor at the point in the line where
+5880       it is to be separated and press ENTER. To join the entire
+5890       line, place the cursor outside the line to be joined. This
+5900       command is identical to the TJ command.
+5910L(n) - Includes the last excluded line or last n excluded lines.
+5920LC   - Changes this line to lower case.
+5930LC(n)- Changes the following line or n lines to lower case.
+5940LCC  - Marks the first line of a block to be changed to lower case.
+5950LJ   - Justifies the data within the set boundaries in this line
+5960       with the left boundary.
+5970LJJ  - Marks the first line of a block of data within the set
+5980       boundaries to be justified to the left. A second LJJ
+5990       command is required to mark the last line of the block
+6000       to be justified. The justification is performed after the
+6010       second LJJ command has been issued.
+6020M(n) - Moves the current line or next n lines to the position indicated
+6030       by an A, B or O line command.
+6040MM   - Marks the first line of the block to be moved.
+6050       A second MM command is required to mark the last line of the
+6060       block to be moved. The lines are moved to the position
+6070       indicated by an A, B or O line command.
+6080MASK - Inserts a blank line in the editor into which you can create
+6090       a mask. This line is inserted whenever the insert (In) line
+6100       command is used to create one or more new lines (see also
+6110       the editor command MASK).
+6120MX   - Moves the line labelled .X. Inserts it after this line.
+6130MY   - Moves the line labelled .Y. Inserts it after this line.
+6140MX-Y - Moves the block of lines from the line labelled .X to the
+6150       line labelled .Y. Inserts it after this line.
+6160N    - Modifications made in this line do not take effect when ENTER
+6170       is pressed.
+6180NZ   - The line marked with this command is placed at the top
+6190       of the editor area when a POINT editor command is issued.
+6200O(n) - Marks this line or the following n lines as target lines
+6210       for a move (M, Mn, MM) or copy (C, Cn, CC) line command.
+6220       The moved/copied line(s) are merged with this line, that is,
+6230       blank characters in the line are overlaid.
+6240OO   - Marks the first line of a block of target lines for a move
+6250       (M, Mn, MM) or copy (C, Cn, CC) line command. A second OO
+6260       command is required to mark the last line of the block of
+6270       target lines. The moved/copied line(s) are merged with these
+6280       lines, that is, blank characters in the lines are overlaid.
+6290R    - Repeats this line once or n times.
+6300RR   - Marks the first line of a block to be repeated. A second
+6310       RR command is required to mark the last line of the block
+6320       to be repeated. The repeat operation is performed after the
+6330       second RR has been entered.
+6340RRn  - Used to mark the last line of a block to be repeated (see RR
+6350       command). The block is repeated n times.
+6360RJ   - Justifies the data within the set boundaries in this line
+6370       with the right boundary.
+6380RJJ  - Marks the first line of a block of data within the set
+6390       boundaries to be justified to the right. A second RJJ
+6400       command is required to mark the last line of the block
+6410       to be justified. The justification is performed after the
+6420       second RJJ has been issued.
+6430S    - Splits this line into two lines beginning at the cursor
+6440       position. Type in the command, move the cursor to the
+6450       position where the line is to be split, and press ENTER.
+6460T    - Scrolls the data to make the marked line the top line.
+6470TABS - Displays the tab positions in this line.
+6480TC   - Centers the data within the set boundaries in this line.
+6490TCC  - Marks the first line of a block of data within the set
+6500       boundaries to be centered. A second TCC command is
+6510       required to mark the last line of the block of the centered.
+6520       The centering is performed after the second TCC command has
+6530       been issued.
+6540TE   - Switches editor to text enter mode (blank screen
+6550       to end of screen).
+6560TF   - Joins this line with the following lines until the next
+6570       blank line. The bounds settings can be used to restrict
+6580       the columns affected (see BNDS command).
+6590TFn  - This line command may be entered with a numerical value
+6600       specifying the right boundary, e.g. the line command TF50
+6610       orders data with column 50.
+6620TI   - Inverts sequence of all characters in the current line and
+6630       within the set boundaries.
+6640TII  - Marks the first line of a block of text to be inverted within
+6650       set boundaries. Requires a second TII to mark the last
+6660       line of the block.
+6670TJ   - Joins next line with this one. Same as the join (J) command.
+6680TO   - Joins this line with the next one.
+6690TOO  - Marks the first line of a block of data within the set
+6700       boundaries to be joined. A second TOO command is required
+6710       to mark the last line of the block to be joined. The
+6720       function is performed after the second TOO has been issued.
+6730TS   - Splits this line into two lines at the cursor position; an
+6740       empty line is also automatically inserted, but deleted if
+6750       unused (identical to S line comm and).
+6760UC(n)- Changes current line or following n lines to upper case.
+6770UCC  - Marks the first line of a block to be changed to upper case.
+6780       A second UCC is required to mark the last line of the block.
+6790W(n) - Opens window with one line or n lines.
+6800WC   - Copies the data window. The cursor position marks the
+6810       column at which this line is to be split to insert the
+6820       copied data.
+6830WCn  - Splits this line in column 'n' and copies the data between
+6840       the resulting two lines.
+6850WE   - Marks end of data window. Works in the same way as WS.
+6860WM   - Moves the data window. Works in the same way as WC, but the
+6870       original data are deleted after the copy operation.
+6880WMn  - Splits this line in column 'n' and moves the data between the
+6890       resulting two lines.
+6900WS   - Marks start of data window. The cursor position marks the
+6910       column from which data are read. If the cursor is not
+6920       in the line for which the command is entered, column 1 is taken.
+6930WSn  - Data window starts in column 'n' of this line.
+6940.X   - Marks this line .X
+6950X(n) - Excludes the current line or the following n lines.
+6960.label - markes the current line with ".label". The label may be
+6970         any string of 1 to 4 alphabetical characters.
+6980.Y   - Marks this line .Y
+6990
+7000*****  End of Description  *****

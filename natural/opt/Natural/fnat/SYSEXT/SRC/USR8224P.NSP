@@ -1,0 +1,66 @@
+0010/* This program serves as an example of how to design a user-defined
+0020/* program to call USR8224N.
+0030/***********************************************************************
+0040OPTIONS LOWSRCE=ON
+0050/*---------------------------------------------------------------------
+0060/*---------------- Data definitions -----------------------------------
+0070/*---------------------------------------------------------------------
+0080Define Data Local
+00901 USR8224N-Parameters
+0100  2 USR8224N-Input-DBID               (I4)       /* In
+0110  2 USR8224N-Input-FNR                (I4)       /* In
+0120  2 USR8224N-Number-Files             (I4)       /* Output
+0130  2 USR8224N-File-List                (*)        /* Output
+0140    3 USR8224N-FNR                    (I4)
+0150    3 USR8224N-File-Name              (A16)
+0160  2 USR8224N-Return-Code              (I4)       /* Out
+0170  2 USR8224N-Return-Message           (A250)     /* Out
+0180/*
+01901 VI2-1                               (I2)
+0200End-Define
+0210/***********************************************************************
+0220Set Key All
+0230/*---------------------------------------------------------------------
+0240/* Prepare Input
+0250/*---------------------------------------------------------------------
+0260USR8224N-Input-DBID := 12
+0270USR8224N-Input-FNR  := 0
+0280/*---------------------------------------------------------------------
+0290/* Input DBID and FNR
+0300/*---------------------------------------------------------------------
+0310Input (AD=M)
+0320      10T 'Data base ....' USR8224N-Input-DBID (AD=L)
+0330    / 10T 'File number ..' USR8224N-Input-FNR (AD=L) '(0 = all files)'
+0340   // 10T 'Press any PF-KEY to stop.'
+0350If *PF-Key <> 'ENTR'
+0360  Stop
+0370End-If
+0380/*---------------------------------------------------------------------
+0390/* Get the file name(s)
+0400/*---------------------------------------------------------------------
+0410/*
+0420Callnat 'USR8224N'
+0430        USR8224N-Parameters
+0440/*---------------------------------------------------------------------
+0450/* Display Result
+0460/*---------------------------------------------------------------------
+0470If (USR8224N-Return-Code = 0)
+0480  For VI2-1 = 1 to USR8224N-Number-Files
+0490    Print USR8224N-FNR (VI2-1) 2X USR8224N-File-Name (VI2-1)
+0500    If *PF-Key <> 'ENTR'
+0510      Escape Bottom
+0520    End-If
+0530  End-For
+0540  Print 'Total number of files found:' USR8224N-Number-Files (AD=L)
+0550Else
+0560  Print 'Return code' USR8224N-Return-Code (AD=L)
+0570        'from USR8224N with message:'
+0580  Print USR8224N-Return-Message
+0590End-If
+0600/***********************************************************************
+0610At Top of Page
+0620  Print 'File Number  File Name'
+0630      / '-----------  ----------------'
+0640End-TopPage
+0650/***********************************************************************
+0660End

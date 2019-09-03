@@ -1,0 +1,54 @@
+0010* Program   MALLOC
+0020* View      FILE-ALLOCATE
+0030*
+0040* Function  Data Set Allocation
+0050*
+0060* ----------------------------------------------------------------------
+0070* Maintenance..:
+0080* hka 97-12-03   NPE213:   make it y2000 compliant
+0090* ======================================================================
+0100*
+0110DEFINE DATA
+0120   GLOBAL USING TUTO
+0130   LOCAL USING ALLOC-L
+0140END-DEFINE
+0150*
+0160ASSIGN FILE-ALLOCATE.CATALOG = 'YES'
+0170INPUT (AD=MIL'_' ZP=OFF)
+0180   //  ##TITLE (AD=OI IP=OFF)
+0190   //  '  Data set name ....:' FILE-ALLOCATE.DSNAME
+0200    /  '  Volume ...........:' FILE-ALLOCATE.VOLSER
+0210   //  '  Dsorg ............:' FILE-ALLOCATE.DSORG
+0220    /  '  Lrecl ............:' FILE-ALLOCATE.LRECL
+0230    /  '  Blksize ..........:' FILE-ALLOCATE.BLKSIZE
+0240   //  '  Recfm ............:' FILE-ALLOCATE.RECFM
+0250   //  '  Allocation type ..:' FILE-ALLOCATE.ALLOCATION-TYPE '(cyl/trk)'
+0260    /  '  Primary ..........:' FILE-ALLOCATE.PRIMARY-ALLOCATION
+0270    /  '  Secondary ........:' FILE-ALLOCATE.SECONDARY-ALLOCATION
+0280    /  '  Directory blocks..:' FILE-ALLOCATE.DIRECTORY-BLOCKS
+0290   //  '  Catalog ..........:' FILE-ALLOCATE.CATALOG '(yes/no)'
+0300   //  '  Expiration date ..:' FILE-ALLOCATE.EXPIRATION-DATX
+0310                               (EM=YYYY-MM-DD) '(format yyyy-mm-dd)'
+0320*
+0330PROCESS FILE-ALLOCATE
+0340   USING NODE                 = ##NODE
+0350     ,   VOLSER               = FILE-ALLOCATE.VOLSER
+0360     ,   DSNAME               = FILE-ALLOCATE.DSNAME
+0370     ,   RECFM                = FILE-ALLOCATE.RECFM
+0380     ,   DSORG                = FILE-ALLOCATE.DSORG
+0390     ,   LRECL                = FILE-ALLOCATE.LRECL
+0400     ,   BLKSIZE              = FILE-ALLOCATE.BLKSIZE
+0410     ,   ALLOCATION-TYPE      = FILE-ALLOCATE.ALLOCATION-TYPE
+0420     ,   PRIMARY-ALLOCATION   = FILE-ALLOCATE.PRIMARY-ALLOCATION
+0430     ,   SECONDARY-ALLOCATION = FILE-ALLOCATE.SECONDARY-ALLOCATION
+0440     ,   DIRECTORY-BLOCKS     = FILE-ALLOCATE.DIRECTORY-BLOCKS
+0450     ,   CATALOG              = FILE-ALLOCATE.CATALOG
+0460     ,   EXPIRATION-DATX      = FILE-ALLOCATE.EXPIRATION-DATX
+0470  GIVING ERROR-CODE
+0480         ERROR-TEXT
+0490IF ERROR-CODE > 0
+0500   REINPUT ERROR-TEXT
+0510ELSE
+0520   REINPUT *1005
+0530END-IF
+0540END

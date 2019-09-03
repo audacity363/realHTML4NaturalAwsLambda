@@ -1,0 +1,18 @@
+0010&H View JOB-SWITCHES
+0020&L
+0030&L
+0040#Zweck@    : Abfragen von Benutzerschaltern.
+0050&L
+0060&L
+0070#System@   : BS2000/OSD.
+0080&L
+0090&L
+0100#Anwendung@: Mit Hilfe dieses Views koennen Sie die BS2000 Benutzer-
+0110             schalter einer Benutzer-Kennung abfragen.
+0120&L
+0130&L
+0140&L
+0150#Anmerkung@: Im single user mode sind auch Setzen und Ruecksetzen der
+0160             Schalter f}r die eigene Benutzerkennung sowie das Abfragen,
+0170             Setzen und Ruecksetzen der Auftragsschalter der eigenen
+0180             Task moeglich.

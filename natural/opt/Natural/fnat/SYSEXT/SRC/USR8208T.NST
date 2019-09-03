@@ -1,0 +1,160 @@
+0010Terminate EntireX Broker service
+0020.
+0030Documentation ......... USR8208T    /*  Text object
+0040Interface ............. USR8208N    /*  Cataloged subprogram
+0050Example Program ....... USR8208P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC
+0100.
+0110Keywords .............. +CURRENT-VERSION, +NEW-NAT-6.3.15,
+0120                        BROKER SERVICE, ENTIREX, RPC, SERVER,
+0130                        SHUTDOWN-SERVICE, TERMINATE
+0140.
+0150Interface Versions .... USR2075N, USR8208N
+0160.
+0170Function .............. With the command TERMINATE-SERVICE the inter-
+0180                        face uses the Command and Information Service
+0190                        of EntireX to fulfill the task.
+0200                        The SHUTDOWN-SERVICE command is sent to the
+0210                        Broker if its version is 5 or above. Otherwise,
+0220                        the same method is used as in USR2075N.
+0230                        It returns version information on
+0240                        the EntireX Broker and the Command and
+0250                        Information Service itself.
+0260                        With the command INFO-SERVICE additional
+0270                        information on the specified service(s) is
+0280                        returned from the Broker.
+0290
+0300.
+0310.
+0320Parameters
+0330----------
+0340Define the following parameters with the DEFINE DATA statement:
+0350.
+036001 PARM-AREA
+0370   02 FUNCTION (A17)       /* TERMINATE-SERVICE,
+0380                           /* INFO-SERVICE, PING
+0390   02 SRVNODE  (A192)      /* Node name of EntireX Broker
+0400   02 SRVCLASS (A32)       /* Server class, usually RPC
+0410   02 SRVNAME  (A192)      /* Server name (A32)
+0420   02 SERVICE  (A32)       /* Service type, CALLNAT for Natural
+0430                           /* RPC servers
+0440   02 IMMEDIATE(L)         /* TRUE: immediately terminate all con-
+0450                           /*   versations for the specified server.
+0460                           /* FALSE: Existing conversations are
+0470                           /*   allowed to end normally; no new con-
+0480                           /*   versations are accepted.
+0490   02 USER-ID  (A32)       /* Logon data for EntireX Broker
+0500   02 PASSWORD (A32)
+0510   02 MSG      (A) dynamic /* Message returned
+0520   02 RC       (I2)        /* Response code, possible values:
+0530                           /* 0 -  MSG contains a normal message
+0540                           /*        from the EntireX Broker
+0550                           /* 1 -  MSG contains an error message
+0560                           /*        from the EntireX Broker
+0570                           /* 3 -  MSG contains an error message
+0580                           /*        from Natural Security
+0590.
+060001 BROKER-INFO                              /* OUT, EntireX Broker
+0610   02 P-CIS-VERSION         (I2)            /* Version of Command and
+0620                                            /*   Information Service
+0630   02 P-CB-KERNELSECURITY   (A1)            /* Status of kernel security
+0640   02 P-ETB-API-VERSION     (I2)            /* Highest supported API
+0650   02 BROKER-VERSIONSTRING  (A)     DYNAMIC /* Broker version string
+0660   02 BRKSTUB-VERSIONSTRING (A)     DYNAMIC /* Broker stub version string
+0670   02 ADD-BRK-INFO          (A/1:*) DYNAMIC /* One occurrence per
+0680                                            /* service; all information
+0690                                            /* is compressed, separated
+0700                                            /* by ';' (for FUNCTION =
+0710                                            /* INFO-SERVICE)
+0720.
+0730.
+0740Interface Call
+0750--------------
+0760Use the interface with the CALLNAT statement:
+0770.
+0780CALLNAT 'USR8208N' PARM-AREA
+0790                   BROKER-INFO
+0800.
+0810.
+0820Using the Application Programming Interface:
+0830--------------------------------------------
+0840Copy the subprogram USR8208N to the library SYSTEM or to the appropriate
+0850steplib library, or to the required library.
+0860.
+0870Following variables have to be filled before invoking the interface:
+0880.
+0890FUNCTION
+0900  TERMINATE-SERVICE sends a shutdown request to a service specified by
+0910      server-class, server-name, and service type.
+0920  INFO-Service returns information about the service(s) such as number
+0930      of active servers or active conversations (see below).
+0940  PING returns the identification string of a server.
+0950.
+0960SRVNODE
+0970  EntireX Broker name.
+0980.
+0990SRVCLASS
+1000  Server class is usually RPC.
+1010.
+1020SRVNAME
+1030  Server name.
+1040.
+1050SERVICE
+1060  Service type is CALLNAT for Natural RPC servers.
+1070.
+1080USER-ID
+1090  The user ID to log on to the EntireX Broker.
+1100.
+1110PASSWORD
+1120  The password to logon to the EntireX Broker if EntireX Broker security
+1130  is active.
+1140  If EntireX Broker security is active, a password must be specified.
+1150  If EntireX Broker security uses the trusted user ID mechanism, the
+1160  reserved password *TRUSTED can be used instead of a user password.
+1170.
+1180.
+1190Information returned with function INFO-SERVICE:
+1200------------------------------------------------
+1210The variable ADD-BRK-INFO(*) contains one occurrence per service.
+1220Each occurrence is a compressed string containing attribute-value
+1230pairs delimited by a semicolon. The following pairs exist:
+1240   'SERVER-CLASS=' SERVER-CLASS
+1250   'SERVER-NAME=' SERVER-NAME
+1260   'SERVICE=' SERVICE
+1270   'TRANS=' TRANS
+1280   'CONV-NONACT=' CONV-NONACT
+1290   'SERVER-ACT=' SERVER-ACT
+1300   'CONV-ACT=' CONV-ACT
+1310   'CONV-HIGH=' CONV-HIGH
+1320   'LONG-ACT=' LONG-ACT
+1330   'LONG-HIGH=' LONG-HIGH
+1340   'SHORT-ACT=' SHORT-ACT
+1350   'SHORT-HIGH=' SHORT-HIGH
+1360   'NUM-WAIT-SERVER=' NUM-WAIT-SERVER
+1370   'NUM-SERV-OCC=' NUM-SERV-OCC
+1380   'NUM-PEND=' NUM-PEND
+1390   'PEND-HIGH=' PEND-HIGH
+1400   'REQ-SUM=' REQ-SUM
+1410   'LMAXUOWS=' LMAXUOWS
+1420   'LMAXUOWMSG=' LMAXUOWMSG
+1430   'LUWTIME=' LUWTIME
+1440   'LMAXDELCNT=' LMAXDELCNT
+1450   'LMAXMSGSIZE=' LMAXMSGSIZE
+1460   'LTOTALUOWS=' LTOTALUOWS
+1470   'CSTORE=' CSTORE
+1480   'CUWSTATP=' CUWSTATP
+1490   'CDEFERRED=' CDEFERRED
+1500   'CENCLEVEL=' CENCLEVEL
+1510   'ATTACH-MGRS-ACT=' ATTACH-MGRS-ACT
+1520   'LUWSTAT-ADD-TIME=' LUWSTAT-ADD-TIME
+1530For a detailed description, see webMethods EntireX V9.0.1 documentation
+1540  > Components and Features of EntireX > ACI Programming
+1550  > Broker CIS Data Structures > Information Reply Structures
+1560  > SERVICE-OBJECT (Struct INFO_SV).
+1570
+1580***** End of Description *****
+1590
+1600

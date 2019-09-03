@@ -1,0 +1,13 @@
+0010** Example 'LOGICX07': SPECIFIED option in logical condition
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #PARM1 (A3)
+00501 #PARM3 (N2)
+0060END-DEFINE
+0070*
+0080#PARM1 := 'ABC'
+0090#PARM3 := 20
+0100*
+0110CALLNAT 'LOGICX08' #PARM1 1X #PARM3
+0120*
+0130END

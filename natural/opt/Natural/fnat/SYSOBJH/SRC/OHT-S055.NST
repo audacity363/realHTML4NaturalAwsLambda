@@ -1,0 +1,25 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Fixed Work File Record Length
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180Sets the format of the unload work file
+0190to a maximum record length of fixed size.
+0200
+0210Every data record contains 256 bytes
+0220if written in internal format,
+0230or 100 bytes in Transfer format.
+0240
+0250<HelpTextEnd>

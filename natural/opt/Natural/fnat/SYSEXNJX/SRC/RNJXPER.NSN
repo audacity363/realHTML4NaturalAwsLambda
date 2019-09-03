@@ -1,0 +1,160 @@
+0010* >Natural Source Header 000000
+0020* :Mode S
+0030* :CP
+0040* <Natural Source Header
+0050/** New Subprogram RNJXPER.
+0060/**
+0070DEFINE DATA PARAMETER
+00801 CT (1:*)
+0090  2 LEVEL (I4)
+0100  2 OPENED (I4)
+0110  2 SELECTED (L)
+0120  2 TEXT (A) DYNAMIC
+01301 PRG (A/1:*) DYNAMIC
+01401 HTML(A/1:*) DYNAMIC
+0150LOCAL
+01601 I (I2) INIT <0>
+01701 IMAX (I2) INIT <22>
+0180END-DEFINE
+0190/*
+0200REDUCE ARRAY CT TO 0
+0210RESIZE ARRAY CT  TO (1:IMAX)
+0220RESIZE ARRAY PRG TO (1:IMAX)
+0230RESIZE ARRAY HTML TO (1:IMAX)
+0240/*
+0250ADD 1 TO I
+0260TEXT(I)  := 'Hint 1: Browser Cache'
+0270HTML(I) := '../njxperformance/html/hint1_browsercaching.html'
+0280LEVEL(I)  := 1
+0290/*
+0300ADD 1 TO I
+0310TEXT(I)  := 'Hint 2: Container Sizing'
+0320HTML(I) := '../njxperformance/html/hint2_container_sizing.html'
+0330LEVEL(I)  := 0
+0340/*
+0350ADD 1 TO I
+0360TEXT(I)  := 'Rowarea Example'
+0370PRG(I)   := "RAREAS-P"
+0380HTML(I) := '../njxperformance/html/hint2_container_sizing.html'
+0390LEVEL(I) := 2
+0400OPENED(I):= 2
+0410/*
+0420ADD 1 TO I
+0430TEXT(I)  := ':o(  ITRs with superfluous % sizing - 1'
+0440PRG(I)   := "BAREAS-P"
+0450HTML(I) := '../njxperformance/html/hint2_container_sizing.html'
+0460LEVEL(I) := 2
+0470OPENED(I):= 2
+0480/*
+0490ADD 1 TO I
+0500TEXT(I)  := ':o(  ITRs with superfluous % sizing - 2'
+0510PRG(I)   := "BHRARS-P"
+0520HTML(I) := '../njxperformance/html/hint2_container_sizing.html'
+0530LEVEL(I) := 2
+0540OPENED(I):= 2
+0550/*
+0560ADD 1 TO I
+0570TEXT(I)  := 'Hint 3: Grids'
+0580HTML(I) := '../njxperformance/html/hint3_grids.html'
+0590LEVEL(I)  := 0
+0600/*
+0610ADD 1 TO I
+0620TEXT(I)  := 'TEXTGRIDSSS2 - % width'
+0630PRG(I)   := "GRDDSP-P"
+0640HTML(I) := '../njxperformance/html/hint3_grids.html'
+0650LEVEL(I) := 2
+0660OPENED(I):= 2
+0670/*
+0680ADD 1 TO I
+0690TEXT(I)  := 'ROWTABLEAREA2 - % width'
+0700PRG(I)   := "GDDSP2-P"
+0710HTML(I) := '../njxperformance/html/hint3_grids.html'
+0720LEVEL(I) := 2
+0730OPENED(I):= 2
+0740/*
+0750ADD 1 TO I
+0760TEXT(I)  := 'ROWTABLEARE2 - px width - movable columns'
+0770PRG(I)   := "GDDSP3-P"
+0780HTML(I) := '../njxperformance/html/hint3_grids.html'
+0790LEVEL(I) := 2
+0800OPENED(I):= 2
+0810/*
+0820ADD 1 TO I
+0830TEXT(I)  := 'TEXTGRIDSSS2 - px width - ROWCOUNT 100'
+0840PRG(I)   := "GDDSP4-P"
+0850HTML(I) := '../njxperformance/html/hint3_grids.html'
+0860LEVEL(I) := 2
+0870OPENED(I):= 2
+0880/*
+0890ADD 1 TO I
+0900TEXT(I)  := ':o(  Huge ROWTABLEAREA2'
+0910PRG(I)   := "BGDSP2-P"
+0920HTML(I) := '../njxperformance/html/hint3_grids.html'
+0930LEVEL(I) := 2
+0940OPENED(I):= 2
+0950/*
+0960ADD 1 TO I
+0970TEXT(I)  := 'Hint 4: Page Size - Modular Design'
+0980HTML(I) := '../njxperformance/html/hint4_pagesize.html'
+0990LEVEL(I)  := 0
+1000/*
+1010ADD 1 TO I
+1020TEXT(I)  := 'ROWTABAREA: Single Controls'
+1030PRG(I)   := "TABARS-P"
+1040LEVEL(I) := 2
+1050OPENED(I):= 2
+1060/*
+1070ADD 1 TO I
+1080TEXT(I)  := 'ROWTABAREA: Grids (ROWTABLEAREA2)'
+1090PRG(I)   := "TABARG-P"
+1100HTML(I) := '../njxperformance/html/hint4_pagesize.html'
+1110LEVEL(I) := 2
+1120OPENED(I):= 2
+1130/*
+1140ADD 1 TO I
+1150TEXT(I)  := 'ROWTABAREA: Grids (TEXTGRIDSSS2)'
+1160PRG(I)   := "TABAGD-P"
+1170HTML(I) := '../njxperformance/html/hint4_pagesize.html'
+1180LEVEL(I) := 2
+1190OPENED(I):= 2
+1200/*
+1210ADD 1 TO I
+1220TEXT(I)  := 'TABSEL with page navigation'
+1230PRG(I)   := "TABPG1-P"
+1240HTML(I) := '../njxperformance/html/hint4_pagesize.html'
+1250LEVEL(I) := 2
+1260OPENED(I):= 2
+1270/*
+1280ADD 1 TO I
+1290TEXT(I)  := 'ROWTABSUBPAGES: multiple Natural sessions'
+1300PRG(I)   := "RTBSUB-P"
+1310HTML(I) := '../njxperformance/html/hint4_pagesize.html'
+1320LEVEL(I) := 2
+1330OPENED(I):= 2
+1340/*
+1350ADD 1 TO I
+1360TEXT(I)  := 'Workplace Applications'
+1370LEVEL(I) := 2
+1380OPENED(I):= 2
+1390HTML(I) := '../njxperformance/html/hint4_workplace.html'
+1400/*
+1410ADD 1 TO I
+1420TEXT(I)  := 'Hint 5: Server-Round-Trips'
+1430HTML(I) := '../njxperformance/html/hint5_serverroundtrip.html'
+1440LEVEL(I)  := 0
+1450/*
+1460ADD 1 TO I
+1470TEXT(I)  := 'Toggle Visibility without Server-Round-Trip'
+1480PRG(I)   := "VISBLO-P"
+1490HTML(I) := '../njxperformance/html/hint5_serverroundtrip.html'
+1500LEVEL(I) := 2
+1510OPENED(I):= 2
+1520/*
+1530ADD 1 TO I
+1540TEXT(I)  := 'Client Side Validation'
+1550LEVEL(I) := 2
+1560OPENED(I):= 2
+1570HTML(I) := '../njxperformance/html/hint5_clientsidevalidation.html'
+1580/*
+1590
+1600END

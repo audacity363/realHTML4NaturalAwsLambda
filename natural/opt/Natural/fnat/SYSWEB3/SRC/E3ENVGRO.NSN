@@ -1,0 +1,129 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3ENVGRO
+0050*
+0060* DESCRIPTION   List all variables sent by the HTTP server.
+0070*               with the same name
+0080*
+0090* AUTHOR        SAG   23.01.2003
+0100*
+0110* Version       8.3
+0120*
+0130* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0140*
+0150* HISTORY
+0160* USER    DATE       REASON
+0170* ------+----------+----------------------------------------------
+0180*       ! --.--.-- !
+0190* ------+----------+----------------------------------------------
+0200*
+0210* ------ PARAMETER -----------------------------------------------
+0220DEFINE DATA
+0230PARAMETER USING W3PARM
+0240LOCAL  USING W3CONST
+0250LOCAL  USING W3PINFO
+0260LOCAL
+02701 W3ARRAYVALUE         (A/1:5) DYNAMIC
+02801 W3ARRAYANZ           (I4) INIT <*OCC(W3ARRAYVALUE)>
+02901 W3ARRAYSTART         (I4) INIT <1>
+03001 W3ARRAYMAX           (I4)
+0310*
+03201 W3NAME               (A) DYNAMIC
+03301 W3VALUE              (A) DYNAMIC
+03401 #SUMM                (I4)
+03501 #CALLS               (I4) INIT <1>
+03601 #II                  (I4)
+0370END-DEFINE
+0380* ------------------------------------------------------ error handling
+0390ON ERROR
+0400  PERFORM W3ERROR ##W3ERROR
+0410  PERFORM W3END ##RPC
+0420  ESCAPE ROUTINE
+0430END-ERROR
+0440* ======================================================== Main Program
+0450* ------------------------------------------------ init HTML Generation
+0460PERFORM W3INIT ##RPC
+0470* -------------------------------------------- Search for this variable
+0480PERFORM W3READ-ENVIRONMENT-TO-DYNAMIC "NAME" "P" W3NAME
+0490IF *LENGTH(W3NAME) = 0 THEN
+0500  W3NAME := "TEST"
+0510ELSE
+0520  EXAMINE W3NAME TRANSLATE INTO UPPER
+0530END-IF
+0540*
+0550* --------------------------------------------- Set type of return Page
+0560PERFORM W3CONTENT-TYPE 'text/html'
+0570* ------------------------------------------- Set head of the HTML page
+0580PERFORM W3TEXTLINE "<!DOCTYPE 'HTML PUBLIC -//W3C//DTD HTML 3.2//EN'>"
+0590PERFORM W3TEXTLINE '<HTML><HEAD><META HTTP-EQUIV="Content-Type" '-
+0600  'CONTENT="text/html; charset=iso-8859-1"><TITLE>'
+0610PERFORM W3TEXTLINE 'Basic Routines- Group of Environment Variables'
+0620PERFORM W3TEXTLINE '</TITLE></HEAD><BODY>'
+0630*
+0640PERFORM W3READ-ENVIRONMENT-GROUP W3ARRAYSTART W3ARRAYANZ W3NAME
+0650  " " W3ARRAYVALUE(*) W3ARRAYMAX
+0660*
+0670COMPRESS "<H2>" 'Group of Environment Variables'
+0680  "</H2><HR>" ##HTTP_NEWLINE
+0690  'Read the all environment variables with name <tt>'
+0700  W3NAME '</tt> in chunks of:' *OCC(W3ARRAYVALUE)
+0710  "<P>" ##HTTP_NEWLINE INTO W3VALUE
+0720PERFORM W3TEXTDYNAMIC W3VALUE
+0730
+0740PERFORM W3TEXTLINE "<TABLE BORDER='0'>"
+0750*
+0760REPEAT
+0770  COMPRESS '<TR BGCOLOR="#CCCCCC"><TH>Found Occurrences:</TH><TD>'
+0780    W3ARRAYMAX "</TD></TR>" ##HTTP_NEWLINE
+0790    '<TR BGCOLOR="#CCCCCC"><TH>Read Occurrences:</TH><TD>'
+0800    W3ARRAYANZ "</TD></TR>" ##HTTP_NEWLINE
+0810*   '<TR BGCOLOR="#CCCCCC"><TH>Next Start:</TH><TD>'
+0820*   W3ARRAYSTART "</TD></TR>" ##HTTP_NEWLINE
+0830    INTO W3VALUE
+0840  PERFORM W3TEXTDYNAMIC W3VALUE
+0850  /*
+0860  FOR #II = 1 TO W3ARRAYANZ
+0870    ADD 1 TO #SUMM
+0880    COMPRESS "<TR><TH>" W3NAME "(" #SUMM ")</TH><TD>"
+0890      INTO W3VALUE LEAVING NO
+0900    PERFORM W3TEXTDYNAMIC W3VALUE
+0910    IF W3ARRAYVALUE(#II) NE " " THEN
+0920      PERFORM W3HTML W3ARRAYVALUE(#II)
+0930    ELSE
+0940      PERFORM W3TEXT "<FONT COLOR=RED>" - '(empty)' - "</FONT>"
+0950    END-IF
+0960    /*
+0970    COMPRESS "</TD></TR>" ##HTTP_NEWLINE INTO W3VALUE
+0980    PERFORM W3TEXTDYNAMIC W3VALUE
+0990  END-FOR
+1000  /*
+1010  IF W3ARRAYSTART = 0
+1020    ESCAPE BOTTOM
+1030  ELSE
+1040    PERFORM W3READ-ENVIRONMENT-GROUP W3ARRAYSTART W3ARRAYANZ "TEST"
+1050      " " W3ARRAYVALUE(*) W3ARRAYMAX
+1060  END-IF
+1070  /*
+1080  ADD 1 TO #CALLS
+1090  COMPRESS '<TR BGCOLOR="#CCCC99"><TH colspan=2>Call Nr:' #CALLS
+1100    "</TH></TR>" INTO W3VALUE
+1110  PERFORM W3TEXTLINEDYNAMIC W3VALUE
+1120END-REPEAT
+1130*
+1140PERFORM W3TEXTLINE "</TABLE>"
+1150*
+1160* --- END THE HTML PAGE ---
+1170COMPRESS "<TABLE BORDER='0' WIDTH='100%' CELLSPACING='0' "-
+1180  "CELLPADDING='5'>"
+1190  '<TR BGCOLOR="#00cc66"><TD>' *PROGRAM '&#32;-&#32;' *DATE
+1200  '&#32;' *TIME
+1210  "</TD><TD ALIGN='RIGHT'>" 'Natural'
+1220  "</TD></TR></TABLE>"
+1230  '</BODY></HTML>' INTO W3VALUE
+1240PERFORM W3TEXTDYNAMIC W3VALUE
+1250*
+1260* --- END Web Interface ---
+1270PERFORM W3END ##RPC
+1280*
+1290END

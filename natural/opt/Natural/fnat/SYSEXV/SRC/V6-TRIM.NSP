@@ -1,0 +1,91 @@
+0010*
+0020* Program .. V6-TRIM
+0030* Library .. SYSEXV
+0040* Version .. 6.1
+0050*
+0060* Functionality: Show new system function *TRIM
+0070************************************************************************
+0080*
+0090DEFINE DATA LOCAL
+01001 #ALPHA1    (A) DYNAMIC
+01101 #ALPHA2    (A) DYNAMIC
+01201 #ALPHA3    (A) DYNAMIC
+01301 #ALPHA4    (A) DYNAMIC
+01401 #ALPHA5    (A) DYNAMIC
+01501 #NUM1      (N4)
+01601 #NUM2      (N4)
+01701 #NUM3      (N4)
+01801 #NUM4      (N4)
+01901 #NUM5      (N4)
+0200END-DEFINE
+0210*
+0220FORMAT KD=ON
+0230SET KEY PF3  NAMED 'Exit'
+0240  PF12 NAMED 'Canc'
+0250*
+0260#ALPHA1 := '    ABC  '
+0270#NUM1   := *LENGTH(#ALPHA1)
+0280*
+0290#ALPHA2 := *TRIM(#ALPHA1,LEADING)
+0300#NUM2   := *LENGTH(#ALPHA2)
+0310COMPRESS FULL  '''' #ALPHA2 '''' INTO #ALPHA2 LEAVING NO
+0320*
+0330#ALPHA3 := *TRIM(#ALPHA1,TRAILING)
+0340#NUM3   := *LENGTH(#ALPHA3)
+0350COMPRESS FULL  '''' #ALPHA3 '''' INTO #ALPHA3 LEAVING NO
+0360*
+0370#ALPHA4 := *TRIM(#ALPHA1)
+0380#NUM4   := *LENGTH(#ALPHA4)
+0390COMPRESS FULL  '''' #ALPHA4 '''' INTO #ALPHA4 LEAVING NO
+0400*
+0410INPUT (IP=OFF)
+0420  01T *TIMX  (AD=OTD)
+0430  21T '***** NATURAL 6.1 ENHANCEMENTS *****'
+0440  70T *DATX  (AD=OTD DF=L)
+0450  /
+0460  01T 'User'
+0470  06T *USER  (AD=OILT)
+0480  34T '- *TRIM -'
+0490  64T 'Program'
+0500  72T *PROGRAM (AD=OI)
+0510  //
+0520  02T 'New system function *TRIM removes leading and/or' (I)
+0530  'trailing blanks.'(I)
+0540  //
+0550  02T '#Alpha1 := ''    ABC  '''
+0560  /
+0570  02T '*LENGTH(#Alpha1):' #NUM1 (AD=OI)
+0580  //
+0590  02T '#Alpha2 :=' '*TRIM'(I) '(#Alpha1,LEADING)'
+0600  40T '/* remove leading blanks'
+0610  /
+0620  02T '#Alpha2:' #ALPHA2 (AD=OI AL=20)
+0630  /
+0640  02T '*LENGTH(#Alpha2):' #NUM2 (AD=OI)
+0650  //
+0660  02T '#Alpha3 :=' '*TRIM'(I) '(#Alpha1,TRAILING)'
+0670  40T '/* remove trailing blanks'
+0680  /
+0690  02T '#Alpha3:' #ALPHA3 (AD=OI AL=20)
+0700  /
+0710  02T '*LENGTH(#Alpha3):' #NUM3 (AD=OI)
+0720  //
+0730  02T '#Alpha4 :=' '*TRIM'(I) '(#Alpha4)'
+0740  40T '/* remove leading and trailing blanks'
+0750  /
+0760  02T '#Alpha4:' #ALPHA4 (AD=OI AL=20)
+0770  /
+0780  02T '*LENGTH(#Alpha4):' #NUM4 (AD=OI)
+0790  //
+0800  02T 'Note: The apostrophes are only included to visualize'
+0810  'the blanks.'
+0820IF *PF-KEY ='PF3'
+0830  ESCAPE ROUTINE
+0840END-IF
+0850IF (*PF-KEY = 'PF12' OR= 'CLR')
+0860  CALLNAT 'UTILSTOP'
+0870END-IF
+0880
+0890*
+0900*
+0910END

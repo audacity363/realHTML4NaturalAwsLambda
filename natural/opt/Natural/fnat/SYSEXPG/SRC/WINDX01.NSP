@@ -1,0 +1,29 @@
+0010** Example 'WINDX01': DEFINE WINDOW
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 COMMAND (A10)
+0050END-DEFINE
+0060*
+0070DEFINE WINDOW TEST
+0080       SIZE 5*25
+0090       BASE 5/40
+0100       TITLE 'Sample Window'
+0110       CONTROL WINDOW
+0120       FRAMED POSITION SYMBOL BOTTOM LEFT
+0130*
+0140INPUT WINDOW='TEST' WITH TEXT 'message line'
+0150      COMMAND (AD=I'_') /
+0160      'dataline 1' /
+0170      'dataline 2' /
+0180      'dataline 3' 'long data line'
+0190*
+0200IF COMMAND = 'TEST2'
+0210  FETCH 'WINDX02'
+0220ELSE
+0230  IF COMMAND = '.'
+0240    STOP
+0250  ELSE
+0260    REINPUT 'invalid command'
+0270  END-IF
+0280END-IF
+0290END

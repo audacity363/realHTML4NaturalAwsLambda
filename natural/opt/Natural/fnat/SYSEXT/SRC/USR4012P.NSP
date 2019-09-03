@@ -1,0 +1,38 @@
+0010/* RPC: Support of application errors.
+0020/*
+0030/* Function ... Raise Natural error NAT1999 with passed error text.
+0040/*
+0050/* This program serves as example how to design a user-defined
+0060/* program call 'USR4012N'.
+0070/*
+0080/* Parameter ..
+0090/*     INPUT
+0100/*             ERRORTEXT (A128) - Error text for NAT1999
+0110/*
+0120/*     OUTPUT
+0130/*             nothing returned   NAT1999 raised
+0140/***********************************************************************
+0150DEFINE DATA LOCAL
+01601 PARM-INPUT
+0170  2 I-ERRORTEXT (A120)
+0180  2 REDEFINE I-ERRORTEXT
+0190    3 I-ERRORTEXT-1 (A60)
+0200    3 I-ERRORTEXT-2 (A60)
+0210END-DEFINE
+0220*
+0230DEFINE WINDOW RPC-NAT1999 SIZE 6*65 BASE 8/8
+0240  TITLE ' Raise Natural errror NAT1999' CONTROL SCREEN
+0250*
+0260SET KEY PF3
+0270*
+0280INPUT WINDOW='RPC-NAT1999'   /
+0290      'Please enter error text for NAT1999:' /
+0300      '-' I-ERRORTEXT-1 (AD=OMI) /
+0310      '-' I-ERRORTEXT-2 (AD=OMI) /
+0320*
+0330IF *PF-KEY NE 'PF3'
+0340  EJECT
+0350  CALLNAT 'USR4012N' USING PARM-INPUT
+0360END-IF
+0370*
+0380END

@@ -1,0 +1,84 @@
+0010Perform Adabas direct calls
+0020.
+0030Documentation ......... USR1043T    /*  Text object
+0040Interface ............. USR1043N    /*  Cataloged subprogram
+0050Example Program ....... USR1043P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATABASE
+0100.
+0110Keywords .............. ADABAS, DATABASE, DDM, FILE
+0120.
+0130Function .............. This interface enables you to issue Adabas
+0140                        direct calls via the CMADA interface.
+0150                        Please have a look at the Adabas Command
+0160                        Reference Documentation for further
+0170                        information.
+0180                        Be aware, that some Adabas commands have
+0190                        plattform specific features and may not
+0200                        longer execute successfully when you change
+0210                        the plattform.
+0220.
+0230.
+0240Parameters
+0250----------
+0260Define the following parameters with the DEFINE DATA statement:
+0270.
+0280 1 CONTROL-BLOCK  (A80)
+0290 1 REDEFINE CONTROL-BLOCK
+0300   2 CB-RESERVED  (B02)     /* Reserved
+0310   2 CB-CMD       (A02)     /* Command code
+0320   2 CB-CID       (A04)     /* Command ID
+0330   2 CB-DBID      (B01)     /* Data base ID
+0340   2 CB-FNR       (B01)     /* File number
+0350   2 CB-RSP       (B02)     /* Response code
+0360   2 CB-ISN       (B04)     /* ISN
+0370   2 CB-ISL       (B04)     /* ISN lower limit
+0380   2 CB-ISQ       (B04)     /* ISN quantity
+0390   2 CB-FBL       (B02)     /* Format buffer length
+0400   2 CB-RBL       (B02)     /* Record buffer length
+0410   2 CB-SBL       (B02)     /* Search buffer length
+0420   2 CB-VBL       (B02)     /* Value  buffer length
+0430   2 CB-IBL       (B02)     /* ISN    buffer length
+0440   2 CB-COP1      (A01)     /* Command option 1
+0450   2 CB-COP2      (A01)     /* Command option 2
+0460   2 CB-ADD1      (A08)     /* Additions 1
+0470   2 CB-ADD2      (A04)     /* Additions 2
+0480   2 CB-ADD3      (A08)     /* Additions 3
+0490   2 CB-ADD4      (A08)     /* Additions 4
+0500   2 CB-ADD5      (A08)     /* Additions 5
+0510   2 CB-CT        (A04)     /* Command time
+0520   2 CB-UA        (A04)     /* User area
+0530 /*
+0540 1 FORMAT-ADDR    (A01)     /* Input/Output
+0550 1 RECORD-ADDR    (A01)     /* Input/Output
+0560 1 SEARCH-ADDR    (A01)     /* Input/Output
+0570 1 VALUE-ADDR     (A01)     /* Input/Output
+0580 1 ISN-ADDR       (A01)     /* Input/Output
+0590                            /* Addresses of the respective buffers.
+0600                            /* The address of a buffer will be ignored,
+0610                            /* if the buffer length is set to zero in
+0620                            /* the control block.
+0630 1 RESPONSE       (I04)     /* Response code from Adabas - Output
+0640                            /* and from ACBX Call:
+0650                            /* 10001 = CMADA-CBXRC must be specified
+0660                            /* 10002 = Only command 'CL' supported
+0670.
+0680.
+0690Interface Call
+0700--------------
+0710Use the interface with the CALLNAT statement:
+0720.
+0730CALLNAT 'USR1043N'
+0740        CONTROL-BLOCK  FORMAT-ADDR  RECORD-ADDR  SEARCH-ADDR
+0750        VALUE-ADDR     ISN-ADDR     RESPONSE
+0760.
+0770.
+0780Using the Application Programming Interface:
+0790--------------------------------------------
+0800Copy the subprogram USR1043N to the library SYSTEM or the steplib
+0810library respectively, or to the required library.
+0820.
+0830.
+0840*****  End of description  *****

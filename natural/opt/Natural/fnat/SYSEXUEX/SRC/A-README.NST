@@ -1,0 +1,56 @@
+0010*  User Exit Examples
+0020*
+0030*  The following Natural programs are available in library SYSEXUEX:
+0040*
+0050*  Natural Program Description
+0060*  --------------- -----------------------------------------------------------
+0070*  ARR3GL-P        Natural program which calls the 3GL function ARR3GL located
+0080*                  in C source file arr3gl.c and passes three parameters to it.
+0090*                  The call is via INTERFACE4. The user exit selects columns
+0100*                  of an array and passes them to the Natural subprogram
+0110*                  ARR3GL-N. A dynamic variable is also passed across the 3GL
+0120*                  function.
+0130*                  This example uses advanced techniques.
+0140*
+0150*  ARR3GL-N        Natural subprogram which is called by user exit ARR3GL.
+0160*                  The selected columns of the array are displayed and can be
+0170*                  modified (INPUT). After return to the main program, the
+0180*                  modifications can be verified. It also demonstrates usage
+0190*                  of variable ranges (1:V in the PDA).
+0200*
+0210*  MY3GL           Natural program which calls the 3GL function MYC3GL located
+0220*                  in C source file myc3gl.c and passes two parameters to it.
+0230*                  The 3GL function itself activates the Natural subprogram
+0240*                  MY3GLSUB and passes the two received parameters back to
+0250*                  the subprogram.
+0260*
+0270*  MY3GL4          Is identical to MY3GL, except for the CALL via INTERFACE4.
+0280*
+0290*  MY3GLSUB        Natural subprogram which is called by user exit MYC3GL.
+0300*
+0310*  MYADD           Natural program which calls MYCADD to add two integers.
+0320*                  This illustrates also the techniques in a user exit to be
+0330*                  callable via INTERFACE4 and the traditional CALL.
+0340*
+0350*  MYEDIT          Natural program which calls MYCEDIT to invoke an external
+0360*                  editor.
+0370*
+0380*  VARDYN          Natural program which calls the 3GL function VARDYN via
+0390*                  INTERFACE4 to illustrate array handling and usage of a
+0400*                  dynamic variable.
+0410*
+0420*                  Array handling:   copy some elements of a 3 dimensional
+0430*                                    array into a 1 dimensional array
+0440*                                    using different techniques for
+0450*                                    accessing the elements.
+0460*
+0470*                  Dynamic variable: move a large field to the dynamic
+0480*                                    variable.
+0490*
+0500*  XARR            Natural program which calls the 3GL function XARR via
+0510*                  INTERFACE4 to illustrate handling of arrays of dynamic
+0520*                  variables and handling of x-arrays.
+0530*
+0540*  For more information, see the file README.TXT in the directory where the
+0550*  C sources are located.
+0560*

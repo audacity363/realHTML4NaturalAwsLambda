@@ -1,0 +1,49 @@
+0010** Example 'LOGICX09': MASK versus IS option in logical condition
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #A2   (A2)
+00501 REDEFINE #A2
+0060  2 #N2 (N2)
+00701 REDEFINE #A2
+0080  2 #P3 (P3)
+00901 #CONV-N2 (N2)
+01001 #CONV-P3 (P3)
+0110END-DEFINE
+0120*
+0130#A2 := '12'
+0140WRITE NOTITLE   'Assignment #A2 := "12" results in:'
+0150PERFORM SUBTEST
+0160#A2 := '-1'
+0170WRITE NOTITLE / 'Assignment #A2 := "-1" results in:'
+0180PERFORM SUBTEST
+0190#N2 :=  12
+0200WRITE NOTITLE / 'Assignment #N2 :=  12  results in:'
+0210PERFORM SUBTEST
+0220#N2 :=  -1
+0230WRITE NOTITLE / 'Assignment #N2 :=  -1  results in:'
+0240PERFORM SUBTEST
+0250#P3 :=  12
+0260WRITE NOTITLE / 'Assignment #P3 :=  12  results in:'
+0270PERFORM SUBTEST
+0280#P3 :=  -1
+0290WRITE NOTITLE / 'Assignment #P3 :=  -1  results in:'
+0300PERFORM SUBTEST
+0310*
+0320DEFINE SUBROUTINE SUBTEST
+0330IF #A2 IS (N2) THEN
+0340  #CONV-N2 := VAL(#A2)
+0350  WRITE NOTITLE 12T '#A2 can be converted to' #CONV-N2 '(N2)'
+0360END-IF
+0370IF #A2 IS (P3) THEN
+0380  #CONV-P3 := VAL(#A2)
+0390  WRITE NOTITLE 12T '#A2 can be converted to' #CONV-P3 '(P3)'
+0400END-IF
+0410IF #N2 = MASK(NZ) THEN
+0420  WRITE NOTITLE 12T '#N2 contains the valid unpacked number' #N2
+0430END-IF
+0440IF #P3 = MASK(NNZ) THEN
+0450  WRITE NOTITLE 12T '#P3 contains the valid packed number' #P3
+0460END-IF
+0470END-SUBROUTINE
+0480*
+0490END

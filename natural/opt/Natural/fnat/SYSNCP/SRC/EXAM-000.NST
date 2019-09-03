@@ -1,0 +1,85 @@
+0010This text displays the structure of the SYSNCP example programs EXAM*.
+0020
+0030The main menu program's name is EXAM.
+0040
+0050
+0060Level 1  Level 2  Level 3  Level 4     Function Description        Ver.
+0070-------- -------- -------- -------- .. --------------------------- ----
+0080
+0090EXAM____                            .. Main Menu Program ......... ok.
+0100I
+0110+------------------------> EXAM-O__ .. Open Processor ............ ok.
+0120I
+0130+------------------------> EXAM-Q__ .. Close NCPWORK ............. ok.
+0140I
+0150+------------------------> EXAM-QO_ .. Open Processor uncond. .... ok.
+0160I
+0170+------> EXAM-G__
+0180I        I
+0190I        +---------------> EXAM-GA_ .. Get all fields ............ ok.
+0200I        +---------------> EXAM-GS_ .. Get small list ............ ok.
+0210I        +---------------> EXAM-GO_ .. Get one field ............. ok.
+0220I        +---------------> EXAM-GC_ .. Get last command (menu) ... ok.
+0230I        +---------------> EXAM-GCL .. Get last commands ......... ok.
+0240I        +---------------> EXAM-GL_ .. Get location .............. ok.
+0250I        +---------------> EXAM-GTX .. Get object's timestamp .... ok.
+0260I
+0270+------> EXAM-S__
+0280I        I
+0290I        +---------------> EXAM-SA_ .. Set allowed fields ........ ok.
+0300I        +---------------> EXAM-SO_ .. Set one field ............. ok.
+0310I        I
+0320I        +------> EXAM-SL_
+0330I        I        I
+0340I        I        +------> EXAM-SLI .. Set location using IKNs ... ok.
+0350I        I        +------> EXAM-SLK .. Set location using Keyw ... ok.
+0360I        I
+0370I        +---------------> EXAM-ST_ .. Set TRACE mode ............ ok.
+0380I
+0390+------> EXAM-T__
+0400I        I
+0410I        +---------------> EXAM-TG_ .. General text .............. ok.
+0420I        +---------------> EXAM-TK_ .. Keyword text .............. ok.
+0430I        +---------------> EXAM-TF_ .. Function text ............. ok.
+0440I
+0450+------> EXAM-H__
+0460I        I
+0470I        +------> EXAM-HK_
+0480I        I        I
+0490I        I        +------> EXAM-HKL .. List all Keywords ......... ok.
+0500I        I        +------> EXAM-HKI .. Keywords sorted by IKN .... ok.
+0510I        I        +------> EXAM-HKS .. Synonyms sorted by IKN .... ok.
+0520I        I        +------> EXAM-HKX .. Keyword individual list ... ok.
+0530I        I
+0540I        +------> EXAM-HG_
+0550I        I        I
+0560I        I        +------> EXAM-HGL .. List all Global Functions . ok.
+0570I        I        +------> EXAM-HGU .. List all Functions ........ ok.
+0580I        I        +------> EXAM-HGI .. Individual List Global .... ok.
+0590I        I
+0600I        +------> EXAM-HL_
+0610I        I        I
+0620I        I        +------> EXAM-HLL .. List Local Functions ...... ok.
+0630I        I        +------> EXAM-HLR .. List Local recursively .... ok.
+0640I        I        +------> EXAM-HLI .. Individual List Local ..... ok.
+0650I        I
+0660I        +---------------> EXAM-HI_ .. Help IKN .................. ok.
+0670I        +---------------> EXAM-HF_ .. Help IFN .................. ok.
+0680I
+0690I
+0700+------------------------> EXAM-C__ .. Check a command ........... ok.
+0710+------------------------> EXAM-X__ .. Execute a command ......... ok.
+0720
+0730
+0740________________________________________________________________________
+0750
+0760Other Programs:
+0770  EXAM-GLN: Get Location name (for EXAM-HL*)
+0780  EXAM-ERR: Get Error Text    (source not available)
+0790  EXAM-HGG: Validate location (called by EXAM-HGL)
+0800  EXAM-HGV: Functions for a given location (called by EXAM-HGU)
+0810  EXAM-XX_: Similar to EXAM-X (under test)
+0820  EXAM-ST0: Set TRACE flag    (called by EXAM-X)
+0830________________________________________________________________________
+0840
+0850*** End of file ***

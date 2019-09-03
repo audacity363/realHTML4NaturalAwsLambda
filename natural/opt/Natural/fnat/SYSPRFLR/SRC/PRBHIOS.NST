@@ -1,0 +1,31 @@
+0010/**********************************************************************
+0020/* Product ....: Natural Profiler Batch
+0030/* Help Text ..: PRBHIOS
+0040/* Description : Internal Help for LUW batch.
+0050/**********************************************************************
+0060<Text>
+0070$STARS$
+0080<Head>
+0090                  ***** NATURAL PROFILER UTILITY *****
+0100                            - Help Internal -
+0110</Head>
+0120
+0130
+0140                          Profiler Keywords
+0150                          =================
+0160
+0170Test a Profiler version
+0180-----------------------
+0190VERSION=nnn            /* Test a version which is (partly)
+0200                       /* coded but not yet released.
+0210                       /* "0" means no test version.
+0220
+0230
+0240Profiler help
+0250-------------
+0260HELP-INTERNAL          /* Write internal help information
+0270
+0280$STARS$
+0290</Text>
+03001234567891123456789212345678931234567894123456789512345678961234567897123
+0310654321398765432129876543211987654321V123456789112345678921234567893123456

@@ -1,0 +1,45 @@
+0010/*  User Exit NCP-REAM : Runtime Action Definition: Allowed actions
+0020/***********************************************************************
+0030/*  Description .... This subprogram is invoked by program 'NCP-REED'.
+0040/*                   NCP-REED contains the 'Runtime Action Definition'
+0050/*                   editor (you start this function when entering
+0060/*                   'ED' in the 'Result Editor' screen.)
+0070/*
+0080/*                   The variable AVAILABLE-MARKS controls, which
+0090/*                   marks may be entered as Runtime Action Definition.
+0100/*
+0110/*                   If you want to allow full functionality,
+0120/*                   use the following statement:
+0130/*                   MOVE '*VTCDFSMER123456789' TO AVAILABLE-MARKS
+0140/*
+0150/*                   If you want to have restricted functionality,
+0160/*                   you simply have to enter "*" (asterisk) at start
+0170/*                   of the line.
+0180/*
+0190/*                   After you modified the source, you should STOW it.
+0200/*
+0210/***********************************************************************
+0220DEFINE DATA PARAMETER            /* Calling program is NCP-REED
+0230  01 AVAILABLE-MARKS  (A32)      /* Format/length must be (A32).
+0240END-DEFINE
+0250/***********************************************************************
+0260COMPRESS /*   Allowed action code :
+0270         /*
+0280  '*'    /*   Comment. Will not be cataloged into the object.
+0290  'V'    /*   Valid. Marks a valid Function having no Runtime Action.
+0300  'T'    /*   Text. May be cataloged into the object.
+0310  'C'    /*   Stack Top Command. Will be put to top of NATURAL stack.
+0320  'D'    /*   Stack Top Data. Will be put to top of NATURAL stack.
+0330  'F'    /*   Fetch. Line contains the Program Name to be FETCHed.
+0340  'S'    /*   Stop. NATURAL will issue a STOP statement at runtime.
+0350  'M'    /*   Move this line to the Command line at runtime.
+0360  'E'    /*   Error. Issues a NATURAL runtime error.
+0370  'R'    /*   Return Code. Will be put to field RETURN-CODE.
+0380  '123'  /*   Occurrences of RESULT-FIELD.
+0390  '456'  /*   Occurrences of RESULT-FIELD.
+0400  '789'  /*   Occurrences of RESULT-FIELD.
+0410         /*
+0420TO AVAILABLE-MARKS
+0430LEAVING NO SPACE
+0440/*
+0450END

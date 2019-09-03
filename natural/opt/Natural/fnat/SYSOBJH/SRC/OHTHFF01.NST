@@ -1,0 +1,31 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Available Functions
+0080<Header2>
+0090/* <Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170The Natural Object Handler offers the following functions:
+0180Unload  You use the unload function to unload data from the Natural system
+0190        environment into Natural work files.
+0200Load    You use the load function to load data from work files into the
+0210        Natural environment.
+0220Scan    You use the scan function to scan a work file for specific objects or
+0230        for the whole contents.
+0240View    You use the view function to display the objects currently located in
+0250        your Natural system environment.
+0260Administrate
+0270        You use the administration function to manage the objects of the
+0280        Object Handler (Workplans).
+0290        Workplans are simple Natural text objects, located in a library called
+0300        Workplan library.
+0310<HelpTextEnd>

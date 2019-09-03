@@ -1,0 +1,25 @@
+0010** Example 'LOGICX08': SPECIFIED option in logical condition
+0020************************************************************************
+0030DEFINE DATA PARAMETER
+00401 #PARM1 (A3)
+00501 #PARM2 (N2) OPTIONAL
+00601 #PARM3 (N2) OPTIONAL
+0070END-DEFINE
+0080*
+0090WRITE '=' #PARM1
+0100*
+0110IF #PARM2 SPECIFIED
+0120  WRITE '#PARM2 is specified'
+0130  WRITE '=' #PARM2
+0140ELSE
+0150  WRITE '#PARM2 is not specified'
+0160* WRITE '=' #PARM2                /* would cause runtime error NAT1322
+0170END-IF
+0180*
+0190IF #PARM3 NOT SPECIFIED
+0200  WRITE '#PARM3 is not specified'
+0210ELSE
+0220  WRITE '#PARM3 is specified'
+0230  WRITE '=' #PARM3
+0240END-IF
+0250END

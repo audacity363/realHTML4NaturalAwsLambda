@@ -1,0 +1,35 @@
+0010**DV          0036     V1ENTER-PROCEDURE                 ENTER-PROCEDURE
+0020**DD          0039N 5.0 2NODE                            /* Node ID (DBID).
+0030**DD          0040N 3.0 2ERROR-CODE                      /* Message code.
+0040**DD          0041B   2 2SYSTEM-CODE                     /* System error code.
+0050**DD          0042A  58 2ERROR-TEXT                      /* Text describing message.
+0060**DD          0043A  16 2NODE-NAME
+0070**DD          0044A  10 2SYSTEM-MESSAGE-CODE             /* System message code.
+0080**DD          0045A   8 2IDENTIFIER                      /* Needed if multiple update
+0090**DD          0046A   8 2FUNCTION                        /* Function to be performed:
+0100**DD          0047A  80 2CARD                            /* Job control record to create
+0110**DD          0048A  54 2DSNAME                          /* Fully qualified file name
+0120**DD          0049A  64 2ELEMENT                         /* Element that contains the
+0130**DD          0050A   8 2PASSWORD                        /* Password for protected file.
+0140**DD          0051A   8 2JOB-NAME                        /* Name of job to be entered.
+0150**DD          0052A   8 2USERID                          /* Specifies USERID under which
+0160**DD          0053A   8 2ACCOUNT-NUMBER                  /* Gives the account number for
+0170**DD          0054A   5 2TIME                            /* Maximum CPU time for the job
+0180**DD          0055A  54 2MONITOR-JOB-VARIABLE            /* Name of a monitoring job
+0190**DD          0056A   4 2JOB-VARIABLE-PASSWORD           /* Password for protected
+0200**DD          0057A   8 2USER-PASSWORD                   /* Password of user id for which
+0210**DD          0058A   8 2JOB-CLASS                       /* Name of the job class where
+0220**DD          0059A   3 2JOB-PRIORITY                    /* Scheduling priority for job o
+0230**DD          0060A   3 2RUN-PRIORITY                    /* Job priority during execution
+0240**DD          0061A  17 2START-OPTION                    /* Specifies start time of job.
+0250**DD          0062A   8 2START-DATE                      /* Value for start date:
+0260**DD          0063A   5 2START-TIME                      /* Value for start time:
+0270**DD          0064A  17 2REPEAT-OPTION                   /* Specifies repeat option of jo
+0280**DD          0065A   5 2REPEAT-TIME                     /* Specifies time for REPEAT-
+0290**DD          0066A   8 2ELEMENT-PASSWORD                /* Password for protected LMS
+0300**DD          0067A 253 2PARAMETER-SET-1                 /* List of comma separated
+0310**DD          0068A 253 2PARAMETER-SET-2                 /* Another list of comma
+0320**DD          0069A 253 2COMMAND-RESPONSE                /* Unformatted command response.
+0330**DD          0070D     2START-DATX                      /* Start date in NATURAL format.
+0340**DD          0071T     2START-TIMX                      /* Start time in NATURAL format.
+0350**DD          0072A   5 2JOB-ID                          /* TSN of job.

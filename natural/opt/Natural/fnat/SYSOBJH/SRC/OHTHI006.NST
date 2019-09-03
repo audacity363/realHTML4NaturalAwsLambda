@@ -1,0 +1,26 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> SYSOBJH Internal Commands
+0080<Header2> Part 6
+0090/* <Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor>OHTHI005
+0140<Successor>OHTHI007
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170HELP
+0180  Invokes the Object Handler help
+0190
+0200INIT
+0210  Re-initialize the Object Handler utility
+0220
+0230READ PROFILE
+0240  Read data from SYSOBJH profile
+0250
+0260<HelpTextEnd>

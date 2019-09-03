@@ -1,0 +1,12 @@
+0010&H View IDCAMS
+0020&L
+0030&L
+0040#Zweck@    : Ausfuehrung des Programms IDCAMS.
+0050&L
+0060#System@   : z/OS.
+0070&L
+0080&L
+0090#Anwendung@: Liest Dateiinformationen unter Verwendung des Programms
+0100             IDCAMS.
+0110&L
+0120#Anmerkung@:

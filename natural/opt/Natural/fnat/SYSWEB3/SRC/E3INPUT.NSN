@@ -1,0 +1,77 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3INPUT
+0050*
+0060* DESCRIPTION   Creates an input field.
+0070*
+0080* AUTHOR        SAG   08.09.1998
+0090*
+0100* Version       8.3
+0110*
+0120* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0130*
+0140* HISTORY
+0150* USER    DATE       REASON
+0160* ------+----------+----------------------------------------------
+0170*       ! --.--.-- !
+0180* ------+----------+----------------------------------------------
+0190*
+0200* ------ PARAMETER -----------------------------------------------
+0210DEFINE DATA
+0220PARAMETER USING W3PARM
+0230LOCAL USING W3CONST
+0240*
+0250END-DEFINE
+0260* --- ERROR HANDLING ---
+0270ON ERROR
+0280  PERFORM W3ERROR ##W3ERROR
+0290  PERFORM W3END ##RPC
+0300  ESCAPE ROUTINE
+0310END-ERROR
+0320*
+0330* --- INITIALIZE Web Interface ---
+0340PERFORM W3INIT ##RPC
+0350*
+0360* --- START HTML Generation ---
+0370PERFORM H3-OPEN-HTML 'HTML Generation - Input' ' ' " "
+0380* --- THE LEVEL 2 HEADER ---
+0390PERFORM H3-HEADER 2 'Input'
+0400*
+0410* --- Form with GET -> Parameter will be added after a ? at the URL ---
+0420PERFORM H3-OPEN-FORM 'G' "NAT-ENV"
+0430*
+0440PERFORM H3-LINE_BREAK 'Normal Text:'
+0450PERFORM H3-LINE-BREAK
+0460*
+0470* --- Input field ---
+0480PERFORM H3-INPUT "T" "TEXT-FIELD" 'none' 32 32
+0490*
+0500PERFORM H3-LINE-BREAK
+0510PERFORM H3-LINE_BREAK 'Password:'
+0520PERFORM H3-LINE-BREAK
+0530*
+0540* --- Input field ---
+0550PERFORM H3-INPUT "P" "PASSWORD-FIELD" " " 32 32
+0560*
+0570PERFORM H3-LINE-BREAK
+0580PERFORM H3-LINE_BREAK 'Hidden Text (view source of this page)'
+0590PERFORM H3-LINE-BREAK
+0600*
+0610* --- Input field ---
+0620PERFORM H3-INPUT "H" "HIDDEN-FIELD" 'This is not shown!' 32 32
+0630*
+0640PERFORM H3-LINE-BREAK
+0650* --- Submit button ---
+0660PERFORM H3-BUTTON "S" ' ' 'Submit with GET' " "
+0670*
+0680PERFORM H3-CLOSE-FORM
+0690*
+0700PERFORM E3-EXAMPLE-END
+0710*
+0720* --- END HTML Generation ---
+0730PERFORM H3-CLOSE-HTML
+0740* --- END Web Interface ---
+0750PERFORM W3END ##RPC
+0760*
+0770END

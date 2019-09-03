@@ -1,0 +1,101 @@
+0010*
+0020* Program .. V4-ZERO
+0030* Library .. SYSEXV
+0040* Version .. 4.1
+0050*
+0060* Functionality: Show zero spacing in INPUT statement
+0070************************************************************************
+0080*
+0090DEFINE DATA
+0100LOCAL
+01101 #A  (A4)
+01201 #B  (A7)
+0130END-DEFINE
+0140*
+0150FORMAT KD=ON
+0160SET KEY PF3  NAMED 'Exit'
+0170  PF12 NAMED 'Canc'
+0180*
+0190*
+0200#A := 'Good'
+0210#B := 'Morning'
+0220*
+0230*
+0240INPUT (IP=OFF)
+0250  01T *TIMX  (AD=OTD)
+0260  21T '***** NATURAL 4.1 ENHANCEMENTS *****'
+0270  70T *DATX  (AD=OTD DF=L)
+0280  /
+0290  01T 'User'
+0300  06T *USER  (AD=OILT)
+0310  29T '- New Zero Spacing -'(I)
+0320  64T 'Program'
+0330  72T *PROGRAM (AD=OI)
+0340  //
+0350  02T 'New positioning without any space between input/output field values'(I)
+0360  ///
+0370  02T '#A(A4) := ''Good'''
+0380  52T '* first example *'
+0390  /
+0400  02T '#B(A7) := ''Morning'''
+0410  ///
+0420  02T 'INPUT (IP=OFF)     #A     #B     Result:'
+0430  #A(AD=OI) #B(AD=OI)
+0440  ///
+0450  02T 'INPUT (IP=OFF)     #A ' '0X'(I) '#B     Result:'
+0460  #A(AD=OI) 0X #B(AD=OI)
+0470  ///
+0480  02T 'INPUT (IP=OFF) ' '1T' '#A ' '5T'(I) '#B     Result:'
+0490  43T #A(AD=OI) 47T #B(AD=OI)
+0500  ///
+0510  02T 'INPUT (IP=OFF)' '1/1'(I) '#A' '1/5'(I) '#B     Result:'
+0520  20/43 #A(AD=OI) 20/47 #B(AD=OI)
+0530  ///
+0540*
+0550*
+0560IF *PF-KEY = 'PF3'
+0570  ESCAPE ROUTINE
+0580END-IF
+0590IF (*PF-KEY = 'PF12' OR= 'CLR')
+0600  CALLNAT 'UTILSTOP'
+0610END-IF
+0620*
+0630INPUT (IP=ON)
+0640  01T '-' *TIMX  (AD=OTD)
+0650  21T '***** NATURAL 4.1 ENHANCEMENTS *****'
+0660  70T '-' *DATX  (AD=OTD DF=L)
+0670  /
+0680  01T 'User'
+0690  06T '-' *USER  (AD=OILT)
+0700  29T '- New Zero Spacing -'(I)
+0710  64T 'Program'
+0720  72T '-' *PROGRAM (AD=OI)
+0730  //
+0740  02T 'New positioning without any space between input/output field values'(I)
+0750  ///
+0760  02T '#A(A4) := ''Good'''
+0770  52T '* second example *'
+0780  /
+0790  02T '#B(A7) := ''Morning'''
+0800  //
+0810  /
+0820  02T 'INPUT (IP=ON)   #A   #B          Result:'
+0830
+0840  45T  #A(AD=OI) #B(AD=OI)
+0850  ///
+0860  02T 'INPUT (IP=ON)' '  #A' ' 0X'(I) '#B        Result:'
+0870  45T  #A(AD=OI) 0X #B(AD=OI)
+0880  /
+0890  ////
+0900
+0910*
+0920SET CONTROL '= '
+0930IF *PF-KEY = 'PF3'
+0940  ESCAPE ROUTINE
+0950END-IF
+0960IF (*PF-KEY = 'PF12' OR= 'CLR')
+0970  CALLNAT 'UTILSTOP'
+0980END-IF
+0990*
+1000*
+1010END

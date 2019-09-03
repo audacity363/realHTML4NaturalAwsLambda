@@ -1,0 +1,72 @@
+0010* Member      BTLCPGM
+0020* Function    Translation needed for copying C Programs from PC to
+0030*             LMS Member
+0040*
+0050* Maintenance
+0060* uuu dd-mm-yy  ...
+0070* ----------------------------------------------------------------------
+0080DEFINE DATA PARAMETER
+009001 P-IN-STRING                 (A253)
+010001 REDEFINE P-IN-STRING
+0110   02 P-IN-CHAR                (A1/1:253)
+0120*
+013001 P-IN-LENGTH                 (P3)
+0140*
+015001 P-OUT-STRING                (A253)
+016001 REDEFINE P-OUT-STRING
+0170   02 P-OUT-CHAR               (A1/1:253)
+0180*
+0190            LOCAL
+020001 #TRANSLATE-TABLE            (A16/0:15) INIT
+0210*
+0220*             0 1 2 3 4 5 6 7 8 9 a b c d e f
+0230*
+0240     (00) <H'000102030405060708090A0B0C0D0E0F'>          /*    0
+0250     (01) <H'101112131415161718191A1B1C1D1E1F'>          /*    1
+0260     (02) <H'202122232425262728292A2B2C2D2E2F'>          /*    2
+0270     (03) <H'303132333435363738393A3B3C3D3E3F'>          /*    3
+0280     (04) <H'40414243444546474849BB4B4C4D4E4F'>          /*    4
+0290     (05) <H'505152535455565758595A5B5C5D5E5F'>          /*    5
+0300     (06) <H'606162636465666768696A6B6C6D6E6F'>          /*    6
+0310     (07) <H'707172737475767778797A7B7C7D7E7F'>          /*    7
+0320     (08) <H'808182838485868788898A8B8C8D8E8F'>          /*    8
+0330     (09) <H'909192939495969798999A9B9C9D9E9F'>          /*    9
+0340     (10) <H'A0A1A2A3A4A5A6A7A8A9AAABACADAEAF'>          /*    a
+0350     (11) <H'B0B1B2B3B4B5B6B7B8B9BCBBBCBDBEBF'>          /*    b
+0360     (12) <H'FBC1C2C3C4C5C6C7C8C9CACBCCCDCECF'>          /*    c
+0370     (13) <H'FDD1D2D3D4D5D6D7D8D9DADBDCDDDEDF'>          /*    d
+0380     (14) <H'E0E1E2E3E4E5E6E7E8E9EAEBECEDEEEF'>          /*    e
+0390     (15) <H'F0F1F2F3F4F5F6F7F8F9FAFBFCFDFEFF'>          /*    f
+0400*
+0410*             0 1 2 3 4 5 6 7 8 9 a b c d e f
+0420*
+043001  REDEFINE #TRANSLATE-TABLE
+0440    02  #LINE (0:15)
+0450        03  #CHAR              (A1/0:15)
+0460*
+047001  #INT                       (I2)
+048001  REDEFINE #INT
+0490    02  #I1                    (I1)
+0500    02  #C2                    (A1)
+0510*
+052001  I                          (I1)
+053001  J                          (I1)
+054001  K                          (P3)
+0550END-DEFINE
+0560*
+0570RESET P-OUT-STRING
+0580IF P-IN-LENGTH > 253
+0590   ASSIGN P-IN-LENGTH = 253
+0600END-IF
+0610*
+0620FOR K = 1 TO P-IN-LENGTH
+0630  RESET #INT
+0640  ASSIGN  #C2  = P-IN-CHAR (K)
+0650  COMPUTE #INT = #INT * 16
+0660  ASSIGN  I    = #I1
+0670  RESET #I1
+0680  COMPUTE #INT = #INT * 16
+0690  ASSIGN  J    = #I1
+0700  ASSIGN  P-OUT-CHAR (K) = #CHAR (I, J)
+0710END-FOR
+0720END

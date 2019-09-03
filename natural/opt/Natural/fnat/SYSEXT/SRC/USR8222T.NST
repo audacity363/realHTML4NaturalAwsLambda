@@ -1,0 +1,62 @@
+0010Get Natural stack information
+0020.
+0030Documentation ......... USR8222T    /*  Text object
+0040Interface ............. USR8222N    /*  Cataloged subprogram
+0050Example Program ....... USR8222P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. RUNTIME
+0100.
+0110Keywords .............. +CURRENT-VERSION,+NEW-NAT-8.4.1,
+0120                        STACK
+0130.
+0140Interface Versions .... USR4003N, USR6303N, USR8222N
+0150.
+0160Function .............. Retrieve the number of stack entries, the
+0170                        type and contents of a given stack entry.
+0180                        The stack entry is received as (U/1:*) dynamic.
+0190.
+0200.
+0210Parameters
+0220----------
+0230Define the following parameters with the DEFINE DATA statement:
+0240.
+0250   01 P-FUNCTION (A1)   The function to be performed; one of:
+0260                        'N' - Retrieve the number of entries stacked
+0270                        'T' - Retrieve the type of a stack entry.
+0280                              A stack is either a command or data.
+0290                        'R' - Return all data of a stack entry.
+0300   01 P-NUMBER   (I4)   - For function 'N': Return the number of
+0310                          stack entries.
+0320                        - For functions 'T' and 'R': Specify the
+0330                          number of the stack entry requested.
+0340                        - Return -1: If an invalid function is specified
+0350                                     or an entry does not exist.
+0360                                 -2: If an invalid type on stack is
+0370                                     found.
+0380                                 -3: If the specified entry on stack
+0390                                     doesn't exist.
+0400   01 P-DATA     (U/1:*) Dynamic
+0410                        - For function 'T': Return the string 'COMMAND'
+0420                          or 'DATA'.
+0430                        - For function 'R': Return all data of a  stack
+0440                          entry for formatted data in DATA(*), that is
+0450                          each field gets its own occurrence;
+0460                          Otherwise return command or data in DATA(1).
+0470                        The maximum length of the string returned is
+0480                        255 bytes. The maximum of occurrences is 32767.
+0490.
+0500Interface Call
+0510--------------
+0520Use the interface with the CALLNAT statement:
+0530.
+0540CALLNAT 'USR8222N' P-FUNCTION P-NUMBER P-DATA
+0550.
+0560.
+0570Using the Application Programming Interface:
+0580--------------------------------------------
+0590Copy the subprogram USR8222N to the library SYSTEM or the steplib
+0600library respectively, or to the required library.
+0610..
+0620*****  End of Description  *****

@@ -1,0 +1,12 @@
+0010&H View WRITE-SPOOL
+0020&L
+0030&L
+0040#Purpose@: Write data directly to JES.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD.
+0070&L
+0080&L
+0090#Usage@  : This view makes it possible to write data directly to JES
+0100           spool queues.
+0110&L
+0120#Notes@  :

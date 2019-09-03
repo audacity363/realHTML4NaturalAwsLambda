@@ -1,0 +1,147 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1023N' or to include 'USR1023W', 'USR1023X',
+0030/*  'USR1023Y' or 'USR1023Z'.
+0040/***********************************************************************
+0050DEFINE DATA
+0060LOCAL
+0070/*---------------------------------------------------------------------
+0080/* Parameters for USR1023N
+0090/*---------------------------------------------------------------------
+01001 P-FUNCTION          (A1)
+01101 P-RETURN-CODE       (N4)
+01201 P-VALUES
+0130  2 P-TIME            (T)
+0140  2 REDEFINE P-TIME
+0150    3 P-TIME-P12      (P12)   /* redefined for copycode USR1023X/Z
+0160  2 P-DATE            (D)
+0170  2 P-STORECLOCK      (B8)
+0180  2 P-MICROSECONDS    (P19)
+0190/*---------------------------------------------------------------------
+0200/* Variables used in copycode USR1023W/Y
+0210/*---------------------------------------------------------------------
+02201 USR1023_B8          (B8)
+02301 REDEFINE USR1023_B8
+0240  2 USR1023_B81       (B3)
+0250  2 USR1023_B82       (B3)
+0260  2 USR1023_B83A      (B1)
+0270  2 USR1023_B83B      (B1)
+02801 USR1023_I41         (I4)
+02901 USR1023_I42         (I4)
+03001 USR1023_I43         (I4)
+0310/*---------------------------------------------------------------------
+0320/* Other local data
+0330/*---------------------------------------------------------------------
+03401 MSG                 (A64) INIT <'Press any PF-Key to stop.'>
+0350END-DEFINE
+0360/***********************************************************************
+0370/*---------------------------------------------------------------------
+0380/* Start of main program
+0390/*---------------------------------------------------------------------
+0400SET KEY ALL
+0410/*
+0420MOVE *TIMX     TO P-TIME
+0430MOVE *DATX     TO P-DATE
+0440MOVE 'T'       TO P-FUNCTION
+0450/*
+0460REPEAT
+0470  /******************************************************
+0480  INPUT (AD=MITL' ' IP=OFF) WITH TEXT MSG
+0490    001T *TIMX  (AD=IO)
+0500    023T '***** Convert Time Variables *****'(I)
+0510    070T *DATX  (AD=IO DF=L )
+0520    //
+0530    /  13T 'Function  Conversion' /
+0540    /  17T 'T     Time and date into store clock and microseconds'
+0550    /  17T 'D     Date into time, store clock and microseconds'
+0560    /  17T 'M     Microseconds into date, time and store clock'
+0570    /  17T 'S     Store clock into date, time and microseconds'
+0580    /  17T 'W     Microseconds into store clock (copycode)'
+0590    /  17T 'X     Microseconds into time        (copycode)'
+0600    /  17T 'Y     Store clock into microseconds (copycode)'
+0610    /  17T 'Z     Time into microseconds        (copycode)'
+0620    /  15T 'blank   Reset to current time'
+0630    // 'Function ......' P-FUNCTION
+0640    /  'Time ..........' P-TIME (EM=YYYY-MM-DD' 'HH:II:SS.T)
+0650    /  'Date ..........' P-DATE (EM=YYYY-MM-DD)
+0660    /  'Store clock ...' P-STORECLOCK
+0670    /  'Microseconds ..' P-MICROSECONDS
+0680  /******************************************************
+0690  IF *PF-KEY NE 'ENTR'
+0700    ESCAPE ROUTINE
+0710  END-IF
+0720  /*
+0730  RESET INITIAL MSG
+0740  /*
+0750  DECIDE ON FIRST VALUE OF P-FUNCTION
+0760      /****************************************************************
+0770      /* Call API USR1023N for functions T, D, M or S.
+0780      /****************************************************************
+0790    VALUE 'T', 'D', 'M', 'S'
+0800      /*
+0810      CALLNAT 'USR1023N' P-FUNCTION P-RETURN-CODE P-VALUES
+0820      /*
+0830      DECIDE ON FIRST VALUE OF P-RETURN-CODE
+0840        VALUE 0
+0850          IGNORE
+0860        VALUE 1
+0870          MOVE 'USR1023N: Invalid function specified' TO MSG
+0880        VALUE 2
+0890          MOVE 'USR1023N: Value outside of Natural time range' TO MSG
+0900        VALUE 3
+0910          MOVE 'USR1023N: Value outside of store clock range' TO MSG
+0920        VALUE 4
+0930          MOVE 'USR1023N: Error during conversion from store clock'-
+0940            ' into microseconds' TO MSG   /* UNIX/Windows only
+0950        VALUE 5
+0960          MOVE 'USR1023N: Error during conversion from microseconds'-
+0970            ' into store clock' TO MSG    /* UNIX/Windows only
+0980        NONE
+0990          COMPRESS 'USR1023N Error:' P-RETURN-CODE TO MSG
+1000      END-DECIDE
+1010      /****************************************************************
+1020      /* Use copycode USR1023W/X/Y/Z for functions W, X, Y or Z, resp.
+1030      /*
+1040      /*                USR1023W              USR1023X
+1050      /*    Store clock <------- Microseconds -------> Natural time
+1060      /*    Store clock -------> Microseconds <------- Natural time
+1070      /*                USR1023Y              USR1023Z
+1080      /****************************************************************
+1090    VALUE 'W' /* Convert microseconds into store clock
+1100      /*
+1110      /* Check for valid microsecond value
+1120      IF P-MICROSECONDS     < 0                /* first store clock
+1130          OR P-MICROSECONDS > 4503599627370495 /* last store clock
+1140        MOVE 'USR1023W: Value outside of store clock range'
+1150          TO MSG
+1160      ELSE
+1170        INCLUDE USR1023W 'P-MICROSECONDS' 'P-STORECLOCK'
+1180      END-IF
+1190      /*
+1200    VALUE 'X' /* Convert microseconds into Natural time
+1210      /*
+1220      /* Check for valid microsecond value
+1230      IF P-MICROSECONDS     < -59958144000099999 /* first Natural time
+1240          OR P-MICROSECONDS >  40041855999999999 /* last Natural time
+1250        MOVE 'USR1023X: Value outside of Natural time range'
+1260          TO MSG
+1270      ELSE
+1280        INCLUDE USR1023X 'P-MICROSECONDS' 'P-TIME-P12'
+1290      END-IF
+1300      /*
+1310    VALUE 'Y' /* Convert store clock into microseconds
+1320      INCLUDE USR1023Y 'P-STORECLOCK' 'P-MICROSECONDS'
+1330      /*
+1340    VALUE 'Z' /* Convert Natural time into microseconds
+1350      INCLUDE USR1023Z 'P-TIME-P12' 'P-MICROSECONDS'
+1360      /*
+1370    VALUE ' ' /* Initialize values
+1380      MOVE *TIMX     TO P-TIME
+1390      MOVE *DATX     TO P-DATE
+1400      MOVE 'T'       TO P-FUNCTION
+1410      RESET P-STORECLOCK P-MICROSECONDS
+1420      /*
+1430    NONE
+1440      COMPRESS 'Error: Invalid function specified' TO MSG
+1450  END-DECIDE
+1460END-REPEAT
+1470END

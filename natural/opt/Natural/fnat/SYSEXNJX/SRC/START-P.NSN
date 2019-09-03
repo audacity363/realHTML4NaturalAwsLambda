@@ -1,0 +1,1059 @@
+0005* >Natural Source Header 000000
+0010* :Mode S
+0015* :CP
+0020* <Natural Source Header
+0025DEFINE DATA PARAMETER
+00301 CT (1:*)
+0035  2 LEVEL (I4)
+0040  2 OPENED (I4)
+0045  2 SELECTED (L)
+0050  2 TEXT (U) DYNAMIC
+00551 PRG (A/1:*) DYNAMIC
+00601 HTML(A/1:*) DYNAMIC
+0065LOCAL
+00701 I (I2) INIT <0>
+00751 IMAX (I2) INIT <175>
+0080END-DEFINE
+0085/*
+0090RESIZE ARRAY CT  TO (1:IMAX)
+0095RESIZE ARRAY PRG TO (1:IMAX)
+0100RESIZE ARRAY HTML TO (1:IMAX)
+0105/* **************************
+0110/* **************************
+0115ADD 1 TO I
+0120TEXT(I)  := 'Getting Started'
+0125LEVEL(I) := 1
+0130/*
+0135ADD 1 TO I
+0140TEXT(I)  := 'Calculator'
+0145PRG(I)   := "CALCUL-P"
+0150LEVEL(I) := 2
+0155OPENED(I):= 2
+0160/*
+0165ADD 1 TO I
+0170TEXT(I)  := 'Hello World!'
+0175PRG(I)   := "HELLOW-P"
+0180LEVEL(I) := 2
+0185OPENED(I):= 2
+0190/* **************************
+0195/*
+0200ADD 1 TO I
+0205TEXT(I)  := 'Fields and Fieldlists'
+0210LEVEL(I) := 1
+0215/*
+0220ADD 1 TO I
+0225TEXT(I)  := 'Valid Values'
+0230PRG(I)   := "CTRFVV-P"
+0235LEVEL(I) := 2
+0240OPENED(I):= 2
+0245/*
+0250ADD 1 TO I
+0255TEXT(I)  := 'Valid Values with textidmode and valuetextprop'
+0260PRG(I)   := "CTRFVT-P"
+0265LEVEL(I) := 2
+0270OPENED(I):= 2
+0275/*
+0280ADD 1 TO I
+0285TEXT(I)  := 'Date and Time Formats'
+0290PRG(I)   := "CTRDTM-P"
+0295LEVEL(I) := 2
+0300OPENED(I):= 2
+0305/*
+0310ADD 1 TO I
+0315TEXT(I)  := 'Autocomplete in Fields'
+0320PRG(I)   := "FDAUTO-P"
+0325LEVEL(I) := 2
+0330OPENED(I):= 2
+0335/*
+0340ADD 1 TO I
+0345TEXT(I)  := 'Client Side Validation: Regular Expressions'
+0350PRG(I)   := "FLDVAL-P"
+0355LEVEL(I) := 2
+0360OPENED(I):= 2
+0365/*
+0370ADD 1 TO I
+0375TEXT(I)  := 'Client Side Validation: Natural Edit Masks'
+0380PRG(I)   := "NEDITM-P"
+0385LEVEL(I) := 2
+0390OPENED(I):= 2
+0395/*
+0400ADD 1 TO I
+0405TEXT(I)  := 'Client Side Validation: Validation Rules'
+0410PRG(I)   := "FLDVRC-P"
+0415LEVEL(I) := 2
+0420OPENED(I):= 2
+0425/*
+0430ADD 1 TO I
+0435TEXT(I)  := 'Client Side Validation: Advanced Validation Rules'
+0440PRG(I)   := "FLDVRS-P"
+0445LEVEL(I) := 2
+0450OPENED(I):= 2
+0455/*
+0460ADD 1 TO I
+0465TEXT(I)  := 'Natural Data Types'
+0470PRG(I)   := "CTRNTY-P"
+0475LEVEL(I) := 2
+0480OPENED(I):= 2
+0485/*
+0490ADD 1 TO I
+0495TEXT(I)  := 'Field List'
+0500PRG(I)   := "CTRFIL-P"
+0505LEVEL(I) := 2
+0510OPENED(I):= 2
+0515/*
+0520ADD 1 TO I
+0525TEXT(I)  := 'FIELDLIST with datatype'
+0530PRG(I)   := "FLDLDT-P"
+0535LEVEL(I) := 2
+0540OPENED(I):= 2
+0545/* **************************
+0550/*
+0555ADD 1 TO I
+0560TEXT(I)  := 'More Input Controls'
+0565LEVEL(I) := 1
+0570/*
+0575ADD 1 TO I
+0580TEXT(I)  := 'Checkbox'
+0585PRG(I)   := "CHCKBX-P"
+0590LEVEL(I) := 2
+0595OPENED(I):= 2
+0600/*
+0605ADD 1 TO I
+0610TEXT(I)  := 'Combo Box'
+0615PRG(I)   := "CTRCDY-P"
+0620LEVEL(I) := 2
+0625OPENED(I):= 2
+0630/*
+0635ADD 1 TO I
+0640TEXT(I)  := 'Combofix'
+0645PRG(I)   := "CMBFIX-P"
+0650LEVEL(I) := 2
+0655OPENED(I):= 2
+0660/*
+0665ADD 1 TO I
+0670TEXT(I)  := 'Combofix with Numeric Data types'
+0675PRG(I)   := "CTRCF2-P"
+0680LEVEL(I) := 2
+0685OPENED(I):= 2
+0690/*
+0695ADD 1 TO I
+0700TEXT(I)  := 'Date Input'
+0705PRG(I)   := "DATINP-P"
+0710LEVEL(I) := 2
+0715OPENED(I):= 2
+0720/*
+0725ADD 1 TO I
+0730TEXT(I)  := 'DATEINPUT2 Control'
+0735PRG(I)   := "DATIP2-P"
+0740LEVEL(I) := 2
+0745OPENED(I):= 2
+0750/*
+0755ADD 1 TO I
+0760TEXT(I)  := 'DATEINPUT2 Control - numberofmonths'
+0765PRG(I)   := "DATIPM-P"
+0770LEVEL(I) := 2
+0775OPENED(I):= 2
+0780/*
+0785ADD 1 TO I
+0790TEXT(I)  := 'DATEINPUT2 Styling'
+0795PRG(I)   := "DATIPS-P"
+0800LEVEL(I) := 2
+0805OPENED(I):= 2
+0810/*
+0815ADD 1 TO I
+0820TEXT(I)  := 'Toggle'
+0825PRG(I)   := "TOGGLE-P"
+0830LEVEL(I) := 2
+0835OPENED(I):= 2
+0840/*
+0845ADD 1 TO I
+0850TEXT(I)  := 'Multi Select'
+0855PRG(I)   := "MULTI-P"
+0860LEVEL(I) := 2
+0865OPENED(I):= 2
+0870/*
+0875ADD 1 TO I
+0880TEXT(I)  := 'Radio Button'
+0885PRG(I)   := "CTRRBU-P"
+0890LEVEL(I) := 2
+0895OPENED(I):= 2
+0900/*
+0905ADD 1 TO I
+0910TEXT(I)  := 'Radio Buttons with Data types'
+0915PRG(I)   := "CTRRB2-P"
+0920LEVEL(I) := 2
+0925OPENED(I):= 2
+0930
+0935/* **************************
+0940/*
+0945ADD 1 TO I
+0950TEXT(I)  := 'Button, Buttonlists and Links'
+0955LEVEL(I) := 1
+0960/*
+0965ADD 1 TO I
+0970TEXT(I)  := 'Button List'
+0975PRG(I)   := "CTRBLI-P"
+0980LEVEL(I) := 2
+0985OPENED(I):= 2
+0990/*
+0995ADD 1 TO I
+1000TEXT(I)  := 'Breadcrumb'
+1005PRG(I)   := "BREAD-P"
+1010LEVEL(I) := 2
+1015OPENED(I):= 2
+1020/*
+1025ADD 1 TO I
+1030TEXT(I)  := 'Method Link'
+1035PRG(I)   := "METHLK-P"
+1040LEVEL(I) := 2
+1045OPENED(I):= 2
+1050/*
+1055ADD 1 TO I
+1060TEXT(I)  := 'Change Visiblity of BUTTONs and ICONs on User Input'
+1065PRG(I)   := "CTRSWV-P"
+1070LEVEL(I) := 2
+1075OPENED(I):= 2
+1080/* **************************
+1085/*
+1090ADD 1 TO I
+1095TEXT(I)  := 'Images, Icons and Iconlists'
+1100LEVEL(I) := 1
+1105/*
+1110ADD 1 TO I
+1115TEXT(I)  := 'Icon'
+1120PRG(I)   := "ICON-P"
+1125LEVEL(I) := 2
+1130OPENED(I):= 2
+1135/*
+1140ADD 1 TO I
+1145TEXT(I)  := 'Icon List'
+1150PRG(I)   := "CTRILI-P"
+1155LEVEL(I) := 2
+1160OPENED(I):= 2
+1165/*
+1170ADD 1 TO I
+1175TEXT(I)  := 'Icon List: Invisible Icons'
+1180PRG(I)   := "CTRILV-P"
+1185LEVEL(I) := 2
+1190OPENED(I):= 2
+1195/*
+1200ADD 1 TO I
+1205TEXT(I)  := 'Drop Icon'
+1210PRG(I)   := "DROPIC-P"
+1215LEVEL(I) := 2
+1220OPENED(I):= 2
+1225/*
+1230ADD 1 TO I
+1235TEXT(I)  := 'Images Contained in Binary Variables'
+1240PRG(I)   := "CTROB1-P"
+1245LEVEL(I) := 2
+1250OPENED(I):= 2
+1255/*
+1260ADD 1 TO I
+1265TEXT(I)  := 'Images in a Grid'
+1270PRG(I)   := "CTROB2-P"
+1275LEVEL(I) := 2
+1280OPENED(I):= 2
+1285/*
+1290ADD 1 TO I
+1295TEXT(I)  := 'Image Viewer'
+1300PRG(I)   := "CTRIMV-P"
+1305LEVEL(I) := 2
+1310OPENED(I):= 2
+1315/* **************************
+1320/*
+1325ADD 1 TO I
+1330TEXT(I)  := 'Menus'
+1335LEVEL(I) := 1
+1340/*
+1345ADD 1 TO I
+1350TEXT(I)  := 'Double Line Menu'
+1355PRG(I)   := "CTRDME-P"
+1360LEVEL(I) := 2
+1365OPENED(I):= 2
+1370/*
+1375ADD 1 TO I
+1380TEXT(I)  := 'DLMENU Control with Drop Down Items'
+1385PRG(I)   := "CTRDMD-P"
+1390LEVEL(I) := 2
+1395OPENED(I):= 2
+1400/*
+1405ADD 1 TO I
+1410TEXT(I)  := 'Menu'
+1415PRG(I)   := "CTRMEN-P"
+1420LEVEL(I) := 2
+1425OPENED(I):= 2
+1430/*
+1435ADD 1 TO I
+1440TEXT(I)  := 'MENU Control with Inactive Items'
+1445PRG(I)   := "CTRMED-P"
+1450LEVEL(I) := 2
+1455OPENED(I):= 2
+1460/*
+1465ADD 1 TO I
+1470TEXT(I)  := 'Context Menus'
+1475PRG(I)   := "CTRCTX-P"
+1480LEVEL(I) := 2
+1485OPENED(I):= 2
+1490/*
+1495ADD 1 TO I
+1500TEXT(I)  := 'Context Menus for Fields'
+1505PRG(I)   := "CTRCTF-P"
+1510LEVEL(I) := 2
+1515OPENED(I):= 2
+1520/* **************************
+1525/*
+1530ADD 1 TO I
+1535TEXT(I)  := 'Grids and Trees'
+1540LEVEL(I) := 1
+1545/*
+1550ADD 1 TO I
+1555TEXT(I)  := 'Client Tree'
+1560PRG(I)   := "CTRCTR-P"
+1565LEVEL(I) := 2
+1570OPENED(I):= 2
+1575/*
+1580ADD 1 TO I
+1585TEXT(I)  := 'Control Grid'
+1590PRG(I)   := "CTRCGR-P"
+1595LEVEL(I) := 2
+1600OPENED(I):= 2
+1605/*
+1610ADD 1 TO I
+1615TEXT(I)  := 'Control Grid Styling'
+1620PRG(I)   := "RTASTY-P"
+1625LEVEL(I) := 2
+1630OPENED(I):= 2
+1635/*
+1640ADD 1 TO I
+1645TEXT(I)  := 'Control Grid with hiding columns'
+1650PRG(I)   := "GRIDHD-P"
+1655LEVEL(I) := 2
+1660OPENED(I):= 2
+1665/*
+1670ADD 1 TO I
+1675TEXT(I)  := 'Grids with Dynamic Columns'
+1680PRG(I)   := "CTRDYN-P"
+1685LEVEL(I) := 2
+1690OPENED(I):= 2
+1695/*
+1700ADD 1 TO I
+1705TEXT(I)  := 'Managed Grid'
+1710PRG(I)   := "CTRMGR-P"
+1715LEVEL(I) := 2
+1720OPENED(I):= 2
+1725/*
+1730ADD 1 TO I
+1735TEXT(I)  := 'Textgrid'
+1740PRG(I)   := "CTRTGR-P"
+1745LEVEL(I) := 2
+1750OPENED(I):= 2
+1755/*
+1760ADD 1 TO I
+1765TEXT(I)  := 'Tree'
+1770PRG(I)   := "CTRTRE-P"
+1775LEVEL(I) := 2
+1780OPENED(I):= 2
+1785/*
+1790ADD 1 TO I
+1795TEXT(I)  := 'Grid Manager'
+1800PRG(I)   := "GRIDMA-P"
+1805LEVEL(I) := 2
+1810OPENED(I):= 2
+1815/*
+1820ADD 1 TO I
+1825TEXT(I)  := 'Operations on Textgrid'
+1830PRG(I)   := "CTRGOP-P"
+1835LEVEL(I) := 2
+1840OPENED(I):= 2
+1845/*
+1850ADD 1 TO I
+1855TEXT(I)  := 'Textgrid with Server Side Scrolling'
+1860PRG(I)   := "CTRTSS-P"
+1865LEVEL(I) := 2
+1870OPENED(I):= 2
+1875/*
+1880ADD 1 TO I
+1885TEXT(I)  := 'Server Side Scrolling in a Tree (1)'
+1890PRG(I)   := "CTRRST-P"
+1895LEVEL(I) := 2
+1900OPENED(I):= 2
+1905/*
+1910ADD 1 TO I
+1915TEXT(I)  := 'Server Side Scrolling in a Tree (2)'
+1920PRG(I)   := "CTRRS2-P"
+1925LEVEL(I) := 2
+1930OPENED(I):= 2
+1935/*
+1940ADD 1 TO I
+1945TEXT(I)  := 'Control Grid with Server Side Scrolling'
+1950PRG(I)   := "CTRRSS-P"
+1955LEVEL(I) := 2
+1960OPENED(I):= 2
+1965/*
+1970ADD 1 TO I
+1975TEXT(I)  := 'Two-Dimensional Arrays'
+1980PRG(I)   := "CTR2D1-P"
+1985LEVEL(I) := 2
+1990OPENED(I):= 2
+1995/*
+2000ADD 1 TO I
+2005TEXT(I)  := 'Two-Dimensional Adabas Arrays bound to a Grid'
+2010PRG(I)   := "CTR2D2-P"
+2015LEVEL(I) := 2
+2020OPENED(I):= 2
+2025/*
+2030ADD 1 TO I
+2035TEXT(I)  := 'Movable Columns'
+2040PRG(I)   := "CTRRTM-P"
+2045LEVEL(I) := 2
+2050OPENED(I):= 2
+2055/*
+2060ADD 1 TO I
+2065TEXT(I)  := 'FLEXLINE - Dynamically Customize Tables'
+2070PRG(I)   := "CTRFLL-P"
+2075LEVEL(I) := 2
+2080OPENED(I):= 2
+2085/*
+2090ADD 1 TO I
+2095TEXT(I)  := 'FLEXLINE - Move Columns in Dynamic Tables'
+2100PRG(I)   := "CTRFLG-P"
+2105LEVEL(I) := 2
+2110OPENED(I):= 2
+2115/*
+2120TEXT(I)  := 'ROWTABLEAREA2: Dynamically styling rows in grids'
+2125PRG(I)   := "RTADST-P"
+2130LEVEL(I) := 2
+2135OPENED(I):= 2
+2140/*
+2145ADD 1 TO I
+2150TEXT(I)  := 'ROWTABLEAREA2: Dynamically styling rows in trees'
+2155PRG(I)   := "TREEST-P"
+2160LEVEL(I) := 2
+2165OPENED(I):= 2
+2170/*
+2175ADD 1 TO I
+2180TEXT(I)  := 'ROWTABLEAREA2: Dynamically setting of grid column headers'
+2185PRG(I)   := "CTRLTC-P"
+2190LEVEL(I) := 2
+2195OPENED(I):= 2
+2200/*
+2205ADD 1 TO I
+2210TEXT(I)  := 'Drag and Drop Grid Lines'
+2215PRG(I)   := "GRDRAG-P"
+2220LEVEL(I) := 2
+2225OPENED(I):= 2
+2230/*
+2235/* **************************
+2240/*
+2245ADD 1 TO I
+2250TEXT(I)  := 'Area Controls'
+2255LEVEL(I) := 1
+2260/*
+2265ADD 1 TO I
+2270TEXT(I)  := 'Disable Tabs in ROWTABAREA and COLTABAREA'
+2275PRG(I)   := "TABARA-P"
+2280LEVEL(I) := 2
+2285OPENED(I):= 2
+2290/*
+2295ADD 1 TO I
+2300TEXT(I)  := 'Dynamic Style in ROWTABAREA and COLTABAREA'
+2305PRG(I)   := "TABSTY-P"
+2310LEVEL(I) := 2
+2315OPENED(I):= 2
+2320/*
+2325ADD 1 TO I
+2330TEXT(I)  := 'ROWTABAREA with Dynamic Tooltips'
+2335PRG(I)   := "TABART-P"
+2340LEVEL(I) := 2
+2345OPENED(I):= 2
+2350/*
+2355ADD 1 TO I
+2360TEXT(I)  := 'Focus Management in the TABPAGE Control'
+2365PRG(I)   := "CTRFTP-P"
+2370LEVEL(I) := 2
+2375OPENED(I):= 2
+2380/*
+2385ADD 1 TO I
+2390TEXT(I)  := 'ROWSCROLLAREA: Dynamically setting scroll position'
+2395PRG(I)   := "ROWSCL-P"
+2400LEVEL(I) := 2
+2405OPENED(I):= 2
+2410/* **************************
+2415/*
+2420ADD 1 TO I
+2425TEXT(I)  := 'Charts, Reports, Maps, Mashups'
+2430LEVEL(I) := 1
+2435/*
+2440ADD 1 TO I
+2445TEXT(I)  := 'Report'
+2450PRG(I)   := "CTRREP-P"
+2455LEVEL(I) := 2
+2460OPENED(I):= 2
+2465/*
+2470ADD 1 TO I
+2475TEXT(I)  := 'PDF Generation - Pop-Up'
+2480PRG(I)   := "PDF-P"
+2485LEVEL(I) := 2
+2490OPENED(I):= 2
+2495/*
+2500ADD 1 TO I
+2505TEXT(I)  := 'PDF Generation - Subpage'
+2510PRG(I)   := "PDFS-P"
+2515LEVEL(I) := 2
+2520OPENED(I):= 2
+2525/*
+2530ADD 1 TO I
+2535TEXT(I)  := 'Integrated Charts'
+2540PRG(I)   := "ICHART-P"
+2545LEVEL(I) := 2
+2550OPENED(I):= 2
+2555/*
+2560ADD 1 TO I
+2565TEXT(I)  := 'Integrated Mashzone Control'
+2570PRG(I)   := "MASHE2-P"
+2575LEVEL(I) := 2
+2580OPENED(I):= 2
+2585/*
+2590ADD 1 TO I
+2595TEXT(I)  := 'Google Maps locations'
+2600PRG(I)   := "CTRGO2-P"
+2605LEVEL(I) := 2
+2610OPENED(I):= 2
+2615/*
+2620ADD 1 TO I
+2625TEXT(I)  := 'Integrated OpenStreetMap'
+2630PRG(I)   := "INTOSM-P"
+2635LEVEL(I) := 2
+2640OPENED(I):= 2
+2645/*
+2650ADD 1 TO I
+2655TEXT(I)  := 'OpenStreetMap with Address (Geocoder)'
+2660PRG(I)   := "INTOS2-P"
+2665LEVEL(I) := 2
+2670OPENED(I):= 2
+2675/* **************************
+2680/*
+2685ADD 1 TO I
+2690TEXT(I)  := 'Pop-Ups'
+2695LEVEL(I) := 1
+2700/*
+2705ADD 1 TO I
+2710TEXT(I)  := 'Open modal'
+2715PRG(I)   := "EMPTY-P"
+2720LEVEL(I) := 2
+2725OPENED(I):= 2
+2730/*
+2735ADD 1 TO I
+2740TEXT(I)  := 'Modal Pop-up Windows'
+2745PRG(I)   := "CTRPOM-P"
+2750LEVEL(I) := 2
+2755OPENED(I):= 2
+2760/*
+2765ADD 1 TO I
+2770TEXT(I)  := 'Configuring Pop-up Dialogs'
+2775PRG(I)   := "CTRPOP-P"
+2780LEVEL(I) := 2
+2785OPENED(I):= 2
+2790/*
+2795ADD 1 TO I
+2800TEXT(I)  := 'Page Pop-Ups:Disabling Parent'
+2805PRG(I)   := "CTRPPD-P"
+2810LEVEL(I) := 2
+2815OPENED(I):= 2
+2820/* **************************
+2825/*
+2830ADD 1 TO I
+2835TEXT(I)  := 'More Single Controls'
+2840LEVEL(I) := 1
+2845/*
+2850ADD 1 TO I
+2855TEXT(I)  := 'Label'
+2860PRG(I)   := "LABEL-P"
+2865LEVEL(I) := 2
+2870OPENED(I):= 2
+2875/*
+2880ADD 1 TO I
+2885TEXT(I)  := 'Schedule'
+2890PRG(I)   := "CTRSHE-P"
+2895LEVEL(I) := 2
+2900OPENED(I):= 2
+2905/*
+2910ADD 1 TO I
+2915TEXT(I)  := 'Slider'
+2920PRG(I)   := "SLIDER-P"
+2925LEVEL(I) := 2
+2930OPENED(I):= 2
+2935/*
+2940ADD 1 TO I
+2945TEXT(I)  := 'Strip Selection'
+2950PRG(I)   := "CTRSRS-P"
+2955LEVEL(I) := 2
+2960OPENED(I):= 2
+2965/*
+2970ADD 1 TO I
+2975TEXT(I)  := 'Tab Selection'
+2980PRG(I)   := "CTRTBS-P"
+2985LEVEL(I) := 2
+2990OPENED(I):= 2
+2995/*
+3000ADD 1 TO I
+3005TEXT(I)  := 'Tab Strip'
+3010PRG(I)   := "CTRTSP-P"
+3015LEVEL(I) := 2
+3020OPENED(I):= 2
+3025/*
+3030ADD 1 TO I
+3035TEXT(I)  := 'Tab Strip2'
+3040PRG(I)   := "TABST2-P"
+3045LEVEL(I) := 2
+3050OPENED(I):= 2
+3055/*
+3060ADD 1 TO I
+3065TEXT(I)  := 'Ihtml'
+3070PRG(I)   := "IHTML-P"
+3075LEVEL(I) := 2
+3080OPENED(I):= 2
+3085/*
+3090ADD 1 TO I
+3095TEXT(I)  := 'STATUSBAR Sample'
+3100PRG(I)   := "CTRSTA-P"
+3105LEVEL(I) := 2
+3110OPENED(I):= 2
+3115/* **************************
+3120/*
+3125ADD 1 TO I
+3130TEXT(I)  := 'Adding functionality - invisible controls'
+3135LEVEL(I) := 1
+3140/*
+3145ADD 1 TO I
+3150TEXT(I)  := 'Event Data'
+3155PRG(I)   := "CTREVD-P"
+3160LEVEL(I) := 2
+3165OPENED(I):= 2
+3170/*
+3175ADD 1 TO I
+3180TEXT(I)  := 'Timer Control'
+3185PRG(I)   := "CTRTIM-P"
+3190LEVEL(I) := 2
+3195OPENED(I):= 2
+3200/*
+3205ADD 1 TO I
+3210TEXT(I)  := 'Control Variables'
+3215PRG(I)   := "CTRCV-P"
+3220LEVEL(I) := 2
+3225OPENED(I):= 2
+3230/*
+3235ADD 1 TO I
+3240TEXT(I)  := '*CURS-FIELD and POS'
+3245PRG(I)   := "CTRCUR-P"
+3250LEVEL(I) := 2
+3255OPENED(I):= 2
+3260/*
+3265ADD 1 TO I
+3270TEXT(I)  := 'Session Parameters'
+3275PRG(I)   := "CTRSEP-P"
+3280LEVEL(I) := 2
+3285OPENED(I):= 2
+3290/*
+3295ADD 1 TO I
+3300TEXT(I)  := 'Localization: Toggle LTR/RTL'
+3305PRG(I)   := "LTRRTL-P"
+3310LEVEL(I) := 2
+3315OPENED(I):= 2
+3320/* **************************
+3325/*
+3330ADD 1 TO I
+3335TEXT(I)  := 'Documents'
+3340LEVEL(I) := 1
+3345/*
+3350ADD 1 TO I
+3355TEXT(I)  := 'File Upload'
+3360PRG(I)   := "FILEUP-P"
+3365LEVEL(I) := 2
+3370OPENED(I):= 2
+3375/*
+3380ADD 1 TO I
+3385TEXT(I)  := 'Display Documents'
+3390PRG(I)   := "NATDOC-P"
+3395LEVEL(I) := 2
+3400OPENED(I):= 2
+3405/*
+3410ADD 1 TO I
+3415TEXT(I)  := 'Download and Upload Documents'
+3420PRG(I)   := "FILEUD-P"
+3425LEVEL(I) := 2
+3430OPENED(I):= 2
+3435/*
+3440ADD 1 TO I
+3445TEXT(I)  := 'Generate and Upload PDF Document'
+3450PRG(I)   := "PDF2-P"
+3455LEVEL(I) := 2
+3460OPENED(I):= 2
+3465/* **************************
+3470/*
+3475ADD 1 TO I
+3480TEXT(I)  := 'Special Controls'
+3485LEVEL(I) := 1
+3490/*
+3495ADD 1 TO I
+3500TEXT(I)  := 'Tag Cloud'
+3505PRG(I)   := "TAGCLD-P"
+3510LEVEL(I) := 2
+3515OPENED(I):= 2
+3520/*
+3525ADD 1 TO I
+3530TEXT(I)  := 'News Feed'
+3535PRG(I)   := "NEWSFD-P"
+3540LEVEL(I) := 2
+3545OPENED(I):= 2
+3550/*
+3555ADD 1 TO I
+3560TEXT(I)  := 'Edit Status'
+3565PRG(I)   := "XMLDMO-P"
+3570LEVEL(I) := 2
+3575OPENED(I):= 2
+3580/*
+3585ADD 1 TO I
+3590TEXT(I)  := 'XML Data Mode'
+3595PRG(I)   := "XMLDM2-P"
+3600LEVEL(I) := 2
+3605OPENED(I):= 2
+3610/* **************************
+3615/*
+3620ADD 1 TO I
+3625TEXT(I)  := 'Subpages and Workplaces'
+3630LEVEL(I) := 1
+3635/*
+3640ADD 1 TO I
+3645TEXT(I)  := 'How to run Multipage Applications in Natural ONE'
+3650PRG(I)   := "MULONE-P"
+3655LEVEL(I) := 2
+3660OPENED(I):= 2
+3665/*
+3670ADD 1 TO I
+3675TEXT(I)  := 'SUBCISPAGE2 with XCICONTEXT'
+3680PRG(I)   := "CTRSUB-P"
+3685LEVEL(I) := 2
+3690OPENED(I):= 2
+3695/*
+3700ADD 1 TO I
+3705TEXT(I)  := 'ROWTABSUBPAGES Sample'
+3710PRG(I)   := "CTRRTB-P"
+3715LEVEL(I) := 2
+3720OPENED(I):= 2
+3725/*
+3730ADD 1 TO I
+3735TEXT(I)  := 'ROWTABSUBPAGES: All Tabs in one Natural Session'
+3740PRG(I)   := "CTRRS-0P"
+3745LEVEL(I) := 2
+3750OPENED(I):= 2
+3755/*
+3760/* **************************
+3765/*
+3770ADD 1 TO I
+3775TEXT(I)  := 'Custom Controls'
+3780LEVEL(I) := 1
+3785/*
+3790ADD 1 TO I
+3795TEXT(I)  := 'Custom Controls - Macro Controls'
+3800PRG(I)   := "CUSTC1-P"
+3805LEVEL(I) := 2
+3810OPENED(I):= 2
+3815/*
+3820ADD 1 TO I
+3825TEXT(I)  := 'Custom Controls - Arrays of Macro Controls'
+3830PRG(I)   := "CUSTC2-P"
+3835LEVEL(I) := 2
+3840OPENED(I):= 2
+3845/*
+3850ADD 1 TO I
+3855TEXT(I)  := 'Custom Controls - Java / JavaScript Controls'
+3860PRG(I)   := "CUSTC3-P"
+3865LEVEL(I) := 2
+3870OPENED(I):= 2
+3875/*
+3880/* **************************
+3885/*
+3890ADD 1 TO I
+3895TEXT(I)  := 'Mobile - Responsive Controls'
+3900LEVEL(I) := 1
+3905/*
+3910ADD 1 TO I
+3915TEXT(I)  := 'Basics: Responsive Controls'
+3920PRG(I)   := "MBHOME-P"
+3925LEVEL(I) := 2
+3930OPENED(I):= 2
+3935/*
+3940ADD 1 TO I
+3945TEXT(I)  := 'Getting Started: Documentation'
+3950PRG(I)   := "MBDOCS-P"
+3955LEVEL(I) := 2
+3960OPENED(I):= 2
+3965/*
+3970ADD 1 TO I
+3975TEXT(I)  := 'Autocomplete in FFIELD'
+3980PRG(I)   := "FFAUTO-P"
+3985LEVEL(I) := 2
+3990OPENED(I):= 2
+3995/*
+4000ADD 1 TO I
+4005TEXT(I)  := 'flush in FFIELD'
+4010PRG(I)   := "FFLUSH-P"
+4015LEVEL(I) := 2
+4020OPENED(I):= 2
+4025/*
+4030ADD 1 TO I
+4035TEXT(I)  := 'maxlength, autotab and uppercase in FFIELD'
+4040PRG(I)   := "FFPROP-P"
+4045LEVEL(I) := 2
+4050OPENED(I):= 2
+4055/*
+4060ADD 1 TO I
+4065TEXT(I)  := 'statusprop in FFIELD'
+4070PRG(I)   := "FFSTRP-P"
+4075LEVEL(I) := 2
+4080OPENED(I):= 2
+4085/*
+4090ADD 1 TO I
+4095TEXT(I)  := 'visibleprop and invisiblemode in FFIELD'
+4100PRG(I)   := "FFVIRP-P"
+4105LEVEL(I) := 2
+4110OPENED(I):= 2
+4115/*
+4120ADD 1 TO I
+4125TEXT(I)  := 'datatype validation in FFIELD '
+4130PRG(I)   := "FLDDAT-P"
+4135LEVEL(I) := 2
+4140OPENED(I):= 2
+4145/*
+4150ADD 1 TO I
+4155TEXT(I)  := 'edit mask validation in FFIELD '
+4160PRG(I)   := "FLDEMK-P"
+4165LEVEL(I) := 2
+4170OPENED(I):= 2
+4175/*
+4180ADD 1 TO I
+4185TEXT(I)  := 'FLABEL control'
+4190PRG(I)   := "MLABEL-P"
+4195LEVEL(I) := 2
+4200OPENED(I):= 2
+4205/*
+4210ADD 1 TO I
+4215TEXT(I)  := 'CHECKBOX control'
+4220PRG(I)   := "MBCHKB-P"
+4225LEVEL(I) := 2
+4230OPENED(I):= 2
+4235/*
+4240ADD 1 TO I
+4245TEXT(I)  := 'Responsive IMAGEOUT control'
+4250PRG(I)   := "MBIMGB-P"
+4255LEVEL(I) := 2
+4260OPENED(I):= 2
+4265/*
+4270ADD 1 TO I
+4275TEXT(I)  := 'Responsive ICON control'
+4280PRG(I)   := "MBICON-P"
+4285LEVEL(I) := 2
+4290OPENED(I):= 2
+4295/*
+4300ADD 1 TO I
+4305TEXT(I)  := 'Responsive BUTTONs and BUTTON lists'
+4310PRG(I)   := "MBBUTT-P"
+4315LEVEL(I) := 2
+4320OPENED(I):= 2
+4325/*
+4330ADD 1 TO I
+4335TEXT(I)  := 'Responsive PAGEHEADER control'
+4340PRG(I)   := "MPGHD-P"
+4345LEVEL(I) := 2
+4350OPENED(I):= 2
+4355/*
+4360ADD 1 TO I
+4365TEXT(I)  := 'Responsive Alerts - Duration'
+4370PRG(I)   := "MBALER-P"
+4375LEVEL(I) := 2
+4380OPENED(I):= 2
+4385/*
+4390ADD 1 TO I
+4395TEXT(I)  := 'Responsive Panels - foldedprop'
+4400PRG(I)   := "MFPPAN-P"
+4405LEVEL(I) := 2
+4410OPENED(I):= 2
+4415/*
+4420ADD 1 TO I
+4425TEXT(I)  := 'Responsive PANEL control'
+4430PRG(I)   := "MPANEL-P"
+4435LEVEL(I) := 2
+4440OPENED(I):= 2
+4445/*
+4450ADD 1 TO I
+4455TEXT(I)  := 'Responsive foldable PANEL control'
+4460PRG(I)   := "MFPANL-P"
+4465LEVEL(I) := 2
+4470OPENED(I):= 2
+4475/*
+4480ADD 1 TO I
+4485TEXT(I)  := 'Vertical PANEL lists with images'
+4490PRG(I)   := "MPANL3-P"
+4495LEVEL(I) := 2
+4500OPENED(I):= 2
+4505/*
+4510ADD 1 TO I
+4515TEXT(I)  := 'Visibility in PANEL lists'
+4520PRG(I)   := "MPANL2-P"
+4525LEVEL(I) := 2
+4530OPENED(I):= 2
+4535/*
+4540ADD 1 TO I
+4545TEXT(I)  := 'Responsive Forms - dynamic properties'
+4550PRG(I)   := "MBFOVI-P"
+4555LEVEL(I) := 2
+4560OPENED(I):= 2
+4565/*
+4570ADD 1 TO I
+4575TEXT(I)  := 'Responsive SUBPAGE control'
+4580PRG(I)   := "MSUBPG-P"
+4585LEVEL(I) := 2
+4590OPENED(I):= 2
+4595/*
+4600ADD 1 TO I
+4605TEXT(I)  := 'Responsive SUBCISPAGE control'
+4610PRG(I)   := "MSUBCP-P"
+4615LEVEL(I) := 2
+4620OPENED(I):= 2
+4625/*
+4630ADD 1 TO I
+4635TEXT(I)  := 'Selection and Sorting in responsive grids'
+4640PRG(I)   := "MBSIGR-P"
+4645LEVEL(I) := 2
+4650OPENED(I):= 2
+4655/*
+4660ADD 1 TO I
+4665TEXT(I)  := 'Responsive Mashzone Control'
+4670PRG(I)   := "MBMASH-P"
+4675LEVEL(I) := 2
+4680OPENED(I):= 2
+4685/*
+4690ADD 1 TO I
+4695TEXT(I)  := 'Responsive OpenStreetMap with Markers'
+4700PRG(I)   := "MBOSM1-P"
+4705LEVEL(I) := 2
+4710OPENED(I):= 2
+4715/*
+4720ADD 1 TO I
+4725TEXT(I)  := 'Responsive OpenStreetMap with Animation'
+4730PRG(I)   := "MBOSMA-P"
+4735LEVEL(I) := 2
+4740OPENED(I):= 2
+4745/*
+4750ADD 1 TO I
+4755TEXT(I)  := 'Responsive Multilanguage Charts and Grids'
+4760PRG(I)   := "RPCHID-P"
+4765LEVEL(I) := 2
+4770OPENED(I):= 2
+4775/*
+4780ADD 1 TO I
+4785TEXT(I)  := 'Responsive Charts'
+4790PRG(I)   := "RPCHAT-P"
+4795LEVEL(I) := 2
+4800OPENED(I):= 2
+4805/*
+4810ADD 1 TO I
+4815TEXT(I)  := 'Responsive Charts- Dynamic Properties'
+4820PRG(I)   := "RCHATD-P"
+4825LEVEL(I) := 2
+4830OPENED(I):= 2
+4835/*
+4840ADD 1 TO I
+4845TEXT(I)  := 'Responsive Charts - Stacked'
+4850PRG(I)   := "RPCHAS-P"
+4855LEVEL(I) := 2
+4860OPENED(I):= 2
+4865/*
+4870ADD 1 TO I
+4875TEXT(I)  := 'Responsive Pie Charts'
+4880PRG(I)   := "RPPIE-P"
+4885LEVEL(I) := 2
+4890OPENED(I):= 2
+4895/*
+4900ADD 1 TO I
+4905TEXT(I)  := 'Responsive Pie Charts- Dynamic Properties'
+4910PRG(I)   := "RPPIED-P"
+4915LEVEL(I) := 2
+4920OPENED(I):= 2
+4925/*
+4930ADD 1 TO I
+4935TEXT(I)  := 'Responsive Charts with Chart Options'
+4940PRG(I)   := "RPCHAO-P"
+4945LEVEL(I) := 2
+4950OPENED(I):= 2
+4955/*
+4960ADD 1 TO I
+4965TEXT(I)  := 'Responsive Charts with Values'
+4970PRG(I)   := "RPCHAV-P"
+4975LEVEL(I) := 2
+4980OPENED(I):= 2
+4985/*
+4990ADD 1 TO I
+4995TEXT(I)  := 'Responsive RADIOBUTTON Control'
+5000PRG(I)   := "MBRDBT-P"
+5005LEVEL(I) := 2
+5010OPENED(I):= 2
+5015/*
+5020ADD 1 TO I
+5025TEXT(I)  := 'Responsive RADIOBUTTON - Advanced'
+5030PRG(I)   := "MBRBTA-P"
+5035LEVEL(I) := 2
+5040OPENED(I):= 2
+5045/*
+5050ADD 1 TO I
+5055TEXT(I)  := 'Responsive TABSUBPAGES'
+5060PRG(I)   := "MBTSPG-P"
+5065LEVEL(I) := 2
+5070OPENED(I):= 2
+5075/*
+5080ADD 1 TO I
+5085TEXT(I)  := 'Responsive Vertical TABSUBPAGES'
+5090PRG(I)   := "MBVTSP-P"
+5095LEVEL(I) := 2
+5100OPENED(I):= 2
+5105/*
+5110ADD 1 TO I
+5115TEXT(I)  := 'Advanced Responsive NAVBAR'
+5120PRG(I)   := "MBNAVB-P"
+5125LEVEL(I) := 2
+5130OPENED(I):= 2
+5135/*
+5140/*
+5145/* **************************
+5150/*
+5155ADD 1 TO I
+5160TEXT(I)  := 'Deprecated Controls'
+5165LEVEL(I) := 1
+5170/*
+5175ADD 1 TO I
+5180TEXT(I)  := 'DEPRECATED: Edit Masks (Generation 1)'
+5185PRG(I)   := "CTREM-P"
+5190LEVEL(I) := 2
+5195OPENED(I):= 2
+5200/*
+5205ADD 1 TO I
+5210TEXT(I)  := 'DEPRECATED: Chart'
+5215PRG(I)   := "CTRGRA-P"
+5220LEVEL(I) := 2
+5225OPENED(I):= 2
+5230/*
+5235ADD 1 TO I
+5240TEXT(I)  := 'DEPRECATED: Chart Types'
+5245PRG(I)   := "CTRGR2-P"
+5250LEVEL(I) := 2
+5255OPENED(I):= 2
+5260/*
+5265ADD 1 TO I
+5270TEXT(I)  := 'DEPRECATED: Linechart Control'
+5275PRG(I)   := "CTRLCH-P"
+5280LEVEL(I) := 2
+5285OPENED(I):= 2
+5290/*
+5295END

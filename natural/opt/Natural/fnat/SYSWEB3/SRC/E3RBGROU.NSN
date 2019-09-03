@@ -1,0 +1,71 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3RBGROU
+0050*
+0060* DESCRIPTION   Creates a radio button group.
+0070*
+0080* AUTHOR        SAG   08.09.1998
+0090*
+0100* Version       8.3
+0110*
+0120* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0130*
+0140* HISTORY
+0150* USER    DATE       REASON
+0160* ------+----------+----------------------------------------------
+0170*       ! --.--.-- !
+0180* ------+----------+----------------------------------------------
+0190*
+0200* ------ PARAMETER -----------------------------------------------
+0210DEFINE DATA
+0220PARAMETER USING W3PARM
+0230LOCAL USING W3CONST
+0240LOCAL
+02501 V                  (I4) CONST <10>
+02601 H3ARRAYVALUE       (A/1:V) DYNAMIC
+02701 H3ARRAYLABLE       (A/1:V) DYNAMIC
+0280*
+02901 II                 (I1)
+0300END-DEFINE
+0310* --- ERROR HANDLING ---
+0320ON ERROR
+0330  PERFORM W3ERROR ##W3ERROR
+0340  PERFORM W3END ##RPC
+0350  ESCAPE ROUTINE
+0360END-ERROR
+0370*
+0380* --- INITIALIZE Web Interface ---
+0390PERFORM W3INIT ##RPC
+0400*
+0410* --- START HTML Generation ---
+0420PERFORM H3-OPEN-HTML 'HTML Generation - Radio Button Group' " " ' '
+0430* --- THE LEVEL 2 HEADER ---
+0440PERFORM H3-HEADER 2 'Radio Button Group '
+0450*
+0460* --- Form with GET -> Parameter will be added after a ? at the URL ---
+0470PERFORM H3-OPEN-FORM "G" "NAT-ENV"
+0480*
+0490FOR II = 1 TO V
+0500    COMPRESS "TEST" II INTO H3ARRAYVALUE(II) LEAVING NO
+0510    COMPRESS "TEST" II INTO H3ARRAYLABLE(II)
+0520END-FOR
+0530*
+0540PERFORM H3-RADIO-GROUP 10 "RB-GROUP" H3ARRAYVALUE(*)
+0550  H3ARRAYLABLE(*) 5 FALSE 3 0
+0560* -------------------------------------------------
+0570*
+0580PERFORM H3-LINE-BREAK
+0590* --- Submit button ---
+0600PERFORM H3-BUTTON "S" " " 'Submit with GET'  ' '
+0610*
+0620PERFORM H3-CLOSE-FORM
+0630*
+0640PERFORM E3-EXAMPLE-END
+0650*
+0660* --- END HTML Generation ---
+0670PERFORM H3-CLOSE-HTML
+0680* --- END Web Interface ---
+0690PERFORM W3END ##RPC
+0700*
+0710END

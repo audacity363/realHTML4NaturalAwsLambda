@@ -1,0 +1,13 @@
+0010** Example 'METH03': Method SUMMATION (used by METH01)
+0020************************************************************************
+0030DEFINE DATA
+0040PARAMETER
+0050  USING METHA
+0060OBJECT
+0070  USING METHO
+0080END-DEFINE
+0090*
+0100* Method SUMMATION of class STUDENTS
+0110*
+0120COMPUTE SUM = #VAR1 + #VAR2 + #VAR3 + #VAR4
+0130END

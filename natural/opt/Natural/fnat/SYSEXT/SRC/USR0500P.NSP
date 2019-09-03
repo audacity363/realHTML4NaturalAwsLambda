@@ -1,0 +1,32 @@
+0010*  Example program to test USR0500N for setting Window Title Text
+0020*
+0030*
+0040DEFINE DATA LOCAL
+0050  1  #WINDOW-TITLE   (A253)
+0060END-DEFINE
+0070*
+0080MOVE 'Test Title' TO #WINDOW-TITLE
+0090*
+0100CALLNAT 'USR0500N' TRUE #WINDOW-TITLE
+0110*           I        I       I
+0120*           I        I       +---  string to be displayed in title bar
+0130*           I        +-----------  true = title bar on; false = title
+0140*           I                      off
+0150*           +--------------------  Name of Subprogram which sets title
+0160*                                  bar
+0170*
+0180SET CONTROL 'WFL55C10B5/10'
+0190INPUT /// 10T 'This is to test the title text...'
+0200*
+0210CALLNAT 'USR0500N' TRUE 'Second Test'
+0220*           I        I       I
+0230*           I        I       +---  string to be displayed in title bar
+0240*           I        +-----------  true = title bar on; false = title
+0250*           I                      off
+0260*           +--------------------  Name of Subprogram which sets title
+0270*                                  bar
+0280*
+0290SET CONTROL 'WFL55C10B5/10'
+0300INPUT /// 10T 'This is to test the title text...'
+0310*
+0320END

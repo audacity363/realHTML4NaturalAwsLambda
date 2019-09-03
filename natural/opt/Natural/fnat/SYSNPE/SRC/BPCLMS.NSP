@@ -1,0 +1,119 @@
+0010* MEMBER      BPCLMS
+0020* Function    Copy Member from PC to BS2000 LMS
+0030*             You may specify Modules to translate Characters
+0040*
+0050* Maintenance
+0060* uuu dd-mm-yy  ...
+0070* ----------------------------------------------------------------------
+0080DEFINE DATA GLOBAL USING TUTO
+0090            LOCAL  USING BWRTF--L
+0100            LOCAL
+0110*
+012001 #TRANS-PGM               (A8/1:5) INIT (01) <'BTLCPGM '>
+0130*
+014001 #DSNAME                  (A54)
+015001 #PASSWORD                (A8)
+016001 #DISPOSITION             (A3)
+017001 #ELEMENT                 (A64)
+018001 #ELEMENT-TYPE            (A8)
+019001 #ELEMENT-VERSION         (A24)
+020001 #ELEMENT-PASSWORD        (A8)
+021001 #FUNCTION                (A8)
+0220*
+023001 I                        (P2)
+024001 RECORDS-WRITTEN          (L)
+025001 #IN-RECORD               (A253)
+026001 #IN-LENGTH               (P3)
+027001 #OUT-RECORD              (A253)
+028001 #PROGRAM                 (A8)
+0290END-DEFINE
+0300*
+0310* ------------------------------ MAIN LOOP ----------------------------
+0320*
+0330PERFORM PF-KEY
+0340*
+0350MAIN.
+0360REPEAT
+0370  PERFORM SCREEN-IO
+0380  PERFORM UPLOAD-PC-FILE
+0390END-REPEAT
+0400*
+0410* ------------------------------ upload-pc-file -----------------------
+0420*
+0430DEFINE SUBROUTINE UPLOAD-PC-FILE
+0440ASSIGN RECORDS-WRITTEN = FALSE
+0450READ.
+0460READ PC FILE 5 #IN-RECORD
+0470  EXAMINE #IN-RECORD FOR 'X' GIVING LENGTH IN #IN-LENGTH
+0480  FOR I = 1 TO 5
+0490    IF #TRANS-PGM (I) NE ' '
+0500       CALLNAT #TRANS-PGM (I) #IN-RECORD
+0510                              #IN-LENGTH
+0520                              #OUT-RECORD
+0530       ASSIGN #IN-RECORD = #OUT-RECORD
+0540    END-IF
+0550  END-FOR
+0560 ASSIGN RECORDS-WRITTEN = TRUE
+0570*
+0580WRITE.
+0590  PROCESS WRITE-FILE
+0600          USING NODE                  = ##NODE
+0610            ,   PRODUCT               = 'L'
+0620            ,   DSNAME                = #DSNAME
+0630            ,   ELEMENT               = #ELEMENT
+0640            ,   ELEMENT-TYPE          = #ELEMENT-TYPE
+0650            ,   ELEMENT-VERSION       = #ELEMENT-VERSION
+0660            ,   ELEMENT-PASSWORD      = #ELEMENT-PASSWORD
+0670            ,   FUNCTION              = #FUNCTION
+0680            ,   DISP                  = #DISPOSITION
+0690            ,   PASSWORD              = #PASSWORD
+0700            ,   RECORD                = #IN-RECORD
+0710            ,   RECORD-LENGTH         = #IN-LENGTH
+0720         GIVING ERROR-CODE
+0730                ERROR-TEXT
+0740                SYSTEM-CODE
+0750  IF ERROR-CODE NE 0
+0760     INCLUDE BERR---C
+0770     ESCAPE BOTTOM
+0780  END-IF
+0790END-WORK
+0800*
+0810IF RECORDS-WRITTEN
+0820CLOSE.
+0830   PROCESS WRITE-FILE
+0840           USING NODE                  = ##NODE
+0850             ,   PRODUCT               = 'L'
+0860             ,   FUNCTION              = 'CLOSE'
+0870          GIVING ERROR-CODE
+0880                 ERROR-TEXT
+0890                 SYSTEM-CODE
+0900   IF ERROR-CODE NE 0
+0910      INCLUDE BERR---C
+0920   END-IF
+0930END-IF
+0940END-SUBROUTINE
+0950*
+0960* ------------------------------ SCREEN-IO ----------------------------
+0970*
+0980DEFINE SUBROUTINE SCREEN-IO
+0990INPUT WITH TEXT *##MSG-NR,
+1000                 ##MSG-TXT1,
+1010                 ##MSG-TXT2
+1020      USING MAP 'BPCLMS-&'
+1030RESET ##MSG
+1040END-SUBROUTINE
+1050*
+1060* ------------------------------ PF-KEY -------------------------------
+1070*
+1080INCLUDE C-PFKEY
+1090*
+1100* ------------------------------ on error -----------------------------
+1110*
+1120ON ERROR
+1130  DECIDE ON FIRST *ERROR-NR
+1140    VALUE 1016 ASSIGN #PROGRAM = *PROGRAM
+1150               FETCH #PROGRAM
+1160    NONE       IGNORE
+1170  END-DECIDE
+1180END-ERROR
+1190END

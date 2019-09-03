@@ -1,0 +1,37 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1061N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060   USING USR1059L
+0070LOCAL
+0080   1 REP-NAME    (A8)
+0090   1 REP-ID      (I4)
+0100   1 RET-CODE    (I4)
+0110END-DEFINE
+0120/*
+0130/* open a new report
+0140/*
+0150INPUT 'OPEN REPORT' // 'Report name (blank to cancel)?'
+0160                        REP-NAME //
+0170'The report name can be the name of any report existing in the NATGUI_BMP' /
+0180'directory (without the .RPT extension, which will be added automatically).' /
+0190'Please make a note of the returned report id, as this must be specified to' /
+0200'use the sample programs corresponding to the following interfaces:' //
+021010T 'Function' 30T 'Interface' /
+022010T '--------' 30T '---------' //
+023010T 'Close report'   28T ' ' NRPTCLOS /
+024010T 'Print report'   28T ' ' NRPTPRNT /
+025010T 'Preview report' 28T ' ' NRPTPREV /
+0260/*
+0270IF REP-NAME NE ' '
+0280   /*
+0290   CALLNAT NRPTOPEN REP-NAME REP-ID RET-CODE
+0300   /*
+0310   IF RET-CODE NE 0
+0320      PERFORM SHOW-ERR RET-CODE TRUE
+0330   ELSE
+0340      WRITE 'Report opened successfully with id' REP-ID
+0350   END-IF
+0360END-IF
+0370END

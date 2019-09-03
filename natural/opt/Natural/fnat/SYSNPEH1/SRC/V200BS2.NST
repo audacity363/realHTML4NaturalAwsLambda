@@ -1,0 +1,13 @@
+0010&H View SUBMIT
+0020&L
+0030&L
+0040#Purpose@: Submit job to Operating System.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : For BS2000, the job to be submitted may also be a library
+0100           element (LMS). It is also possible to pass the job's JCL
+0110           cardwise to the ENTIRE SYSTEM SERVER.
+0120&L
+0130#Notes@  :

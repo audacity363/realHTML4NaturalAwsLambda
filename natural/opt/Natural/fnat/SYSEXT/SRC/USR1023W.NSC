@@ -1,0 +1,70 @@
+0010/*  This copycode can directly be used. For more information read the
+0020/*  text object 'USR1023T' in library SYSEXT.
+0030/***********************************************************************
+0040/*
+0050/*  Copycode Interface .... USR1023W    /*  Copycode source
+0060/*  Documentation ......... USR1023T    /*  Text object
+0070/*  Example Program ....... USR1023P    /*  Source program
+0080/*
+0090/*  Function .............. Convert microseconds into a store clock.
+0100/*
+0110/*
+0120/*  Transferred Parameters
+0130/*  ----------------------
+0140/*  &1&   Input:  microseconds since 1900-01-01 00:00:00,
+0150/*                format (P19), (N19) or (F8)
+0160/*  &2&   Output: store clock value, format (B8)
+0170/*
+0180/*
+0190/*  Additional Data Definitions
+0200/*  ---------------------------
+0210/*  1 USR1023_B8     (B8)  /* variables used in copycode USR1023W
+0220/*  1 REDEFINE USR1023_B8
+0230/*    2 USR1023_B81  (B3)
+0240/*    2 USR1023_B82  (B3)
+0250/*    2 USR1023_B83A (B1)
+0260/*    2 USR1023_B83B (B1)
+0270/*  1 USR1023_I41    (I4)
+0280/*  1 USR1023_I42    (I4)
+0290/*  1 USR1023_I43    (I4)
+0300/*
+0310/*
+0320/*  Using Copycode Interface
+0330/*  ------------------------
+0340/*  Copy the copycode USR1023W to the required library.
+0350/*
+0360/*  Add the additional data definitions for the copycode to the data
+0370/*  definitions of your program.
+0380/*
+0390/*  Before execution of the copycode, check that a valid
+0400/*  store clock value is requested:
+0410/*      IF C-MICROSECONDS < 0                  /* first store clock
+0420/*      OR C-MICROSECONDS > 4503599627370495   /* last store clock
+0430/*        PRINT 'Value outside of store clock range.'
+0440/*        ESCAPE ROUTINE
+0450/*      END-IF
+0460/*
+0470/*  Use the copycode with the INCLUDE statement:
+0480/*     INCLUDE USR1023W 'C-MICROSECONDS' 'C-STORECLOCK'
+0490***********************************************************************
+0500*
+0510* Calculate integer values
+0520*
+0530DIVIDE 0000000000268435456 INTO &1&
+0540  GIVING USR1023_I41 REMAINDER USR1023_I42
+0550DIVIDE 16 INTO USR1023_I42
+0560  GIVING USR1023_I42 REMAINDER USR1023_I43
+0570USR1023_I43  := 16 * USR1023_I43
+0580*
+0590* Transform to binary
+0600*
+0610USR1023_B81  := USR1023_I41
+0620USR1023_B82  := USR1023_I42
+0630USR1023_B83A := USR1023_I43
+0640USR1023_B83B := H'00'
+0650*
+0660* Return result
+0670*
+0680&2&          := USR1023_B8
+0690*
+0700***********************************************************************

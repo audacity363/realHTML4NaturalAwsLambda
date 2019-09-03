@@ -1,0 +1,18 @@
+0010/* ---------------------------------------------------------------------
+0020/* Program:        ERROR1
+0030/* Library:        SYSEXBAT (Batch mode samples)
+0040/*
+0050/* Functionality:  Error handling
+0060/*
+0070/* Description:    This program is part of the error handling in
+0080/*                 batch mode.
+0090/*
+0100/*
+0110/* ---------------------------------------------------------------------
+0120DEFINE DATA LOCAL
+01301 #age (N3)
+0140END-DEFINE
+0150**
+0160INPUT (IP=ON AD=M) "Age:" #age
+0170DISPLAY #age
+0180END

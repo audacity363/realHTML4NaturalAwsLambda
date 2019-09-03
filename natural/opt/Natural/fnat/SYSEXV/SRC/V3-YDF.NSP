@@ -1,0 +1,114 @@
+0010*
+0020* Program .. V3-YDF
+0030* Library .. SYSEXV
+0040* Version .. 3.1
+0050*
+0060* Functionality: For Year 2000, MOVE with new field parameter DF
+0070*
+0080* Note: Set profile parameter DTFORM=I for this example.
+0090************************************************************************
+0100*
+0110DEFINE DATA
+0120LOCAL
+01301 #DATE1   (D)
+01401 #ALPHA1  (A10)
+01501 #ALPHA2  (A10)
+01601 #ALPHA3  (A10)
+01701 #ALPHA4  (A10)
+0180END-DEFINE
+0190*
+0200FORMAT KD=ON
+0210SET KEY PF3  NAMED 'Exit'
+0220  PF12 NAMED 'Canc'
+0230*
+0240#DATE1 := D'1997-12-20'
+0250*
+0260MOVE #DATE1        TO #ALPHA1
+0270MOVE #DATE1 (DF=S) TO #ALPHA2
+0280MOVE #DATE1 (DF=I) TO #ALPHA3
+0290MOVE #DATE1 (DF=L) TO #ALPHA4
+0300*
+0310INPUT (IP=OFF )
+0320  01T *TIMX  (AD=OTD )
+0330  21T '***** NATURAL 3.1 ENHANCEMENTS *****'
+0340  70T *DATX  (AD=OTD DF=L  )
+0350  /
+0360  01T 'User'
+0370  06T *USER  (AD=OILT )
+0380  28T '- Year 2000 Features -'(I)
+0390  64T 'Program'
+0400  72T *PROGRAM (AD=OI)
+0410  ///
+0420  02T 'New session parameter DF - date format'(I)
+0430  '     * First example *'
+0440  ///
+0450  02T '#DATE(D) := D''1997-12-20'' '
+0460  ///
+0470  02T 'MOVE #DATE        TO #ALPHA'
+0480  '    Result (in format YY-MM-DD):  '
+0490  #ALPHA1 (AD=OI)
+0500  //
+0510  02T 'MOVE #DATE' '(DF=S)'(I) 'TO #ALPHA'
+0520  '    Result (in format YY-MM-DD):  '
+0530  #ALPHA2 (AD=OI)
+0540  //
+0550  02T 'MOVE #DATE' '(DF=I)'(I) 'TO #ALPHA'
+0560  '    Result (in format YYYYMMDD):  '
+0570  #ALPHA3 (AD=OI)
+0580  //
+0590  02T 'MOVE #DATE' '(DF=L)'(I) 'TO #ALPHA'
+0600  '    Result (in format YYYY-MM-DD):'
+0610  #ALPHA4 (AD=OI)
+0620*
+0630IF *PF-KEY = 'PF3'
+0640  ESCAPE ROUTINE
+0650END-IF
+0660IF (*PF-KEY = 'PF12' OR= 'CLR')
+0670  CALLNAT 'UTILSTOP'
+0680END-IF
+0690*
+0700*
+0710RESET #ALPHA1 #ALPHA2
+0720*
+0730STACK TOP DATA #DATE1 #DATE1 (DF=L)
+0740*
+0750INPUT #ALPHA1 #ALPHA2
+0760*
+0770INPUT (IP=OFF )
+0780  01T *TIMX  (AD=OTD )
+0790  21T '***** NATURAL 3.1 ENHANCEMENTS *****'
+0800  70T *DATX  (AD=OTD DF=L  )
+0810  /
+0820  01T 'User'
+0830  06T *USER  (AD=OILT )
+0840  28T '- Year 2000 Features -'(I)
+0850  64T 'Program'
+0860  72T *PROGRAM (AD=OI)
+0870  ///
+0880  02T 'New session parameter DF - date format'(I)
+0890  '     * Second example *'
+0900  ///
+0910  02T '#DATE(D) := D''1997-12-20'' '
+0920  //
+0930  02T 'STACK TOP DATA #DATE '
+0940  /
+0950  02T 'INPUT #ALPHA'
+0960  //
+0970  02T 'Result: #ALPHA contains'
+0980  #ALPHA1 (AD=OI)
+0990  ///
+1000  02T 'STACK TOP DATA #DATE' '(DF=L)' (I)
+1010  /
+1020  02T 'INPUT #ALPHA'
+1030  //
+1040  02T 'Result: #ALPHA contains'
+1050  #ALPHA2 (AD=OI)
+1060  //
+1070IF *PF-KEY = 'PF3'
+1080  ESCAPE ROUTINE
+1090END-IF
+1100IF (*PF-KEY = 'PF12' OR= 'CLR')
+1110  CALLNAT 'UTILSTOP'
+1120END-IF
+1130*
+1140END

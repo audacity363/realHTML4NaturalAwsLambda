@@ -1,0 +1,40 @@
+0010Get or set data for RPC default server
+0020.
+0030Documentation ......... USR2007T    /*  Text object
+0040Interface ............. USR2007N    /*  Cataloged subprogram
+0050Example Program ....... USR2007P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC
+0100.
+0110Keywords .............. RPC, SERVER
+0120.
+0130Function .............. Set or get information about the
+0140                        Natural RPC default server
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+021001 FUNCTION  (A1)   -  G: get data, P: put data (set new server data)
+022001 NODE      (A32)  -  node id of default server
+023001 SERVER    (A32)  -  server name of default serve
+024001 LOGON     (A1)   -  logon requested? Y/' '
+025001 BIKE      (A1)   -  transport bike - B(Broker), C(CSCI)
+026001 NOSERVDIR (A1)   -  service directory: Y (not required)
+0270.                                         N (required)
+0280.
+0290Interface Call
+0300--------------
+0310Use the interface with the CALLNAT statement:
+0320.
+0330CALLNAT 'USR2007N' FUNCTION NODE SERVER LOGON BIKE NOSERVDIR
+0340.
+0350Using the Application Programming Interface:
+0360--------------------------------------------
+0370Copy the subprogram USR2007N to the library SYSTEM or the steplib
+0380library respectively, or to the required library.
+0390.
+0400***** End of Description *****

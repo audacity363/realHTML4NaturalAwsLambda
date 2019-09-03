@@ -1,0 +1,14 @@
+0010** Example 'DSREX2': DEFINE SUBROUTINE (using GDA fields)
+0020************************************************************************
+0030DEFINE DATA
+0040GLOBAL
+0050  USING DSREX2G
+0060END-DEFINE
+0070*
+0080INPUT 'Enter value in GDA field' GDA-FIELD1
+0090*
+0100*  Call external subroutine in DSREX2S
+0110*
+0120PERFORM DSREX2-SUB
+0130*
+0140END

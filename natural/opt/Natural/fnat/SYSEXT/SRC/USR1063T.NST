@@ -1,0 +1,74 @@
+0010Select printer to print a report
+0020.
+0030Documentation ......... USR1063T    /*  Text object
+0040Interface ............. USR1063N    /*  Cataloged subprogram
+0050Example Program ....... USR1063P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. REPORTER
+0100.
+0110Keywords .............. +MOD-NAT-8.3.8, PREVIEW, PRINT, PRINTER,
+0120                        REPORTER, SELECT
+0130.
+0140Function .............. This interface selects the printer which will
+0150                        be used by subsequent print/preview requests.
+0160                        If this interface is not made, these requests
+0170                        will be printed by the system default printer
+0180                        (if any).
+0190.
+0200.
+0210Parameters
+0220----------
+0230Define the following parameters with the DEFINE DATA statement:
+0240.
+0250Input ...... DEVICE-NAME (A8)
+0260                    NATURAL logical device name identifying the
+0270                    printer which is to be used. Valid values
+0280                    are 'LPT1' through to 'LPT31'.
+0290Output ..... RETURN-CODE (I4)
+0300                    Return code. Set to zero if the interface
+0310                    succeeded, otherwise set to a non-zero
+0320                    error code, which can be one of the
+0330                    following:
+0340.
+0350                    -3  : proc not found. Indicates that a
+0360                          procedure in a dynamically-loaded
+0370                          support library cannot be found.
+0380                          Possible cause: version mismatch.
+0390                          (check executable file search path)
+0400.
+0410                    -4  : initialization error. Possible causes:
+0420                             - the interface which initializes
+0430                               the Natural Reporter interface has
+0440                               NOT yet been called
+0450                             - the interface which initializes
+0460                               the Natural Reporter interface
+0470                               was called, but did not succeed
+0480                               (non-zero return code)
+0490                             - the interface which terminates
+0500                               the Natural Reporter interface has
+0510                               been called
+0520.
+0530                    -11 : general error. Indicates non-specific
+0540                          error in dynamically-loaded support
+0550                          library
+0560.
+0570                    -99 : unsupported machine class. The reporter
+0580                          runs only under Windows.
+0590.
+0600.
+0610Interface Call
+0620--------------
+0630Use the interface with the CALLNAT statement:
+0640.
+0650CALLNAT 'USR1063N' REPORT-ID DEVICE-NAME RETURN-CODE
+0660.
+0670.
+0680Using the Application Programming Interface:
+0690--------------------------------------------
+0700Copy the subprogram USR1063N to the library SYSTEM or the steplib
+0710library respectively, or to the required library.
+0720.
+0730.
+0740*****  End of description  *****

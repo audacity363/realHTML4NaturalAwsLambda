@@ -1,0 +1,21 @@
+0010** Example 'EDITMX03': Edit mask (different EM for alpha-numeric fields)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 EMPLOY-VIEW VIEW OF EMPLOYEES
+0050  2 PERSONNEL-ID
+0060  2 FIRST-NAME
+0070  2 NAME
+0080  2 CITY
+0090  2 SALARY(1)
+0100END-DEFINE
+0110*
+0120LIMIT 3
+0130READ EMPLOY-VIEW BY PERSONNEL-ID FROM '20018000'
+0140                 WHERE SALARY(1) = 28000 THRU 30000
+0150  DISPLAY 'N A M E'  NAME       (EM=X^^X^^X^^X^^X^^X^^X^^X^^X^^X^^X) /
+0160          'NAME HEX' NAME       (EM=H^H^H^H^H^H^H^H^H^H^H)
+0170                     FIRST-NAME (EM=' - 'X(15)*)
+0180                     CITY       (EM=X..X(10))
+0190  SKIP 1
+0200END-READ
+0210END

@@ -1,0 +1,73 @@
+0010Modify the clipboard
+0020.
+0030Documentation ......... USR1039T    /*  Text object
+0040Interface ............. USR1039N    /*  Cataloged subprogram
+0050Example Program ....... USR1039P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATA HANDLING
+0100.
+0110Keywords .............. CLIPBOARD
+0120.
+0130Function .............. In Windows and Presentation Manager, the
+0140                        clipboard provides temporary storage for text
+0150                        information you want to transfer. Using the
+0160                        clipboard function in NATURAL, you can
+0170                        manipulate the contents of the clipboard.
+0180.
+0190Parameters
+0200----------
+0210Define the following parameters with the DEFINE DATA statement:
+0220.
+02301 USR1039L
+0240   2 INPUTS
+0250     3 FUNCTION       (A01)
+0260   2 INPUT-OUTPUTS
+0270     3 TEXT-LENGTH    (I04)
+0280     3 TEXT           (A253)
+0290   2 OUTPUTS
+0300     3 RESPONSE       (I04)
+0310.
+0320Interface Call
+0330--------------
+0340Use the interface with the CALLNAT statement:
+0350.
+0360CALLNAT 'USR1039N' USR1039L
+0370.
+0380.
+0390Using the Application Programming Interface:
+0400--------------------------------------------
+0410Copy the subprogram USR1039N to the library SYSTEM or the steplib
+0420library respectively, or to the required library.
+0430.
+0440.
+0450Description of the parameters:
+0460.
+0470Input ...... FUNCTION (A01)
+0480                     Function code. Possible values are:
+0490                     'E' - Empty the clipboard of information
+0500                     'C' - Copy information into the clipboard
+0510                     'A' - Append information to the contents of
+0520                           the clipboard
+0530                     'P' - Paste information from the clipboard
+0540.
+0550In/Output .. TEXT-LENGTH (I04)
+0560                     Length of TEXT.
+0570                     TEXT-LENGTH must be specified for the
+0580                     FUNCTIONs 'A' and 'C', possible values are
+0590                     1 to 253. FUNCTION = 'P' returns always
+0600                     the first 253 characters stored in the
+0610                     clipboard.
+0620.
+0630In/Output .. TEXT (A253)
+0640                     The information put into or retrieved from the
+0650                     clipboard.
+0660.
+0670Output ..... RESPONSE (I04)
+0680                     Response code; possible values are:
+0690                     =  0000  OK
+0700                     =  1001  Invalid function code
+0710                     =  1002  Error code from clipboard received
+0720.
+0730*****  End of description  *****

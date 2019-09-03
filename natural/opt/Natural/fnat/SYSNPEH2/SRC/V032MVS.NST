@@ -1,0 +1,18 @@
+0010&H View RESOURCE-CONTROL
+0020&L
+0030&L
+0040#Zweck@    : Anfordern und Freigeben von System-Enqueues.
+0050&L
+0060&L
+0070#System@   : z/OS.
+0080&L
+0090&L
+0100#Anwendung@: Dieser View wird zur Synchronisierung von Objekt-
+0110             zugriffen auf NATURAL-Basis benutzt. Ressourcen
+0120             koennen von einer Anwendung gesperrt und wieder frei-
+0130             gegeben werden. Benutzen andere Anwendungen ebenfalls
+0140             diese Technik, ist ein synchroner Objektzugriff gewaehr-
+0150             leistet.
+0160&L
+0170&L
+0180#Anmerkung@:

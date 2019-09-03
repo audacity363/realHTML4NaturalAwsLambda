@@ -1,0 +1,13 @@
+0010&H View FILE-MAINTENANCE
+0020&L
+0030&L
+0040#Zweck@    : Verdichtet eine BS2000-Datei.
+0050&L
+0060#System@   : z/OS, BS2000/OSD.
+0070&L
+0080&L
+0090#Anwendung@: Dieser View erlaubt das Freigeben von nicht benutztem
+0100             Plattenplatz. Ausserdem ist die Funktionalitaet des
+0110             BS2000 Kommandos 'VERIFY' mittels diesem View verfuegbar.
+0120&L
+0130#Anmerkung@:

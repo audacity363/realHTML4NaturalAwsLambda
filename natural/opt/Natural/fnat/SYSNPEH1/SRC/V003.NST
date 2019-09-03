@@ -1,0 +1,12 @@
+0010&H View LIB-DIRECTORY
+0020&L
+0030&L
+0040#Purpose@: Read library directories.
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : The view reads the directory of the corresponding library
+0100           and returns the entries record by record.
+0110&L
+0120#Notes@  : The library MUST already exist.

@@ -1,0 +1,7 @@
+0010**DV          0008     V1SYSTEM-COMMAND                  SYSTEM-COMMAND
+0020**DD          0011N 3.0 2ERROR-CODE                      /* Message code.
+0030**DD          0012A  58 2ERROR-TEXT                      /* Text describing message.
+0040**DD          0013N 5.0 2NODE                            /* Node ID - was N3 02-02-15
+0050**DD          0014A  10 2SYSTEM-MESSAGE-CODE
+0060**DD          0015A 132 2LINE                            /* Output line. If more than one
+0070**DD I1 C     0016A  80M2COMMAND                         (1:20) /* MVS: Commands to be ex

@@ -1,0 +1,20 @@
+0010** Example 'FORMAX04': FORMAT (with parameters AL, NL, LC, TC, IC and
+0020**                     compare with FORMAX03)
+0030************************************************************************
+0040DEFINE DATA LOCAL
+00501 VIEWEMP VIEW OF EMPLOYEES
+0060  2 NAME
+0070  2 FIRST-NAME
+0080  2 SALARY (1:1)
+0090  2 BONUS  (1:1,1:1)
+0100END-DEFINE
+0110*
+0120FORMAT AL=10 NL=6
+0130*
+0140READ (5) VIEWEMP BY NAME STARTING FROM 'JONES'
+0150  DISPLAY NAME            (LC=*)
+0160          FIRST-NAME      (TC=*)
+0170          SALARY (1:1)    (IC=$)
+0180          BONUS (1:1,1:1) (LC=>)
+0190END-READ
+0200END

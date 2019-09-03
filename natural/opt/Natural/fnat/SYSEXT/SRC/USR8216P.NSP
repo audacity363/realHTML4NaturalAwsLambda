@@ -1,0 +1,245 @@
+0010/* Function ... Maintain a Natural RPC Service Directory
+0020/*              Following functions are supported:
+0030/*              - define a Service Directory newly or add definitions
+0040/*                at a specific place in an existing Service Directory
+0050/*              - retrieve a whole Service Directory
+0060/*              - search for entries in a Service Directory
+0070/*              - replace the value of a specific entry with a new value
+0080/*              - delete entries in a Service Directory including
+0090/*                whole subtrees
+0100/*
+0110/* This program serves as an example of how to design a user-defined
+0120/* program to call USR8216N.
+0130/***********************************************************************
+0140/*
+0150*
+0160OPTIONS LOWSRCE=ON
+0170*
+0180Define Data
+0190Local
+0200  1 USR8216-P
+0210    2 P-Command
+0220      3 FUNC-Key            (A) Dynamic       /* IN
+0230      3 FUNC-Opt            (A) Dynamic       /* IN
+0240      3 FUNC-Parm           (A) Dynamic       /* IN
+0250    2 Library               (A8)              /* IN
+0260    2 Library-Info          (A) Dynamic       /* OUT
+0270    2 Number-of-Items       (I4)              /* OUT
+0280    2 Res                   (*)               /* OUT
+0290      3 R-LineNo            (I4)              /* OUT
+0300      3 R-Value             (A) Dynamic       /* OUT
+0310      3 R-Parent            (A) Dynamic       /* OUT
+0320      3 R-Attribute         (A3)              /* OUT
+0330    2 Message               (A/*) Dynamic     /* OUT
+0340    2 ResponseCode          (I4)              /* OUT
+0350*
+0360Local
+0370  1 L_I1                    (I4)
+0380  1 L_OCC                   (I4)
+0390  1 L_Num                   (I4)
+0400  1 SDElements
+0410    2 SDNode                (A192)
+0420    2 SDServer              (A32)
+0430    2 SDLibrary             (A10)
+0440    2 SDPrograms            (A) dynamic
+0450  1 SDAttributes
+0460    2 SDTransport           (A1)
+0470    2 SDLOGON               (A1)
+0480  1 T-Adyn                  (A) dynamic
+0490End-Define
+0500*
+0510Format PS=0
+0520Expand array Message to (1:4)
+0530If ( *Machine-Class = 'MAINFRAME'
+0540 and *Data > 0 )
+0550  Input Message(1) (AL=78)
+0560End-if
+0570*
+0580Library := *Library-ID
+0590* 1. Append to existing ServDir
+0600* FUNC-Key      := 'DEFINE'
+0610* FUNC-Parm     := 'n=n1(b),s=s1(Y).'
+0620*
+0630* 2. Define new ServDir
+0640* FUNC-Key      := 'DEFINE'
+0650* FUNC-Opt      := 'OVERWRITE'
+0660* FUNC-Parm     := 'N=NTESTN,S=STestS,n=BKR01:4321,s=TSTSRV1,s=TSTSRV2'
+0670*
+0680* 3. Insert tree after a specified item
+0690* FUNC-Key      := 'DEFINE'
+0700* FUNC-Opt      := 'After N=TESTN'
+0710* FUNC-Parm     := 's=TSTS,L=TSTLIB1,s=TSTLIB2'
+0720*
+0730* 4. Retrieve whole tree
+0740FUNC-Key      := 'RETRIEVE'
+0750FUNC-Opt      := 'TREE'
+0760FUNC-Parm     := ' '              /* is ignored for TREE option
+0770*
+0780* 5. DELETE part FROM
+0790* FUNC-Key      := 'DELETE'
+0800* FUNC-Parm     := 'N=BKR001:4321'  /* 'S=TestS'
+0810* FUNC-Opt      := ' '              /* 'FROM N=NTESTN'
+0820*
+0830* 6. Retrieve one item
+0840* FUNC-Key      := 'RETRIEVE'
+0850* FUNC-Opt      := 'ALL '     /* 'FIRST WHOLE'
+0860* FUNC-Parm     := 'srv'      /* 'bkr001:4321'
+0870*
+0880* 7. Retrieve one item
+0890* FUNC-Key      := 'REPLACE'
+0900* FUNC-Opt      := 'ALL '
+0910* FUNC-Parm     := 'srv1 with srv5'
+0920*
+0930*
+0940Set Key All
+0950/*
+0960Repeat
+0970  Input (AD=MI'_' IP=OFF CD=NE)
+0980       5T 'Maintain Service Directory with' (YEI) *Program (AD=OI CD=YE)
+0990   //  5T 'in Library ...' (TU) Library (AD=T )
+1000   //  5T 'with the following command:' (YEI)
+1010    /  5T 'Keyword ......' (TU) FUNC-Key  (AD=T AL=60)
+1020    / 19T '(DEFINE, DELETE, REPLACE, RETRIEVE)' (TU)
+1030    /  5T 'Option .......' (TU) FUNC-Opt  (AD=T AL=60) /*' ' (TU)
+1040    /  5T 'Parameters ...' (TU) FUNC-Parm (AD=T AL=60)
+1050    /  7T 'DEFINE: Leave Parameters blank to define entries' (TU)
+1060          'from an input map.' (TU)
+1070   //  5T '(Press any PF key to end the program.)'
+1080   //  5T 'Response code:' (TU) ResponseCode (AD=OL ZP=ON CD=TU)
+1090    / 20T  '   0 -  success message' (TU)
+1100    / 20T  '<> 0 -  error message'   (TU)
+1110    /  5T 'Message:' (TU) Message(1) (AD=OL AL=64  CD=TU)
+1120    / 14T                 Message(2) (AD=OL AL=64  CD=TU)
+1130    / 14T                 Message(3) (AD=OL AL=64  CD=TU)
+1140    / 14T                 Message(4) (AD=OL AL=64  CD=TU)
+1150
+1160  IF *PF-Key <> 'ENTR'
+1170    Escape Bottom
+1180  End-if
+1190  Decide on first value of FUNC-Key
+1200    Value 'DEFINE'
+1210      If FUNC-Parm = ' '
+1220        Perform IS_BuildTree
+1230      End-if
+1240    none value    ignore
+1250  End-Decide
+1260  /*
+1270  CALLNAT 'USR8216N' USR8216-P
+1280  /*
+1290  IF  Number-of-Items > 0
+1300    Compress Library '(' Library-Info ')'
+1310        into T-Adyn leaving no space
+1320    Print 'ResponseCode:' ResponseCode(NL=3) 'for function' FUNC-Key FUNC-Opt
+1330    If ( FUNC-Key = 'RETRIEVE'
+1340     and FUNC-Opt = 'TREE'    )
+1350      Perform IS_Print-Tree
+1360    Else
+1370      If *occ(R-Value) > 0
+1380        Perform IS_Print-Results
+1390      End-if
+1400    End-if /* FUNC-Key = 'RETRIEVE' and FUNC-Opt = 'TREE'
+1410  End-if /* Number-of-Items > 0
+1420End-Repeat
+1430/*********************************************
+1440/* End-of-Main
+1450/*********************************************
+1460Define Subroutine IS_BuildTree
+1470  Reset FUNC-Parm
+1480  Repeat
+1490    Reset SDElements SDAttributes
+1500    /*
+1510    Input (AD=MI'_' IP=OFF CD=NE)
+1520        5T 'Maintain Service Directory - Define Entries' (YEI)
+1530     // 5T '  Press ENTER to append your definitions:' (TU)
+1540     // 5T 'Node ........' (TU) SDNode      (AL=60)
+1550      / 5T 'Server ......' (TU) SDServer
+1560      / 5T 'Library .....' (TU) SDLibrary   (AD=T AL=8)
+1570      / 5T 'Program(s) ..' (TU) SDPrograms  (AD=T AL=60)
+1580      / 8T '(comma-separated list without blanks)'
+1590     // 5T 'Attributes:'     (TU)
+1600      / 8T 'Transport ...' (TU) SDTransport '(B/'' '')'   (TU)
+1610      / 8T 'Logon .......' (TU) SDLOGON     '(Y/N/'' '')' (TU)
+1620     // 5T 'Press any PF key to stop.' (TU)
+1630   /*
+1640    If *PF-KEY ne 'ENTR'
+1650      Escape Bottom
+1660    End-if
+1670    /*
+1680    If SDNode <> ' '
+1690      Compress 'N' SDNode     into SDNode     with Delimiter '='
+1700    End-if
+1710    If SDServer <> ' '
+1720      Compress 'S' SDServer   into SDServer   with Delimiter '='
+1730    End-if
+1740    If SDLibrary <> ' '
+1750      Compress 'L' SDLibrary  into SDLibrary  with Delimiter '='
+1760    End-if
+1770    If SDPrograms <> ' '
+1780      Compress 'P' SDPrograms into SDPrograms with Delimiter '='
+1790    End-if
+1800    /*
+1810    /* Each Program needs an P=
+1820    Examine SDPrograms /* for
+1830            ',' and replace with ',P='
+1840    Examine SDPrograms /* for
+1850            ',P=P=' and replace with ',P='
+1860    /*
+1870    /* Check attributes
+1880    If SDTransport = 'B'
+1890      Compress SDNode '(B)'
+1900          into SDNode   leaving no space
+1910    End-if
+1920    If SDLOGON = 'Y'
+1930      Compress SDServer '(Y)'
+1940          into SDServer   leaving no space
+1950    End-if
+1960    /*
+1970    /* Glue all together
+1980    Compress FUNC-Parm SDElements
+1990        into FUNC-Parm
+2000        with Delimiter ','
+2010  End-Repeat
+2020End-Subroutine /* IS_BuildTree
+2030* ------------------------------
+2040Define Subroutine IS_Print-Tree
+2050  L_OCC := *occ(USR8216-P.R-Value) - 1
+2060  Print // 'Service Directory of Library' T-Adyn
+2070         / '  The attributes in brackets mean'
+2080         / '  - for Node  : Logon=Y/N and Transport=B/'' '' '
+2090         / '  - for Server: Logon=Y/N '
+2100         / L_OCC 'items follow:' /
+2110  For L_I1 from 1 to L_OCC
+2120    Decide on first value of R-Value(L_I1)
+2130      Value 'N'
+2140        Print R-LineNo(L_I1) 1x R-Value(L_I1) R-Parent(L_I1) '(' R-Attribute(L_I1) ')'
+2150      Value 'S','X'    /* X=Location Transparency, dropped functionality
+2160        Print R-LineNo(L_I1) 3x R-Value(L_I1) R-Parent(L_I1) '(' R-Attribute(L_I1) ')'
+2170      Value 'L'
+2180        Print R-LineNo(L_I1) 5x R-Value(L_I1) R-Parent(L_I1)
+2190      Value 'P'
+2200        Print R-LineNo(L_I1) 7x R-Value(L_I1) R-Parent(L_I1)
+2210      none value ignore
+2220    End-decide
+2230  End-for
+2240End-Subroutine /* IS_Print-Tree
+2250* ------------------------------
+2260Define Subroutine IS_Print-Results
+2270  If Number-of-Items = 1
+2280    Print // 'One line follows for Service Directory of Library' T-Adyn  /
+2290  Else
+2300    Print // Number-of-Items 'lines follow for Service Directory of Library' T-Adyn  /
+2310  End-if
+2320  For L_I1 from 1 to Number-of-Items
+2330    Decide on first value of Substring(R-Value(L_I1),1,1)
+2340      Value 'N','S','X'     /* X=Location Transparency, dropped functionality
+2350        Print R-LineNo(L_I1) R-Parent(L_I1) R-Value(L_I1) '(' R-Attribute(L_I1) ')'
+2360      Value 'L','P'
+2370        Print R-LineNo(L_I1) R-Parent(L_I1) R-Value(L_I1)
+2380      none value            /* R-Value contains a message
+2390        Print R-Value(L_I1) /* ';  Index =' R-LineNo(L_I1) (NL=4)
+2400    End-decide
+2410  End-for
+2420End-Subroutine /* IS_Print-Results
+2430/*
+2440END
+2450

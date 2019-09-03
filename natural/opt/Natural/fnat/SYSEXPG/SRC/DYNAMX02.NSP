@@ -1,0 +1,13 @@
+0010** Example 'DYNAMX02': Dynamic variables (as parameters)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #MYTEXT (A) DYNAMIC
+0050END-DEFINE
+0060*
+0070#MYTEXT := '123456'      /* extended to 6 bytes, *LENGTH(#MYTEXT) = 6
+0080*
+0090CALLNAT 'DYNAMX03' USING #MYTEXT
+0100*
+0110WRITE *LENGTH(#MYTEXT)          /* *LENGTH(#MYTEXT) = 8
+0120*
+0130END

@@ -1,0 +1,17 @@
+0010&H View LIB-ZAP
+0020&L
+0030&L
+0040#Purpose@: Apply zaps to a load module.
+0050&L
+0060&L
+0070#OpSys@  : z/OS
+0080&L
+0090&L
+0100#Usage@  : Apply zaps to load modules using AMASPZAP, without
+0110           having to submit a batch job.
+0120&L
+0130&L
+0140#Notes@  :
+0150
+0160
+0170

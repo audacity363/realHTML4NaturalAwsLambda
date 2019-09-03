@@ -1,0 +1,56 @@
+0010Get path to system file
+0020.
+0030Documentation ......... USR6006T    /*  Text object
+0040Interface ............. USR6006N    /*  Cataloged subprogram
+0050Example Program ....... USR6006P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. SYSTEM FILES
+0100.
+0110Keywords .............. DBID, FNAT, FNR, FUSER, PATH, SYSTEM FILE
+0120.
+0130Function .............. Get path to system file for given DBID, FNR.
+0140.
+0150.
+0160Parameters
+0170----------
+0180Define the following parameters with the DEFINE DATA statement:
+0190.
+020001 PARM-AREA
+0210   2 INPUTS
+0220     3 SYSF-DBID       (I4)      /* DBID of system file
+0230     3 SYSF-FNR        (I4)      /* FNR  of system file
+0240   2 OUTPUTS
+0250     3 SYSF-PATH       (A253)    /* PATH
+0260     3 RESPONSE-CODE   (I4)      /* see response code in 'How to...'
+0270     3 INFOTEXT        (A65)
+0280 1 EXTENSIONS          (A1/1:1)
+0290.
+0300.
+0310Interface Call
+0320--------------
+0330Use the interface with the CALLNAT statement:
+0340.
+0350CALLNAT 'USR6006N' PARM-AREA
+0360.
+0370.
+0380Using the Application Programming Interface:
+0390--------------------------------------------
+0400Copy the subprogram USR6006N to the library SYSTEM or the steplib
+0410library respectively, or to the required library.
+0420.
+0430The subprogram reads the requested information about the system file
+0440from the Global Config File NATCONF.CFG
+0450.
+0460RESPONSE-CODE indicates whether field SYSF-PATH is filled correctly:
+0470    0 ...  SYSF-PATH contains the corresponding value
+0480    1 ...  Invalid DBID specified
+0490    2 ...  Invalid FNR specified
+0500    3 ...  DBID/FNR are not defined in NATCONF.CFG
+0510    5 ...  Set system file access failed
+0520   10 ...  Internal error (please report to Software AG)
+0530.
+0540INFOTEXT contains information about the error.
+0550.
+0560***** End of description *****

@@ -1,0 +1,115 @@
+0010/*  User Exit: Select Processor Name
+0020/***********************************************************************
+0030/*  Description .... This subprogram is invoked by program 'NCP-SEL1'.
+0040/*                   NCP-SEL1 contains the 'Select Processor' function.
+0050/*                   +++ NEW +++: On UNIX and PC platforms the 'Select
+0060/*                                Processor' function is contained in
+0070/*                                the program 'NCP-SELU'
+0080/*                                (with the same functionality as on
+0090/*                                 mainframes).
+0100/*
+0110/*                   (You start the 'Select Processor' function by
+0120/*                   entering 'S' on the SYSNCP menu screen.)
+0130/*
+0140/*                   NCP-SEL1 finds all processor source names and
+0150/*                   libraries on both system files, FNAT and FUSER.
+0160/*
+0170/*                   Each processor name is given to subprogram
+0180/*                   NCP-SELX, where a post-selection can be done.
+0190/*                   Depending on the selection criteria, the switch
+0200/*                   SEL-ITEM is set. The calling program NCP-SEL1
+0210/*                   suppresses the display of items with SEL-ITEM
+0220/*                   being blank.
+0230/*
+0240/*                   To give you an idea what the window of the
+0250/*                   selection function will contain, you simply
+0260/*                   have to remove the line ESCAPE ROUTINE
+0270/*                   from the current source and STOW the subprogram.
+0280/*
+0290/***********************************************************************
+0300DEFINE DATA PARAMETER            /* Calling program is NCP-SEL1.
+0310  01 SWITCH               (A01)  /* This is the only output field.
+0320                                 /* <Blank> will de-select current item.
+0330                                 /* Any non-<Blank> character allows
+0340                                 /* NCP-SEL1 to add the current
+0350                                 /* processor name to the list.
+0360  /***********************************
+0370  /* ATTENTION: the following fields
+0380  /* are write-protected. If you try
+0390  /* and overwrite any of them, error
+0400  /* NAT0938 will occur.
+0410  /***********************************
+0420  01 SYSTEM-FILE          (A05)  /* 'FNAT' or 'FUSER'
+0430  01 PROCESSOR-NAME       (A08)  /*
+0440  01 PROCESSOR-LIB        (A08)  /*
+0450  01 CREATOR              (A08)  /* User ID of the creator
+0460  01 CREATION-DATE        (A10)  /* Format YYYY-MM-DD
+0470  01 CREATION-TIME        (N06)  /* *TIMN of INIT-DATE
+0480  01 CURR-STATUS          (A08)  /* processor's status, e.g. 'Saved'
+0490  01 STMP-HEADER          (B08)  /* TIMESTMP last mod. of Header
+0500  01 STMP-KEYW-SOURCE     (B08)  /* TIMESTMP last mod. Keyw-Srce
+0510  01 STMP-KEYW-STOW       (B08)  /* TIMESTMP last STOW Keywords
+0520  01 STMP-FUNC            (B08)  /* TIMESTMP last Function Editor
+0530  01 MOD-USER-HEADER      (A08)  /* User who last mod. the HEADER
+0540  01 MOD-USER-KEYW-SOURCE (A08)  /* User who last mod. Keywords
+0550  01 MOD-USER-KEYW-STOW   (A08)  /* User who last Stowed Keywords
+0560  01 MOD-USER-FUNC        (A08)  /* User who last mod. Functions
+0570  01 MOD-USER-ACTION      (A08)  /* User who last mod. Runtime Ac
+0580  01 MOD-USER-CAT         (A08)  /* User who last cataloged
+0590END-DEFINE
+0600/***********************************************************************
+0610/*
+0620MOVE 'X' TO SWITCH     /*  any non-blank character would do
+0630/*
+0640IF *INIT-USER = 'HSO2'
+0650  IF CREATION-DATE < '1992'
+0660    MOVE 'X' TO SWITCH
+0670  ELSE
+0680    MOVE ' ' TO SWITCH
+0690  END-IF
+0700  ESCAPE ROUTINE
+0710ELSE
+0720  ESCAPE ROUTINE         /*  exit post-selection immediately =======>
+0730END-IF
+0740/*
+0750/* PERFORM SHOW-PARMS
+0760/*
+0770/***********************************************************************
+0780/*
+0790/* Here follows an example for a post-selection rule:
+0800/*
+0810IF *INIT-USER = CREATOR
+0820OR *INIT-USER = MOD-USER-HEADER
+0830OR *INIT-USER = MOD-USER-KEYW-SOURCE
+0840OR *INIT-USER = MOD-USER-KEYW-STOW
+0850OR *INIT-USER = MOD-USER-FUNC
+0860OR *INIT-USER = MOD-USER-ACTION
+0870OR *INIT-USER = MOD-USER-CAT
+0880  SWITCH := 'X'   /*  any non-blank character
+0890ELSE
+0900  RESET SWITCH    /*  <blank>
+0910END-IF
+0920/*********************************
+0930DEFINE SHOW-PARMS
+0940  INPUT (AD=OI IP=ON)
+0950  /  SWITCH  (AD=MI)
+0960  /  SYSTEM-FILE
+0970  /  PROCESSOR-NAME
+0980  /  PROCESSOR-LIB
+0990  /  CREATOR
+1000  /  CREATION-DATE
+1010  /  CREATION-TIME
+1020  /  CURR-STATUS
+1030  /  STMP-HEADER
+1040  /  STMP-KEYW-SOURCE
+1050  /  STMP-KEYW-STOW
+1060  /  STMP-FUNC
+1070  /  MOD-USER-HEADER
+1080  /  MOD-USER-KEYW-SOURCE
+1090  /  MOD-USER-KEYW-STOW
+1100  /  MOD-USER-FUNC
+1110  /  MOD-USER-ACTION
+1120  /  MOD-USER-CAT
+1130END-SUBROUTINE
+1140/********
+1150END

@@ -1,0 +1,119 @@
+0010*
+0020* Program .. V6-EXAM1
+0030* Library .. SYSEXV
+0040* Version .. 6.1
+0050*
+0060* Functionality: Show new direction and position clause in EXAMINE stmt
+0070************************************************************************
+0080*
+0090DEFINE DATA LOCAL
+0100  1 #FIELD    (A50)
+0110  1 #DIR      (A1)
+0120  1 #START    (N2)
+0130  1 #END      (N2)
+0140  1 #START-I4 (I4)
+0150  1 #END-I4   (I4)
+0160  1 #POS      (I4)
+0170  1 #SEARCH   (A5)
+0180END-DEFINE
+0190*
+0200FORMAT KD=ON
+0210SET KEY PF3  NAMED 'Exit'
+0220        PF12 NAMED 'Canc'
+0230*
+0240#FIELD  := 'Eight days a week' /* 'Say Hello to the world'
+0250#SEARCH := 'week'
+0260#DIR    := 'F'
+0270#START  := 1
+0280#END    := 17
+0290*
+0300*
+0310*
+0320REPEAT
+0330*
+0340  #START-I4 := #START
+0350  #END-I4   := #END
+0360*
+0370  EXAMINE DIRECTION #DIR FULL VALUE OF #FIELD
+0380          STARTING FROM POSITION #START-I4
+0390          ENDING AT POSITION #END-I4
+0400          FOR #SEARCH GIVING POSITION #POS
+0410*
+0420*
+0430  INPUT (IP=OFF)
+0440   01T *TIMX  (AD=OTD)
+0450   21T '***** NATURAL 6.1 ENHANCEMENTS *****'
+0460   70T *DATX  (AD=OTD DF=L)
+0470   /
+0480   01T 'User'
+0490   06T *USER  (AD=OILT)
+0500   28T '- EXAMINE Statement -'(I)
+0510   64T 'Program'
+0520   72T *PROGRAM (AD=OI)
+0530   ///
+0540   02T 'New DIRECTION and POSITION clause in EXAMINE statement'(I)
+0550   //
+0560   02T 'EXAMINE' 'DIRECTION'(I) '#Dir FULL VALUE OF #Field'
+0570       'STARTING FROM POSITION'(I) '#Start'
+0580   /
+0590   10T 'ENDING AT POSITION'(I) '#End'
+0600       'FOR #Search GIVING POSITION #Pos'
+0610   ///
+0620   02T 'Text string:'
+0630   21T #FIELD  (AD=MI'_')
+0640   //
+0650   02T 'Search characters:'
+0660   21T #SEARCH (AD=MI'_')
+0670   //
+0680   02T 'Search direction:'
+0690   21T  #DIR (AD=MIT CD=NE) '  (F - forward, B - backward)'(I)
+0700   //
+0710   02T 'Starting from:'
+0720   21T #START (AD=MI'_'L)
+0730   /
+0740   02T 'Ending at:'
+0750   21T #END (AD=MI'_'L)
+0760   //
+0770   02T 'Found position:'
+0780   21T #POS (AD=OIL)
+0790
+0800*
+0810  IF *PF-KEY ='PF3'
+0820    ESCAPE BOTTOM
+0830  END-IF
+0840  IF (*PF-KEY = 'PF12' OR= 'CLR')
+0850  CALLNAT 'UTILSTOP'
+0860END-IF
+0870*
+0880  IF NOT (#DIR = 'F' OR= 'B')
+0890    REINPUT 'Enter F for forward or B for backward searching.'
+0900             MARK *#DIR
+0910  END-IF
+0920*
+0930  IF #DIR = 'F'
+0940    IF #START < 1
+0950      REINPUT 'Start value must be greater zero.' MARK *#START
+0960    END-IF
+0970    IF #START > #END
+0980      REINPUT 'Start value must be smaller than end value.' MARK *#START
+0990    END-IF
+1000    IF #END > 50
+1010      REINPUT 'End value must be smaller than field length (A50).'
+1020              MARK *#END
+1030    END-IF
+1040  ELSE
+1050    IF #END > #START
+1060      REINPUT 'Start value must be greater than end value.' MARK *#START
+1070    END-IF
+1080    IF #START > 50
+1090      REINPUT 'Start value must be smaller than field length (A50).'
+1100              MARK *#START
+1110    END-IF
+1120    IF #END < 1
+1130      REINPUT 'End value must be greater zero.' MARK *#END
+1140    END-IF
+1150  END-IF
+1160*
+1170END-REPEAT
+1180*
+1190END

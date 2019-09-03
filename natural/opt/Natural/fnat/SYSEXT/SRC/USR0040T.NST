@@ -1,0 +1,44 @@
+0010Get type of last error
+0020.
+0030Documentation ......... USR0040T    /*  Text object
+0040Interface ............. USR0040N    /*  Cataloged subprogram
+0050Example Program ....... USR0040P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. ERROR HANDLING
+0100.
+0110Keywords .............. *ERROR-NR, ERROR
+0120.
+0130Function .............. Get information about the type and number
+0140                        of last recently issued error message.
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+0210  01 PARM-1  (A01)         /*  Type of last error message
+0220  01 PARM-2  (P07)         /*  Error Number
+0230.
+0240Interface Call
+0250--------------
+0260Use the interface with the CALLNAT statement:
+0270.
+0280CALLNAT 'USR0040N' PARM-1 PARM-2
+0290.
+0300.
+0310Using the Application Programming Interface:
+0320--------------------------------------------
+0330Copy the subprogram USR0040N to the library SYSTEM or the steplib
+0340library respectively, or to the required library.
+0350.
+0360.
+0370PARM-1 indicates the type of error.
+0380  'U' ---> User Error, example statement:  REINPUT *0012
+0390  'S' ---> Natural System Error, example: FETCH '123456789'
+0400  'E' ---> Internal Error during execution of USR0040N
+0410.
+0420PARM-2 holds the number of the last error.
+0430.
+0440***** End of Description *****

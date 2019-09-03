@@ -1,0 +1,44 @@
+0010/* This program serves as an example of how to design a user-defined
+0020/* program to call USR8401N.
+0030/***********************************************************************
+0040OPTIONS LOWSRCE=ON
+0050/*---------------------------------------------------------------------
+0060/*---------------- Data definitions -----------------------------------
+0070/*---------------------------------------------------------------------
+0080Define Data Local
+00901 USR8401-Parameters
+0100  2 P-Function               (A1)     /* In
+0110  2 P-Number-Fields          (N1)     /* In/out
+0120  2 P-Fields-A72             (A72/7)  /* In/out
+0130  2 P-Return-Code            (I4)     /* Out
+0140*
+01501 Input-Field                (A10)
+0160End-Define
+0170/***********************************************************************
+0180/*
+0190P-Function        := 'W'     /* Function WRITE
+0200P-Number-Fields   := 3       /* 3 dynamic error parts
+0210P-Fields-A72 (1)  := 'Application'
+0220P-Fields-A72 (2)  := 'A17-05-04'
+0230P-Fields-A72 (3)  := 'data analysis'
+0240*
+0250Callnat 'USR8401N'
+0260        USR8401-Parameters
+0270*
+0280* NAT5690 = :1: error :2: during :3:.
+0290*
+0300Input with text *-5690       /* use Natural error 5690 as example
+0310      Input-Field
+0320*
+0330P-Function        := 'W'
+0340P-Number-Fields   := 3
+0350P-Fields-A72 (1)  := 'Critical'
+0360P-Fields-A72 (2)  := 'X9999-01'
+0370P-Fields-A72 (3)  := 'data processing'
+0380*
+0390Callnat 'USR8401N'
+0400        USR8401-Parameters
+0410*
+0420Move 5690 to *Error-Nr
+0430/***********************************************************************
+0440End

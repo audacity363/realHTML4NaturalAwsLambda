@@ -1,0 +1,51 @@
+0010Get SYSPROF information
+0020.
+0030Documentation ......... USR3013T    /*  Text object
+0040Interface ............. USR3013N    /*  Cataloged subprogram
+0050Example Program ....... USR3013P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. SYSTEM COMMANDS
+0100.
+0110Keywords .............. +CURRENT-VERSION,
+0120                        DBID, ENVIRONMENT, FILE, FNAT, FNR, FUSER,
+0130                        SYSPROF
+0140.
+0150Interface Versions .... USR0010N, USR2013N, USR3013N
+0160.
+0170Function .............. Natural System File Assignments are returned
+0180                        to the calling NaturaL program.
+0190                        With USR3013N, the values of file name and DB
+0200                        type are enhanced.
+0210.
+0220.
+0230Parameters
+0240----------
+0250Define the following parameters with the DEFINE DATA statement:
+0260.
+0270 1 USR3013L
+0280   2 OUTPUTS
+0290     3 FILENAME       (A16/1:50)    /* System File Name
+0300     3 DBID           (P05/1:50)    /* DBID
+0310     3 FNR            (P05/1:50)    /* File Number
+0320     3 DBNAME         (A20/1:50)    /* DB Type
+0330     3 AMOUNT         (P04)         /* Number of Entries
+0340.
+0350Interface Call
+0360--------------
+0370Use the interface with the CALLNAT statement:
+0380.
+0390CALLNAT 'USR3013N'  USR3013L
+0400.
+0410.
+0420Using the Application Programming Interface:
+0430--------------------------------------------
+0440Copy the subprogram USR3013N to the library SYSTEM or the steplib
+0450library respectively, or to the required library.
+0460.
+0470.
+0480AMOUNT indicates how many occurrences of the returned
+0490arrays FILENAME through DBNAME are filled.
+0500.
+0510***** End of Description *****

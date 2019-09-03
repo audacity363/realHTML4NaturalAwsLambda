@@ -1,0 +1,153 @@
+0010*
+0020* Program .. V3-ERR
+0030* Library .. SYSEXV
+0040* Version .. 3.1
+0050*
+0060* Functionality: Show new error information with user exit USR2006N
+0070************************************************************************
+0080*
+0090DEFINE DATA LOCAL
+010001 CONTROL                /* Control block
+0110  02 INDEX     (I4)       /* Number of message to read
+0120  02 RESPONSE  (I4)       /* Response code
+0130*
+014001 ERROR                  /* Error information
+0150  02 NUMBER    (I4)       /* Error number
+0160  02 LINE      (I4)       /* Program line where error occurred
+0170  02 PROGRAM   (A32)      /* Program with error
+0180  02 LIBRARY   (A32)      /* Library of program with error
+0190  02 DBID      (I4)       /* DBID
+0200  02 FNR       (I4)       /* File number
+0210  02 TIME      (T)        /* Time of error
+0220  02 OBJTYPE   (A11)      /* Object type
+0230  02 LANGUAGE  (I4)       /* Language code
+0240  02 LEVEL     (I4)       /* Object level
+0250  02 FILLER    (B1)       /* Filler Byte for future use
+0260  02 MC        (B1)       /* Message class:
+0270    /* 00 - Error
+0280    /* 01 - Warning
+0290    /* 02 - Message
+0300  02 EC        (B1)       /* Error class:
+0310    /* 00 - System
+0320    /* 00 - User
+0330  02 ET        (B1)       /* Error type
+0340    /* 00 - Runtime
+0350    /* 01 - Syntax
+0360    /* 02 - Command time
+0370    /* 03 - Termination
+0380    /* 04 - Program termination
+0390    /* 05 - Remote
+0400*
+041001 TEXT       (A253)     /* Message text
+0420*
+043001 #TEXT-ARR  (A70/1:5)
+044001 J          (I2)
+045001 READ-ERROR (L)
+0460END-DEFINE
+0470*
+0480FORMAT KD=ON
+0490SET KEY PF3  NAMED 'Exit'
+0500  PF12 NAMED 'Canc'
+0510*
+0520INPUT (IP=OFF)
+0530  01T *TIMX  (AD=OTD)
+0540  21T '***** NATURAL 3.1 ENHANCEMENTS *****'
+0550  70T *DATX  (AD=OTD DF=L)
+0560  /
+0570  01T 'User'
+0580  06T *USER  (AD=OILT)
+0590  26T '- Statement Enhancements -'(I)
+0600  64T 'Program'
+0610  72T *PROGRAM (AD=OI)
+0620  ////
+0630  04T 'This example program will lead to a runtime error:'(I)
+0640  ///
+0650  04T 'The current program V3-ERR contains CALLNAT ''V3-ERR1''.'
+0660  /
+0670  04T 'The subprogram V3-ERR1 contains INCLUDE V3-ERR2.'
+0680  /
+0690  04T 'The copycode V3-ERR2 contains INCLUDE V3-ERR3.'
+0700  /
+0710  04T 'The copycode V3-ERR3 calls HUGO which does not exist and'
+0720  /
+0730  04T 'produces the runtime error NAT0920.'
+0740  ///
+0750  04T 'The' 'ON ERROR routine in V3-ERR' 'shows the received'-
+0760  ' error messages.'
+0770  ///
+0780  10T 'Please press ENTER.'
+0790  / //
+0800*
+0810IF *PF-KEY = 'PF3'
+0820  ESCAPE ROUTINE
+0830END-IF
+0840IF (*PF-KEY = 'PF12' OR= 'CLR')
+0850  CALLNAT 'UTILSTOP'
+0860END-IF
+0870*
+0880CALLNAT 'V3-ERR1'
+0890*
+0900***********************************************************************
+0910ON ERROR
+0920  MOVE 1 TO INDEX
+0930  RESET J
+0940  MOVE TRUE TO READ-ERROR
+0950  REPEAT
+0960    CALLNAT 'USR2006N' CONTROL ERROR TEXT
+0970    IF RESPONSE NE 0
+0980      IF INDEX GT 1
+0990        MOVE FALSE TO READ-ERROR
+1000      END-IF
+1010      RESET INDEX                               /*READ LAST MESSAGE*/
+1020      CALLNAT 'USR2006N' CONTROL ERROR TEXT
+1030    END-IF
+1040    IF READ-ERROR
+1050      ADD 1 TO J
+1060      IF J LE 5
+1070        MOVE TEXT    TO #TEXT-ARR (J)
+1080      END-IF
+1090      IF INDEX = 0 OR J GE 5       /* map fields filled
+1100        MOVE FALSE TO READ-ERROR
+1110      ELSE
+1120        ADD 1 TO INDEX
+1130      END-IF
+1140    END-IF
+1150    UNTIL NOT READ-ERROR
+1160  END-REPEAT
+1170  MOVE -1 TO INDEX              /* delete error message buffer
+1180  CALLNAT 'USR2006N' CONTROL ERROR TEXT
+1190  /*
+1200  INPUT (IP=OFF)
+1210    01T *TIMX  (AD=OTD)
+1220    21T '***** NATURAL 3.1 ENHANCEMENTS *****'
+1230    70T *DATX  (AD=OTD DF=L)
+1240    /
+1250    01T 'User'
+1260    06T *USER  (AD=OILT)
+1270    26T '- Statement Enhancements -'(I)
+1280    64T 'Program'
+1290    72T *PROGRAM (AD=OI)
+1300    ///
+1310    02T 'The last 3 error messages are:'
+1320    ///
+1330    02T #TEXT-ARR(1)  (AD=OI)
+1340    //
+1350    02T #TEXT-ARR(2)  (AD=OI)
+1360    //
+1370    02T #TEXT-ARR(3)  (AD=OI)
+1380    //
+1390    02T #TEXT-ARR(4)  (AD=OI)
+1400    //
+1410    02T #TEXT-ARR(5)  (AD=OI)
+1420    / // / //
+1430  /*
+1440  ESCAPE ROUTINE          /* go back
+1450  /*
+1460END-ERROR
+1470IF *PF-KEY = 'PF3'
+1480  ESCAPE ROUTINE
+1490END-IF
+1500IF (*PF-KEY = 'PF12' OR= 'CLR')
+1510  CALLNAT 'UTILSTOP'
+1520END-IF
+1530END

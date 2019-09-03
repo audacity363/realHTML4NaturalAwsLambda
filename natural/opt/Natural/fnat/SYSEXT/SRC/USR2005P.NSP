@@ -1,0 +1,104 @@
+0010/* DOCU. ...... USR2005P
+0020/*
+0030/* Function ... Access to the internal file translation table
+0040/*              NTTF/TF
+0050/*
+0060/* Interface Program Description:
+0070/* ------------------------------
+0080/* With this routine you can maintain the internal file translation
+0090/* table defined via NTTF macro or the NATURAL parameter TF.
+0100/* Please do not use this interface within an active database loop.
+0110/*
+0120/* Parameter Description:
+0130/* ----------------------
+0140/* Input ...... 1 FUNCTION (I04)
+0150/*                    Function code; possible values are:
+0160/*                     4 - Clear the table
+0170/*                     8 - Add a NTTF specification to the internal
+0180/*                         table for translated files
+0190/*                    12 - Retrieve one NTTF entry
+0200/*                    16 - Delete a NTTF entry out of the table
+0210/*                    20 - Modify one NTTF entry
+0220/*                    24 - Translate (NAT23 only)
+0230/*
+0240/* Output ..... 1 RESPONSE (I04)
+0250/*                    Response code; possible values are:
+0260/*                    = 0  Ok
+0270/*                      NAT22 (NATNIM)
+0280/*                    = 4  Entry does not exist
+0290/*                      NAT23 (NATSNTC)
+0300/*                    > 0 NATURAL ERROR NUMBER
+0310/*                    < 0 INTERNAL ERROR
+0320/*                    - 4096 ENTRY DOES NOT EXIST
+0330/*                    - 4097 DUPLICATE ENTRY
+0340/*                    - 4098 VALUE OF TF NUMBER INVALID, < 1
+0350/*                    - 4100 INVALID FUNCTION CODE
+0360/*
+0370/* In/Output .. 1 INDEX (I04)
+0380/*                    FUNCTION = 12: Index of entry to be retrieved
+0390/*                    FUNCTION = 16: Index of entry to be deleted
+0400/*
+0410/* In/Output .. 1 OLD-DBID (I04), OLD-FNR (I04),
+0420/*                NEW-DBID (I04), NEW-FNR (I04)
+0430/*                    This fields define an entry in the file
+0440/*                    translation table. The "old" values will be
+0450/*                    translated into the "new" values during runtime.
+0460/*
+0470/***********************************************************************
+0480DEFINE DATA
+0490LOCAL
+050001 FUNCTION           (I4)
+051001 INDEX              (I4)     /* Number of entry in table
+052001 OLD-DBID           (I4)     /* translate from dbid
+053001 OLD-FNR            (I4)     /* translate from fnr
+054001 NEW-DBID           (I4)     /* translate to dbid
+055001 NEW-FNR            (I4)     /* translate to fnr
+056001 RESPONSE           (I4)
+0570*
+0580END-DEFINE
+0590/*
+0600SET KEY ALL
+0610/*
+0620REPEAT
+0630  /*
+0640  INPUT (AD=MITL'_' IP=OFF CD=NE)
+0650    / 5T 'CMSTFT:' (YEI)
+0660      21T 'Access logical file translation table' (YEI)
+0670    / 1T '-' (18) (YEI) 21T '-' (37) (YEI)
+0680    / 1T '0' 3T '4' 5T '8'  8T '12' 11T '16' 14T '20' 17T '24'
+0690    / 1T 'I' 3T 'I' 5T 'I'  8T 'I'  11T 'I'  14T 'I'  17T 'I'
+0700      21T 'Function ..........' (TU) FUNCTION
+0710    /               5T 'O'  8T 'I'  11T 'I'
+0720      21T 'Index .............' (TU) INDEX
+0730    /               5T 'I'  8T 'O'           14T 'IO' 17T 'IO'
+0740      21T 'OLD DBID ..........' (TU) OLD-DBID
+0750    /               5T 'I'  8T 'O'           14T 'IO' 17T 'IO'
+0760      21T 'OLD FNR ...........' (TU) OLD-FNR
+0770    /               5T 'I'  8T 'O'           14T 'IO' 17T 'IO'
+0780      21T 'NEW DBID ..........' (TU) NEW-DBID
+0790    /               5T 'I'  8T 'O'           14T 'IO' 17T 'IO'
+0800      21T 'NEW FNR ...........' (TU) NEW-FNR
+0810    // 21T 'Response ..........' (TU) RESPONSE (AD=OI CD=TU ZP=ON)
+0820    // 21T 'Press any PF-key to stop.' (TU)
+0830   // 'Function 0:initialize 4:clear table 8:add 12:retrieve'
+0840      '16:delete 20:modify'
+0850    / '         24:translate'
+0860  /*
+0870  IF *PF-KEY NE 'ENTR'
+0880    ESCAPE BOTTOM
+0890  END-IF
+0900  DECIDE ON FIRST VALUE OF FUNCTION
+0910    VALUE 0,4
+0920      RESET INDEX OLD-DBID OLD-FNR NEW-DBID NEW-FNR
+0930    VALUE 8
+0940      RESET INDEX
+0950    VALUE 12,16
+0960      RESET OLD-DBID OLD-FNR NEW-DBID NEW-FNR
+0970    NONE IGNORE
+0980  END-DECIDE
+0990  /*
+1000  CALLNAT 'USR2005N' FUNCTION INDEX OLD-DBID OLD-FNR NEW-DBID
+1010                     NEW-FNR RESPONSE
+1020  /*
+1030END-REPEAT
+1040END

@@ -1,0 +1,85 @@
+0010Get or set type and name of editor contents
+0020.
+0030Documentation ......... USR0080T    /*  Text object
+0040Interface ............. USR0080N    /*  Cataloged subprogram
+0050Example Program ....... USR0080P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. EDITOR
+0100.
+0110Keywords .............. EDITOR, NAME, OBJECT NAME, OBJECT TYPE, TYPE
+0120.
+0130Function .............. Get and set type and name of object being
+0140                        currently in the Natural program/data editor.
+0150.
+0160.
+0170Parameters
+0180----------
+0190Define the following parameters with the DEFINE DATA statement:
+0200.
+0210
+0220  01 ACTION   (A08)         /* GET / SET
+0230  01 TYPE     (A01)         /* Type code
+0240  01 NAME     (A08)         /* Object's name
+0250  01 EMPTY    (L)           /* True, if editor is empty
+0260  01 RESPONSE (N04)         /* Zero, if no error occurred
+0270  01 ERR-TXT  (A65)         /* Explanation to RESPONSE
+0280.
+0290Interface Call
+0300--------------
+0310Use the interface with the CALLNAT statement:
+0320.
+0330CALLNAT 'USR0080N'
+0340         ACTION TYPE NAME EMPTY RESPONSE ERR-TXT
+0350.
+0360.
+0370Using the Application Programming Interface:
+0380--------------------------------------------
+0390Copy the subprogram USR0080N to the library SYSTEM or the steplib
+0400library respectively, or to the required library.
+0410.
+0420For information purposes (that is the 'GET' option),
+0430the calling program has to use the following statement:
+0440.
+0450MOVE 'GET' TO ACTION
+0460CALLNAT 'USR0080N'
+0470  ACTION TYPE NAME EMPTY RESPONSE ERR-TXT
+0480.
+0490Meaning of code field 'TYPE':
+0500.
+0510  TYPE   Object Type   Category
+0520  ----   -----------   --------
+0530    P    Program       1 and 3
+0540    S    Subroutine    1
+0550    H    Helproutine   1
+0560    N    Subprogram    1 and 3
+0570    C    Copycode      1
+0580    T    Text          1 and 3
+0590    G    GDA           2
+0600    L    LDA           2
+0610    A    PDA           2
+0620    M    Map           3
+0630    3    Dialog        4        (not on mainframe)
+0640    4    Class         1
+0650    O    Macro         5        (only on mainframe for ISPF)
+0660    7    Function      1
+0670    8    Adapter       6
+0680.
+0690Each object type belongs to at least one category.
+0700An object's type may only be changed within its current category.
+0710Some correct examples: 'P' may be set to 'T',
+0720'G' ---> 'L',  'M' ---> 'N', 'N' ---> 'P'.
+0730.
+0740Type '3' for dialog is only available on C platforms, not on mainframe.
+0750Type 'O' for macro is only available on mainframe for Natural ISPF.
+0760.
+0770If you want to 'SET' a different type,
+0780the calling program has to use the following statement:
+0790.
+0800MOVE 'SET' TO ACTION
+0810CALLNAT 'USR0080N'
+0820  ACTION TYPE NAME EMPTY RESPONSE ERR-TXT
+0830.
+0840***** End of Description *****
+0850

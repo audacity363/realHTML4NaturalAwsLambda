@@ -1,0 +1,22 @@
+0010** Example 'DECEX1': DECIDE FOR (with FIRST option)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 #FUNCTION (A1)
+00501 #PARM     (A1)
+0060END-DEFINE
+0070*
+0080INPUT #FUNCTION #PARM
+0090*
+0100DECIDE FOR FIRST CONDITION
+0110  WHEN #FUNCTION = 'A' AND #PARM = 'X'
+0120    WRITE 'Function A with parameter X selected.'
+0130  WHEN #FUNCTION = 'B' AND #PARM = 'X'
+0140    WRITE 'Function B with parameter X selected.'
+0150  WHEN #FUNCTION = 'C' THRU 'D'
+0160    WRITE 'Function C or D selected.'
+0170  WHEN NONE
+0180    REINPUT 'Please enter a valid function.'
+0190            MARK *#FUNCTION
+0200END-DECIDE
+0210*
+0220END

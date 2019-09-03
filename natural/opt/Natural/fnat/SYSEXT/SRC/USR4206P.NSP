@@ -1,0 +1,198 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR4206N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+00601 V                                   (I1)  CONST <20>
+0070LOCAL
+00801 USR4206L
+0090  2 OBJECT-KEY
+0100    3 LIBRARY                         (A8)
+0110    3 OBJECT-FROM                     (A33)
+0120    3 OBJECT-TO                       (A33)
+0130    3 OBJECT-KIND                     (A1)
+0140      /*
+0150  2 OBJECT-LOCATION
+0160    3 OBJECT-DBID                     (N5)
+0170    3 OBJECT-FNR                      (N4)
+0180    3 OBJECT-PSW                      (A8)
+0190    3 OBJECT-CIP                      (N8)
+0200    3 OBJECT-SYSFILE                  (A1)
+0210  2 INPUTS
+0220    3 OPT-ACCESS                      (A1)
+0230    3 OPT-TYPE-OP                     (A1)
+0240    3 OPT-TYPE                        (A24)
+0250    3 OPT-SCROLL                      (A1)
+0260    3 OPT-WILDCARD                    (A1)
+0270    3 OPT-ASTERISK                    (A1)
+0280    3 OPT-AMOUNT                      (I2)
+0290      /*
+0300  2 INPUT-OUTPUTS
+0310    3 INT-HANDLE                      (I4)
+0320    3 NEXT-OBJ                        (A32)
+0330  2 OUTPUTS
+0340    3 RETURNED                        (I2)
+0350    3 LIST-OBJ                        (A32/1:V)
+0360    3 LIST-TYPE-SRC                   (A1/1:V)
+0370    3 LIST-TYPE-MOD                   (A1/1:V)
+0380      /*
+0390  2 OUTPUT-DIR-DATA                   (1:V)
+0400    3 OUT-SOURCE-DATA
+0410      4 OUT-SRC-DATE-TIME             (T)
+0420      4 OUT-SRC-USER                  (A8)
+0430      4 OUT-SRC-VERSION               (A8)  /* VV.RR.SM
+0440      4 OUT-SRC-SIZE                  (I4)
+0450      4 OUT-SRC-PROG-MODE             (A1)
+0460      4 OUT-SRC-CODEPAGE              (A32)
+0470    3 OUT-CATALOGED-DATA
+0480      4 OUT-CAT-DATE-TIME             (T)
+0490      4 OUT-CAT-USER                  (A8)
+0500      4 OUT-CAT-VERSION               (A8)  /* VV.RR.SM
+0510      4 OUT-CAT-BP-SIZE               (I4)
+0520      4 OUT-CAT-GDA-NAME              (A8)
+0530      4 OUT-CAT-CODEPAGE              (A32)
+0540      /*
+05501 USR4206N
+0560  2 VERSION                           (I1)     INIT <2>
+0570  2 ED-VERSION-FORMAT                 (A1)     INIT <'N'>
+0580  2 V2-FSEC-DBID                      (N05)
+0590  2 V2-FSEC-FNR                       (N05)
+0600  2 V2-FSEC-PSW                       (A08)
+0610  2 V2-FSEC-CIP                       (N08)
+06201 REDEFINE USR4206N
+0630  2 EXTENDED-PARMS
+0640    3 EXTENDED-DATA                   (A1/1:28)
+0650/*
+0660LOCAL USING USR-MSG   /* Data for message exchange
+0670LOCAL USING USR-FLD   /* Description of the field in error
+0680/*
+0690LOCAL
+07001 LOCAL-MSG                           (A79)
+07101 IX                                  (I2)
+07201 INPUT-OK                            (L)
+0730END-DEFINE
+0740/**********************************************************************
+0750SET KEY ALL
+0760FORMAT LS=200
+0770/*
+0780LIBRARY     := *LIBRARY-ID
+0790OBJECT-FROM := 'USR>     '
+0800OBJECT-TO   := '         '
+0810OBJECT-KIND := 'A'
+0820OPT-TYPE-OP := ' '
+0830OPT-TYPE    := 'PT      '
+0840OPT-SCROLL  := 'D'
+0850OPT-AMOUNT  := 20
+0860/*
+0870OPT-ACCESS := 'O'     /* Open
+0880NAD-FLD.FIELD-POSITION := 2
+0890/*
+0900REPEAT
+0910  INPUT (AD=MITL'_' IP=OFF)
+0920    TEXT NAD-MSG.MSG, MSG-DATA (1), MSG-DATA (2), MSG-DATA (3)
+0930    MARK NAD-FLD.FIELD-POSITION
+0940    / 10T 'List objects in a library:' (I)
+0950    / 10T '-' (26) (I) /
+0960    / 10T 'System file (U/N) .....' OBJECT-SYSFILE
+0970    / 10T 'Library ...............' LIBRARY
+0980    / 10T 'DBID of library .......' OBJECT-DBID
+0990          'PSW of library ........' OBJECT-PSW (AD=N)
+1000    / 10T 'FNR of library ........' OBJECT-FNR
+1010         ' Cipherkey of library ..' OBJECT-CIP
+1020    / 10T 'Object from ...........' OBJECT-FROM  (AL=9)
+1030    / 10T 'Object to .............' OBJECT-TO    (AL=9)
+1040    / 10T 'Type operator .........' OPT-TYPE-OP
+1050    / 10T 'Object types ..........' OPT-TYPE
+1060    / 10T 'Kind ..................' OBJECT-KIND
+1070    / 10T 'Version format (N/O) ..' ED-VERSION-FORMAT
+1080    / 10T 'Amount of objects .....' OPT-AMOUNT
+1090    / 10T 'Wildcard ..............' OPT-WILDCARD
+1100    / 10T 'Asterisk ..............' OPT-ASTERISK
+1110    / 10T 'DBID of FSEC ..........' V2-FSEC-DBID
+1120          'PSW of FSEC ...........' V2-FSEC-PSW (AD=N)
+1130    / 10T 'FNR of FSEC ...........' V2-FSEC-FNR (AL=4)
+1140          'Cipherkey of FSEC .....' V2-FSEC-CIP
+1150  /// 10T 'Press any PF-key to stop.'
+1160  /*
+1170  IF *PF-KEY NE 'ENTR'
+1180    ESCAPE ROUTINE
+1190  END-IF
+1200  /*
+1210  IF OPT-AMOUNT > V
+1220    COMPRESS 'The maximum for the amount is' V
+1230             'in this example program.' INTO LOCAL-MSG
+1240    NAD-MSG.MSG            := LOCAL-MSG
+1250    NAD-FLD.FIELD-POSITION := 7
+1260    ESCAPE TOP
+1270  END-IF
+1280  /*
+1290  CALLNAT 'USR4206N'   USR4206L    USR4206N.EXTENDED-DATA (*)
+1300                       NAD-MSG     NAD-FLD
+1310  /*
+1320  OPT-ACCESS := 'R'   /* Read
+1330  /*
+1340  FOR IX = 1 TO RETURNED
+1350    IF (LIST-OBJ (IX) <> ' ')
+1360      IF (LIST-TYPE-SRC (IX) <> ' ')
+1370        PRINT IX LIST-OBJ (IX) (AL=8)
+1380          17T 'Src:' LIST-TYPE-SRC (IX)
+1390          24T OUT-SRC-DATE-TIME (IX) (EM=YYYY-MM-DD' 'HH:II:SS)
+1400          44T OUT-SRC-USER      (IX)
+1410          53T OUT-SRC-VERSION   (IX)
+1420          62T OUT-SRC-SIZE      (IX)
+1430          74T OUT-SRC-PROG-MODE (IX)
+1440        / 22T OUT-SRC-CODEPAGE  (IX)
+1450      END-IF
+1460      IF (LIST-TYPE-MOD (IX) <> ' ')
+1470        IF (LIST-TYPE-SRC (IX) <> ' ')
+1480          PRINT
+1490            17T 'Cat:' LIST-TYPE-MOD (IX)
+1500            24T OUT-CAT-DATE-TIME (IX) (EM=YYYY-MM-DD' 'HH:II:SS)
+1510            44T OUT-CAT-USER      (IX)
+1520            53T OUT-CAT-VERSION   (IX)
+1530            62T OUT-CAT-BP-SIZE   (IX)
+1540            74T OUT-CAT-GDA-NAME  (IX)
+1550          / 22T OUT-CAT-CODEPAGE  (IX)
+1560        ELSE
+1570          PRINT IX LIST-OBJ (IX) (AL=8)
+1580            17T 'Cat:' LIST-TYPE-MOD (IX)
+1590            24T OUT-CAT-DATE-TIME (IX) (EM=YYYY-MM-DD' 'HH:II:SS)
+1600            44T OUT-CAT-USER      (IX)
+1610            53T OUT-CAT-VERSION   (IX)
+1620            62T OUT-CAT-BP-SIZE   (IX)
+1630            74T OUT-CAT-GDA-NAME  (IX)
+1640          / 22T OUT-CAT-CODEPAGE  (IX)
+1650        END-IF
+1660      END-IF
+1670    END-IF
+1680  END-FOR
+1690  /*
+1700  IF *PF-KEY NE 'ENTR'
+1710    OPT-ACCESS := 'C'     /* Close
+1720    CALLNAT 'USR4206N'   USR4206L    USR4206N.EXTENDED-DATA (*)
+1730                         NAD-MSG     NAD-FLD
+1740    ESCAPE BOTTOM
+1750  END-IF
+1760  /*
+1770  IF MSG-NR NE 0
+1780    IF NOT INPUT-OK AND RETURNED = 0
+1790      ESCAPE TOP
+1800    ELSE
+1810      WRITE (AD=LI)
+1820        / 'Message number ....' NAD-MSG.MSG-NR
+1830        / 'Message ...........' NAD-MSG.MSG (AL=59)
+1840        / 'Message type ......' NAD-MSG.MSG-TYPE
+1850        / 'Message data ......' NAD-MSG.MSG-DATA (1:3)
+1860        // 'Field structure ...' NAD-FLD.FIELD-STRUCTURE
+1870        / 'Field name ........' NAD-FLD.FIELD-NAME
+1880        / 'Field position ....' NAD-FLD.FIELD-POSITION
+1890        / 'Field index .......' NAD-FLD.FIELD-INDEX1
+1900        NAD-FLD.FIELD-INDEX2
+1910        NAD-FLD.FIELD-INDEX3
+1920      ESCAPE BOTTOM
+1930    END-IF
+1940  END-IF
+1950  /*
+1960  INPUT-OK := TRUE    /* All parameter checks are done
+1970END-REPEAT
+1980END

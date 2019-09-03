@@ -1,0 +1,98 @@
+0010*
+0020* Subprogram .. V4-PARM2
+0030* Library ..... SYSEXV
+0040* Version ..... 4.1
+0050*
+0060* Functionality: Show features with new optional parameters
+0070*                called by V4-PARMS
+0080************************************************************************
+0090*
+0100DEFINE DATA
+0110PARAMETER
+0120 1 #PARM1 (A20)
+0130 1 #PARM2 (T)  BY VALUE OPTIONAL
+0140 1 #PARM3 (I4) BY VALUE RESULT OPTIONAL
+0150 1 #PARM4 (A)  DYNAMIC OPTIONAL
+0160 1 #PARM5 (A8) OPTIONAL
+0170LOCAL
+0180 1 #PARM-ARRAY (A20/1:5)
+0190 1 #RESULT     (A26)
+0200END-DEFINE
+0210*
+0220IF #PARM1 SPECIFIED
+0230  #PARM-ARRAY(1):= 'specified'
+0240ELSE
+0250  #PARM-ARRAY(1):= 'not specified'
+0260END-IF
+0270IF #PARM2 SPECIFIED
+0280  #PARM-ARRAY(2):= 'specified'
+0290ELSE
+0300  #PARM-ARRAY(2):= 'not specified'
+0310END-IF
+0320IF #PARM3 SPECIFIED
+0330  #PARM-ARRAY(3):= 'specified'
+0340ELSE
+0350  #PARM-ARRAY(3):= 'not specified'
+0360END-IF
+0370IF #PARM4 SPECIFIED
+0380  #PARM-ARRAY(4):= 'specified'
+0390  MOVE #PARM4 TO #RESULT
+0400ELSE
+0410  #PARM-ARRAY(4):= 'not specified'
+0420END-IF
+0430IF #PARM5 SPECIFIED
+0440  #PARM-ARRAY(5):= 'specified'
+0450ELSE
+0460  #PARM-ARRAY(5):= 'not specified'
+0470END-IF
+0480*
+0490FORMAT KD=ON
+0500SET KEY PF3  NAMED 'Exit'
+0510        PF12 NAMED 'Canc'
+0520*
+0530INPUT (IP=OFF)
+0540 01T *TIMX  (AD=OTD )
+0550 21T '***** NATURAL 4.1 ENHANCEMENTS *****'
+0560 70T *DATX  (AD=OTD DF=L)
+0570 /
+0580 01T 'User'
+0590 06T *USER  (AD=OILT )
+0600 27T '- Optional Parameters -'(I)
+0610 64T 'Program'
+0620 72T *PROGRAM (AD=OI)
+0630 //
+0640 02T 'Within subprogram V4-PARM2: '
+0650 //
+0660 02T 'DEFINE DATA PARAMETER'
+0670 /
+0680 02T ' 1 #Parm1 (A20)'
+0690 /
+0700 02T ' 1 #Parm2 (T)  BY VALUE'   'OPTIONAL'(I)
+0710 /
+0720 02T ' 1 #Parm3 (I4) BY VALUE RESULT'   'OPTIONAL'(I)
+0730 /
+0740 02T ' 1 #Parm4 (A)  DYNAMIC'  'OPTIONAL' (I)
+0750 /
+0760 02T ' 1 #Parm5 (A8)'  'OPTIONAL'(I)
+0770 /
+0780 02T 'END-DEFINE'
+0790 //
+0800 02T 'Checking optional parameter: IF #Parm5'
+0810     'SPECIFIED'(I) 'OR #Parm2'  'NOT SPECIFIED' (I)
+0820 //
+0830 02T '#Parm1:'  #PARM1 (AD=OI)   40T 'Parameter is'
+0840      #PARM-ARRAY(1)   (AD=OI)
+0850 /
+0860 02T '#Parm2:'                         40T 'Parameter is'
+0870      #PARM-ARRAY(2)   (AD=OI)
+0880 /
+0890 02T '#Parm3:'  #PARM3 (AD=OI)   40T 'Parameter is'
+0900      #PARM-ARRAY(3)   (AD=OI)
+0910 /
+0920 02T '#Parm4:'  #RESULT (AD=OI)  40T 'Parameter is'
+0930      #PARM-ARRAY(4)   (AD=OI)
+0940 /
+0950 02T '#Parm5:'                        40T 'Parameter is'
+0960      #PARM-ARRAY(5)   (AD=OI)
+0970*
+0980END

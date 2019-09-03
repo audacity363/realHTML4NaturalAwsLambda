@@ -1,0 +1,141 @@
+0010/*  Get next user short error-messgae from FUSER
+0020/*  ATTENTION:   Natural Security check intentionally bypassed
+0030/*  This program serves as an example how to design a user-defined
+0040/*  program to call 'USR1027N'
+0050/**********************************************************************
+0060DEFINE DATA
+0070LOCAL
+0080  01 PARMS
+0090     02 LIBRARY      (A08) /* In ...... Library name
+0100     02 ERROR-NUMBER (N04) /* In/Out .. 0001 thru 9999
+0110     02 BEHIND       (L)   /* In ...... Start with/behind ERROR-NUMBER
+0120     02 LANGUAGE     (I01) /* In ...... The wanted text's language
+0130     02 LANG-EXACTLY (L)   /* In ...... Find only specified LANGUAGE
+0140     02 S-TEXT       (A79) /* Out ..... Short message
+0150     02 RESPONSE     (N04) /* Out ..... Error code
+0160LOCAL
+0170  01 #FROM           (N04) INIT <0001>
+0180  01 #THRU           (N04) INIT <9999>
+0190  01 #LANG-EXACTLY   (A01) INIT <'N'>
+0200  01 #MSG0           (A64)
+0210  01 #MSG1           (A78)
+0220  01 #MSG2           (A78)
+0230  01 #MARK           (P07)
+0240END-DEFINE
+0250/**********************************************************************
+0260/*
+0270/* Set up some defaults:
+0280/*
+0290MOVE *APPLIC-ID TO LIBRARY         /* Current library
+0300MOVE *LANGUAGE  TO LANGUAGE        /* Current language number
+0310MOVE FALSE      TO BEHIND          /* start with given number
+0320SET KEY ALL
+0330/***********************************************************************
+0340REPEAT
+0350  /****************************************************
+0360  INPUT (AD=MITL'_' IP=OFF ZP=ON SG=OFF)
+0370  WITH TEXT #MSG0 MARK #MARK                ///
+0380    15T  ' List Available User Short Messages'    /
+0390    15T  '-' (35) //
+0400    18T  'Library .........' LIBRARY        /
+0410    18T  'First number ....' #FROM          /
+0420    18T  'Thru  number ....' #THRU          /
+0430    18T  'Language ........' LANGUAGE       /
+0440    18T  'Only language ...' #LANG-EXACTLY  ///
+0450    15T  'Press ENTER to start the search.' /
+0460    15T  'Press any PF-Key to stop.'
+0470    19/1 ' ' (78)
+0480  /****************************************************
+0490  /*
+0500  IF *PF-KEY NE 'ENTR'
+0510    ESCAPE BOTTOM
+0520  END-IF
+0530  /*
+0540  RESET #MSG0 #MARK RESPONSE S-TEXT
+0550  /*
+0560  IF #FROM < 1
+0570    #MSG0 := 'Please check start value.'
+0580    #MARK := 2
+0590  END-IF
+0600  /*
+0610  IF #THRU < 1
+0620  OR #FROM > #THRU
+0630    #MSG0 := 'Please check end value.'
+0640    #MARK := 3
+0650  END-IF
+0660  /*
+0670  DECIDE ON FIRST #LANG-EXACTLY
+0680    VALUE 'Y', 'T', '1'
+0690      MOVE 'Y' TO #LANG-EXACTLY
+0700      MOVE TRUE TO LANG-EXACTLY
+0710    VALUE 'N', 'F', '0'
+0720      MOVE 'N' TO #LANG-EXACTLY
+0730      MOVE FALSE TO LANG-EXACTLY
+0740    NONE
+0750      #MSG0 := 'Enter "Y" or "N", please.'
+0760      #MARK := 5
+0770  END-DECIDE
+0780  /*
+0790  /*  Now start the list:
+0800  /*
+0810  COMPRESS
+0820    'List User Short Messages, Lib=' LIBRARY
+0830    ', Language=' LANGUAGE
+0840    ', From=' #FROM
+0850    ', Thru=' #THRU
+0860    ','
+0870    TO #MSG1 LEAVING NO
+0880  /*
+0890  COMPRESS
+0900    'Suppress empty text=' #LANG-EXACTLY
+0910    ', User=' *USER
+0920    ', Date=' *DATX (DF=L)
+0930    ', Time=' *TIMX
+0940    '.'
+0950    TO #MSG2 LEAVING NO
+0960  /*
+0970  WRITE TITLE #MSG1 (AD=I) / #MSG2 (AD=I) / '-' (79) (I) /
+0980  /*
+0990  FOR. FOR ERROR-NUMBER #FROM #THRU
+1000    /*
+1010    CALLNAT 'USR1027N' PARMS
+1020    /*
+1030    IF ERROR-NUMBER > #THRU
+1040      MOVE 9 TO RESPONSE
+1050    END-IF
+1060    /*
+1070    DECIDE ON FIRST VALUE OF RESPONSE
+1080      VALUE 0
+1090        IF S-TEXT = ' '
+1100          WRITE ERROR-NUMBER (EM=9999) '  <===  <empty>' (I)
+1110        ELSE
+1120          WRITE ERROR-NUMBER (EM=9999) S-TEXT (AL=65)
+1130        END-IF
+1140        IF ERROR-NUMBER = #THRU
+1150          WRITE '*** End of list ***'
+1160          ESCAPE BOTTOM (FOR.)
+1170        END-IF
+1180      VALUE 2
+1190        MOVE 'Invalid Library.' TO #MSG0
+1200        #MARK := POS (LIBRARY)
+1210      VALUE 3
+1220        MOVE 'Invalid Error Number.' TO #MSG0
+1230        #MARK := POS (ERROR-NUMBER)
+1240      VALUE 4
+1250        MOVE 'Invalid Language Code.' TO #MSG0
+1260        #MARK := POS (LANGUAGE)
+1270      VALUE 9
+1280        WRITE '*** End of list ***'
+1290        ESCAPE BOTTOM (FOR.)
+1300      NONE
+1310        COMPRESS 'Response code from USR1027N:' RESPONSE TO #MSG0
+1320    END-DECIDE
+1330    /*
+1340    IF #MSG0 NE ' '
+1350      ESCAPE BOTTOM (FOR.)
+1360    END-IF
+1370    /*
+1380  END-FOR
+1390  /*
+1400END-REPEAT
+1410END

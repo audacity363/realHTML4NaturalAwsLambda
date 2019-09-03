@@ -1,0 +1,125 @@
+0010/*  EXAM-TF - TEXT for Function
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (1:8)
+0070     02 NATURAL-ERROR
+0080     02 RETURN-CODE
+0090     02 RESULT-FIELD (1:9)
+0100     02 GETSET-FIELD-NAME
+0110     02 GETSET-FIELD-VALUE
+0120  01 MSG     (A72)
+0130  01 MOD     (C)
+0140  01 IX      (I01)
+0150  01 MK      (I01)
+0160  01 W1      (A64) CONST <'This field must not be empty.'>
+0170END-DEFINE
+0180DEFINE WINDOW INFO-TEXT
+0190  SIZE 16 * 70
+0200  BASE IX / IX
+0210  TITLE ' (TF) Text for Function '
+0220  CONTROL SCREEN
+0230  FRAMED POSITION OFF
+0240SET KEY ALL
+0250IX := *LEVEL * 2
+0260SET KEY ALL
+0270/***********************************************************************
+0280PROCESS COMMAND ACTION GET USING
+0290  PROCESSOR-NAME = ' '
+0300  GETSET-FIELD-NAME = 'NAME&'
+0310/*
+0320IF NATURAL-ERROR NE 0
+0330  CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0340  WRITE MSG (AD=I)
+0350  ESCAPE ROUTINE
+0360END-IF
+0370/*
+0380MOVE GETSET-FIELD-VALUE TO PROCESSOR-NAME
+0390RESET COMMAND-LINE (*)
+0400/***********************************************************************
+0410REPEAT
+0420  /******************************************************
+0430  INPUT WINDOW = 'INFO-TEXT' (AD=MIT IP=F CV=MOD)
+0440  WITH TEXT MSG
+0450  MARK MK
+0460    /  ' Processor Name .......' PROCESSOR-NAME (AD=OI)
+0470    /  ' Location Keyword #1 ..' COMMAND-LINE (1) (AD=MIT AL=16)
+0480    /  '          Keyword #2 ..' COMMAND-LINE (2) (AD=MIT AL=16)
+0490    /  '          Keyword #3 ..' COMMAND-LINE (3) (AD=MIT AL=16)
+0500    /  ' Function Keyword #1 ..' COMMAND-LINE (4) (AD=MIT AL=16)
+0510    /  '          Keyword #2 ..' COMMAND-LINE (5) (AD=MIT AL=16)
+0520    /  '          Keyword #3 ..' COMMAND-LINE (6) (AD=MIT AL=16)
+0530    /  '-' (65)
+0540  /******************************************************
+0550  SET WINDOW OFF
+0560  IF *PF-KEY NE 'ENTR'
+0570  OR MOD NOT MODIFIED
+0580    ESCAPE ROUTINE
+0590  END-IF
+0600  RESET MSG MK
+0610  /******************************************************
+0620  /* Verify correct Location specification:
+0630  IF COMMAND-LINE (1) = ' '
+0640    IF COMMAND-LINE (2) NE ' '
+0650      MOVE W1 TO MSG
+0660      MOVE 1 TO MK
+0670      ESCAPE TOP
+0680    END-IF
+0690    IF COMMAND-LINE (3) NE ' '
+0700      MOVE W1 TO MSG
+0710      MOVE 2 TO MK
+0720      ESCAPE TOP
+0730    END-IF
+0740  END-IF
+0750  IF COMMAND-LINE (2) = ' '
+0760  AND COMMAND-LINE (3) NE ' '
+0770    MOVE W1 TO MSG
+0780    MOVE 2 TO MK
+0790    ESCAPE TOP
+0800  END-IF
+0810  /******************************************************
+0820  /* Verify correct Function specification:
+0830  IF COMMAND-LINE (4) = ' '
+0840    MOVE W1 TO MSG
+0850    MOVE 4 TO MK
+0860    ESCAPE TOP
+0870  END-IF
+0880  IF  COMMAND-LINE (5)  = ' '
+0890  AND COMMAND-LINE (6) NE ' '
+0900    MOVE W1 TO MSG
+0910    MOVE 5 TO MK
+0920    ESCAPE TOP
+0930  END-IF
+0940  /******************************************************
+0950  PROCESS COMMAND ACTION TEXT USING
+0960    PROCESSOR-NAME = PROCESSOR-NAME
+0970    COMMAND-LINE (*) = COMMAND-LINE (*)
+0980  /**************************************
+0990  IF NATURAL-ERROR > 0
+1000    CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+1010    ESCAPE TOP
+1020  END-IF
+1030  /***************************************************************
+1040  INPUT WINDOW = 'INFO-TEXT' (AD=OIT' ' IP=OFF ) WITH TEXT MSG
+1050    /  ' Processor Name .......' PROCESSOR-NAME (AD=OI)
+1060    /  ' Location Keyword #1 ..' COMMAND-LINE (1) (AL=16)
+1070    /  '          Keyword #2 ..' COMMAND-LINE (2) (AL=16)
+1080    /  '          Keyword #3 ..' COMMAND-LINE (3) (AL=16)
+1090    /  ' Function Keyword #1 ..' COMMAND-LINE (4) (AL=16)
+1100    /  '          Keyword #2 ..' COMMAND-LINE (5) (AL=16)
+1110    /  '          Keyword #3 ..' COMMAND-LINE (6) (AL=16)
+1120    /  '-' (65)
+1130    /  ' '
+1140    /  ' (1) Function Text ....' RESULT-FIELD (1) (AL=16)
+1150    /  ' (2) Location (IFN) ...' RESULT-FIELD (2) (AL=16)
+1160    /  ' (3) Function (IFN) ...' RESULT-FIELD (3) (AL=16)
+1170  /***************************************************************
+1180  SET WINDOW OFF
+1190  IF *PF-KEY NE 'ENTR'
+1200    ESCAPE ROUTINE
+1210  END-IF
+1220  RESET MSG MK
+1230END-REPEAT
+1240/**************************************
+1250END

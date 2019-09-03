@@ -1,0 +1,93 @@
+0010** Example 'UTIL02': USE THE ACTIVEX COMPONENT 'SoftwareAG.NaturalX.Utilities'
+0020******************************************************************************
+0030DEFINE DATA
+0040LOCAL
+00501 #CLASS (A) DYNAMIC CONST <'SoftwareAG.NaturalX.Utilities.3'>
+00601 #UTIL HANDLE OF OBJECT
+00701 #OBJ HANDLE OF OBJECT
+00801 #CONTENT HANDLE OF OBJECT
+00901 #WORD HANDLE OF OBJECT
+01001 #DOC (A) DYNAMIC
+01101 #MSG (A72)
+01201 #ERR (I4)
+01301 #TEXT (A) DYNAMIC
+0140END-DEFINE
+0150*
+0160* Create an instance of the Utilities class.
+0170CREATE OBJECT #UTIL OF #CLASS GIVING #ERR
+0180IF #UTIL EQ NULL-HANDLE
+0190  COMPRESS 'Object of class' #CLASS 'could not be created.' TO #MSG
+0200  WRITE #MSG
+0210  ESCAPE ROUTINE
+0220END-IF
+0230*
+0240* Create a file name in the RES subdirectory of the library SYSEXPG (todo).
+0250#DOC := 'c:\word.doc'
+0260*
+0270* Create a simple Microsoft Word document to work with.
+0280DEFINE WORK FILE 1 #DOC TYPE 'unformatted'
+0290WRITE WORK FILE 1 VARIABLE 'They say there is no hope.'
+0300CLOSE WORK FILE 1
+0310*
+0320* Now load this document with the help of its container
+0330* application and return an object handle to the document.
+0340* The option (AD=O) is essential, because the method expects a by value parameter.
+0350SEND 'BindToObject' TO #UTIL
+0360WITH #DOC (AD=O) RETURN #OBJ GIVING #ERR
+0370IF #ERR NE 0
+0380  COMPRESS 'Object' #DOC 'could not be created. Error:' #ERR TO #MSG
+0390  WRITE #MSG
+0400  #MSG := 'Probably Microsoft Word is not installed.'
+0410  WRITE #MSG
+0420  ESCAPE ROUTINE
+0430END-IF
+0440WRITE 'Loaded' #DOC (AL=60)
+0450*
+0460* Modify the content of the document.
+0470#CONTENT := #OBJ.CONTENT
+0480#TEXT := #CONTENT.TEXT
+0490WRITE 'Content:' #TEXT (AL=60)
+0500COMPRESS #TEXT 'They say, no UFOs.' TO #TEXT
+0510#CONTENT.TEXT := #TEXT
+0520WRITE 'Modified content:' #TEXT (AL=60)
+0530*
+0540* Save the document.
+0550SEND 'Save' TO #OBJ GIVING #ERR
+0560IF #ERR NE 0
+0570  COMPRESS 'Object' #DOC 'could not be saved. Error:' #ERR TO #MSG
+0580  WRITE #MSG
+0590  ESCAPE ROUTINE
+0600END-IF
+0610*
+0620* Close Microsoft Word.
+0630#WORD := #OBJ.APPLICATION
+0640SEND 'Quit' TO #WORD
+0650*
+0660* We can also use a URL to load the document and thus download a document
+0670* from the Internet. To do this, we would of course use the 'http://'
+0680* or 'ftp://' protocol prefix. In this sample we use the 'file://'
+0690* prefix, because our sample document is in the local file system.
+0700* The option (AD=O) is essential, because the method expects a by value parameter.
+0710COMPRESS 'file://' #DOC TO #DOC LEAVING NO
+0720SEND 'BindToObject' TO #UTIL
+0730WITH #DOC (AD=O) RETURN #OBJ GIVING #ERR
+0740IF #ERR NE 0
+0750  COMPRESS 'Object' #DOC 'could not be created. Error:' #ERR TO #MSG
+0760  WRITE #MSG
+0770  #MSG := 'Probably Microsoft Word is not installed.'
+0780  WRITE #MSG
+0790  ESCAPE ROUTINE
+0800END-IF
+0810WRITE 'Loaded' #DOC (AL=60)
+0820*
+0830* Get the content of the document.
+0840#CONTENT := #OBJ.CONTENT
+0850#TEXT := #CONTENT.TEXT
+0860WRITE 'Content:' #TEXT (AL=60)
+0870*
+0880* Close Microsoft Word.
+0890#WORD := #OBJ.APPLICATION
+0900SEND 'Quit' TO #WORD
+0910*
+0920END
+0930

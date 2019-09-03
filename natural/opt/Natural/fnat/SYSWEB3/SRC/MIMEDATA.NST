@@ -1,0 +1,26 @@
+0010/*
+0020/* This file controls what data type is choosen.
+0030/*
+0040/* Sending the correct dada type to the client is important so they
+0050/* know how to handle the content of the file.
+0060/* Extra types can either be added here.
+0070/*
+0080/* Wildcard * possible!!
+0090/*
+0100/* supported data types are:
+0110/* alpha
+0120/* binary
+0130/*
+0140/* -> finding strategy - top to bottom
+0150/*                       first match found - first win
+0160/*
+0170
+0180application/*                  binary
+0190
+0200text/*;*charset*=*utf-16       binary
+0210text/*                         alpha
+0220
+0230image/svg                      alpha
+0240image/*                        binary
+0250
+0260*                              alpha

@@ -1,0 +1,88 @@
+0010* ----------------------------------------------------------------------
+0020* CLASS  Natural Web Interface - Example Programs
+0030*
+0040*        E3COUNT
+0050*
+0060* DESCRIPTION   Returns the current size of the output area and the
+0070*               number of bytes already written there.
+0080*
+0090* AUTHOR        SAG   08.09.1998
+0100*
+0110* Version       8.3
+0120*
+0130* Copyright (c) 1997-2016 Software AG, Germany.  All rights reserved.
+0140*
+0150* HISTORY
+0160* USER    DATE       REASON
+0170* ------+----------+----------------------------------------------
+0180*       ! --.--.-- !
+0190* ------+----------+----------------------------------------------
+0200*
+0210* ------ PARAMETER -----------------------------------------------
+0220DEFINE DATA
+0230PARAMETER USING W3PARM
+0240LOCAL USING W3CONST
+0250LOCAL
+02601 #HTML          (A) DYNAMIC
+0270*
+02801 W3WRITTEN      (I4)
+02901 W3MAXPAGE      (I4)
+03001 W3FREE         (I4)
+0310END-DEFINE
+0320* --- ERROR HANDLING ---
+0330ON ERROR
+0340  PERFORM W3ERROR ##W3ERROR
+0350  PERFORM W3END ##RPC
+0360  ESCAPE ROUTINE
+0370END-ERROR
+0380*
+0390* --- INITIALIZE Web Interface ---
+0400PERFORM W3INIT ##RPC
+0410*
+0420* --- SET TYPE OF RETURN-PAGE ---
+0430PERFORM W3CONTENT-TYPE 'text/html'
+0440* --- WRITE THE HEAD OF THE DOCUMENT ---
+0450COMPRESS
+0460  "<!DOCTYPE 'HTML PUBLIC -//W3C//DTD HTML 3.2//EN'>" ##HTTP_NEWLINE
+0470  '<HTML><HEAD><META HTTP-EQUIV="Content-Type" '-
+0480  'CONTENT="text/html; charset=iso-8859-1"><TITLE>' ##HTTP_NEWLINE
+0490  'Basic Routines - Count Size of Output Area' ##HTTP_NEWLINE
+0500  '</TITLE></HEAD><BODY>' ##HTTP_NEWLINE
+0510  '<H2>Count Size of Output Area  </H2>' ##HTTP_NEWLINE
+0520  '<P>' ##HTTP_NEWLINE
+0530  'Stop output if free output page is less than '-
+0540  '400 bytes.' ##HTTP_NEWLINE
+0550  "<BR><BR><BR><TABLE BORDER=1>" ##HTTP_NEWLINE
+0560*
+0570  "<TR><TH WIDTH='150'>" 'written'
+0580  "</TH><TH WIDTH='150'>" 'free'
+0590  "</TH><TH WIDTH='150'>" 'maximum'
+0600  "</TH></TR>" INTO #HTML LEAVING NO
+0610PERFORM W3TEXTDYNAMIC #HTML
+0620REPEAT
+0630  PERFORM W3COUNTER W3WRITTEN W3MAXPAGE W3FREE
+0640  COMPRESS "<TR><TD ALIGN='CENTER'>" W3WRITTEN
+0650    "</TD><TD ALIGN='CENTER'>" W3FREE
+0660    "</TD><TD ALIGN='CENTER'>" W3MAXPAGE
+0670    "</TD></TR>" ##HTTP_NEWLINE INTO #HTML LEAVING NO
+0680  PERFORM W3TEXTDYNAMIC #HTML
+0690  IF W3FREE LT 600
+0700    ESCAPE BOTTOM
+0710  END-IF
+0720END-REPEAT
+0730*
+0740* --- END THE HTML PAGE ---
+0750COMPRESS
+0760  "</TABLE>" ##HTTP_NEWLINE
+0770  "<TABLE BORDER='0' WIDTH='100%' CELLSPACING='0' "-
+0780  "CELLPADDING='5'>"
+0790  '<TR BGCOLOR="#00cc66"><TD>' *PROGRAM '&#32;-&#32;' *DATE '&#32;' *TIME
+0800  "</TD><TD ALIGN='RIGHT'>" 'Natural'
+0810  "</TD></TR></TABLE>"
+0820  '</BODY></HTML>' INTO #HTML LEAVING NO
+0830PERFORM W3TEXTDYNAMIC #HTML
+0840*
+0850* --- END Web Interface ---
+0860PERFORM W3END ##RPC
+0870*
+0880END

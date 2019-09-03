@@ -1,0 +1,168 @@
+0010Perform Adabas direct calls using ACBX protocol
+0020.
+0030Documentation ......... USR8219T    /*  Text object
+0040Interface ............. USR8219N    /*  Cataloged subprogram
+0050Example Program ....... USR8219P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATABASE
+0100.
+0110Keywords .............. +NEW-NAT-8.2.6, ACBX, ADABAS, DATABASE, DDM,
+0120                        FILE
+0130.
+0140Function .............. This interface enables you to issue Adabas
+0150                        direct calls using the ACBX protocol.
+0160                        All Adabas buffers which are supplied by the
+0170                        interface are dynamic alphanumeric fields.
+0180                        A buffer is ignored if its allocated
+0190                        length (*LENGTH) is zero (0).
+0200                        If a buffer is omitted in the parameter list,
+0210                        all following buffers are ignored.
+0220                        If a buffer is used to receive data, the
+0230                        size of the buffer has to be defined big
+0240                        enough. If required, increase the allocated
+0250                        length (*LENGTH) of the buffer before the call.
+0260                        After the call, the allocated length (*LENGTH)
+0270                        of the buffer is the length of the received
+0280                        data.
+0290                        Three triples of format/record/multifetch
+0300                        buffers are available.
+0310                        Please have a look at the Command Reference
+0320                        section in the Adabas documentation for
+0330                        further information.
+0340                        Be aware, that some Adabas commands have
+0350                        platform specific features and may not
+0360                        longer execute successfully when you change
+0370                        the platform.
+0380                        Note that for the ACB protocol, you have to
+0390                        use the interface USR1043N.
+0400.
+0410.
+0420Parameters
+0430----------
+0440Define the following parameters with the DEFINE DATA statement:
+0450.
+0460/*
+0470/* Extended Adabas Control Block (Input/Output)
+0480/*
+04901 ACBX           (B192)        /* Extended Adabas Control Block
+05001 REDEFINE ACBX
+0510  2 ACBX-TYP     (B01)         /* Call Type
+0520  2 ACBX-RSV1    (B01)         /* (internal use only)
+0530  2 ACBX-VER     (A02)         /* Version Indicator; 'F2' for ACBX
+0540  2 ACBX-LEN     (B02)         /* Length of ACBX; currently 192
+0550  2 ACBX-CMD     (A02)         /* Command Code
+0560  2 ACBX-RSV2    (B02)         /* (internal use only)
+0570  2 ACBX-RSP     (B02)         /* Adabas Response Code
+0580  2 ACBX-CID     (A04)         /* Command ID
+0590  2 ACBX-DBID    (B04)         /* Database ID
+0600  2 ACBX-FNR     (B04)         /* File number
+0610  2 ACBX-FILL1   (B04)         /* (do not use)
+0620  2 ACBX-ISN     (B04)         /* ISN
+0630  2 ACBX-FILL2   (B04)         /* (do not use)
+0640  2 ACBX-ISL     (B04)         /* ISN lower limit
+0650  2 ACBX-FILL3   (B04)         /* (do not use)
+0660  2 ACBX-ISQ     (B04)         /* ISN Quantity
+0670  2 ACBX-COP1    (A01)         /* Command Option 1
+0680  2 ACBX-COP2    (A01)         /* Command Option 2
+0690  2 ACBX-COP3    (A01)         /* Command Option 3
+0700  2 ACBX-COP4    (A01)         /* Command Option 4
+0710  2 ACBX-COP5    (A01)         /* Command Option 5
+0720  2 ACBX-COP6    (A01)         /* Command Option 6
+0730  2 ACBX-COP7    (A01)         /* Command Option 7
+0740  2 ACBX-COP8    (A01)         /* Command Option 8
+0750  2 ACBX-ADD1    (A08)         /* Additions 1
+0760  2 ACBX-ADD2    (B04)         /* Additions 2
+0770  2 ACBX-ADD3    (A08)         /* Additions 3
+0780  2 ACBX-ADD4    (A08)         /* Additions 4
+0790  2 ACBX-ADD5    (A08)         /* Additions 5
+0800  2 ACBX-ADD6    (A08)         /* Additions 6
+0810  2 ACBX-RSV3    (B04)         /* (internal use only)
+0820  2 ACBX-FILL4   (B04)         /* (do not use)
+0830  2 ACBX-ERRA    (B04)         /* Error Offset in Buffer
+0840  2 ACBX-ERRB    (A02)         /* Error Character Field
+0850  2 ACBX-ERRC    (B02)         /* Error Subcode
+0860  2 ACBX-ERRD    (A01)         /* Error Buffer ID
+0870  2 ACBX-ERRE    (B01)         /* (internal use only)
+0880  2 ACBX-ERRF    (B02)         /* Error Buffer Sequence Number
+0890  2 ACBX-SUBR    (B02)         /* Subcomponent Response Code
+0900  2 ACBX-SUBS    (B02)         /* Subcomponent Response Subcode
+0910  2 ACBX-SUBT    (A04)         /* Subcomponent Error Text
+0920  2 ACBX-FILL5   (B04)         /* (do not use)
+0930  2 ACBX-LCMP    (B04)         /* Compressed Record Length
+0940  2 ACBX-FILL6   (B04)         /* (do not use)
+0950  2 ACBX-LDEC    (B04)         /* Decompressed Record Length
+0960  2 ACBX-FILL7   (B04)         /* (do not use)
+0970  2 ACBX-CMDT    (B04)         /* Command Time
+0980  2 ACBX-USER    (A16)         /* User Area
+0990  2 ACBX-RSV4    (B24)         /* (internal use only)
+1000/*
+1010/* Adabas buffer (Input/Output)
+1020/*
+10301 FORMAT-BUFFER-1     (A) DYNAMIC   /*  optional: Format buffer 1
+10401 RECORD-BUFFER-1     (A) DYNAMIC   /*  optional: Record buffer 1
+10501 MULTIFETCH-BUFFER-1 (A) DYNAMIC   /*  optional: Multifetch buffer 1
+10601 SEARCH-BUFFER       (A) DYNAMIC   /*  optional: Search buffer
+10701 VALUE-BUFFER        (A) DYNAMIC   /*  optional: Value buffer
+10801 ISN-BUFFER          (A) DYNAMIC   /*  optional: ISN buffer
+10901 USER-BUFFER         (A) DYNAMIC   /*  optional: User buffer
+11001 FORMAT-BUFFER-2     (A) DYNAMIC   /*  optional: Format buffer 2
+11101 RECORD-BUFFER-2     (A) DYNAMIC   /*  optional: Record buffer 2
+11201 MULTIFETCH-BUFFER-2 (A) DYNAMIC   /*  optional: Multifetch buffer 2
+11301 FORMAT-BUFFER-3     (A) DYNAMIC   /*  optional: Format buffer 3
+11401 RECORD-BUFFER-3     (A) DYNAMIC   /*  optional: Record buffer 3
+11501 MULTIFETCH-BUFFER-3 (A) DYNAMIC   /*  optional: Multifetch buffer 3
+1160/*
+1170/* Return code from USR8219N (Output)
+1180/*
+11901 RETURN-CODE    (I04)         /* USR8219N return code
+1200                               /*    0 = ok
+1210                               /* 3nnn = Adabas response code nnn
+1220                               /*   -1 = DB type invalid; expected ADA2
+1230                               /* < -1 = Internal error
+1240.
+1250If the ACBX protocol used by USR8219N is not yet supported, the
+1260following is received:
+1270 - Mainframe: Adabas response code 253, subcode 11 (unsupported
+1280     ABD version)
+1290 - UNIX and Windows: Natural error NAT0920 (Program CMADA2 cannot be
+1300     loaded)
+1310Use a higher Natural version in this case.
+1320.
+1330.
+1340Interface Call
+1350--------------
+1360If data is received in a buffer, prepare the buffer before the call
+1370so that the data will fit in. For example:
+1380.
+1390MOVE ALL ' ' TO RECORD-BUFFER-1 UNTIL 10000
+1400.
+1410.
+1420Use the interface with the CALLNAT statement:
+1430.
+1440CALLNAT 'USR8219N'
+1450  RETURN-CODE             /* USR8219N return code
+1460  ACBX                    /* Extended Adabas Control Block
+1470  FORMAT-BUFFER-1         /* Format buffer 1     (optional)
+1480  RECORD-BUFFER-1         /* Record buffer 1     (optional)
+1490  MULTIFETCH-BUFFER-1     /* Multifetch buffer 1 (optional)
+1500  SEARCH-BUFFER           /* Search buffer       (optional)
+1510  VALUE-BUFFER            /* Value buffer        (optional)
+1520  ISN-BUFFER              /* ISN buffer          (optional)
+1530  USER-BUFFER             /* User buffer         (optional)
+1540  FORMAT-BUFFER-2         /* Format buffer 2     (optional)
+1550  RECORD-BUFFER-2         /* Record buffer 2     (optional)
+1560  MULTIFETCH-BUFFER-2     /* Multifetch buffer 2 (optional)
+1570  FORMAT-BUFFER-3         /* Format buffer 3     (optional)
+1580  RECORD-BUFFER-3         /* Record buffer 3     (optional)
+1590  MULTIFETCH-BUFFER-3     /* Multifetch buffer 3 (optional)
+1600.
+1610.
+1620Using the Application Programming Interface:
+1630--------------------------------------------
+1640Copy the subprogram USR8219N to the library SYSTEM or the steplib
+1650library respectively, or to the required library.
+1660.
+1670.
+1680*****  End of description  *****

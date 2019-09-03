@@ -1,0 +1,18 @@
+0010** Example 'EDITMX02': Edit mask (using EM)
+0020************************************************************************
+0030DEFINE DATA LOCAL
+00401 VIEWEMP VIEW OF EMPLOYEES
+0050  2 NAME
+0060  2 FIRST-NAME
+0070  2 JOB-TITLE
+0080  2 SALARY (1:3)
+0090END-DEFINE
+0100*
+0110READ (3) VIEWEMP BY NAME STARTING FROM 'JONES'
+0120  DISPLAY 'N A M E'    NAME         (EM=X^X^X^X^X^X^X^X^X^X^X^X^X^X^X) /
+0130                       FIRST-NAME   (EM=...X(10)...)
+0140          'OCCUPATION' JOB-TITLE    (EM=' ___ 'X(12))
+0150          'SALARY'     SALARY (1:3) (EM=' USD 'ZZZ,999)
+0160  SKIP 1
+0170END-READ
+0180END

@@ -1,0 +1,26 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1063N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+0060   USING USR1059L
+0070LOCAL
+0080   1 DEV-NAME    (A8)
+0090   1 RET-CODE    (I4)
+0100END-DEFINE
+0110/*
+0120INPUT 'SELECT PRINTER' // 'Logical printer name (blank to cancel)?' DEV-NAME (AD=T)
+0130/*
+0140IF DEV-NAME NE ' '
+0150   /*
+0160   /* select the printer
+0170   /*
+0180   CALLNAT NRPTSELP DEV-NAME RET-CODE
+0190   /*
+0200   IF RET-CODE NE 0
+0210      PERFORM SHOW-ERR RET-CODE TRUE
+0220   ELSE
+0230      WRITE 'Printer selected successfully'
+0240   END-IF
+0250END-IF
+0260END

@@ -1,0 +1,31 @@
+0010/**********************************************************************
+0020/* Help texts for SYSOBJH.
+0030/* Do not change the identifiers (text between '<' and '>')
+0040/**********************************************************************
+0050<HeaderStart>
+0060<Application> SYSOBJH
+0070<Header1> Special Date Values
+0080<Header2>
+0090<Window-Size> 0, 0
+0100/* <Window-Pos>  0, 0
+0110/* <InputValues>
+0120/* <InputNames>
+0130<Predecessor> OHT-P006
+0140<Successor>
+0150<HeaderEnd>
+0160<HelpTextStart>
+0170
+0180The following special date values are supported:
+0190  TODAY (+/-nnnn)
+0200        Use the current date;
+0210        can be followed by '+' or '-'xxxx, where xxxx is a max.
+0220        4-digit number, the date is calculated in days from
+0230        current date plus or minus this number.
+0240  YESTERDAY
+0250        Use the date of the day before the current date.
+0260  MONTH
+0270        Use all dates of the current month.
+0280  YEAR
+0290        Use all dates of the current year.
+0300
+0310<HelpTextEnd>

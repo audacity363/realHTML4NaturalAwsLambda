@@ -1,0 +1,117 @@
+0010/* EXAM-HF - HELP (IFN)
+0020/**********************************************************************
+0030DEFINE DATA LOCAL
+0040  01 COMMAND VIEW OF COMMAND
+0050     02 PROCESSOR-NAME
+0060     02 COMMAND-LINE (01:12)
+0070     02 NATURAL-ERROR
+0080     02 RETURN-CODE
+0090     02 RESULT-FIELD (01:12)
+0100     02 GETSET-FIELD-NAME
+0110     02 GETSET-FIELD-VALUE
+0120     /*********************
+0130  01 PROC-NAME   (A08)
+0140  01 MSG         (A72)
+0150  01 IFN         (A10)
+0160  01 #ALL        (A01) INIT <'A'>
+0170  01 #TYPE       (A01)
+0180  01 #TYPE-TEXT  (A24)
+0190  01 IX          (I01)
+0200END-DEFINE
+0210/**********************************************************************
+0220DEFINE WINDOW HELP-IFN
+0230  SIZE 09 * 78
+0240  BASE 02 / 02
+0250  TITLE ' (HF) Translate IFN to Location Name'
+0260  CONTROL SCREEN
+0270  FRAMED POSITION OFF
+0280SET KEY ALL
+0290IX := *LEVEL * 2
+0300/**********************************************************************
+0310/* Current processor name:
+0320/*
+0330PROCESS COMMAND ACTION GET USING
+0340  PROCESSOR-NAME = ' '
+0350  GETSET-FIELD-NAME = 'NAME&'
+0360IF NATURAL-ERROR NE 0
+0370  CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0380  WRITE MSG
+0390  ESCAPE ROUTINE
+0400END-IF
+0410/*
+0420MOVE GETSET-FIELD-VALUE TO PROC-NAME
+0430/**********************************************************************
+0440/* Ask for current location:
+0450/*
+0460PROCESS COMMAND ACTION GET USING
+0470  PROCESSOR-NAME = PROC-NAME
+0480  GETSET-FIELD-NAME = 'CURR-LOCATION'
+0490IF NATURAL-ERROR NE 0
+0500  CALLNAT 'EXAM-ERR' NATURAL-ERROR MSG
+0510  WRITE MSG
+0520  ESCAPE ROUTINE
+0530END-IF
+0540/*
+0550MOVE GETSET-FIELD-VALUE TO IFN
+0560/*********************************************************************
+0570REPEAT
+0580  /**************************************************************
+0590  INPUT WINDOW = 'HELP-IFN' (AD=MILT' ' IP=OFF  )
+0600  WITH TEXT MSG
+0610    / 'Processor Name .........' PROC-NAME (AD=OI)
+0620    / 'IFN to be translated ...' IFN
+0630    / 'Internal IFN, too ......' #ALL
+0640    / 'Restriction for IFN ....' #TYPE
+0650    / 'Location ...............' RESULT-FIELD (1) (AD=OI AL=50)
+0660  /**************************************************************
+0670  IF *PF-KEY NE 'ENTR'
+0680    ESCAPE ROUTINE
+0690  END-IF
+0700  RESET MSG RESULT-FIELD (*)
+0710  /******************************************************************
+0720  IF IFN NE MASK (NNNNNNNNNN)
+0730    MOVE 'Invalid IFN.' TO MSG
+0740    ESCAPE TOP
+0750  END-IF
+0760  IF #ALL NE ' '
+0770    RESET INITIAL #ALL
+0780  END-IF
+0790  DECIDE ON FIRST #TYPE
+0800    VALUE 'C'                      /*  Accept if IFN is a command
+0810      MOVE 'Command with'  TO #TYPE-TEXT
+0820    VALUE 'L'                      /*  Accept if IFN is a location
+0830      MOVE 'Location with' TO #TYPE-TEXT
+0840    NONE
+0850      RESET #TYPE #TYPE-TEXT       /*  Check for both types of IFN
+0860  END-DECIDE
+0870  /******************************************************************
+0880  IF IFN = '0000000000'
+0890    MOVE '< Initial Location >' TO RESULT-FIELD (1)
+0900    ESCAPE TOP
+0910  END-IF
+0920  /******************************************************************
+0930  COMPRESS 'IFN' #ALL TO COMMAND-LINE (1)
+0940  MOVE IFN TO COMMAND-LINE (2)
+0950  COMPRESS
+0960    'T'   /*  Transform to lower case
+0970    #TYPE /*  Location and/or Command
+0980    TO COMMAND-LINE (3) LEAVING NO  /*  Options
+0990  /*
+1000  PROCESS COMMAND ACTION HELP USING
+1010      PROCESSOR-NAME = PROC-NAME
+1020      COMMAND-LINE (*) = COMMAND-LINE (*)
+1030  /*
+1040  IF NATURAL-ERROR > 0
+1050    CALLNAT 'EXAM-ERR' NATURAL-ERROR  MSG
+1060  END-IF
+1070  /*
+1080  IF RESULT-FIELD (1) = ' '
+1090    COMPRESS 'IFN' COMMAND-LINE (2) 'does not exist.' TO  MSG
+1100    IF #TYPE NE ' '
+1110      COMPRESS #TYPE-TEXT MSG TO MSG
+1120    END-IF
+1130  END-IF
+1140  /*
+1150END-REPEAT
+1160/**********
+1170END

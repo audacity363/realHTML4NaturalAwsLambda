@@ -1,0 +1,41 @@
+0010 DB: 000 FILE: 027  - SAG-TOURS-E-YACHT                DEFAULT SEQUENCE:
+0020
+0030T L DB Name                              F Leng  S D Remark
+0040- - -- --------------------------------  - ----  - - ------------------------
+0050  1 DB YACHT-ID                          N  8.0  N D
+0060  1 DC YACHT-NAME                        A   30  N D
+0070  1 DE YACHT-BRANCH                      A    1  N
+0080*      'A' = 'charter yacht',  'B' =
+0090*      'sailor yacht'
+0100  1 DN ID-CH-BASE                        A    8  N D
+0110*      only for
+0120*      YACHT-BRANCHE='A'-COMPANY-ID of
+0130*      charter b
+0140  1 DP ID-S-OWNER                        N  8.0  N D
+0150*      only for
+0160*      YACHT-CRANCH='B'-PERSON-ID of
+0170*      yacht owner
+0180  1 DM DID-DESCRIPTION                   A    8  N D
+0190  1 DD YACHT-TYPE                        A   30  N D
+0200  1 DF LENGTH                            P  3.2  N
+0210*      in meters
+0220  1 DG WIDTH                             P  3.2  N
+0230*      in meters
+0240  1 DH DRAFT                             P  3.2  N
+0250*      in meters
+0260  1 DI SAIL-SURFACE                      P  3.0  N
+0270*      in square meters
+0280  1 DJ MOTOR                             P  3.0  N
+0290*      output in HP
+0300  1 DK HEAD-ROOM                         P  3.2  N
+0310*      headroom in saloon in meters
+0320  1 DL BUNKS                             P  3.0  N
+0330*      number of bunks
+0340  1 T4 YACHT-TIMESTAMP                   T   12  N
+0350*      used for Natural Constract
+0360  1 DQ YACHT-NAME-PH                     A   20  N
+0370  1 DR YACHT-BRANCH-SP                   A    9    S
+0380*      -------- SOURCE FIELD(S) -------
+0390*      YACHT-BRANCH(1-1)
+0400*      YACHT-ID(1-8)
+0410******DDM OUTPUT TERMINATED******

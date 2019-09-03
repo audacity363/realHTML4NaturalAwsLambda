@@ -1,0 +1,20 @@
+0010/* ---------------------------------------------------------------------
+0020/* Program:        PFKEY
+0030/* Library:        SYSEXBAT (Batch mode samples)
+0040/*
+0050/* Functionality:  Function keys
+0060/*
+0070/* Description:    The terminal command %K is used to enter PF-Keys in
+0080/*                 batch mode.
+0090/* ---------------------------------------------------------------------
+0100DEFINE DATA LOCAL
+01101 #name  (A10)
+0120END-DEFINE
+0130**
+0140SET KEY ALL
+0150**
+0160INPUT (IP=OFF AD=M) #name
+0170**
+0180DISPLAY *PF-KEY
+0190**
+0200END

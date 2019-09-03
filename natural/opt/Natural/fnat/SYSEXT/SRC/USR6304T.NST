@@ -1,0 +1,66 @@
+0010Get or set reliable state for RPC execution
+0020.
+0030Documentation ......... USR6304T    /*  Text object
+0040Interface ............. USR6304N    /*  Cataloged subprogram
+0050Example Program ....... USR6304P    /*  Source program
+0060.
+0070Product Code .......... RPC
+0080.
+0090Category .............. RPC - RELIABLE RPC
+0100.
+0110Keywords .............. CLIENT, RELIABLE, RPC, UOW
+0120.
+0130Function .............. Set/get reliable state for RPC execution
+0140.
+0150.
+0160Parameters
+0170----------
+0180Define the following parameters with the DEFINE DATA statement:
+0190.
+0200INPUT
+0210       FUNCTION     (A01)  Function code
+0220                             'G'  get reliable state
+0230                             'P'  set reliable state
+0240INOUT
+0250       STATE        (N01)  reliable state
+0260                             0    no reliable state
+0270                                  standard RPC execution
+0280                             1    reliable auto   commit
+0290                             2    reliable client commit
+0300OUTPUT
+0310       RC           (N04)  return code
+0320                             0    ok
+0330                             1    invalid function code
+0340                             2    invalid reliable state
+0350                             3    reliable state can't be changed
+0360                                  commit/rollback pending
+0370                             4    invalid ACI version
+0380                             9999 Broker error (see MESSAGE)
+0390       MESSAGE      (A80)  message text
+0400.
+0410.
+0420Interface Call
+0430--------------
+0440Use the interface with the CALLNAT statement:
+0450.
+0460CALLNAT 'USR6304N' FUNCTION STATE RC MESSAGE
+0470.
+0480.
+0490Using the Application Programming Interface:
+0500--------------------------------------------
+0510Copy the subprogram USR6304N to the library SYSTEM or the steplib
+0520library respectively, or to the required library.
+0530.
+0540.
+0550Functionality:
+0560--------------
+0570The reliable state is set for RPC execution.
+0580.
+0590Once set, the reliable state applies to all following RPC messages
+0600until the reliable state is changed or reset by a call to USR6304N.
+0610.
+0620The reliable state "client commit" cannot be changed if the reliable
+0630RPC messages are not committed or rolled back (UOW state RECEIVED).
+0640.
+0650.
+0660***** End of Description *****

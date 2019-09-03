@@ -1,0 +1,12 @@
+0010&H View FILE-ALLOCATE
+0020&L
+0030&L
+0040#Purpose@: Allocate files
+0050&L
+0060#OpSys@  : z/OS, z/VSE, BS2000/OSD
+0070&L
+0080&L
+0090#Usage@  : This view makes it possible to allocate files from
+0100           a NATURAL session.
+0110&L
+0120#Notes@  :

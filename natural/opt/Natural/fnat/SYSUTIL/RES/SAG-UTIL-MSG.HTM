@@ -1,0 +1,23 @@
+The SYSUTIL <strong>Message Retrieval</strong> is used to read Natural or user 
+defined messages. It is called in the following way:<br />
+<br />
+&nbsp;&nbsp;&nbsp; <code>SYSUTIL -MSG</code> [<em>nnnn</em> [<em>library</em>]]<br />
+<br />
+whereby<br>
+<br />
+&nbsp;&nbsp;&nbsp; <em>nnnn</em> is the message number<br /><br />
+and<br>
+<br />
+&nbsp;&nbsp;&nbsp; <em>library</em> is the library containing the user defined message.<br />
+<br />
+If the message number and the library are specified, the user defined message <em>nnnn</em> from library <em>library</em> is displayed.
+If only the message number is specified, the Natural message <em>nnnn</em> is 
+displayed. If no parameter is given, the Natural message 
+<code>NAT0001</code> is shown initially.<br />
+<br />
+In the tool, you can specify the message type (Natural or user defined), the 
+language of the message, the library of a user defined message and the message 
+number. The tool provides functions to read the previous or next message. For 
+any message it shows the corresponding short and long text. Additionally, the 
+tool provides functions to print the message or to convert it into a PDF 
+document.

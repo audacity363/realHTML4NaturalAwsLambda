@@ -1,0 +1,109 @@
+0010Perform base64 conversion of alphanumeric and binary bytes
+0020.
+0030Documentation ......... USR4220T    /*  Text object
+0040Interface ............. USR4220N    /*  Cataloged subprogram
+0050Example Program ....... USR4220P    /*  Source program
+0060.
+0070Product Code .......... NAT
+0080.
+0090Category .............. DATA HANDLING
+0100.
+0110Keywords .............. +CURRENT-VERSION, +NEW-NAT-6.3.9,
+0120                        ALPHA, BASE64, BINARY, CONVERSION,
+0130                        NETWORK, TCP/IP
+0140.
+0150Interface Versions .... USR4210N, USR4220N
+0160.
+0170Function .............. Convert binary bytes into printable,
+0180                        network-compatible bytes or vice versa using
+0190                        Base64 conversion.
+0200.
+0210                        Makes USR4210N obsolete!! Use USR4220N.
+0220.
+0230                        Base64 conversion means (B) -> (A) -> (B),
+0240                        where 6 binary bits will be converted into 8
+0250                        alphanumeric bits. For example, a B3 value will
+0260                        be converted into an A4 value.
+0270.
+0280                        Note: every binary value will be converted into
+0290                        a non-ambiguous alphanumeric  value.
+0300                        Re-converting this alphanumeric  value again
+0310                        will result in the original binary value.
+0320                        However, this is not the case for most of the
+0330                        (A) -> (B) -> (A) conversions.
+0340.
+0350                        The conversion may be used to transfer a .bmp
+0360                        file via TCP/IP or to transfer Natural binary or
+0370                        integer values via the utility protocol.
+0380.
+0390                        There are 2 modes available: NATRPC and RFC3548
+0400                        (default).
+0410                        NATRPC means that the conversion is done
+0420                        according to the NATRPC logic. This works on
+0430                        mainframe and on open systems.
+0440                        RFC3548 is like NATRPC, but alphanumeric bytes
+0450                        that are not needed are filled with '='.
+0460                        Furthermore on open systems there is the mode
+0470                        RFC2045 available.
+0480.
+0490.
+0500Parameters
+0510----------
+0520Define the following parameters with the DEFINE DATA statement:
+0530.
+0540Input ......... PARM-FUNCTION (A2)
+0550                    'AB' Alpha to binary conversion
+0560                    'BA' Binary to alpha conversion
+0570Output ........ PARM-RC       (I4)
+0580                    0  ok
+0590                    Mainframe
+0600                    1  Source is not numeric
+0610                    2  Source is not packed
+0620                    3  Source is not floating point
+0630                    4  Overflow, source doesn't fit into target
+0640                    5  Integer overflow
+0650                    6  Source is not a valid date or time
+0660                    7  Length error (hex input not even)
+0670                    8  Target precision is less than source precision
+0680                    9  Float underflow (result->0)
+0690                    10 Alpha source contains non-hex characters
+0700                    20 Invalid function code PARM-FUNCTION
+0710                    21 Invalid value for RFC parameter
+0720                    Open Systems
+0730                    1  Invalid value for RFC parameter
+0740                    2  Invalid function code
+0750                    3  CMBASE64: Overflow, source doesn't fit into
+0760                                 target
+0770                    4  CMBASE64: Non-base64 character found in encoded
+0780                                 data
+0790                    5  CMBASE64: Out of memory
+0800                    6  CMBASE64: Inalid number of parameters
+0810                    7  CMBASE64: Invalid parameter type
+0820                    8  CMBASE64: Invalid parameter length
+0830                    9  CMBASE64: Invalid function code
+0840                    10 CMBASE64: Unkown return code
+0850.
+0860                PARM-ERRTXT   (A72)
+0870                    blank, if ok, no error
+0880                    else error text
+0890Input/output .. PARM-B        (B) DYNAMIC
+0900                    Binary source input/target output
+0910                PARM-A        (A) DYNAMIC
+0920                    Alpha source input/target output
+0930Input ......... PARM-RFC      (B1)
+0940                    0 - RFC3548; 3 - RFC2045 (OS only); 4 - NATRPC;
+0950.
+0960Interface Call
+0970--------------
+0980Use the interface with the CALLNAT statement:
+0990.
+1000CALLNAT 'USR4220N' PARM-FUNCTION PARM-RC PARM-ERRTXT
+1010                   PARM-B PARM-A PARM-RFC.
+1020.
+1030Using the Application Programming Interface:
+1040--------------------------------------------
+1050Copy the subprogram USR4220N to the library SYSTEM or the steplib
+1060library respectively, or to the required library.
+1070.
+1080.
+1090*****  End of Description  *****

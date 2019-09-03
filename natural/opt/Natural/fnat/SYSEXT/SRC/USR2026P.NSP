@@ -1,0 +1,173 @@
+0010/* This program serves as example how to design a user-defined
+0020/* program to call 'USR2026N'
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+00601 TECH-BLOCK1                        /* First map of TECH cmd
+0070  2 NAT-TIME            (T)
+0080  2 NAT-DATE            (D)
+0090  2 NAT-USER            (A8)
+0100  2 NAT-LIB             (A8)
+0110  2 NAT-VERSION         (A2)         /* use new Natural full version
+0120  2 REDEFINE NAT-VERSION
+0130    3 NAT-VERSION1      (A1)
+0140    3 NAT-VERSION2      (A1)
+0150  2 NAT-LEVEL           (A4)         /* use new Natural full version
+0160  2 START-UP            (A8)
+0170  2 SECURITY            (A3)
+0180  2 NAT-OS              (A32)
+0190  2 NAT-OSVERS          (A16)
+0200  2 NAT-MACHINE-CLASS   (A16)
+0210  2 NAT-HARDWARE        (A15)
+0220  2 NAT-TPSYS           (A8)
+0230  2 NAT-DEVICE          (A8)
+0240  2 NAT-INIT-ID         (A8)
+0250  2 LAST-CMD            (A32)
+02601 TECH-BLOCK2                         /* Second map of TECH cmd
+0270  2 ERROR-NUM           (N7)
+0280  2 ERROR-LINE          (N4)
+0290  2 ERROR-PROGRAM       (A8)
+0300  2 ERROR-PGM-TYPE      (A1)
+0310  2 ERROR-PGM-TYPE-LONG (A11)
+0320  2 ERROR-LEVEL         (I4)
+0330  2 ERROR-LIB           (A8)
+0340  2 ERROR-DBID          (I4)
+0350  2 ERROR-FNR           (I4)
+0360  2 ERROR-CLASS         (A6)
+0370  2 ERROR-TYPE          (A25)
+0380  2 ERROR-TIME          (A19)
+0390  2 ERROR-TA            (A8)
+04001 TECH-BLOCK3                         /* Third map of TECH cmd
+0410  2 STEP-LIB            (A8/1:11)
+0420  2 STEP-DBID           (A5/1:11)
+0430  2 STEP-FNR            (A5/1:11)
+0440  2 OBJ-NAME            (A8/1:10)
+0450  2 OBJ-TYPE            (A1/1:10)
+0460  2 OBJ-LEVEL           (N3/1:10)
+0470  2 OBJ-LINE            (A4/1:10)
+04801 TECH-BLOCK4
+0490  2 RETURN-CODE         (I4)
+0500  2 ADDITIONALS         (A1/1:102)
+0510  2 REDEFINE ADDITIONALS
+0520    3 ADD-VERSION       (N2)
+0530    3 NAT-CODEPAGE      (A64)        /* version 1
+0540    3 NAT-LOCALE        (A8)         /* version 1
+0550    3 NAT-HARDWARE-16   (A16)        /* version 2
+0560    3 NAT-VERSION-FULL  (A10)        /* version 3 : Natural full version
+0570    3 NAT-Dummy         (I1)         /* version 5 : not supported in LUW
+0580    3 NAT-EDITOR        (A1)         /* version 5 : Editor flag
+0590LOCAL
+0600 1 #ERR-DB              (A5)
+0610 1 #ERR-FNR             (A5)
+0620 1 #ERR-DB-FNR          (A13)
+0630* 1 #NAT-VERSION        (A3)
+0640 1 #NAT-VERSION-FULL    (A10)
+0650 1 REDEFINE #NAT-VERSION-FULL
+0660   2 #NAT-VERSION-F     (A01/1:10)
+0670 1 #NATURAL-VERSION     (A13)
+0680 1 #EDITOR-FLAG         (A10)
+0690END-DEFINE
+0700*
+0710DEFINE WINDOW TECH-WINDOW
+0720  SIZE 21 * 60
+0730  BASE 02 / 10
+0740  TITLE ' Technical Information'
+0750  FRAMED POSITION OFF
+0760*
+0770*
+0780ADD-VERSION := 5
+0790CALLNAT 'USR2026N'  TECH-BLOCK1 TECH-BLOCK2 TECH-BLOCK3 TECH-BLOCK4
+0800*
+0810* COMPRESS NAT-VERSION1 '.' NAT-VERSION2 INTO #NAT-VERSION LEAVING NO
+0820*
+0830* Natural full version without leading zeros (with version=3)
+0840*
+0850MOVE NAT-VERSION-FULL TO #NAT-VERSION-FULL
+0860IF #NAT-VERSION-F(1) = '0'
+0870  #NAT-VERSION-F(1) := ' '
+0880END-IF
+0890IF #NAT-VERSION-F(3) = '0'
+0900  #NAT-VERSION-F(3) := ' '
+0910END-IF
+0920IF  #NAT-VERSION-F(5) = '0'
+0930  #NAT-VERSION-F(5) := ' '
+0940END-IF
+0950COMPRESS #NAT-VERSION-F(1:2) '.' #NAT-VERSION-F(3:4) '.'
+0960         #NAT-VERSION-F(5:6) '.' #NAT-VERSION-F(7:10)
+0970    INTO #NATURAL-VERSION LEAVING NO
+0980*
+0990IF NAT-EDITOR = 'E'
+1000  #EDITOR-FLAG := 'Enabled'
+1010ELSE
+1020  #EDITOR-FLAG := 'Disabled'
+1030END-IF
+1040*
+1050INPUT WINDOW = 'TECH-WINDOW'
+1060  (AD=OD CD=YE IP=OFF ZP=OFF SG=OFF)
+1070      'Time ..'(TU) NAT-TIME  29T 'Date .....'(TU) NAT-DATE (DF=L)/
+1080      'User ..'(TU) NAT-USER  29T 'Library ..'(TU) NAT-LIB //
+1090*     'Natural Version / Level ...'(TU) #NAT-VERSION '/' NAT-LEVEL  /
+1100      'Natural Version ...........'(TU) #NATURAL-VERSION /
+1110      'Startup Transaction .......'(TU) START-UP /
+1120      'Natural Security ..........'(TU) SECURITY    /
+1130      'Natural Editors ...........'(TU) #EDITOR-FLAG /
+1140      'Operating System ..........'(TU) NAT-OS      /
+1150      'Operating System Version ..'(TU) NAT-OSVERS    /
+1160      'Machine Class .............'(TU) NAT-MACHINE-CLASS  /
+1170      'Hardware ..................'(TU) NAT-HARDWARE-16  /
+1180      'TP Monitor ................'(TU) NAT-TPSYS /
+1190      'Device Type ...............'(TU) NAT-DEVICE /
+1200      'Terminal ID ...............'(TU) NAT-INIT-ID /
+1210      'Code Page .................'(TU) NAT-CODEPAGE (AL=32) /
+1220      'Locale ....................'(TU) NAT-LOCALE   //
+1230      'Last Command ..............'(TU) LAST-CMD
+1240*
+1250IF NOT(ERROR-DBID = 0 AND ERROR-FNR = 0)
+1260  MOVE ERROR-DBID TO #ERR-DB
+1270  MOVE ERROR-FNR  TO #ERR-FNR
+1280  COMPRESS #ERR-DB '/' #ERR-FNR INTO #ERR-DB-FNR
+1290END-IF
+1300*
+1310INPUT WINDOW = 'TECH-WINDOW'
+1320  (AD=ODL CD=YE IP=OFF ZP=OFF SG=OFF) /
+1330      'Error Number ..'(TU) ERROR-NUM /
+1340      'Error Line ....'(TU) ERROR-LINE  //
+1350      'Object ........'(TU) ERROR-PROGRAM /
+1360      'Type ..........'(TU) ERROR-PGM-TYPE /
+1370      'Type Long .....'(TU) ERROR-PGM-TYPE-LONG /
+1380      'Level .........'(TU) ERROR-LEVEL /
+1390      'Library........'(TU) ERROR-LIB /
+1400      'DBID/FNR ......'(TU) #ERR-DB-FNR //
+1410      'Error Class ...'(TU) ERROR-CLASS /
+1420      'Error Type ....'(TU) ERROR-TYPE  /
+1430      'Error Time ....'(TU) ERROR-TIME /
+1440      'Error TA ......'(TU) ERROR-TA
+1450*
+1460INPUT WINDOW = 'TECH-WINDOW'
+1470  (AD=OD CD=YE IP=OFF ZP=OFF SG=OFF) /
+1480     ' Steplib   DBID  FNR       Object   Type Level Number'(TU) /
+1490     ' --------  ----- -----     -------- ---- ----- ------'(TU) /
+1500  02T STEP-LIB (1) 12T STEP-DBID (1) 18T STEP-FNR (1)
+1510  28T OBJ-NAME (1) 39T OBJ-TYPE  (1) 43T OBJ-LEVEL(1) 49T OBJ-LINE (1)
+1520/ 02T STEP-LIB (2) 12T STEP-DBID (2) 18T STEP-FNR (2)
+1530  28T OBJ-NAME (2) 39T OBJ-TYPE  (2) 43T OBJ-LEVEL(2) 49T OBJ-LINE (2)
+1540/ 02T STEP-LIB (3) 12T STEP-DBID (3) 18T STEP-FNR (3)
+1550  28T OBJ-NAME (3) 39T OBJ-TYPE  (3) 43T OBJ-LEVEL(3) 49T OBJ-LINE (3)
+1560/ 02T STEP-LIB (4) 12T STEP-DBID (4) 18T STEP-FNR (4)
+1570  28T OBJ-NAME (4) 39T OBJ-TYPE  (4) 43T OBJ-LEVEL(4) 49T OBJ-LINE (4)
+1580/ 02T STEP-LIB (5) 12T STEP-DBID (5) 18T STEP-FNR (5)
+1590  28T OBJ-NAME (5) 39T OBJ-TYPE  (5) 43T OBJ-LEVEL(5) 49T OBJ-LINE (5)
+1600/ 02T STEP-LIB (6) 12T STEP-DBID (6) 18T STEP-FNR (6)
+1610  28T OBJ-NAME (6) 39T OBJ-TYPE  (6) 43T OBJ-LEVEL(6) 49T OBJ-LINE (6)
+1620/ 02T STEP-LIB (7) 12T STEP-DBID (7) 18T STEP-FNR (7)
+1630  28T OBJ-NAME (7) 39T OBJ-TYPE  (7) 43T OBJ-LEVEL(7) 49T OBJ-LINE (7)
+1640/ 02T STEP-LIB (8) 12T STEP-DBID (8) 18T STEP-FNR (8)
+1650  28T OBJ-NAME (8) 39T OBJ-TYPE  (8) 43T OBJ-LEVEL(8) 49T OBJ-LINE (8)
+1660/ 02T STEP-LIB (9) 12T STEP-DBID (9) 18T STEP-FNR (9)
+1670  28T OBJ-NAME (9) 39T OBJ-TYPE  (9) 43T OBJ-LEVEL(9) 49T OBJ-LINE (9)
+1680/ 02T STEP-LIB(10) 12T STEP-DBID(10) 18T STEP-FNR (10)
+1690  28T OBJ-NAME(10) 39T OBJ-TYPE (10) 43T OBJ-LEVEL(10) 49T OBJ-LINE(10)
+1700/ 02T STEP-LIB(11) 12T STEP-DBID(11) 18T STEP-FNR (11)
+1710*
+1720*
+1730END

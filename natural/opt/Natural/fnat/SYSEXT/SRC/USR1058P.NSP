@@ -1,0 +1,265 @@
+0010/*  This program serves as example how to design a user-defined
+0020/*  program to call 'USR1058N'.
+0030/***********************************************************************
+0040DEFINE DATA
+0050LOCAL
+00601 V                  (I01)  CONST <20>
+0070LOCAL
+00801 USR1058L
+0090  2 OBJECT-KEY
+0100    3 LIBRARY        (A08)
+0110    3 OBJECT-NAME    (A32)
+0120    3 OBJECT-TYPE    (A02)
+0130      /*
+0140  2 INPUTS
+0150    3 OPT-ACCESS     (A01)
+0160    3 OPT-UNUSED-1   (L)
+0170    3 OPT-UNUSED-2   (A01)
+0180    3 OPT-LINE-NUM   (A01)
+0190    3 OPT-UNUSED-3   (L)
+0200    3 OPT-REDEF-DIR  (L)
+0210    3 OPT-UNUSED-4   (A01)
+0220    3 OPT-AMOUNT     (I02)
+0230    3 OPT-LINESIZE   (I02)
+0240      /*
+0250  2 INPUT-OUTPUTS
+0260    3 INT-HANDLE     (I04)
+0270    3 NEXT-SEQ       (I04)
+0280    3 NEXT-NUM       (I02)
+0290      /*
+0300  2 OUTPUTS
+0310    3 RETURNED       (I02)
+0320    3 SRC-NUM        (I02/1:V)
+0330    3 SRC-TEXT       (A01/1:V,1:79)
+0340    3 REDEFINE SRC-TEXT
+0350      4 SRC-GROUP    (1:V)
+0360        5 SRC-LINE   (A79)
+0370        5 REDEFINE SRC-LINE
+0380          6 #TYP     (A01)
+0390          6 F1       (A01)
+0400          6 #LEV     (A01)
+0410          6 F2       (A01)
+0420          6 #DB      (A02)
+0430          6 F3       (A01)
+0440          6 #NAME    (A32)
+0450          6 F4       (A02)
+0460          6 #FORMAT  (A01)
+0470          6 F5       (A01)
+0480          6 #LENGTH  (A04)
+0490          6 F6       (A02)
+0500          6 #SPE     (A01)
+0510          6 F7       (A01)
+0520          6 #DES     (A01)
+0530          6 F8       (A01)
+0540          6 #REMARK  (A24)
+0550          6 F9       (A01)
+0560    3 REDEFINE SRC-TEXT           /* Header information - Mainframe
+0570      4 HD-DBID          (N05)
+0580      4 HD-FNR           (N05)
+0590      4 HD-DEFSEQ        (A02)
+0600      4 HD-VSAM-SUBTYPE  (A01)
+0610      4 HD-VSAM-NAME     (A08)
+0620    3 REDEFINE SRC-TEXT           /* Directory - UNIX / PC platforms
+0630      4 DIR-OBJNAME      (A32)    /* Object Name
+0640      4 DIR-LIBRARY      (A08)    /* Library ID
+0650      4 DIR-OBJTYPE      (A02)    /* Object Type
+0660      4 DIR-OBJKIND      (A01)    /* Source or Module
+0670      4 DIR-DBID         (A05)    /* DBID of System File
+0680      4 DIR-FNR          (A05)    /* FNR of System File
+0690      4 DIR-DATN         (A08)    /* Date in Format (YYYYMMDD)
+0700      4 DIR-TIMN         (A07)    /* Time in Format (HHIISST)
+0710      4 DIR-USERID       (A08)    /* User ID
+0720      4 DIR-PROGMODE     (A01)    /* Programming Mode
+0730      4 DIR-SRCSIZE      (A10)    /* Source Area Size
+0740      4 DIR-GPSIZE       (A10)    /* Size of Module
+0750      4 DIR-UNIQUE-ID    (A32)    /* Unique ID
+0760      4 DIR-DDM-DBID     (A05)    /* DBID the DDM is cataloged with
+0770      4 DIR-DDM-FNR      (A05)    /* FNR the DDM is cataloged with
+0780        /* End of directory attributes
+0790    3 SRC-SEQ        (I04/1:V)
+0800    3 SRC-LONG       (A01/1:V)
+0810      /*
+08201 USR1058N
+0830  2 VERSION          (I01)     INIT <5>
+0840  2 V0-WORK-AREA     (B125)    /* Work area; do not modify
+0850  2 V0-WORK-AREA1    (B125)    /* Work area; do not modify
+0860  2 V1-OPT-FORMAT    (A01)     /* Mainframe or UNIX/PC format
+0870  2 V2-DBID          (N05)     /* FDIC DBID
+0880  2 V2-FNR           (N05)     /* FDIC FNR
+0890  2 V2-PASSWORD      (A08)     /* FDIC PASSWORD
+0900  2 V2-CIPHERCODE    (N08)     /* FDIC CIPHERCODE
+0910  2 V3-WORK-AREA2    (N03)     /* Work area; do not modify
+0920  2 V4-WORK-AREA3    (A01)     /* MF only
+0930  2 V4-WORK-AREA4    (A256)    /* MF only
+0940  2 V4-ASK-CCHARS    (A01)     /* MF only
+0950  2 V5-FSEC-DBID     (N05)     /* FSEC DBID
+0960  2 V5-FSEC-FNR      (N05)     /* FSEC FNR
+0970  2 V5-FSEC-PSW      (A08)     /* FSEC PASSWORD
+0980  2 V5-FSEC-CIP      (N08)     /* FSEC CIPHERCODE
+09901 REDEFINE USR1058N
+1000  2 EXTENDED-PARMS
+1010    3 EXTENDED-DATA  (A01/1:565)
+1020      /*
+1030LOCAL USING USR-MSG   /* Data for message exchange
+1040LOCAL USING USR-FLD   /* Description of the field in error
+1050/*
+1060LOCAL
+10701 USR1038L
+1080  2 OUTPUTS
+1090    3 PLATFORM-DATA    (A16)
+1100    3 REDEFINE PLATFORM-DATA
+1110      4 NAT-IMPL       (A01)
+1120      4 CHAR-SET       (A01)
+1130      4 OP-SYSTEM      (A01)
+1140      4 USER-INTERFACE (A01)
+1150      4 BYTE-SWAPPING  (A01)
+1160      4 FILLER         (A11)
+1170        /*
+11801 USR1038N
+1190  2 VERSION            (I01)     INIT <0>
+12001 REDEFINE USR1038N
+1210  2 EXTENDED-PARMS
+1220    3 EXTENDED-DATA    (A01/1:1)
+1230LOCAL
+12401 LOCAL-MSG          (A79)
+12501 IX                 (I02)
+12601 INPUT-OK           (L)
+1270END-DEFINE
+1280/*
+1290SET KEY ALL
+1300/*
+1310LIBRARY       := 'SYSTEM  '
+1320OBJECT-NAME   := 'EMPLOYEES'
+1330OPT-LINE-NUM  := 'Y'
+1340OPT-REDEF-DIR := TRUE
+1350OPT-AMOUNT    := 20
+1360OPT-LINESIZE  := 79
+1370V1-OPT-FORMAT := 'C'
+1380/*
+1390/*
+1400REP1.
+1410REPEAT
+1420  OPT-ACCESS   := 'O'
+1430  RETURNED := 0
+1440*
+1450  INPUT (AD=MITL'_' IP=OFF)
+1460    TEXT NAD-MSG.MSG, MSG-DATA (1), MSG-DATA (2), MSG-DATA (3)
+1470    MARK NAD-FLD.FIELD-POSITION
+1480    / 10T 'Read the source of a DDM into an array:' (I)
+1490    / 10T '-' (39) (I) /
+1500    / 10T 'Library ..............'  LIBRARY
+1510    / 10T 'DDM name .............'  OBJECT-NAME
+1520    / 10T 'Object type ..........'  OBJECT-TYPE (AL=1)
+1530    / 10T 'Amount of lines ......'  OPT-AMOUNT
+1540    / 10T 'Line size ............'  OPT-LINESIZE
+1550    / 10T 'Return line numbers ..'  OPT-LINE-NUM
+1560    / 10T 'Redefine directory ...'  OPT-REDEF-DIR (EM=F/T)
+1570    / 10T 'Output format ........'  V1-OPT-FORMAT
+1580    / 10T 'Ask for conversion ...'  V4-ASK-CCHARS
+1590    / 10T 'DBID of FDIC .........'  V2-DBID
+1600          'Password of FDIC .....'  V2-PASSWORD
+1610    / 10T 'FNR of FDIC ..........'  V2-FNR
+1620          'Cipherkey of FDIC ....'  V2-CIPHERCODE
+1630    / 10T 'DBID of FSEC .........'  V5-FSEC-DBID
+1640          'PSW of FSEC ..........'  V5-FSEC-PSW
+1650    / 10T 'FNR of FSEC ..........'  V5-FSEC-FNR
+1660          'Cipherkey of FSEC ....'  V5-FSEC-CIP
+1670    /// 10T 'Press any PF-key to stop.'
+1680/*
+1690  IF *PF-KEY NE 'ENTR'
+1700    ESCAPE BOTTOM
+1710  END-IF
+1720/*
+1730  IF OPT-AMOUNT > V
+1740    COMPRESS 'The maximum for the amount is' V
+1750      'in this example program.' INTO LOCAL-MSG
+1760    NAD-MSG.MSG := LOCAL-MSG
+1770    NAD-FLD.FIELD-POSITION := 4
+1780    ESCAPE TOP
+1790  END-IF
+1800/*
+1810  IF OPT-LINESIZE > 79
+1820    COMPRESS 'The maximum for the line size is'  79
+1830      'in this example program.' INTO LOCAL-MSG
+1840    NAD-MSG.MSG := LOCAL-MSG
+1850    NAD-FLD.FIELD-POSITION := 5
+1860    ESCAPE TOP
+1870  END-IF
+1880/*
+1890  CALLNAT 'USR1038N'  USR1038L  USR1038N.EXTENDED-PARMS
+1900  /*
+1910  REPEAT
+1920    CALLNAT 'USR1058N' USR1058L  USR1058N.EXTENDED-PARMS
+1930      NAD-MSG   NAD-FLD
+1940    /*
+1950    FOR IX = 1 TO RETURNED
+1960      IF OPT-ACCESS = 'O' AND MSG-NR = 0 AND IX = 1
+1970        IF OPT-REDEF-DIR AND NAT-IMPL = 'C'    /* write directory
+1980          WRITE (AD=LI) 'Back with message number:' MSG-NR /
+1990            / '=' DIR-OBJNAME
+2000            / '=' DIR-LIBRARY
+2010            / '=' DIR-OBJKIND
+2020            / '=' DIR-OBJTYPE
+2030            / '=' DIR-DATN
+2040            / '=' DIR-TIMN
+2050            / '=' DIR-USERID
+2060            / '=' DIR-PROGMODE
+2070            / '=' DIR-SRCSIZE
+2080            / '=' DIR-GPSIZE
+2090            / '=' DIR-DDM-DBID
+2100            / '=' DIR-DDM-FNR
+2110          NEWPAGE
+2120        END-IF
+2130        /*
+2140        IF NAT-IMPL = 'A'     /* Write header information
+2150          WRITE (AD=LI)
+2160            / 'DBID of DDM .......' HD-DBID
+2170            / 'FNR of DDM ........' HD-FNR
+2180            / 'Default sequence ..' HD-DEFSEQ
+2190            / 'VSAM Subtype ......' HD-VSAM-SUBTYPE
+2200            / 'VSAM Name .........' HD-VSAM-NAME
+2210            /
+2220        END-IF
+2230        ESCAPE TOP
+2240      END-IF
+2250    /*
+2260      IF SRC-LINE (IX) = MASK ('* /')    /* New page intended
+2270        NEWPAGE
+2280      END-IF
+2290      WRITE SRC-LINE (IX)
+2300    END-FOR
+2310    /*
+2320    OPT-ACCESS := 'R'
+2330    /*
+2340    IF *PF-KEY NE 'ENTR'
+2350      OPT-ACCESS := 'C'
+2360      CALLNAT 'USR1058N' USR1058L  USR1058N.EXTENDED-PARMS
+2370        NAD-MSG   NAD-FLD
+2380      ESCAPE BOTTOM (REP1.)
+2390    END-IF
+2400    /*
+2410    IF MSG-NR NE 0
+2420      IF NOT INPUT-OK AND RETURNED = 0
+2430* NAD-MSG.MSG, MSG-DATA (1), MSG-DATA (2), MSG-DATA (3) and
+2440* NAD-FLD.FIELD-POSITION is set
+2450        ESCAPE BOTTOM
+2460      ELSE
+2470        WRITE (AD=LI)
+2480          / 'Message number ....' NAD-MSG.MSG-NR
+2490          / 'Message ...........' NAD-MSG.MSG (AL=59)
+2500          / 'Message type ......' NAD-MSG.MSG-TYPE
+2510          / 'Message data ......' NAD-MSG.MSG-DATA (1:3)
+2520          // 'Field structure ...' NAD-FLD.FIELD-STRUCTURE
+2530          / 'Field name ........' NAD-FLD.FIELD-NAME
+2540          / 'Field position ....' NAD-FLD.FIELD-POSITION
+2550          / 'Field index .......' NAD-FLD.FIELD-INDEX1
+2560          NAD-FLD.FIELD-INDEX2
+2570          NAD-FLD.FIELD-INDEX3
+2580        ESCAPE BOTTOM (REP1.)
+2590      END-IF
+2600    END-IF
+2610    /*
+2620    INPUT-OK := TRUE    /* All parameter checks are done
+2630  END-REPEAT
+2640END-REPEAT
+2650END
